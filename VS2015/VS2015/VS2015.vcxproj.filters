@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Examples">
+      <UniqueIdentifier>{3246d73a-737f-44ca-b2a4-5ce4e2f5a5cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Delegate">
+      <UniqueIdentifier>{99dac339-f0eb-4bc0-8eed-2f55e0f989f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Port">
+      <UniqueIdentifier>{3d1793c2-a97a-48ae-be3c-4e862c702d03}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Examples\SysData.h">
+      <Filter>Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Examples\SysDataNoLock.h">
+      <Filter>Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Examples\SysDataTypes.h">
+      <Filter>Examples</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\stdafx.h" />
+    <ClInclude Include="..\..\targetver.h" />
+    <ClInclude Include="..\..\Delegate\Delegate.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateAsync.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateInvoker.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateMsg.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateThread.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\MulticastDelegate.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\SinglecastDelegate.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateLib.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\MulticastDelegateSafe.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateSp.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateSpAsync.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateAsyncWait.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\LockGuard.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\Semaphore.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateOpt.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Port\DataTypes.h">
+      <Filter>Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Port\Fault.h">
+      <Filter>Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Port\ThreadMsg.h">
+      <Filter>Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Port\ThreadWin.h">
+      <Filter>Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Port\UserMsgs.h">
+      <Filter>Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Port\WorkerThreadStd.h">
+      <Filter>Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Port\WorkerThreadWin.h">
+      <Filter>Port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateRemoteInvoker.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateRemoteRecv.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateRemoteSend.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\DelegateTransport.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Delegate\make_tuple_heap.h">
+      <Filter>Delegate</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Examples\SysData.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Examples\SysDataNoLock.cpp">
+      <Filter>Examples</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\main.cpp" />
+    <ClCompile Include="..\..\stdafx.cpp" />
+    <ClCompile Include="..\..\Delegate\LockGuard.cpp">
+      <Filter>Delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Delegate\Semaphore.cpp">
+      <Filter>Delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Port\Fault.cpp">
+      <Filter>Port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Port\ThreadWin.cpp">
+      <Filter>Port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Port\WorkerThreadStd.cpp">
+      <Filter>Port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Port\WorkerThreadWin.cpp">
+      <Filter>Port</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Delegate\DelegateRemoteInvoker.cpp">
+      <Filter>Delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Delegate\DelegateAsync.cpp">
+      <Filter>Delegate</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
