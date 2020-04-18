@@ -227,99 +227,11 @@ static TestStructNoCopy testStructNoCopy(999);
 
 extern void DelegateUnitTests();
 
-class TestSmart
-{
-public:
-    TestSmart() { i = 10; }
-    ~TestSmart() {}
-
-    int i;
-};
-
-
-
-class MyDeleterTest
-{
-public:
-    MyDeleterTest() 
-    { 
-        val = 0;
-        val2 = 0.0f;
-        //heapval = new int(999); 
-    }
-    virtual ~MyDeleterTest() 
-    { 
-        //delete heapval; 
-    }
-    int val;
-    float val2;
-    int* heapval;
-};
-
 //------------------------------------------------------------------------------
 // main
 //------------------------------------------------------------------------------
 int main(void)
 {
-#if 0
-    {
-        MyDeleterTest realArg;
-        realArg.val = 1234;
-        realArg.val2 = 5.432f;
-        MyDeleterTest* pRealArg = &realArg;
-        MyDeleterTest** arg = &pRealArg;
-
-        std::list<std::shared_ptr<DeleterBase>> heapArgs;
-        DeleterBase* base;
-        {
-            MyDeleterTest** heap_val = 0;
-            //*heap_val = 0;
-            heap_val = new MyDeleterTest*();
-            *heap_val = new MyDeleterTest(realArg);
-
-            //(*heap_val)->~MyDeleterTest();
-
-            //delete *heap_val;
-            //delete heap_val;
-
-            //MyDeleterTest* ddd = new MyDeleterTest(realArg);
-            //delete ddd;
-
-            //void* mem = malloc(sizeof(*arg));
-            //MyDeleterTest** heap_val = new (mem) MyDeleterTest*();
-
-            //void* mem2 = malloc(sizeof(**arg));
-            //*heap_val = new (mem2) MyDeleterTest(**arg);
-
-            printf("%d %d %d %d %d %d\n", sizeof(realArg), sizeof(arg), sizeof(*arg), sizeof(**arg), sizeof(*heap_val), sizeof(heap_val));
-
-            std::shared_ptr<DeleterBase> deleter(new Deleter<MyDeleterTest**>(heap_val));
-            heapArgs.push_back(deleter);
-            //std::shared_ptr<DeleterBase> deleter2(new Deleter<MyDeleterTest*>(*heap_val));
-            //heapArgs.push_back(deleter2);
-
-#if 0
-            MyDeleterTest** pptest = new *MyDeleterTest;
-            MyDeleterTest* ptest = new MyDeleterTest;
-            //Deleter<MyDeleterTest> deleter(test);
-            //std::shared_ptr<Deleter<MyDeleterTest>> deleter(new Deleter<MyDeleterTest>(test));
-            std::shared_ptr<DeleterBase> deleter(new Deleter<MyDeleterTest>(test));
-            keepList.push_back(deleter);
-            //base = &deleter;
-#endif
-        }
-    }
-#endif
-
-
-    //delete base;
-
-    void* keep;
-    {
-        std::shared_ptr<TestSmart> dd(new TestSmart());
-        keep = (void*)dd.get();
-    }
-
 	TestStruct testStruct;
 	testStruct.x = 123;
 	TestStruct* pTestStruct = &testStruct;
