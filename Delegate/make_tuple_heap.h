@@ -5,8 +5,6 @@
 #include <list>
 #include <memory>
 
-extern int newDeleteCnt;    // TODO REMOVE
-
 namespace DelegateLib 
 {
 
@@ -24,7 +22,6 @@ public:
     heap_arg_deleter(T& arg) : m_arg(arg) { }
     virtual ~heap_arg_deleter()
     {
-        newDeleteCnt--;
         delete &m_arg;
     }
 private:
@@ -38,7 +35,6 @@ public:
     heap_arg_deleter(T& arg) : m_arg(arg) { }
     virtual ~heap_arg_deleter()
     {
-        newDeleteCnt--;
         delete &m_arg;
     }
 private:
@@ -52,7 +48,6 @@ public:
     heap_arg_deleter(T* arg) : m_arg(arg) { }
     virtual ~heap_arg_deleter()
     {
-        newDeleteCnt--;
         delete m_arg;
     }
 private:
@@ -66,8 +61,6 @@ public:
     heap_arg_deleter(T** arg) : m_arg(arg) {}
     virtual ~heap_arg_deleter()
     {
-        newDeleteCnt--;
-        newDeleteCnt--;
         delete *m_arg;
         delete m_arg;
     }
@@ -80,8 +73,6 @@ private:
 template <typename Arg, typename... TupleElem>
 auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg** arg)
 {
-    newDeleteCnt++;
-    newDeleteCnt++;
     Arg** heap_arg = 0;
     try 
     {
@@ -106,7 +97,6 @@ auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, c
 template <typename Arg, typename... TupleElem>
 auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg* arg)
 {
-    newDeleteCnt++;
     Arg* heap_arg = 0;
     try
     {
@@ -128,7 +118,6 @@ auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, c
 template <typename Arg, typename... TupleElem>
 auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg& arg)
 {
-    newDeleteCnt++;
     Arg& heap_arg = *(new Arg(arg));
     try
     {

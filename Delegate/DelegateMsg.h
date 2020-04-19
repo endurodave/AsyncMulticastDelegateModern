@@ -8,8 +8,6 @@
 #include <list>
 #include <memory>
 
-extern int newDeleteCnt;    // TODO REMOVE
-
 namespace DelegateLib {
 
 class DelegateMsgBase
@@ -46,9 +44,7 @@ public:
     { 
     }
 
-    virtual ~DelegateMsg()
-    {
-    }
+    virtual ~DelegateMsg() {}
 
     std::tuple<Args...>& GetArgs() { return m_heapArgs; }
 

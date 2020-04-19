@@ -129,7 +129,7 @@ public:
             delegate->m_sema.Reset();
 
             // Create a new message instance 
-            auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, std::forward<Args>(args)...)); // TODO forward here?
+            auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, args...)); 
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
@@ -255,7 +255,7 @@ public:
             delegate->m_sema.Reset();
 
             // Create a new message instance 
-            auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, std::forward<Args>(args)...));  // TODO forward here?
+            auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, args...)); 
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
