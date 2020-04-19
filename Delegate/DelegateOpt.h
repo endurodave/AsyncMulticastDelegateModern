@@ -8,8 +8,8 @@
 // is >= 1700 then C++11 features are available. 
 #if _MSC_VER >= 1700
 	#define USE_CPLUSPLUS_11 1
-	//#define USE_STD_THREADS	1
-	#define USE_WIN32_THREADS 1 
+	#define USE_STD_THREADS	1
+	//#define USE_WIN32_THREADS 1 
 #elif _MSC_VER >= 1500
 	#define USE_WIN32_THREADS 1
 #endif
