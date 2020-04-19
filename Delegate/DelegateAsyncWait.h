@@ -139,15 +139,9 @@ public:
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
                 m_invoke = delegate->m_invoke;
 
-            bool deleteData = false;
             {
                 LockGuard lockGuard(&delegate->m_lock);
-                if (--delegate->m_refCnt == 0)
-                    deleteData = true;
-            }
-            if (deleteData) {
-                delete msg;
-                delete delegate;
+                delegate->m_refCnt--;
             }
             return m_invoke.GetRetVal();
         }
@@ -155,28 +149,18 @@ public:
 
     /// Called by the target thread to invoke the delegate function 
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
-        bool deleteData = false;
-        {
-            // Typecast the base pointer to back to the templatized instance
-            auto delegateMsg = static_cast<DelegateMsg<Args...>*>(*msg);
+        // Typecast the base pointer to back to the templatized instance
+        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(*msg);
 
-            LockGuard lockGuard(&this->m_lock);
-            if (this->m_refCnt == 2) {
-                // Invoke the delegate function then signal the waiting thread
-                m_sync = true;
-                m_invoke(this, delegateMsg->GetArgs());
-                this->m_sema.Signal();
-            }
+        LockGuard lockGuard(&this->m_lock);
+        if (this->m_refCnt == 2) {
+            // Invoke the delegate function then signal the waiting thread
+            m_sync = true;
+            m_invoke(this, delegateMsg->GetArgs());
+            this->m_sema.Signal();
+        }
 
-            // If waiting thread is no longer waiting then delete heap data
-            if (--this->m_refCnt == 0)
-                deleteData = true;
-        }
-        if (deleteData) {
-            delete *msg;
-            *msg = 0;
-            delete this;
-        }
+        this->m_refCnt--;
     }
 
     /// Returns true if asynchronous function successfully invoked on target thread
@@ -281,32 +265,28 @@ public:
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
                 m_invoke = delegate->m_invoke;
 
-            --delegate->m_refCnt;   // TODO ref cnt no longer needed?
-
+            {
+                LockGuard lockGuard(&delegate->m_lock);
+                delegate->m_refCnt--;
+            }
             return m_invoke.GetRetVal();
         }
     }
 
     /// Called by the target thread to invoke the delegate function 
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
-        bool deleteData = false;
-        {
-            // Typecast the base pointer to back to the templatized instance
-            //auto delegateMsg = static_cast<DelegateMsg<Args...>*>(*msg);
-            auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
+        // Typecast the base pointer to back to the templatized instance
+        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
 
-            LockGuard lockGuard(&this->m_lock);
-            if (this->m_refCnt == 2) {
-                // Invoke the delegate function then signal the waiting thread
-                m_sync = true;
-                m_invoke(this, delegateMsg->GetArgs());
-                this->m_sema.Signal();
-            }
-
-            // If waiting thread is no longer waiting then delete heap data
-            if (--this->m_refCnt == 0)  // TODO don't need ref cnt
-                deleteData = true;
+        LockGuard lockGuard(&this->m_lock);
+        if (this->m_refCnt == 2) {
+            // Invoke the delegate function then signal the waiting thread
+            m_sync = true;
+            m_invoke(this, delegateMsg->GetArgs());
+            this->m_sema.Signal();
         }
+
+        this->m_refCnt--;
     }
 
     /// Returns true if asynchronous function successfully invoked on target thread
