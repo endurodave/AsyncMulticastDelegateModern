@@ -150,7 +150,7 @@ public:
     /// Called by the target thread to invoke the delegate function 
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
         // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(*msg);
+        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
 
         LockGuard lockGuard(&this->m_lock);
         if (this->m_refCnt == 2) {
