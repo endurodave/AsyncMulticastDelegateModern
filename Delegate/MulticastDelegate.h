@@ -32,7 +32,7 @@ public:
     void operator-=(const Delegate<RetType(Args...)>& delegate) { 
         for (auto it = m_delegates.begin(); it != m_delegates.end(); ++it) 
         {
-            if ((DelegateBase*)&delegate == (DelegateBase*)(*it))
+            if (*((DelegateBase*)&delegate) == *((DelegateBase*)(*it)))
             {
                 delete (*it);
                 m_delegates.erase(it);

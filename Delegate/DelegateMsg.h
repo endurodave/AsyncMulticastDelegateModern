@@ -48,24 +48,12 @@ public:
 
     virtual ~DelegateMsg()
     {
-        // TODO - this not right. Destructor or argument not called!
-        // Create std::shared_ptr in make_tuple_heap then no std::list<void*> required. 
-#if 0
-        // Delete each heap allocated tuple element 
-        for (auto i = m_heapMem.begin(); i != m_heapMem.end(); ) 
-        {
-            newDeleteCnt--;
-            delete (*i);
-            i = m_heapMem.erase(i);
-        }
-#endif
     }
 
     std::tuple<Args...>& GetArgs() { return m_heapArgs; }
 
 private:
     /// A list of heap allocated argument memory blocks
-    //std::list<void*> m_heapMem;
     std::list<std::shared_ptr<heap_arg_deleter_base>> m_heapMem;
 
     /// An empty starting tuple

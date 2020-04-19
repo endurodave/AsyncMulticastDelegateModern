@@ -7,6 +7,9 @@
 
 extern int newDeleteCnt;    // TODO REMOVE
 
+namespace DelegateLib 
+{
+
 class heap_arg_deleter_base
 {
 public:
@@ -159,6 +162,8 @@ auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs
 {
     auto new_tup = tuple_append(heapArgs, tup, arg1);
     return make_tuple_heap(heapArgs, new_tup, args...);
+}
+
 }
 
 #endif
