@@ -39,14 +39,14 @@ public:
 	virtual void DispatchDelegate(DelegateLib::DelegateMsgBase* msg);
 
 private:
-	WorkerThread(const WorkerThread&);
-	WorkerThread& operator=(const WorkerThread&);
+	WorkerThread(const WorkerThread&) = delete;
+	WorkerThread& operator=(const WorkerThread&) = delete;
 
 	/// Entry point for the thread
 	void Process();
 
-	std::thread* m_thread;
-	std::queue<ThreadMsg*> m_queue;
+	std::shared_ptr<std::thread> m_thread;
+	std::queue<std::shared_ptr<ThreadMsg>> m_queue;
 	std::mutex m_mutex;
 	std::condition_variable m_cv;
 	const CHAR* THREAD_NAME;

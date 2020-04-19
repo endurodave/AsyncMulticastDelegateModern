@@ -31,7 +31,7 @@ WorkerThread::~WorkerThread()
 BOOL WorkerThread::CreateThread()
 {
 	if (!m_thread)
-		m_thread = new thread(&WorkerThread::Process, this);
+		m_thread = std::shared_ptr<std::thread>(new thread(&WorkerThread::Process, this));
 	return TRUE;
 }
 
@@ -61,7 +61,7 @@ void WorkerThread::ExitThread()
 		return;
 
 	// Create a new ThreadMsg
-	ThreadMsg* threadMsg = new ThreadMsg(MSG_EXIT_THREAD, 0);
+	std::shared_ptr<ThreadMsg> threadMsg(new ThreadMsg(MSG_EXIT_THREAD, 0));
 
 	// Put exit thread message into the queue
 	{
@@ -71,8 +71,6 @@ void WorkerThread::ExitThread()
 	}
 
 	m_thread->join();
-	delete m_thread;
-	m_thread = 0;
 }
 
 //----------------------------------------------------------------------------
@@ -83,7 +81,7 @@ void WorkerThread::DispatchDelegate(DelegateLib::DelegateMsgBase* msg)
 	ASSERT_TRUE(m_thread);
 
 	// Create a new ThreadMsg
-	ThreadMsg* threadMsg = new ThreadMsg(MSG_DISPATCH_DELEGATE, msg);
+    std::shared_ptr<ThreadMsg> threadMsg(new ThreadMsg(MSG_DISPATCH_DELEGATE, msg));
 
 	// Add dispatch delegate msg to queue and notify worker thread
 	std::unique_lock<std::mutex> lk(m_mutex);
@@ -98,7 +96,7 @@ void WorkerThread::Process()
 {
 	while (1)
 	{
-		ThreadMsg* msg = 0;
+		std::shared_ptr<ThreadMsg> msg;
 		{
 			// Wait for a message to be added to the queue
 			std::unique_lock<std::mutex> lk(m_mutex);
@@ -125,20 +123,12 @@ void WorkerThread::Process()
 				delegateMsg->GetDelegateInvoker()->DelegateInvoke(&delegateMsg);
 
 				// Delete dynamic data passed through message queue
-				delete msg;
+				//delete msg;
 				break;
 			}
 
 			case MSG_EXIT_THREAD:
 			{
-				delete msg;
-				std::unique_lock<std::mutex> lk(m_mutex);
-				while (!m_queue.empty())
-				{
-					msg = m_queue.front();
-					m_queue.pop();
-					delete msg;
-				}
 				return;
 			}
 
