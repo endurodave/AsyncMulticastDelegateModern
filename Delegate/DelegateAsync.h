@@ -23,11 +23,11 @@ public:
 
     typedef RetType(*FreeFunc)(Args...);
 
-    DelegateFreeAsync(FreeFunc func, std::shared_ptr<DelegateThread> thread) : m_sync(false) { Bind(func, thread); }
+    DelegateFreeAsync(FreeFunc func, DelegateThread* thread) : m_sync(false) { Bind(func, thread); }
     DelegateFreeAsync() : m_thread(0), m_sync(false) { }
 
     /// Bind a free function to the delegate.
-    void Bind(FreeFunc func, std::shared_ptr<DelegateThread> thread) {
+    void Bind(FreeFunc func, DelegateThread* thread) {
         m_thread = thread;
         DelegateFree<RetType(Args...)>::Bind(func);
     }
@@ -73,7 +73,7 @@ public:
     }
 
 private:
-    std::shared_ptr<DelegateThread> m_thread; 
+    DelegateThread* m_thread; 
     bool m_sync;
 };
 
@@ -150,7 +150,7 @@ public:
 
 private:
     /// Target thread to invoke the delegate function
-    DelegateThread * m_thread;
+    DelegateThread* m_thread;
     bool m_sync;
 };
 
