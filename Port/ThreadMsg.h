@@ -15,18 +15,18 @@ public:
 	/// @pre The data pointer argument *must* be created on the heap.
 	/// @port The destination thread will delete the heap allocated data once the 
 	///		callback is complete.  
-	ThreadMsg(INT id, void* data) : 
+	ThreadMsg(INT id, std::shared_ptr<DelegateLib::DelegateMsgBase> data) :
 		m_id(id), 
 		m_data(data)
 	{
 	}
 
 	INT GetId() const { return m_id; } 
-	void* GetData() const { return m_data; } 
+    std::shared_ptr<DelegateLib::DelegateMsgBase>& GetData() { return m_data; }
 
 private:
 	INT m_id;
-	void* m_data;
+    std::shared_ptr<DelegateLib::DelegateMsgBase> m_data;
 };
 
 #endif

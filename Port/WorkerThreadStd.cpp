@@ -70,13 +70,14 @@ void WorkerThread::ExitThread()
 		m_cv.notify_one();
 	}
 
-	m_thread->join();
+    m_thread->join();
+    m_thread = 0;
 }
 
 //----------------------------------------------------------------------------
 // DispatchDelegate
 //----------------------------------------------------------------------------
-void WorkerThread::DispatchDelegate(DelegateLib::DelegateMsgBase* msg)
+void WorkerThread::DispatchDelegate(std::shared_ptr<DelegateLib::DelegateMsgBase> msg)
 {
 	ASSERT_TRUE(m_thread);
 
@@ -117,13 +118,13 @@ void WorkerThread::Process()
 				ASSERT_TRUE(msg->GetData() != NULL);
 
 				// Convert the ThreadMsg void* data back to a DelegateMsg* 
-				DelegateMsgBase* delegateMsg = static_cast<DelegateMsgBase*>(msg->GetData());
+				//DelegateMsgBase* delegateMsg = static_cast<DelegateMsgBase*>(msg->GetData());
+                auto delegateMsg = msg->GetData();
 
 				// Invoke the callback on the target thread
-				delegateMsg->GetDelegateInvoker()->DelegateInvoke(&delegateMsg);
+				delegateMsg->GetDelegateInvoker()->DelegateInvoke(delegateMsg);
 
 				// Delete dynamic data passed through message queue
-				//delete msg;
 				break;
 			}
 

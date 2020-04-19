@@ -18,7 +18,7 @@ public:
 	/// Constructor
 	/// @param[in] invoker - the invoker instance the delegate is registered with.
 	/// @param[in] delegate - the delegate instance. 
-	DelegateMsgBase(IDelegateInvoker* invoker) :
+	DelegateMsgBase(std::shared_ptr<IDelegateInvoker> invoker) :
 		m_invoker(invoker)
 	{
 		ASSERT_TRUE(m_invoker != 0);
@@ -28,11 +28,11 @@ public:
 
 	/// Get the delegate invoker instance the delegate is registered with.
 	/// @return The invoker instance. 
-	IDelegateInvoker* GetDelegateInvoker() const { return m_invoker; }
+	std::shared_ptr<IDelegateInvoker> GetDelegateInvoker() const { return m_invoker; }
 	
 private:
 	/// The IDelegateInvoker instance 
-	IDelegateInvoker* m_invoker;
+	std::shared_ptr<IDelegateInvoker> m_invoker;
 };
 
 /// @brief A class storing all function arguments within the heap suitable 
@@ -41,7 +41,7 @@ template <class...Args>
 class DelegateMsg : public DelegateMsgBase
 {
 public:
-    DelegateMsg(IDelegateInvoker* invoker, Args... args) : DelegateMsgBase(invoker), 
+    DelegateMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsgBase(invoker), 
         m_heapArgs(make_tuple_heap(m_heapMem, m_start, args...))
     { 
     }

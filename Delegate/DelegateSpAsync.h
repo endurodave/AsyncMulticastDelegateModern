@@ -66,10 +66,10 @@ public:
         else
         {
             // Create a clone instance of this delegate 
-            auto delegate = Clone();
+            auto delegate = std::shared_ptr<DelegateMemberAsyncSp<TClass, RetType(Args...)>>(Clone());
 
             // Create the delegate message
-            auto msg = new DelegateMsg<Args...>(delegate, args...);
+            auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, args...));
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
@@ -78,21 +78,14 @@ public:
     }
 
     /// Called by the target thread to invoke the delegate function 
-    virtual void DelegateInvoke(DelegateMsgBase** msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
         // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(*msg);
+        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
 
         // Invoke the delegate function
         m_sync = true;
         std::apply(&DelegateMemberSp<TClass, RetType(Args...)>::operator(),
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-
-        // Delete heap data 
-        delete *msg;
-        *msg = 0;
-
-        // Do this last before returning!
-        delete this;    // TODO - use shared_ptr
     }
 
 private:

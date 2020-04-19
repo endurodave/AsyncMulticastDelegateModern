@@ -123,13 +123,13 @@ public:
             return DelegateFree<RetType(Args...)>::operator()(args...);
         else {
             // Create a clone instance of this delegate 
-            auto delegate = Clone();
+            auto delegate = std::shared_ptr<DelegateFreeAsyncWait<RetType(Args...)>>(Clone());
             delegate->m_refCnt = 2;
             delegate->m_sema.Create();
             delegate->m_sema.Reset();
 
             // Create a new message instance 
-            auto msg = new DelegateMsg<Args...>(delegate, std::forward<Args>(args)...); // TODO forward here?
+            auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, std::forward<Args>(args)...)); // TODO forward here?
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
@@ -154,7 +154,7 @@ public:
     }
 
     /// Called by the target thread to invoke the delegate function 
-    virtual void DelegateInvoke(DelegateMsgBase** msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
         bool deleteData = false;
         {
             // Typecast the base pointer to back to the templatized instance
@@ -265,13 +265,13 @@ public:
             return DelegateMember<TClass, RetType(Args...)>::operator()(args...);
         else {
             // Create a clone instance of this delegate 
-            auto delegate = Clone();
+            auto delegate = std::shared_ptr<DelegateMemberAsyncWait<TClass, RetType(Args...)>>(Clone());
             delegate->m_refCnt = 2;
             delegate->m_sema.Create();
             delegate->m_sema.Reset();
 
             // Create a new message instance 
-            auto msg = new DelegateMsg<Args...>(delegate, std::forward<Args>(args)...);
+            auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, std::forward<Args>(args)...));  // TODO forward here?
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
@@ -281,26 +281,19 @@ public:
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
                 m_invoke = delegate->m_invoke;
 
-            bool deleteData = false;
-            {
-                LockGuard lockGuard(&delegate->m_lock);
-                if (--delegate->m_refCnt == 0)
-                    deleteData = true;
-            }
-            if (deleteData) {
-                delete msg;
-                delete delegate;
-            }
+            --delegate->m_refCnt;   // TODO ref cnt no longer needed?
+
             return m_invoke.GetRetVal();
         }
     }
 
     /// Called by the target thread to invoke the delegate function 
-    virtual void DelegateInvoke(DelegateMsgBase** msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
         bool deleteData = false;
         {
             // Typecast the base pointer to back to the templatized instance
-            auto delegateMsg = static_cast<DelegateMsg<Args...>*>(*msg);
+            //auto delegateMsg = static_cast<DelegateMsg<Args...>*>(*msg);
+            auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
 
             LockGuard lockGuard(&this->m_lock);
             if (this->m_refCnt == 2) {
@@ -311,13 +304,8 @@ public:
             }
 
             // If waiting thread is no longer waiting then delete heap data
-            if (--this->m_refCnt == 0)
+            if (--this->m_refCnt == 0)  // TODO don't need ref cnt
                 deleteData = true;
-        }
-        if (deleteData) {
-            delete *msg;
-            *msg = 0;
-            delete this;
         }
     }
 

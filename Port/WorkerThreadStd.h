@@ -36,7 +36,7 @@ public:
 	/// Get the ID of the currently executing thread
 	static std::thread::id GetCurrentThreadId();
 
-	virtual void DispatchDelegate(DelegateLib::DelegateMsgBase* msg);
+	virtual void DispatchDelegate(std::shared_ptr<DelegateLib::DelegateMsgBase> msg);
 
 private:
 	WorkerThread(const WorkerThread&) = delete;

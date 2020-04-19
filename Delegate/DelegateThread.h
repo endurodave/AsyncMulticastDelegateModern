@@ -21,7 +21,7 @@ public:
 	///		using operator new. 
 	/// @pre Caller *must* create the DelegateMsg argument dynamically using operator new.
 	/// @post The destination thread must delete the msg instance by calling DelegateInvoke().
-	virtual void DispatchDelegate(DelegateMsgBase* msg) = 0;
+	virtual void DispatchDelegate(std::shared_ptr<DelegateMsgBase> msg) = 0;
 };
 
 }

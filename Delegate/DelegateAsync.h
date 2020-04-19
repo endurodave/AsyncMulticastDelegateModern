@@ -23,11 +23,11 @@ public:
 
     typedef RetType(*FreeFunc)(Args...);
 
-    DelegateFreeAsync(FreeFunc func, DelegateThread* thread) : m_sync(false) { Bind(func, thread); }
+    DelegateFreeAsync(FreeFunc func, std::shared_ptr<DelegateThread> thread) : m_sync(false) { Bind(func, thread); }
     DelegateFreeAsync() : m_thread(0), m_sync(false) { }
 
     /// Bind a free function to the delegate.
-    void Bind(FreeFunc func, DelegateThread* thread) {
+    void Bind(FreeFunc func, std::shared_ptr<DelegateThread> thread) {
         m_thread = thread;
         DelegateFree<RetType(Args...)>::Bind(func);
     }
@@ -50,10 +50,10 @@ public:
         else
         {
             // Create a clone instance of this delegate 
-            auto delegate = Clone();
+            auto delegate = std::shared_ptr<DelegateFreeAsync<RetType(Args...)>>(Clone());
 
             // Create the delegate message
-            auto msg = new DelegateMsg<Args...>(delegate, args...);
+            auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, args...));
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
@@ -62,25 +62,18 @@ public:
     }
 
     // Called to invoke the delegate function on the target thread of control
-    virtual void DelegateInvoke(DelegateMsgBase** msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
         // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(*msg);
+        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
 
         // Invoke the delegate function
         m_sync = true;
         std::apply(&DelegateFree<RetType(Args...)>::operator(), 
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-
-        // Delete heap data 
-        delete *msg;
-        *msg = 0;
-
-        // Do this last before returning!
-        delete this;
     }
 
 private:
-    DelegateThread * m_thread;  // TODO C++ shared pointer? 
+    std::shared_ptr<DelegateThread> m_thread; 
     bool m_sync;
 };
 
@@ -133,10 +126,10 @@ public:
         else
         {
             // Create a clone instance of this delegate 
-            auto delegate = Clone();
+            auto delegate = std::shared_ptr<DelegateMemberAsync<TClass, RetType(Args...)>>(Clone());
 
             // Create the delegate message
-            auto msg = new DelegateMsg<Args...>(delegate, args...);
+            auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, args...));
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
@@ -145,21 +138,14 @@ public:
     }
 
     /// Called by the target thread to invoke the delegate function 
-    virtual void DelegateInvoke(DelegateMsgBase** msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
         // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(*msg);
+        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
 
         // Invoke the delegate function
         m_sync = true;
         std::apply(&DelegateMember<TClass, RetType(Args...)>::operator(),
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-
-        // Delete heap data 
-        delete *msg;
-        *msg = 0;
-
-        // Do this last before returning!
-        delete this;
     }
 
 private:
