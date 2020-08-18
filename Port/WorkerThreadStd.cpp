@@ -40,7 +40,7 @@ BOOL WorkerThread::CreateThread()
 //----------------------------------------------------------------------------
 std::thread::id WorkerThread::GetThreadId()
 {
-	ASSERT_TRUE(m_thread != 0);
+	ASSERT_TRUE(m_thread != nullptr);
 	return m_thread->get_id();
 }
 
@@ -71,7 +71,7 @@ void WorkerThread::ExitThread()
 	}
 
     m_thread->join();
-    m_thread = 0;
+    m_thread = nullptr;
 }
 
 //----------------------------------------------------------------------------

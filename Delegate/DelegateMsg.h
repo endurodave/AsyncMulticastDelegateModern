@@ -19,7 +19,7 @@ public:
 	DelegateMsgBase(std::shared_ptr<IDelegateInvoker> invoker) :
 		m_invoker(invoker)
 	{
-		ASSERT_TRUE(m_invoker != 0);
+		ASSERT_TRUE(m_invoker != nullptr);
 	}
 
     virtual ~DelegateMsgBase() {}

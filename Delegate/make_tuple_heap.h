@@ -15,7 +15,7 @@ public:
     virtual ~heap_arg_deleter_base() {}
 };
 
-/// @brief Frees heap memory for each type of heap argument
+/// @brief Frees heap memory for reference heap argument
 template<typename T>
 class heap_arg_deleter : public heap_arg_deleter_base
 {
@@ -29,6 +29,7 @@ private:
     T& m_arg;
 };
 
+/// @brief Frees heap memory for pointer heap argument
 template<typename T>
 class heap_arg_deleter<T*> : public heap_arg_deleter_base
 {
@@ -42,6 +43,7 @@ private:
     T* m_arg;
 };
 
+/// @brief Frees heap memory for pointer to pointer heap argument
 template<typename T>
 class heap_arg_deleter<T**> : public heap_arg_deleter_base
 {
@@ -56,11 +58,11 @@ private:
     T** m_arg;
 };
 
-/// @brief Append an argument to the tuple
+/// @brief Append a pointer to pointer argument to the tuple
 template <typename Arg, typename... TupleElem>
 auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg** arg)
 {
-    Arg** heap_arg = 0;
+    Arg** heap_arg = nullptr;
     try 
     {
         heap_arg = new Arg*();
@@ -81,10 +83,11 @@ auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, c
     }
 }
 
+/// @brief Append a pointer argument to the tuple
 template <typename Arg, typename... TupleElem>
 auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg* arg)
 {
-    Arg* heap_arg = 0;
+    Arg* heap_arg = nullptr;
     try
     {
         heap_arg = new Arg(*arg);
@@ -102,6 +105,7 @@ auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, c
     }
 }
 
+/// @brief Append a reference argument to the tuple
 template <typename Arg, typename... TupleElem>
 auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg& arg)
 {
@@ -131,9 +135,10 @@ auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs
 }
 
 /// @brief Creates a tuple with all tuple elements created on the heap using
-/// operator new. Call with an empty list and tuple. The empty tuple is concatenated
-/// with each heap element. The list contains pointers to each heap memory block
-/// that will be automatically deleted.
+/// operator new. Call with an empty list and empty tuple. The empty tuple is concatenated
+/// with each heap element. The list contains heap_arg_deleter_base objects for each 
+/// argument heap memory block that will be automatically deleted after the bound
+/// function is invoked on the target thread. 
 template<typename Arg1, typename... Args, typename... Ts>
 auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, std::tuple<Ts...> tup, Arg1 arg1, Args... args)
 {

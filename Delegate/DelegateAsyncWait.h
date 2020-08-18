@@ -119,7 +119,7 @@ public:
 
     /// Invoke delegate function asynchronously
     virtual RetType operator()(Args... args) {
-        if (this->m_thread == 0 || m_sync)
+        if (this->m_thread == nullptr || m_sync)
             return DelegateFree<RetType(Args...)>::operator()(args...);
         else {
             // Create a clone instance of this delegate 
@@ -245,7 +245,7 @@ public:
 
     /// Invoke delegate function asynchronously
     virtual RetType operator()(Args... args) {
-        if (this->m_thread == 0 || m_sync)
+        if (this->m_thread == nullptr || m_sync)
             return DelegateMember<TClass, RetType(Args...)>::operator()(args...);
         else {
             // Create a clone instance of this delegate 

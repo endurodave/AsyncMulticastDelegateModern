@@ -54,7 +54,7 @@ public:
     }
 
     bool Empty() const { return !(m_object && m_func); }
-    void Clear() { m_object = 0; m_func = 0; }
+    void Clear() { m_object = nullptr; m_func = nullptr; }
 
     explicit operator bool() const { return !Empty(); }
 

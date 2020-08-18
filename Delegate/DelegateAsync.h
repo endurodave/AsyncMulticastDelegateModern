@@ -45,7 +45,7 @@ public:
 
     // Invoke delegate function asynchronously
     virtual void operator()(Args... args) {
-        if (m_thread == 0 || m_sync)
+        if (m_thread == nullptr || m_sync)
             DelegateFree<RetType(Args...)>::operator()(args...);
         else
         {
@@ -121,7 +121,7 @@ public:
 
     /// Invoke delegate function asynchronously
     virtual void operator()(Args... args) {
-        if (m_thread == 0 || m_sync)
+        if (m_thread == nullptr || m_sync)
             DelegateMember<TClass, RetType(Args...)>::operator()(args...);
         else
         {

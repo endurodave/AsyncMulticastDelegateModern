@@ -39,7 +39,7 @@ public:
     void Clear() {
         if (m_delegate) {
             delete m_delegate;
-            m_delegate = 0;
+            m_delegate = nullptr;
         }
     }
 
