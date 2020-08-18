@@ -16,10 +16,13 @@
 // https://en.wikibooks.org/wiki/C%2B%2B_Programming/Templates/Template_Meta-Programming
 // - Fix remote delegates
 // - Fix unit tests
-// - Remove Win32 threads
+// - Fix Win32 threads to use smart pointers
 // - New C++ loop styles
+// - && arguments supported?
+// - DelegateThread* thread to smart pointer?
 // - Replace asserts with exceptions? noexcept keyword?
 // - Fix MulticastDelegate class TODO's
+// - New namespace? DelegateLib -> mcd
 // - Try creating common errors. Are the compiler error comprehesible? 
 // - All modern C++ pointers for class members? shared, unqiue_ptr, etc... 
 // - Lambda expressions supported?
@@ -28,6 +31,7 @@
 // - Use void(int) form for defining delegates?
 // - Handle non-void return values?
 // - static assert if use non-void return value in async?
+// - Use std::function in delegate classes? Heavyweight solution?
 // - Use std::forward on arguments in function invocation to save processing time?
 //      f(std::forward<Args>(args)...);
 // - Use std::forward in DelegateArgs::New()?
@@ -37,6 +41,13 @@
 // - std::mem_fn in member versions of delegates? A free function one too? std::bind better?
 // - std::function instead of raw function pointers in delegate classes
 //   std::function<void (Ts...)> f;
+// - use std::mem_fn ? 
+// - use std::invoke in operator() functions?
+// - Using in class instead of typedef?
+//     https://stackoverflow.com/questions/23323547/perfect-forwarding-results-in-an-error-i-dont-understand
+//     using Fn = ReturnType(*)(args...);
+// - GoogleTest
+// - Remove Win32 threads? Just C++ threads?
 
 
 // main.cpp
@@ -46,23 +57,21 @@
 // @see https://www.codeproject.com/Articles/5262271/Remote-Procedure-Calls-using-Cplusplus-Delegates
 // David Lafreniere, Mar 2020.
 
-using namespace std;
-using namespace DelegateLib;
-
-WorkerThread workerThread1("WorkerThread1");
-
 #if 0 // Not reliable
 struct DumpLeaks
 {
-	~DumpLeaks() {
-	    BOOL leaks = _CrtDumpMemoryLeaks();
-	    ASSERT_TRUE(leaks == FALSE); 
-	}
+    ~DumpLeaks() {
+        BOOL leaks = _CrtDumpMemoryLeaks();
+        ASSERT_TRUE(leaks == FALSE);
+    }
 };
 static DumpLeaks dumpLeaks;
 #endif
 
-int newDeleteCnt = 0;
+using namespace std;
+using namespace DelegateLib;
+
+WorkerThread workerThread1("WorkerThread1");
 
 /// @brief Test client to get callbacks from SysData::SystemModeChangedDelgate and 
 /// SysDataNoLock::SystemModeChangedDelegate
@@ -97,7 +106,6 @@ private:
 
 	int m_numberOfCallbacks;
 };
-
 
 struct TestStruct
 {
@@ -191,7 +199,6 @@ public:
 		cout << "StaticFunc " << value->x << endl;
 	}
 
-
 	int TestFunc()
 	{
 		cout << "TestFunc " << endl;
@@ -209,6 +216,7 @@ public:
 // function as is. 
 // TODO - Doesn't work now. Pass as void*? Overload new/delete in TestStructNoCopy to do nothing thus preventing new/delete
 // Smart pointer will prevent copying? 
+// TODO - This will not work. No more "DelegateArg" class
 #if 0
 namespace DelegateLib
 {
@@ -248,188 +256,210 @@ int main(void)
 #endif
 
 	// Run all unit tests (uncomment to run unit tests)
-	//DelegateUnitTests();
+	DelegateUnitTests();
 
-	// Create a delegate bound to a free function then invoke
-	DelegateFree<void(int)> delegateFree = MakeDelegate(&FreeFuncInt);
-	delegateFree(123);
+#ifdef WIN32
+    LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds, TotalElapsedMicroseconds = { 0 };
+    LARGE_INTEGER Frequency;
 
-	// Create a delegate bound to a member function then invoke
-	DelegateMember<TestClass, void(TestStruct*)> delegateMember = MakeDelegate(&testClass, &TestClass::MemberFunc);
-	delegateMember(&testStruct);
-
-	// Create a delegate bound to a member function. Assign and invoke from
-	// a base reference. 
-	DelegateMember<TestClass, void(TestStruct*)> delegateMember2 = MakeDelegate(&testClass, &TestClass::MemberFunc);
-	delegateMember2(&testStruct);
-
-	// Create a multicast delegate container that accepts Delegate1<int> delegates.
-	// Any function with the signature "void Func(int)".
-	MulticastDelegate<void(int)> delegateA;
-
-	// Add a DelegateFree1<int> delegate to the container 
-	delegateA += MakeDelegate(&FreeFuncInt);
-
-	// Invoke the delegate target free function FreeFuncInt()
-	if (delegateA)
-		delegateA(123);
-
-	// Remove the delegate from the container
-	delegateA -= MakeDelegate(&FreeFuncInt);
-
-	// Create a multicast delegate container that accepts Delegate<TestStruct*> delegates
-	// Any function with the signature "void Func(TestStruct*)".
-	MulticastDelegate<void(TestStruct*)> delegateB;
-
-	// Add a DelegateMember1<TestStruct*> delegate to the container
-	delegateB += MakeDelegate(&testClass, &TestClass::MemberFunc);
-
-	// Invoke the delegate target member function TestClass::MemberFunc()
-	if (delegateB)
-		delegateB(&testStruct);
-
-	// Remove the delegate from the container
-	delegateB -= MakeDelegate(&testClass, &TestClass::MemberFunc);
-
-	// Create a thread-safe multicast delegate container that accepts Delegate<TestStruct*> delegates
-	// Any function with the signature "void Func(TestStruct*)".
-	MulticastDelegateSafe<void(TestStruct*)> delegateC;
-
-	// Add a DelegateMember1<TestStruct*> delegate to the container that will invoke on workerThread1
-	delegateC += MakeDelegate(&testClass, &TestClass::MemberFunc, &workerThread1);
-
-	// Asynchronously invoke the delegate target member function TestClass::MemberFunc()
-	if (delegateC)
-		delegateC(&testStruct);
-
-	// Remove the delegate from the container
-	delegateC -= MakeDelegate(&testClass, &TestClass::MemberFunc, &workerThread1);
-
-	// Create a thread-safe multicast delegate container that accepts Delegate<TestStruct&, float, int**> delegates
-	// Any function with the signature "void Func(const TestStruct&, float, int**)".
-	MulticastDelegateSafe<void(const TestStruct&, float, int**)> delegateD; 
-
-	// Add a DelegateMember1<TestStruct*> delegate to the container that will invoke on workerThread1
-	delegateD += MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, &workerThread1);
-
-	// Asynchronously invoke the delegate target member function TestClass::MemberFuncThreeArgs()
-	if (delegateD)
-	{
-		int i = 555;
-		int* pI = &i;
-		delegateD(testStruct, 1.23f, &pI);
-	}
-
-	// Remove the delegate from the container
-	delegateD -= MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, &workerThread1);
-
-#if 0
-	// Create a thread-safe multicast delegate container that accepts Delegate<TestStructNoCopy*> delegates
-	// Any function with the signature "void Func(TestStructNoCopy*)".
-	MulticastDelegateSafe<void(TestStructNoCopy*)> delegateE;     // TODO FIX
-
-	// Add a DelegateMember1<TestStructNoCopy*> delegate to the container that will invoke on workerThread1
-	delegateE += MakeDelegate(&testClass, &TestClass::MemberFuncNoCopy, &workerThread1);
-
-	// Asynchronously invoke the delegate target member function TestClass::MemberFuncNoCopy().
-	// TestStructNoCopy will not be copied and created on the heap because of DelegateParam<TestStructNoCopy *>. 
-	// Developer must ensure the testStructNoCopy instance exists when the asynchronous callback occurs. 
-	if (delegateE)
-		delegateE(&testStructNoCopy);
-
-	// Remove the delegate from the container
-	delegateE -= MakeDelegate(&testClass, &TestClass::MemberFuncNoCopy, &workerThread1);
+    QueryPerformanceFrequency(&Frequency);
+    QueryPerformanceCounter(&StartingTime);
 #endif
 
-	// Create a singlecast delegate container that accepts Delegate1<int, int> delegates.
-	// Any function with the signature "int Func(int)".
-	SinglecastDelegate<int(int)> delegateF;
+    //for (int iii = 0; iii < 100; iii++)
+    {
+        // Create a delegate bound to a free function then invoke
+        DelegateFree<void(int)> delegateFree = MakeDelegate(&FreeFuncInt);
+        delegateFree(123);
 
-	// Add a DelegateFree1<int, int> delegate to the container 
-	delegateF = MakeDelegate(&FreeFuncIntRetInt);
+        // Create a delegate bound to a member function then invoke
+        DelegateMember<TestClass, void(TestStruct*)> delegateMember = MakeDelegate(&testClass, &TestClass::MemberFunc);
+        delegateMember(&testStruct);
 
-	// Invoke the delegate target free function FreeFuncInt()
-	int retVal = 0;
-	if (delegateF)
-		retVal = delegateF(123);
+        // Create a delegate bound to a member function. Assign and invoke from
+        // a base reference. 
+        DelegateMember<TestClass, void(TestStruct*)> delegateMember2 = MakeDelegate(&testClass, &TestClass::MemberFunc);
+        delegateMember2(&testStruct);
 
-	// Remove the delegate from the container
-	delegateF.Clear();
+        // Create a multicast delegate container that accepts Delegate1<int> delegates.
+        // Any function with the signature "void Func(int)".
+        MulticastDelegate<void(int)> delegateA;
 
-	// Create a singlecast delegate container that accepts delegates with 
-	// the singature "void Func(TestStruct**)"
-	SinglecastDelegate<void(TestStruct**)> delegateG;
+        // Add a DelegateFree1<int> delegate to the container 
+        delegateA += MakeDelegate(&FreeFuncInt);
 
-	// Make a delegate that points to a free function 
-	delegateG = MakeDelegate(&FreeFuncPtrPtrTestStruct);
+        // Invoke the delegate target free function FreeFuncInt()
+        if (delegateA)
+            delegateA(123);
 
-	// Invoke the delegate target function FreeFuncPtrPtrTestStruct()
-	delegateG(&pTestStruct);
+        // Remove the delegate from the container
+        delegateA -= MakeDelegate(&FreeFuncInt);
 
-	// Remove the delegate from the container
-	delegateG = 0;
+        // Create a multicast delegate container that accepts Delegate<TestStruct*> delegates
+        // Any function with the signature "void Func(TestStruct*)".
+        MulticastDelegate<void(TestStruct*)> delegateB;
 
-	// Create delegate with std::string and int arguments then asychronously 
-	// invoke on a member function
-	MulticastDelegateSafe<void(const std::string&, int)> delegateH; 
-	delegateH += MakeDelegate(&testClass, &TestClass::MemberFuncStdString, &workerThread1);
-	delegateH("Hello world", 2016); 
-	delegateH.Clear();
+        // Add a DelegateMember1<TestStruct*> delegate to the container
+        delegateB += MakeDelegate(&testClass, &TestClass::MemberFunc);
 
-	// Create a asynchronous blocking delegate and invoke. This thread will block until the 
-	// msg and year stack values are set by MemberFuncStdStringRetInt on workerThread1.
-	auto delegateI = MakeDelegate(&testClass, &TestClass::MemberFuncStdStringRetInt, &workerThread1, WAIT_INFINITE);
-	std::string msg;
-	int year = delegateI(msg);
-	if (delegateI.IsSuccess())
-		cout << msg.c_str() << " " << year << endl;
+        // Invoke the delegate target member function TestClass::MemberFunc()
+        if (delegateB)
+            delegateB(&testStruct);
 
-	// Create a shared_ptr, create a delegate, then synchronously invoke delegate function
-	std::shared_ptr<TestClass> spObject(new TestClass());
-	auto delegateMemberSp = MakeDelegate(spObject, &TestClass::MemberFuncStdString);
-	delegateMemberSp("Hello world using shared_ptr", 2016);   
+        // Remove the delegate from the container
+        delegateB -= MakeDelegate(&testClass, &TestClass::MemberFunc);
 
-	// Example of a bug where the testClassHeap is deleted before the asychronous delegate 
-	// is invoked on the workerThread1. In other words, by the time workerThread1 calls
-	// the bound delegate function the testClassHeap instance is deleted and no longer valid.
-	TestClass* testClassHeap = new TestClass();
-	auto delegateMemberAsync = MakeDelegate(testClassHeap, &TestClass::MemberFuncStdString, &workerThread1);
-	delegateMemberAsync("Function async invoked on deleted object. Bug!", 2016); 
-	delegateMemberAsync.Clear();
-	delete testClassHeap;
+        // Create a thread-safe multicast delegate container that accepts Delegate<TestStruct*> delegates
+        // Any function with the signature "void Func(TestStruct*)".
+        MulticastDelegateSafe<void(TestStruct*)> delegateC;
 
-	// Example of the smart pointer function version of the delegate. The testClassSp instance 
-	// is only deleted after workerThread1 invokes the callback function thus solving the bug.
-	std::shared_ptr<TestClass> testClassSp(new TestClass());
-	auto delegateMemberSpAsync = MakeDelegate(testClassSp, &TestClass::MemberFuncStdString, &workerThread1);
-	delegateMemberSpAsync("Function async invoked using smart pointer. Bug solved!", 2016); 
-	delegateMemberSpAsync.Clear();
-	testClassSp.reset();
+        // Add a DelegateMember1<TestStruct*> delegate to the container that will invoke on workerThread1
+        delegateC += MakeDelegate(&testClass, &TestClass::MemberFunc, &workerThread1);
 
-	// Create a SysDataClient instance on the stack
-	SysDataClient sysDataClient;
+        // Asynchronously invoke the delegate target member function TestClass::MemberFunc()
+        if (delegateC)
+            delegateC(&testStruct);
 
-	// Set new SystemMode values. Each call will invoke callbacks to all 
-	// registered client subscribers.
-	SysData::GetInstance().SetSystemMode(SystemMode::STARTING);
-	SysData::GetInstance().SetSystemMode(SystemMode::NORMAL);
+        // Remove the delegate from the container
+        delegateC -= MakeDelegate(&testClass, &TestClass::MemberFunc, &workerThread1);
 
-	// Set new SystemMode values for SysDataNoLock.
-	SysDataNoLock::GetInstance().SetSystemMode(SystemMode::SERVICE);
-	SysDataNoLock::GetInstance().SetSystemMode(SystemMode::SYS_INOP);
+        // Create a thread-safe multicast delegate container that accepts Delegate<TestStruct&, float, int**> delegates
+        // Any function with the signature "void Func(const TestStruct&, float, int**)".
+        MulticastDelegateSafe<void(const TestStruct&, float, int**)> delegateD;
 
-	// Set new SystemMode values for SysDataNoLock using async API
-	SysDataNoLock::GetInstance().SetSystemModeAsyncAPI(SystemMode::SERVICE);
-	SysDataNoLock::GetInstance().SetSystemModeAsyncAPI(SystemMode::SYS_INOP);
+        // Add a DelegateMember1<TestStruct*> delegate to the container that will invoke on workerThread1
+        delegateD += MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, &workerThread1);
 
-	// Set new SystemMode values for SysDataNoLock using async wait API
-	SystemMode::Type previousMode;
-	previousMode = SysDataNoLock::GetInstance().SetSystemModeAsyncWaitAPI(SystemMode::STARTING);
-	previousMode = SysDataNoLock::GetInstance().SetSystemModeAsyncWaitAPI(SystemMode::NORMAL);
+        // Asynchronously invoke the delegate target member function TestClass::MemberFuncThreeArgs()
+        if (delegateD)
+        {
+            int i = 555;
+            int* pI = &i;
+            delegateD(testStruct, 1.23f, &pI);
+        }
+
+        // Remove the delegate from the container
+        delegateD -= MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, &workerThread1);
+
+#if 0 // TestStructNoCopy does not work in modern C++ implementation
+        // Create a thread-safe multicast delegate container that accepts Delegate<TestStructNoCopy*> delegates
+        // Any function with the signature "void Func(TestStructNoCopy*)".
+        MulticastDelegateSafe<void(TestStructNoCopy*)> delegateE;     // TODO FIX
+
+        // Add a DelegateMember1<TestStructNoCopy*> delegate to the container that will invoke on workerThread1
+        delegateE += MakeDelegate(&testClass, &TestClass::MemberFuncNoCopy, &workerThread1);
+
+        // Asynchronously invoke the delegate target member function TestClass::MemberFuncNoCopy().
+        // TestStructNoCopy will not be copied and created on the heap because of DelegateParam<TestStructNoCopy *>. 
+        // Developer must ensure the testStructNoCopy instance exists when the asynchronous callback occurs. 
+        if (delegateE)
+            delegateE(&testStructNoCopy);
+
+        // Remove the delegate from the container
+        delegateE -= MakeDelegate(&testClass, &TestClass::MemberFuncNoCopy, &workerThread1);
+#endif
+
+        // Create a singlecast delegate container that accepts Delegate1<int, int> delegates.
+        // Any function with the signature "int Func(int)".
+        SinglecastDelegate<int(int)> delegateF;
+
+        // Add a DelegateFree1<int, int> delegate to the container 
+        delegateF = MakeDelegate(&FreeFuncIntRetInt);
+
+        // Invoke the delegate target free function FreeFuncInt()
+        int retVal = 0;
+        if (delegateF)
+            retVal = delegateF(123);
+
+        // Remove the delegate from the container
+        delegateF.Clear();
+
+        // Create a singlecast delegate container that accepts delegates with 
+        // the singature "void Func(TestStruct**)"
+        SinglecastDelegate<void(TestStruct**)> delegateG;
+
+        // Make a delegate that points to a free function 
+        delegateG = MakeDelegate(&FreeFuncPtrPtrTestStruct);
+
+        // Invoke the delegate target function FreeFuncPtrPtrTestStruct()
+        delegateG(&pTestStruct);
+
+        // Remove the delegate from the container
+        delegateG = 0;
+
+        // Create delegate with std::string and int arguments then asychronously 
+        // invoke on a member function
+        MulticastDelegateSafe<void(const std::string&, int)> delegateH;
+        delegateH += MakeDelegate(&testClass, &TestClass::MemberFuncStdString, &workerThread1);
+        delegateH("Hello world", 2016);
+        delegateH.Clear();
+
+        // Create a asynchronous blocking delegate and invoke. This thread will block until the 
+        // msg and year stack values are set by MemberFuncStdStringRetInt on workerThread1.
+        auto delegateI = MakeDelegate(&testClass, &TestClass::MemberFuncStdStringRetInt, &workerThread1, WAIT_INFINITE);
+        std::string msg;
+        int year = delegateI(msg);
+        if (delegateI.IsSuccess())
+        {
+            cout << msg.c_str() << " " << year << endl;
+        }
+
+        // Create a shared_ptr, create a delegate, then synchronously invoke delegate function
+        std::shared_ptr<TestClass> spObject(new TestClass());
+        auto delegateMemberSp = MakeDelegate(spObject, &TestClass::MemberFuncStdString);
+        delegateMemberSp("Hello world using shared_ptr", 2016);
+
+        // Example of a bug where the testClassHeap is deleted before the asychronous delegate 
+        // is invoked on the workerThread1. In other words, by the time workerThread1 calls
+        // the bound delegate function the testClassHeap instance is deleted and no longer valid.
+        TestClass* testClassHeap = new TestClass();
+        auto delegateMemberAsync = MakeDelegate(testClassHeap, &TestClass::MemberFuncStdString, &workerThread1);
+        delegateMemberAsync("Function async invoked on deleted object. Bug!", 2016);
+        delegateMemberAsync.Clear();
+        delete testClassHeap;
+
+        // Example of the smart pointer function version of the delegate. The testClassSp instance 
+        // is only deleted after workerThread1 invokes the callback function thus solving the bug.
+        std::shared_ptr<TestClass> testClassSp(new TestClass());
+        auto delegateMemberSpAsync = MakeDelegate(testClassSp, &TestClass::MemberFuncStdString, &workerThread1);
+        delegateMemberSpAsync("Function async invoked using smart pointer. Bug solved!", 2016);
+        delegateMemberSpAsync.Clear();
+        testClassSp.reset();
+
+        // Create a SysDataClient instance on the stack
+        SysDataClient sysDataClient;
+
+        // Set new SystemMode values. Each call will invoke callbacks to all 
+        // registered client subscribers.
+        SysData::GetInstance().SetSystemMode(SystemMode::STARTING);
+        SysData::GetInstance().SetSystemMode(SystemMode::NORMAL);
+
+        // Set new SystemMode values for SysDataNoLock.
+        SysDataNoLock::GetInstance().SetSystemMode(SystemMode::SERVICE);
+        SysDataNoLock::GetInstance().SetSystemMode(SystemMode::SYS_INOP);
+
+        // Set new SystemMode values for SysDataNoLock using async API
+        SysDataNoLock::GetInstance().SetSystemModeAsyncAPI(SystemMode::SERVICE);
+        SysDataNoLock::GetInstance().SetSystemModeAsyncAPI(SystemMode::SYS_INOP);
+
+        // Set new SystemMode values for SysDataNoLock using async wait API
+        SystemMode::Type previousMode;
+        previousMode = SysDataNoLock::GetInstance().SetSystemModeAsyncWaitAPI(SystemMode::STARTING);
+        previousMode = SysDataNoLock::GetInstance().SetSystemModeAsyncWaitAPI(SystemMode::NORMAL);
+    }
+
+
+#ifdef WIN32
+    QueryPerformanceCounter(&EndingTime);
+    ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
+    ElapsedMicroseconds.QuadPart *= 1000000;
+    ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
+    std::cout << "Elapsed Time: " << (float)ElapsedMicroseconds.QuadPart / 1000000.0f << " seconds" << std::endl;
+#endif
+
+   	workerThread1.ExitThread();
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
-
-	workerThread1.ExitThread();
 
 	return 0;
 }

@@ -1,4 +1,3 @@
-#if 0
 #include "DelegateLib.h"
 #include <iostream>
 #if USE_STD_THREADS
@@ -185,7 +184,7 @@ void SinglecastDelegateTests()
 	StructParam* pStructParam = &structParam;
 
 	// N=0 Free Functions
-	SinglecastDelegate0<> FreeFunc0SinglecastDelegate;
+	SinglecastDelegate<void(void)> FreeFunc0SinglecastDelegate;
 	ASSERT_TRUE(FreeFunc0SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFunc0SinglecastDelegate);
 	FreeFunc0SinglecastDelegate = MakeDelegate(&FreeFunc0);
@@ -195,14 +194,14 @@ void SinglecastDelegateTests()
 	FreeFunc0SinglecastDelegate.Clear();
 	ASSERT_TRUE(!FreeFunc0SinglecastDelegate);
 
-	SinglecastDelegate0<INT> FreeFuncIntWithReturn0SinglecastDelegate;
+	SinglecastDelegate<INT(void)> FreeFuncIntWithReturn0SinglecastDelegate;
 	FreeFuncIntWithReturn0SinglecastDelegate = MakeDelegate(&FreeFuncIntWithReturn0);
 	ASSERT_TRUE(FreeFuncIntWithReturn0SinglecastDelegate() == TEST_INT);
 
 	// N=0 Member Functions
 	TestClass0 testClass0;
 
-	SinglecastDelegate0<> MemberFunc0SinglecastDelegate;
+	SinglecastDelegate<void(void)> MemberFunc0SinglecastDelegate;
 	ASSERT_TRUE(MemberFunc0SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFunc0SinglecastDelegate);
 	MemberFunc0SinglecastDelegate = MakeDelegate(&testClass0, &TestClass0::MemberFunc0);
@@ -212,17 +211,17 @@ void SinglecastDelegateTests()
 	MemberFunc0SinglecastDelegate.Clear();
 	ASSERT_TRUE(!MemberFunc0SinglecastDelegate);
 
-	SinglecastDelegate0<INT> MemberFuncIntWithReturn0SinglecastDelegate;
+	SinglecastDelegate<INT(void)> MemberFuncIntWithReturn0SinglecastDelegate;
 	MemberFuncIntWithReturn0SinglecastDelegate = MakeDelegate(&testClass0, &TestClass0::MemberFuncWithReturn0);
 	ASSERT_TRUE(MemberFuncIntWithReturn0SinglecastDelegate() == TEST_INT);
 
 	// N=0 Static Functions
-	SinglecastDelegate0<> StaticFunc0SinglecastDelegate;
+	SinglecastDelegate<void(void)> StaticFunc0SinglecastDelegate;
 	StaticFunc0SinglecastDelegate = MakeDelegate(&TestClass0::StaticFunc0);
 	StaticFunc0SinglecastDelegate();
 
 	// N=1 Free Functions
-	SinglecastDelegate1<INT> FreeFuncInt1SinglecastDelegate;
+	SinglecastDelegate<void(INT)> FreeFuncInt1SinglecastDelegate;
 	ASSERT_TRUE(FreeFuncInt1SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt1SinglecastDelegate);
 	FreeFuncInt1SinglecastDelegate = MakeDelegate(&FreeFuncInt1);
@@ -232,38 +231,38 @@ void SinglecastDelegateTests()
 	FreeFuncInt1SinglecastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt1SinglecastDelegate);
 
-	SinglecastDelegate1<INT, INT> FreeFuncIntWithReturn1SinglecastDelegate;
+	SinglecastDelegate<INT(INT)> FreeFuncIntWithReturn1SinglecastDelegate;
 	FreeFuncIntWithReturn1SinglecastDelegate = MakeDelegate(&FreeFuncIntWithReturn1);
 	ASSERT_TRUE(FreeFuncIntWithReturn1SinglecastDelegate(TEST_INT) == TEST_INT);
 
-	SinglecastDelegate1<StructParam**> FreeFuncPtrPtr1SinglecastDelegate;
+	SinglecastDelegate<void(StructParam**)> FreeFuncPtrPtr1SinglecastDelegate;
 	FreeFuncPtrPtr1SinglecastDelegate = MakeDelegate(&FreeFuncPtrPtr1);
 	FreeFuncPtrPtr1SinglecastDelegate(&pStructParam);
 
-	SinglecastDelegate1<StructParam> FreeFuncStruct1SinglecastDelegate;
+	SinglecastDelegate<void(StructParam)> FreeFuncStruct1SinglecastDelegate;
 	FreeFuncStruct1SinglecastDelegate = MakeDelegate(&FreeFuncStruct1);
 	FreeFuncStruct1SinglecastDelegate(structParam);
 
-	SinglecastDelegate1<StructParam*> FreeFuncStructPtr1SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*)> FreeFuncStructPtr1SinglecastDelegate;
 	FreeFuncStructPtr1SinglecastDelegate = MakeDelegate(&FreeFuncStructPtr1);
 	FreeFuncStructPtr1SinglecastDelegate(&structParam);
 
-	SinglecastDelegate1<const StructParam*> FreeFuncStructConstPtr1SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*)> FreeFuncStructConstPtr1SinglecastDelegate;
 	FreeFuncStructConstPtr1SinglecastDelegate = MakeDelegate(&FreeFuncStructConstPtr1);
 	FreeFuncStructConstPtr1SinglecastDelegate(&structParam);
 
-	SinglecastDelegate1<StructParam&> FreeFuncStructRef1SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&)> FreeFuncStructRef1SinglecastDelegate;
 	FreeFuncStructRef1SinglecastDelegate = MakeDelegate(&FreeFuncStructRef1);
 	FreeFuncStructRef1SinglecastDelegate(structParam);
 
-	SinglecastDelegate1<const StructParam&> FreeFuncStructConstRef1SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&)> FreeFuncStructConstRef1SinglecastDelegate;
 	FreeFuncStructConstRef1SinglecastDelegate = MakeDelegate(&FreeFuncStructConstRef1);
 	FreeFuncStructConstRef1SinglecastDelegate(structParam);
 
 	// N=1 Member Functions
 	TestClass1 testClass1;
 
-	SinglecastDelegate1<INT> MemberFuncInt1SinglecastDelegate;
+	SinglecastDelegate<void(INT)> MemberFuncInt1SinglecastDelegate;
 	ASSERT_TRUE(MemberFuncInt1SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt1SinglecastDelegate);
 	MemberFuncInt1SinglecastDelegate = MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1);
@@ -273,57 +272,57 @@ void SinglecastDelegateTests()
 	MemberFuncInt1SinglecastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt1SinglecastDelegate);
 
-	SinglecastDelegate1<INT, INT> MemberFuncIntWithReturn1SinglecastDelegate;
+	SinglecastDelegate<INT(INT)> MemberFuncIntWithReturn1SinglecastDelegate;
 	MemberFuncIntWithReturn1SinglecastDelegate = MakeDelegate(&testClass1, &TestClass1::MemberFuncIntWithReturn1);
 	ASSERT_TRUE(MemberFuncIntWithReturn1SinglecastDelegate(TEST_INT) == TEST_INT);
 
-	SinglecastDelegate1<StructParam> MemberFuncStruct1SinglecastDelegate;
+	SinglecastDelegate<void(StructParam)> MemberFuncStruct1SinglecastDelegate;
 	MemberFuncStruct1SinglecastDelegate = MakeDelegate(&testClass1, &TestClass1::MemberFuncStruct1);
 	MemberFuncStruct1SinglecastDelegate(structParam);
 
-	SinglecastDelegate1<StructParam*> MemberFuncStructPtr1SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*)> MemberFuncStructPtr1SinglecastDelegate;
 	MemberFuncStructPtr1SinglecastDelegate = MakeDelegate(&testClass1, &TestClass1::MemberFuncStructPtr1);
 	MemberFuncStructPtr1SinglecastDelegate(&structParam);
 
-	SinglecastDelegate1<const StructParam*> MemberFuncStructConstPtr1SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*)> MemberFuncStructConstPtr1SinglecastDelegate;
 	MemberFuncStructConstPtr1SinglecastDelegate = MakeDelegate(&testClass1, &TestClass1::MemberFuncStructConstPtr1);
 	MemberFuncStructConstPtr1SinglecastDelegate(&structParam);
 
-	SinglecastDelegate1<StructParam&> MemberFuncStructRef1SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&)> MemberFuncStructRef1SinglecastDelegate;
 	MemberFuncStructRef1SinglecastDelegate = MakeDelegate(&testClass1, &TestClass1::MemberFuncStructRef1);
 	MemberFuncStructRef1SinglecastDelegate(structParam);
 
-	SinglecastDelegate1<const StructParam&> MemberFuncStructConstRef1SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&)> MemberFuncStructConstRef1SinglecastDelegate;
 	MemberFuncStructConstRef1SinglecastDelegate = MakeDelegate(&testClass1, &TestClass1::MemberFuncStructConstRef1);
 	MemberFuncStructConstRef1SinglecastDelegate(structParam);
 
 	// N=1 Static Functions
-	SinglecastDelegate1<INT> StaticFuncInt1SinglecastDelegate;
+	SinglecastDelegate<void(INT)> StaticFuncInt1SinglecastDelegate;
 	StaticFuncInt1SinglecastDelegate = MakeDelegate(&TestClass1::StaticFuncInt1);
 	StaticFuncInt1SinglecastDelegate(TEST_INT);
 
-	SinglecastDelegate1<StructParam> StaticFuncStruct1SinglecastDelegate;
+	SinglecastDelegate<void(StructParam)> StaticFuncStruct1SinglecastDelegate;
 	StaticFuncStruct1SinglecastDelegate = MakeDelegate(&TestClass1::StaticFuncStruct1);
 	StaticFuncStruct1SinglecastDelegate(structParam);
 
-	SinglecastDelegate1<StructParam*> StaticFuncStructPtr1SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*)> StaticFuncStructPtr1SinglecastDelegate;
 	StaticFuncStructPtr1SinglecastDelegate = MakeDelegate(&TestClass1::StaticFuncStructPtr1);
 	StaticFuncStructPtr1SinglecastDelegate(&structParam);
 
-	SinglecastDelegate1<const StructParam*> StaticFuncStructConstPtr1SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*)> StaticFuncStructConstPtr1SinglecastDelegate;
 	StaticFuncStructConstPtr1SinglecastDelegate = MakeDelegate(&TestClass1::StaticFuncStructConstPtr1);
 	StaticFuncStructConstPtr1SinglecastDelegate(&structParam);
 
-	SinglecastDelegate1<StructParam&> StaticFuncStructRef1SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&)> StaticFuncStructRef1SinglecastDelegate;
 	StaticFuncStructRef1SinglecastDelegate = MakeDelegate(&TestClass1::StaticFuncStructRef1);
 	StaticFuncStructRef1SinglecastDelegate(structParam);
 
-	SinglecastDelegate1<const StructParam&> StaticFuncStructConstRef1SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&)> StaticFuncStructConstRef1SinglecastDelegate;
 	StaticFuncStructConstRef1SinglecastDelegate = MakeDelegate(&TestClass1::StaticFuncStructConstRef1);
 	StaticFuncStructConstRef1SinglecastDelegate(structParam);
 
 	// N=2 Free Functions
-	SinglecastDelegate2<INT, INT> FreeFuncInt2SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT)> FreeFuncInt2SinglecastDelegate;
 	ASSERT_TRUE(FreeFuncInt2SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt2SinglecastDelegate);
 	FreeFuncInt2SinglecastDelegate = MakeDelegate(&FreeFuncInt2);
@@ -333,38 +332,38 @@ void SinglecastDelegateTests()
 	FreeFuncInt2SinglecastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt2SinglecastDelegate);
 
-	SinglecastDelegate2<INT, INT, INT> FreeFuncIntWithReturn2SinglecastDelegate;
+	SinglecastDelegate<INT(INT, INT)> FreeFuncIntWithReturn2SinglecastDelegate;
 	FreeFuncIntWithReturn2SinglecastDelegate = MakeDelegate(&FreeFuncIntWithReturn2);
 	ASSERT_TRUE(FreeFuncIntWithReturn2SinglecastDelegate(TEST_INT, TEST_INT) == TEST_INT);
 
-	SinglecastDelegate2<StructParam**, INT> FreeFuncPtrPtr2SinglecastDelegate;
+	SinglecastDelegate<void(StructParam**, INT)> FreeFuncPtrPtr2SinglecastDelegate;
 	FreeFuncPtrPtr2SinglecastDelegate = MakeDelegate(&FreeFuncPtrPtr2);
 	FreeFuncPtrPtr2SinglecastDelegate(&pStructParam, TEST_INT);
 
-	SinglecastDelegate2<StructParam, INT> FreeFuncStruct2SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT)> FreeFuncStruct2SinglecastDelegate;
 	FreeFuncStruct2SinglecastDelegate = MakeDelegate(&FreeFuncStruct2);
 	FreeFuncStruct2SinglecastDelegate(structParam, TEST_INT);
 
-	SinglecastDelegate2<StructParam*, INT> FreeFuncStructPtr2SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT)> FreeFuncStructPtr2SinglecastDelegate;
 	FreeFuncStructPtr2SinglecastDelegate = MakeDelegate(&FreeFuncStructPtr2);
 	FreeFuncStructPtr2SinglecastDelegate(&structParam, TEST_INT);
 
-	SinglecastDelegate2<const StructParam*, INT> FreeFuncStructConstPtr2SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT)> FreeFuncStructConstPtr2SinglecastDelegate;
 	FreeFuncStructConstPtr2SinglecastDelegate = MakeDelegate(&FreeFuncStructConstPtr2);
 	FreeFuncStructConstPtr2SinglecastDelegate(&structParam, TEST_INT);
 
-	SinglecastDelegate2<StructParam&, INT> FreeFuncStructRef2SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT)> FreeFuncStructRef2SinglecastDelegate;
 	FreeFuncStructRef2SinglecastDelegate = MakeDelegate(&FreeFuncStructRef2);
 	FreeFuncStructRef2SinglecastDelegate(structParam, TEST_INT);
 
-	SinglecastDelegate2<const StructParam&, INT> FreeFuncStructConstRef2SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT)> FreeFuncStructConstRef2SinglecastDelegate;
 	FreeFuncStructConstRef2SinglecastDelegate = MakeDelegate(&FreeFuncStructConstRef2);
 	FreeFuncStructConstRef2SinglecastDelegate(structParam, TEST_INT);
 
 	// N=2 Member Functions
 	TestClass2 testClass2;
 
-	SinglecastDelegate2<INT, INT> MemberFuncInt2SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT)> MemberFuncInt2SinglecastDelegate;
 	ASSERT_TRUE(MemberFuncInt2SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt2SinglecastDelegate);
 	MemberFuncInt2SinglecastDelegate = MakeDelegate(&testClass2, &TestClass2::MemberFuncInt2);
@@ -374,57 +373,57 @@ void SinglecastDelegateTests()
 	MemberFuncInt2SinglecastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt2SinglecastDelegate);
 
-	SinglecastDelegate2<INT, INT, INT> MemberFuncIntWithReturn2SinglecastDelegate;
+	SinglecastDelegate<INT(INT, INT)> MemberFuncIntWithReturn2SinglecastDelegate;
 	MemberFuncIntWithReturn2SinglecastDelegate = MakeDelegate(&testClass2, &TestClass2::MemberFuncIntWithReturn2);
 	ASSERT_TRUE(MemberFuncIntWithReturn2SinglecastDelegate(TEST_INT, TEST_INT) == TEST_INT);
 
-	SinglecastDelegate2<StructParam, INT> MemberFuncStruct2SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT)> MemberFuncStruct2SinglecastDelegate;
 	MemberFuncStruct2SinglecastDelegate = MakeDelegate(&testClass2, &TestClass2::MemberFuncStruct2);
 	MemberFuncStruct2SinglecastDelegate(structParam, TEST_INT);
 
-	SinglecastDelegate2<StructParam*, INT> MemberFuncStructPtr2SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT)> MemberFuncStructPtr2SinglecastDelegate;
 	MemberFuncStructPtr2SinglecastDelegate = MakeDelegate(&testClass2, &TestClass2::MemberFuncStructPtr2);
 	MemberFuncStructPtr2SinglecastDelegate(&structParam, TEST_INT);
 
-	SinglecastDelegate2<const StructParam*, INT> MemberFuncStructConstPtr2SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT)> MemberFuncStructConstPtr2SinglecastDelegate;
 	MemberFuncStructConstPtr2SinglecastDelegate = MakeDelegate(&testClass2, &TestClass2::MemberFuncStructConstPtr2);
 	MemberFuncStructConstPtr2SinglecastDelegate(&structParam, TEST_INT);
 
-	SinglecastDelegate2<StructParam&, INT> MemberFuncStructRef2SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT)> MemberFuncStructRef2SinglecastDelegate;
 	MemberFuncStructRef2SinglecastDelegate = MakeDelegate(&testClass2, &TestClass2::MemberFuncStructRef2);
 	MemberFuncStructRef2SinglecastDelegate(structParam, TEST_INT);
 
-	SinglecastDelegate2<const StructParam&, INT> MemberFuncStructConstRef2SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT)> MemberFuncStructConstRef2SinglecastDelegate;
 	MemberFuncStructConstRef2SinglecastDelegate = MakeDelegate(&testClass2, &TestClass2::MemberFuncStructConstRef2);
 	MemberFuncStructConstRef2SinglecastDelegate(structParam, TEST_INT);
 
 	// N=2 Static Functions
-	SinglecastDelegate2<INT, INT> StaticFuncInt2SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT)> StaticFuncInt2SinglecastDelegate;
 	StaticFuncInt2SinglecastDelegate = MakeDelegate(&TestClass2::StaticFuncInt2);
 	StaticFuncInt2SinglecastDelegate(TEST_INT, TEST_INT);
 
-	SinglecastDelegate2<StructParam, INT> StaticFuncStruct2SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT)> StaticFuncStruct2SinglecastDelegate;
 	StaticFuncStruct2SinglecastDelegate = MakeDelegate(&TestClass2::StaticFuncStruct2);
 	StaticFuncStruct2SinglecastDelegate(structParam, TEST_INT);
 
-	SinglecastDelegate2<StructParam*, INT> StaticFuncStructPtr2SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT)> StaticFuncStructPtr2SinglecastDelegate;
 	StaticFuncStructPtr2SinglecastDelegate = MakeDelegate(&TestClass2::StaticFuncStructPtr2);
 	StaticFuncStructPtr2SinglecastDelegate(&structParam, TEST_INT);
 
-	SinglecastDelegate2<const StructParam*, INT> StaticFuncStructConstPtr2SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT)> StaticFuncStructConstPtr2SinglecastDelegate;
 	StaticFuncStructConstPtr2SinglecastDelegate = MakeDelegate(&TestClass2::StaticFuncStructConstPtr2);
 	StaticFuncStructConstPtr2SinglecastDelegate(&structParam, TEST_INT);
 
-	SinglecastDelegate2<StructParam&, INT> StaticFuncStructRef2SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT)> StaticFuncStructRef2SinglecastDelegate;
 	StaticFuncStructRef2SinglecastDelegate = MakeDelegate(&TestClass2::StaticFuncStructRef2);
 	StaticFuncStructRef2SinglecastDelegate(structParam, TEST_INT);
 
-	SinglecastDelegate2<const StructParam&, INT> StaticFuncStructConstRef2SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT)> StaticFuncStructConstRef2SinglecastDelegate;
 	StaticFuncStructConstRef2SinglecastDelegate = MakeDelegate(&TestClass2::StaticFuncStructConstRef2);
 	StaticFuncStructConstRef2SinglecastDelegate(structParam, TEST_INT);
 
 	// N=3 Free Functions
-	SinglecastDelegate3<INT, INT, INT> FreeFuncInt3SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT, INT)> FreeFuncInt3SinglecastDelegate;
 	ASSERT_TRUE(FreeFuncInt3SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt3SinglecastDelegate);
 	FreeFuncInt3SinglecastDelegate = MakeDelegate(&FreeFuncInt3);
@@ -434,38 +433,38 @@ void SinglecastDelegateTests()
 	FreeFuncInt3SinglecastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt3SinglecastDelegate);
 
-	SinglecastDelegate3<INT, INT, INT, INT> FreeFuncIntWithReturn3SinglecastDelegate;
+	SinglecastDelegate<INT(INT, INT, INT)> FreeFuncIntWithReturn3SinglecastDelegate;
 	FreeFuncIntWithReturn3SinglecastDelegate = MakeDelegate(&FreeFuncIntWithReturn3);
 	ASSERT_TRUE(FreeFuncIntWithReturn3SinglecastDelegate(TEST_INT, TEST_INT, TEST_INT) == TEST_INT);
 
-	SinglecastDelegate3<StructParam, INT, INT> FreeFuncStruct3SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT, INT)> FreeFuncStruct3SinglecastDelegate;
 	FreeFuncStruct3SinglecastDelegate = MakeDelegate(&FreeFuncStruct3);
 	FreeFuncStruct3SinglecastDelegate(structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<StructParam**, INT, INT> FreeFuncPtrPtr3SinglecastDelegate;
+	SinglecastDelegate<void(StructParam**, INT, INT)> FreeFuncPtrPtr3SinglecastDelegate;
 	FreeFuncPtrPtr3SinglecastDelegate = MakeDelegate(&FreeFuncPtrPtr3);
 	FreeFuncPtrPtr3SinglecastDelegate(&pStructParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<StructParam*, INT, INT> FreeFuncStructPtr3SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT, INT)> FreeFuncStructPtr3SinglecastDelegate;
 	FreeFuncStructPtr3SinglecastDelegate = MakeDelegate(&FreeFuncStructPtr3);
 	FreeFuncStructPtr3SinglecastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<const StructParam*, INT, INT> FreeFuncStructConstPtr3SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT, INT)> FreeFuncStructConstPtr3SinglecastDelegate;
 	FreeFuncStructConstPtr3SinglecastDelegate = MakeDelegate(&FreeFuncStructConstPtr3);
 	FreeFuncStructConstPtr3SinglecastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<StructParam&, INT, INT> FreeFuncStructRef3SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT, INT)> FreeFuncStructRef3SinglecastDelegate;
 	FreeFuncStructRef3SinglecastDelegate = MakeDelegate(&FreeFuncStructRef3);
 	FreeFuncStructRef3SinglecastDelegate(structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<const StructParam&, INT, INT> FreeFuncStructConstRef3SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT, INT)> FreeFuncStructConstRef3SinglecastDelegate;
 	FreeFuncStructConstRef3SinglecastDelegate = MakeDelegate(&FreeFuncStructConstRef3);
 	FreeFuncStructConstRef3SinglecastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=3 Member Functions
 	TestClass3 testClass3;
 
-	SinglecastDelegate3<INT, INT, INT> MemberFuncInt3SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT, INT)> MemberFuncInt3SinglecastDelegate;
 	ASSERT_TRUE(MemberFuncInt3SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt3SinglecastDelegate);
 	MemberFuncInt3SinglecastDelegate = MakeDelegate(&testClass3, &TestClass3::MemberFuncInt3);
@@ -475,57 +474,57 @@ void SinglecastDelegateTests()
 	MemberFuncInt3SinglecastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt3SinglecastDelegate);
 
-	SinglecastDelegate3<INT, INT, INT, INT> MemberFuncIntWithReturn3SinglecastDelegate;
+	SinglecastDelegate<INT(INT, INT, INT)> MemberFuncIntWithReturn3SinglecastDelegate;
 	MemberFuncIntWithReturn3SinglecastDelegate = MakeDelegate(&testClass3, &TestClass3::MemberFuncIntWithReturn3);
 	ASSERT_TRUE(MemberFuncIntWithReturn3SinglecastDelegate(TEST_INT, TEST_INT, TEST_INT) == TEST_INT);
 
-	SinglecastDelegate3<StructParam, INT, INT> MemberFuncStruct3SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT, INT)> MemberFuncStruct3SinglecastDelegate;
 	MemberFuncStruct3SinglecastDelegate = MakeDelegate(&testClass3, &TestClass3::MemberFuncStruct3);
 	MemberFuncStruct3SinglecastDelegate(structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<StructParam*, INT, INT> MemberFuncStructPtr3SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT, INT)> MemberFuncStructPtr3SinglecastDelegate;
 	MemberFuncStructPtr3SinglecastDelegate = MakeDelegate(&testClass3, &TestClass3::MemberFuncStructPtr3);
 	MemberFuncStructPtr3SinglecastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<const StructParam*, INT, INT> MemberFuncStructConstPtr3SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT, INT)> MemberFuncStructConstPtr3SinglecastDelegate;
 	MemberFuncStructConstPtr3SinglecastDelegate = MakeDelegate(&testClass3, &TestClass3::MemberFuncStructConstPtr3);
 	MemberFuncStructConstPtr3SinglecastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<StructParam&, INT, INT> MemberFuncStructRef3SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT, INT)> MemberFuncStructRef3SinglecastDelegate;
 	MemberFuncStructRef3SinglecastDelegate = MakeDelegate(&testClass3, &TestClass3::MemberFuncStructRef3);
 	MemberFuncStructRef3SinglecastDelegate(structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<const StructParam&, INT, INT> MemberFuncStructConstRef3SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT, INT)> MemberFuncStructConstRef3SinglecastDelegate;
 	MemberFuncStructConstRef3SinglecastDelegate = MakeDelegate(&testClass3, &TestClass3::MemberFuncStructConstRef3);
 	MemberFuncStructConstRef3SinglecastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=3 Static Functions
-	SinglecastDelegate3<INT, INT, INT> StaticFuncInt3SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT, INT)> StaticFuncInt3SinglecastDelegate;
 	StaticFuncInt3SinglecastDelegate = MakeDelegate(&TestClass3::StaticFuncInt3);
 	StaticFuncInt3SinglecastDelegate(TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<StructParam, INT, INT> StaticFuncStruct3SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT, INT)> StaticFuncStruct3SinglecastDelegate;
 	StaticFuncStruct3SinglecastDelegate = MakeDelegate(&TestClass3::StaticFuncStruct3);
 	StaticFuncStruct3SinglecastDelegate(structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<StructParam*, INT, INT> StaticFuncStructPtr3SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT, INT)> StaticFuncStructPtr3SinglecastDelegate;
 	StaticFuncStructPtr3SinglecastDelegate = MakeDelegate(&TestClass3::StaticFuncStructPtr3);
 	StaticFuncStructPtr3SinglecastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<const StructParam*, INT, INT> StaticFuncStructConstPtr3SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT, INT)> StaticFuncStructConstPtr3SinglecastDelegate;
 	StaticFuncStructConstPtr3SinglecastDelegate = MakeDelegate(&TestClass3::StaticFuncStructConstPtr3);
 	StaticFuncStructConstPtr3SinglecastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<StructParam&, INT, INT> StaticFuncStructRef3SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT, INT)> StaticFuncStructRef3SinglecastDelegate;
 	StaticFuncStructRef3SinglecastDelegate = MakeDelegate(&TestClass3::StaticFuncStructRef3);
 	StaticFuncStructRef3SinglecastDelegate(structParam, TEST_INT, TEST_INT);
 
-	SinglecastDelegate3<const StructParam&, INT, INT> StaticFuncStructConstRef3SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT, INT)> StaticFuncStructConstRef3SinglecastDelegate;
 	StaticFuncStructConstRef3SinglecastDelegate = MakeDelegate(&TestClass3::StaticFuncStructConstRef3);
 	StaticFuncStructConstRef3SinglecastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=4 Free Functions
-	SinglecastDelegate4<INT, INT, INT, INT> FreeFuncInt4SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT, INT, INT)> FreeFuncInt4SinglecastDelegate;
 	ASSERT_TRUE(FreeFuncInt4SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt4SinglecastDelegate);
 	FreeFuncInt4SinglecastDelegate = MakeDelegate(&FreeFuncInt4);
@@ -535,38 +534,38 @@ void SinglecastDelegateTests()
 	FreeFuncInt4SinglecastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt4SinglecastDelegate);
 
-	SinglecastDelegate4<INT, INT, INT, INT, INT> FreeFuncIntWithReturn4SinglecastDelegate;
+	SinglecastDelegate<INT(INT, INT, INT, INT)> FreeFuncIntWithReturn4SinglecastDelegate;
 	FreeFuncIntWithReturn4SinglecastDelegate = MakeDelegate(&FreeFuncIntWithReturn4);
 	ASSERT_TRUE(FreeFuncIntWithReturn4SinglecastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT) == TEST_INT);
 
-	SinglecastDelegate4<StructParam, INT, INT, INT> FreeFuncStruct4SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT, INT, INT)> FreeFuncStruct4SinglecastDelegate;
 	FreeFuncStruct4SinglecastDelegate = MakeDelegate(&FreeFuncStruct4);
 	FreeFuncStruct4SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<StructParam**, INT, INT, INT> FreeFuncPtrPtr4SinglecastDelegate;
+	SinglecastDelegate<void(StructParam**, INT, INT, INT)> FreeFuncPtrPtr4SinglecastDelegate;
 	FreeFuncPtrPtr4SinglecastDelegate = MakeDelegate(&FreeFuncPtrPtr4);
 	FreeFuncPtrPtr4SinglecastDelegate(&pStructParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<StructParam*, INT, INT, INT> FreeFuncStructPtr4SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT, INT, INT)> FreeFuncStructPtr4SinglecastDelegate;
 	FreeFuncStructPtr4SinglecastDelegate = MakeDelegate(&FreeFuncStructPtr4);
 	FreeFuncStructPtr4SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<const StructParam*, INT, INT, INT> FreeFuncStructConstPtr4SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT, INT, INT)> FreeFuncStructConstPtr4SinglecastDelegate;
 	FreeFuncStructConstPtr4SinglecastDelegate = MakeDelegate(&FreeFuncStructConstPtr4);
 	FreeFuncStructConstPtr4SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<StructParam&, INT, INT, INT> FreeFuncStructRef4SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT, INT, INT)> FreeFuncStructRef4SinglecastDelegate;
 	FreeFuncStructRef4SinglecastDelegate = MakeDelegate(&FreeFuncStructRef4);
 	FreeFuncStructRef4SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<const StructParam&, INT, INT, INT> FreeFuncStructConstRef4SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT, INT, INT)> FreeFuncStructConstRef4SinglecastDelegate;
 	FreeFuncStructConstRef4SinglecastDelegate = MakeDelegate(&FreeFuncStructConstRef4);
 	FreeFuncStructConstRef4SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=4 Member Functions
 	TestClass4 testClass4;
 
-	SinglecastDelegate4<INT, INT, INT, INT> MemberFuncInt4SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT, INT, INT)> MemberFuncInt4SinglecastDelegate;
 	ASSERT_TRUE(MemberFuncInt4SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt4SinglecastDelegate);
 	MemberFuncInt4SinglecastDelegate = MakeDelegate(&testClass4, &TestClass4::MemberFuncInt4);
@@ -576,57 +575,57 @@ void SinglecastDelegateTests()
 	MemberFuncInt4SinglecastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt4SinglecastDelegate);
 
-	SinglecastDelegate4<INT, INT, INT, INT, INT> MemberFuncIntWithReturn4SinglecastDelegate;
+	SinglecastDelegate<INT(INT, INT, INT, INT)> MemberFuncIntWithReturn4SinglecastDelegate;
 	MemberFuncIntWithReturn4SinglecastDelegate = MakeDelegate(&testClass4, &TestClass4::MemberFuncIntWithReturn4);
 	ASSERT_TRUE(MemberFuncIntWithReturn4SinglecastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT) == TEST_INT);
 
-	SinglecastDelegate4<StructParam, INT, INT, INT> MemberFuncStruct4SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT, INT, INT)> MemberFuncStruct4SinglecastDelegate;
 	MemberFuncStruct4SinglecastDelegate = MakeDelegate(&testClass4, &TestClass4::MemberFuncStruct4);
 	MemberFuncStruct4SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<StructParam*, INT, INT, INT> MemberFuncStructPtr4SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT, INT, INT)> MemberFuncStructPtr4SinglecastDelegate;
 	MemberFuncStructPtr4SinglecastDelegate = MakeDelegate(&testClass4, &TestClass4::MemberFuncStructPtr4);
 	MemberFuncStructPtr4SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<const StructParam*, INT, INT, INT> MemberFuncStructConstPtr4SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT, INT, INT)> MemberFuncStructConstPtr4SinglecastDelegate;
 	MemberFuncStructConstPtr4SinglecastDelegate = MakeDelegate(&testClass4, &TestClass4::MemberFuncStructConstPtr4);
 	MemberFuncStructConstPtr4SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<StructParam&, INT, INT, INT> MemberFuncStructRef4SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT, INT, INT)> MemberFuncStructRef4SinglecastDelegate;
 	MemberFuncStructRef4SinglecastDelegate = MakeDelegate(&testClass4, &TestClass4::MemberFuncStructRef4);
 	MemberFuncStructRef4SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<const StructParam&, INT, INT, INT> MemberFuncStructConstRef4SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT, INT, INT)> MemberFuncStructConstRef4SinglecastDelegate;
 	MemberFuncStructConstRef4SinglecastDelegate = MakeDelegate(&testClass4, &TestClass4::MemberFuncStructConstRef4);
 	MemberFuncStructConstRef4SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=4 Static Functions
-	SinglecastDelegate4<INT, INT, INT, INT> StaticFuncInt4SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT, INT, INT)> StaticFuncInt4SinglecastDelegate;
 	StaticFuncInt4SinglecastDelegate = MakeDelegate(&TestClass4::StaticFuncInt4);
 	StaticFuncInt4SinglecastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<StructParam, INT, INT, INT> StaticFuncStruct4SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT, INT, INT)> StaticFuncStruct4SinglecastDelegate;
 	StaticFuncStruct4SinglecastDelegate = MakeDelegate(&TestClass4::StaticFuncStruct4);
 	StaticFuncStruct4SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<StructParam*, INT, INT, INT> StaticFuncStructPtr4SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT, INT, INT)> StaticFuncStructPtr4SinglecastDelegate;
 	StaticFuncStructPtr4SinglecastDelegate = MakeDelegate(&TestClass4::StaticFuncStructPtr4);
 	StaticFuncStructPtr4SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<const StructParam*, INT, INT, INT> StaticFuncStructConstPtr4SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT, INT, INT)> StaticFuncStructConstPtr4SinglecastDelegate;
 	StaticFuncStructConstPtr4SinglecastDelegate = MakeDelegate(&TestClass4::StaticFuncStructConstPtr4);
 	StaticFuncStructConstPtr4SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<StructParam&, INT, INT, INT> StaticFuncStructRef4SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT, INT, INT)> StaticFuncStructRef4SinglecastDelegate;
 	StaticFuncStructRef4SinglecastDelegate = MakeDelegate(&TestClass4::StaticFuncStructRef4);
 	StaticFuncStructRef4SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate4<const StructParam&, INT, INT, INT> StaticFuncStructConstRef4SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT, INT, INT)> StaticFuncStructConstRef4SinglecastDelegate;
 	StaticFuncStructConstRef4SinglecastDelegate = MakeDelegate(&TestClass4::StaticFuncStructConstRef4);
 	StaticFuncStructConstRef4SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Free Functions
-	SinglecastDelegate5<INT, INT, INT, INT, INT> FreeFuncInt5SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT, INT, INT, INT)> FreeFuncInt5SinglecastDelegate;
 	ASSERT_TRUE(FreeFuncInt5SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt5SinglecastDelegate);
 	FreeFuncInt5SinglecastDelegate = MakeDelegate(&FreeFuncInt5);
@@ -636,38 +635,38 @@ void SinglecastDelegateTests()
 	FreeFuncInt5SinglecastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt5SinglecastDelegate);
 
-	SinglecastDelegate5<INT, INT, INT, INT, INT, INT> FreeFuncIntWithReturn5SinglecastDelegate;
+	SinglecastDelegate<INT(INT, INT, INT, INT, INT)> FreeFuncIntWithReturn5SinglecastDelegate;
 	FreeFuncIntWithReturn5SinglecastDelegate = MakeDelegate(&FreeFuncIntWithReturn5);
 	ASSERT_TRUE(FreeFuncIntWithReturn5SinglecastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT) == TEST_INT);
 
-	SinglecastDelegate5<StructParam, INT, INT, INT, INT> FreeFuncStruct5SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT, INT, INT, INT)> FreeFuncStruct5SinglecastDelegate;
 	FreeFuncStruct5SinglecastDelegate = MakeDelegate(&FreeFuncStruct5);
 	FreeFuncStruct5SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<StructParam**, INT, INT, INT, INT> FreeFuncPtrPtr5SinglecastDelegate;
+	SinglecastDelegate<void(StructParam**, INT, INT, INT, INT)> FreeFuncPtrPtr5SinglecastDelegate;
 	FreeFuncPtrPtr5SinglecastDelegate = MakeDelegate(&FreeFuncPtrPtr5);
 	FreeFuncPtrPtr5SinglecastDelegate(&pStructParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<StructParam*, INT, INT, INT, INT> FreeFuncStructPtr5SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT, INT, INT, INT)> FreeFuncStructPtr5SinglecastDelegate;
 	FreeFuncStructPtr5SinglecastDelegate = MakeDelegate(&FreeFuncStructPtr5);
 	FreeFuncStructPtr5SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<const StructParam*, INT, INT, INT, INT> FreeFuncStructConstPtr5SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT, INT, INT, INT)> FreeFuncStructConstPtr5SinglecastDelegate;
 	FreeFuncStructConstPtr5SinglecastDelegate = MakeDelegate(&FreeFuncStructConstPtr5);
 	FreeFuncStructConstPtr5SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<StructParam&, INT, INT, INT, INT> FreeFuncStructRef5SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT, INT, INT, INT)> FreeFuncStructRef5SinglecastDelegate;
 	FreeFuncStructRef5SinglecastDelegate = MakeDelegate(&FreeFuncStructRef5);
 	FreeFuncStructRef5SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<const StructParam&, INT, INT, INT, INT> FreeFuncStructConstRef5SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT, INT, INT, INT)> FreeFuncStructConstRef5SinglecastDelegate;
 	FreeFuncStructConstRef5SinglecastDelegate = MakeDelegate(&FreeFuncStructConstRef5);
 	FreeFuncStructConstRef5SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Member Functions
 	TestClass5 testClass5;
 
-	SinglecastDelegate5<INT, INT, INT, INT, INT> MemberFuncInt5SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT, INT, INT, INT)> MemberFuncInt5SinglecastDelegate;
 	ASSERT_TRUE(MemberFuncInt5SinglecastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt5SinglecastDelegate);
 	MemberFuncInt5SinglecastDelegate = MakeDelegate(&testClass5, &TestClass5::MemberFuncInt5);
@@ -677,52 +676,52 @@ void SinglecastDelegateTests()
 	MemberFuncInt5SinglecastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt5SinglecastDelegate);
 
-	SinglecastDelegate5<INT, INT, INT, INT, INT, INT> MemberFuncIntWithReturn5SinglecastDelegate;
+	SinglecastDelegate<INT(INT, INT, INT, INT, INT)> MemberFuncIntWithReturn5SinglecastDelegate;
 	MemberFuncIntWithReturn5SinglecastDelegate = MakeDelegate(&testClass5, &TestClass5::MemberFuncIntWithReturn5);
 	ASSERT_TRUE(MemberFuncIntWithReturn5SinglecastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT) == TEST_INT);
 
-	SinglecastDelegate5<StructParam, INT, INT, INT, INT> MemberFuncStruct5SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT, INT, INT, INT)> MemberFuncStruct5SinglecastDelegate;
 	MemberFuncStruct5SinglecastDelegate = MakeDelegate(&testClass5, &TestClass5::MemberFuncStruct5);
 	MemberFuncStruct5SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<StructParam*, INT, INT, INT, INT> MemberFuncStructPtr5SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT, INT, INT, INT)> MemberFuncStructPtr5SinglecastDelegate;
 	MemberFuncStructPtr5SinglecastDelegate = MakeDelegate(&testClass5, &TestClass5::MemberFuncStructPtr5);
 	MemberFuncStructPtr5SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<const StructParam*, INT, INT, INT, INT> MemberFuncStructConstPtr5SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT, INT, INT, INT)> MemberFuncStructConstPtr5SinglecastDelegate;
 	MemberFuncStructConstPtr5SinglecastDelegate = MakeDelegate(&testClass5, &TestClass5::MemberFuncStructConstPtr5);
 	MemberFuncStructConstPtr5SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<StructParam&, INT, INT, INT, INT> MemberFuncStructRef5SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT, INT, INT, INT)> MemberFuncStructRef5SinglecastDelegate;
 	MemberFuncStructRef5SinglecastDelegate = MakeDelegate(&testClass5, &TestClass5::MemberFuncStructRef5);
 	MemberFuncStructRef5SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<const StructParam&, INT, INT, INT, INT> MemberFuncStructConstRef5SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT, INT, INT, INT)> MemberFuncStructConstRef5SinglecastDelegate;
 	MemberFuncStructConstRef5SinglecastDelegate = MakeDelegate(&testClass5, &TestClass5::MemberFuncStructConstRef5);
 	MemberFuncStructConstRef5SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Static Functions
-	SinglecastDelegate5<INT, INT, INT, INT, INT> StaticFuncInt5SinglecastDelegate;
+	SinglecastDelegate<void(INT, INT, INT, INT, INT)> StaticFuncInt5SinglecastDelegate;
 	StaticFuncInt5SinglecastDelegate = MakeDelegate(&TestClass5::StaticFuncInt5);
 	StaticFuncInt5SinglecastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<StructParam, INT, INT, INT, INT> StaticFuncStruct5SinglecastDelegate;
+	SinglecastDelegate<void(StructParam, INT, INT, INT, INT)> StaticFuncStruct5SinglecastDelegate;
 	StaticFuncStruct5SinglecastDelegate = MakeDelegate(&TestClass5::StaticFuncStruct5);
 	StaticFuncStruct5SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<StructParam*, INT, INT, INT, INT> StaticFuncStructPtr5SinglecastDelegate;
+	SinglecastDelegate<void(StructParam*, INT, INT, INT, INT)> StaticFuncStructPtr5SinglecastDelegate;
 	StaticFuncStructPtr5SinglecastDelegate = MakeDelegate(&TestClass5::StaticFuncStructPtr5);
 	StaticFuncStructPtr5SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<const StructParam*, INT, INT, INT, INT> StaticFuncStructConstPtr5SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam*, INT, INT, INT, INT)> StaticFuncStructConstPtr5SinglecastDelegate;
 	StaticFuncStructConstPtr5SinglecastDelegate = MakeDelegate(&TestClass5::StaticFuncStructConstPtr5);
 	StaticFuncStructConstPtr5SinglecastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<StructParam&, INT, INT, INT, INT> StaticFuncStructRef5SinglecastDelegate;
+	SinglecastDelegate<void(StructParam&, INT, INT, INT, INT)> StaticFuncStructRef5SinglecastDelegate;
 	StaticFuncStructRef5SinglecastDelegate = MakeDelegate(&TestClass5::StaticFuncStructRef5);
 	StaticFuncStructRef5SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	SinglecastDelegate5<const StructParam&, INT, INT, INT, INT> StaticFuncStructConstRef5SinglecastDelegate;
+	SinglecastDelegate<void(const StructParam&, INT, INT, INT, INT)> StaticFuncStructConstRef5SinglecastDelegate;
 	StaticFuncStructConstRef5SinglecastDelegate = MakeDelegate(&TestClass5::StaticFuncStructConstRef5);
 	StaticFuncStructConstRef5SinglecastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 }
@@ -733,7 +732,7 @@ void MulticastDelegateTests()
 	structParam.val = TEST_INT;
 
 	// N=0 Free Functions
-	MulticastDelegate0 FreeFunc0MulticastDelegate;
+	MulticastDelegate<void(void)> FreeFunc0MulticastDelegate;
 	ASSERT_TRUE(FreeFunc0MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFunc0MulticastDelegate);
 	FreeFunc0MulticastDelegate += MakeDelegate(&FreeFunc0);
@@ -749,7 +748,7 @@ void MulticastDelegateTests()
 	// N=0 Member Functions
 	TestClass0 testClass0;
 
-	MulticastDelegate0 MemberFunc0MulticastDelegate;
+	MulticastDelegate<void(void)> MemberFunc0MulticastDelegate;
 	ASSERT_TRUE(MemberFunc0MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFunc0MulticastDelegate);
 	MemberFunc0MulticastDelegate += MakeDelegate(&testClass0, &TestClass0::MemberFunc0);
@@ -760,12 +759,12 @@ void MulticastDelegateTests()
 	ASSERT_TRUE(!MemberFunc0MulticastDelegate);
 
 	// N=0 Static Functions
-	MulticastDelegate0 StaticFunc0MulticastDelegate;
+	MulticastDelegate<void(void)> StaticFunc0MulticastDelegate;
 	StaticFunc0MulticastDelegate += MakeDelegate(&TestClass0::StaticFunc0);
 	StaticFunc0MulticastDelegate();
 
 	// N=1 Free Functions
-	MulticastDelegate1<INT> FreeFuncInt1MulticastDelegate;
+	MulticastDelegate<void(INT)> FreeFuncInt1MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt1MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt1MulticastDelegate);
 	FreeFuncInt1MulticastDelegate += MakeDelegate(&FreeFuncInt1);
@@ -778,30 +777,30 @@ void MulticastDelegateTests()
 	FreeFuncInt1MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt1MulticastDelegate);
 
-	MulticastDelegate1<StructParam> FreeFuncStruct1MulticastDelegate;
+	MulticastDelegate<void(StructParam)> FreeFuncStruct1MulticastDelegate;
 	FreeFuncStruct1MulticastDelegate += MakeDelegate(&FreeFuncStruct1);
 	FreeFuncStruct1MulticastDelegate(structParam);
 
-	MulticastDelegate1<StructParam*> FreeFuncStructPtr1MulticastDelegate;
+	MulticastDelegate<void(StructParam*)> FreeFuncStructPtr1MulticastDelegate;
 	FreeFuncStructPtr1MulticastDelegate += MakeDelegate(&FreeFuncStructPtr1);
 	FreeFuncStructPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegate1<const StructParam*> FreeFuncStructConstPtr1MulticastDelegate;
+	MulticastDelegate<void(const StructParam*)> FreeFuncStructConstPtr1MulticastDelegate;
 	FreeFuncStructConstPtr1MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr1);
 	FreeFuncStructConstPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegate1<StructParam&> FreeFuncStructRef1MulticastDelegate;
+	MulticastDelegate<void(StructParam&)> FreeFuncStructRef1MulticastDelegate;
 	FreeFuncStructRef1MulticastDelegate += MakeDelegate(&FreeFuncStructRef1);
 	FreeFuncStructRef1MulticastDelegate(structParam);
 
-	MulticastDelegate1<const StructParam&> FreeFuncStructConstRef1MulticastDelegate;
+	MulticastDelegate<void(const StructParam&)> FreeFuncStructConstRef1MulticastDelegate;
 	FreeFuncStructConstRef1MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef1);
 	FreeFuncStructConstRef1MulticastDelegate(structParam);
 
 	// N=1 Member Functions
 	TestClass1 testClass1;
 
-	MulticastDelegate1<INT> MemberFuncInt1MulticastDelegate;
+	MulticastDelegate<void(INT)> MemberFuncInt1MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt1MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt1MulticastDelegate);
 	MemberFuncInt1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1);
@@ -811,53 +810,53 @@ void MulticastDelegateTests()
 	MemberFuncInt1MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt1MulticastDelegate);
 
-	MulticastDelegate1<StructParam> MemberFuncStruct1MulticastDelegate;
+	MulticastDelegate<void(StructParam)> MemberFuncStruct1MulticastDelegate;
 	MemberFuncStruct1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStruct1);
 	MemberFuncStruct1MulticastDelegate(structParam);
 
-	MulticastDelegate1<StructParam*> MemberFuncStructPtr1MulticastDelegate;
+	MulticastDelegate<void(StructParam*)> MemberFuncStructPtr1MulticastDelegate;
 	MemberFuncStructPtr1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructPtr1);
 	MemberFuncStructPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegate1<const StructParam*> MemberFuncStructConstPtr1MulticastDelegate;
+	MulticastDelegate<void(const StructParam*)> MemberFuncStructConstPtr1MulticastDelegate;
 	MemberFuncStructConstPtr1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructConstPtr1);
 	MemberFuncStructConstPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegate1<StructParam&> MemberFuncStructRef1MulticastDelegate;
+	MulticastDelegate<void(StructParam&)> MemberFuncStructRef1MulticastDelegate;
 	MemberFuncStructRef1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructRef1);
 	MemberFuncStructRef1MulticastDelegate(structParam);
 
-	MulticastDelegate1<const StructParam&> MemberFuncStructConstRef1MulticastDelegate;
+	MulticastDelegate<void(const StructParam&)> MemberFuncStructConstRef1MulticastDelegate;
 	MemberFuncStructConstRef1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructConstRef1);
 	MemberFuncStructConstRef1MulticastDelegate(structParam);
 
 	// N=1 Static Functions
-	MulticastDelegate1<INT> StaticFuncInt1MulticastDelegate;
+	MulticastDelegate<void(INT)> StaticFuncInt1MulticastDelegate;
 	StaticFuncInt1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncInt1);
 	StaticFuncInt1MulticastDelegate(TEST_INT);
 
-	MulticastDelegate1<StructParam> StaticFuncStruct1MulticastDelegate;
+	MulticastDelegate<void(StructParam)> StaticFuncStruct1MulticastDelegate;
 	StaticFuncStruct1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStruct1);
 	StaticFuncStruct1MulticastDelegate(structParam);
 
-	MulticastDelegate1<StructParam*> StaticFuncStructPtr1MulticastDelegate;
+	MulticastDelegate<void(StructParam*)> StaticFuncStructPtr1MulticastDelegate;
 	StaticFuncStructPtr1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructPtr1);
 	StaticFuncStructPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegate1<const StructParam*> StaticFuncStructConstPtr1MulticastDelegate;
+	MulticastDelegate<void(const StructParam*)> StaticFuncStructConstPtr1MulticastDelegate;
 	StaticFuncStructConstPtr1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructConstPtr1);
 	StaticFuncStructConstPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegate1<StructParam&> StaticFuncStructRef1MulticastDelegate;
+	MulticastDelegate<void(StructParam&)> StaticFuncStructRef1MulticastDelegate;
 	StaticFuncStructRef1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructRef1);
 	StaticFuncStructRef1MulticastDelegate(structParam);
 
-	MulticastDelegate1<const StructParam&> StaticFuncStructConstRef1MulticastDelegate;
+	MulticastDelegate<void(const StructParam&)> StaticFuncStructConstRef1MulticastDelegate;
 	StaticFuncStructConstRef1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructConstRef1);
 	StaticFuncStructConstRef1MulticastDelegate(structParam);
 
 	// N=2 Free Functions
-	MulticastDelegate2<INT, INT> FreeFuncInt2MulticastDelegate;
+	MulticastDelegate<void(INT, INT)> FreeFuncInt2MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt2MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt2MulticastDelegate);
 	FreeFuncInt2MulticastDelegate += MakeDelegate(&FreeFuncInt2);
@@ -870,30 +869,30 @@ void MulticastDelegateTests()
 	FreeFuncInt2MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt2MulticastDelegate);
 
-	MulticastDelegate2<StructParam, INT> FreeFuncStruct2MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT)> FreeFuncStruct2MulticastDelegate;
 	FreeFuncStruct2MulticastDelegate += MakeDelegate(&FreeFuncStruct2);
 	FreeFuncStruct2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegate2<StructParam*, INT> FreeFuncStructPtr2MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT)> FreeFuncStructPtr2MulticastDelegate;
 	FreeFuncStructPtr2MulticastDelegate += MakeDelegate(&FreeFuncStructPtr2);
 	FreeFuncStructPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegate2<const StructParam*, INT> FreeFuncStructConstPtr2MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT)> FreeFuncStructConstPtr2MulticastDelegate;
 	FreeFuncStructConstPtr2MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr2);
 	FreeFuncStructConstPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegate2<StructParam&, INT> FreeFuncStructRef2MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT)> FreeFuncStructRef2MulticastDelegate;
 	FreeFuncStructRef2MulticastDelegate += MakeDelegate(&FreeFuncStructRef2);
 	FreeFuncStructRef2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegate2<const StructParam&, INT> FreeFuncStructConstRef2MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT)> FreeFuncStructConstRef2MulticastDelegate;
 	FreeFuncStructConstRef2MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef2);
 	FreeFuncStructConstRef2MulticastDelegate(structParam, TEST_INT);
 
 	// N=2 Member Functions
 	TestClass2 testClass2;
 
-	MulticastDelegate2<INT, INT> MemberFuncInt2MulticastDelegate;
+	MulticastDelegate<void(INT, INT)> MemberFuncInt2MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt2MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt2MulticastDelegate);
 	MemberFuncInt2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncInt2);
@@ -903,53 +902,53 @@ void MulticastDelegateTests()
 	MemberFuncInt2MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt2MulticastDelegate);
 
-	MulticastDelegate2<StructParam, INT> MemberFuncStruct2MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT)> MemberFuncStruct2MulticastDelegate;
 	MemberFuncStruct2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStruct2);
 	MemberFuncStruct2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegate2<StructParam*, INT> MemberFuncStructPtr2MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT)> MemberFuncStructPtr2MulticastDelegate;
 	MemberFuncStructPtr2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructPtr2);
 	MemberFuncStructPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegate2<const StructParam*, INT> MemberFuncStructConstPtr2MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT)> MemberFuncStructConstPtr2MulticastDelegate;
 	MemberFuncStructConstPtr2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructConstPtr2);
 	MemberFuncStructConstPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegate2<StructParam&, INT> MemberFuncStructRef2MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT)> MemberFuncStructRef2MulticastDelegate;
 	MemberFuncStructRef2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructRef2);
 	MemberFuncStructRef2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegate2<const StructParam&, INT> MemberFuncStructConstRef2MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT)> MemberFuncStructConstRef2MulticastDelegate;
 	MemberFuncStructConstRef2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructConstRef2);
 	MemberFuncStructConstRef2MulticastDelegate(structParam, TEST_INT);
 
 	// N=2 Static Functions
-	MulticastDelegate2<INT, INT> StaticFuncInt2MulticastDelegate;
+	MulticastDelegate<void(INT, INT)> StaticFuncInt2MulticastDelegate;
 	StaticFuncInt2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncInt2);
 	StaticFuncInt2MulticastDelegate(TEST_INT, TEST_INT);
 
-	MulticastDelegate2<StructParam, INT> StaticFuncStruct2MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT)> StaticFuncStruct2MulticastDelegate;
 	StaticFuncStruct2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStruct2);
 	StaticFuncStruct2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegate2<StructParam*, INT> StaticFuncStructPtr2MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT)> StaticFuncStructPtr2MulticastDelegate;
 	StaticFuncStructPtr2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructPtr2);
 	StaticFuncStructPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegate2<const StructParam*, INT> StaticFuncStructConstPtr2MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT)> StaticFuncStructConstPtr2MulticastDelegate;
 	StaticFuncStructConstPtr2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructConstPtr2);
 	StaticFuncStructConstPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegate2<StructParam&, INT> StaticFuncStructRef2MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT)> StaticFuncStructRef2MulticastDelegate;
 	StaticFuncStructRef2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructRef2);
 	StaticFuncStructRef2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegate2<const StructParam&, INT> StaticFuncStructConstRef2MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT)> StaticFuncStructConstRef2MulticastDelegate;
 	StaticFuncStructConstRef2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructConstRef2);
 	StaticFuncStructConstRef2MulticastDelegate(structParam, TEST_INT);
 
 	// N=3 Free Functions
-	MulticastDelegate3<INT, INT, INT> FreeFuncInt3MulticastDelegate;
+	MulticastDelegate<void(INT, INT, INT)> FreeFuncInt3MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt3MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt3MulticastDelegate);
 	FreeFuncInt3MulticastDelegate += MakeDelegate(&FreeFuncInt3);
@@ -962,30 +961,30 @@ void MulticastDelegateTests()
 	FreeFuncInt3MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt3MulticastDelegate);
 
-	MulticastDelegate3<StructParam, INT, INT> FreeFuncStruct3MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT, INT)> FreeFuncStruct3MulticastDelegate;
 	FreeFuncStruct3MulticastDelegate += MakeDelegate(&FreeFuncStruct3);
 	FreeFuncStruct3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<StructParam*, INT, INT> FreeFuncStructPtr3MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT, INT)> FreeFuncStructPtr3MulticastDelegate;
 	FreeFuncStructPtr3MulticastDelegate += MakeDelegate(&FreeFuncStructPtr3);
 	FreeFuncStructPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<const StructParam*, INT, INT> FreeFuncStructConstPtr3MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT, INT)> FreeFuncStructConstPtr3MulticastDelegate;
 	FreeFuncStructConstPtr3MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr3);
 	FreeFuncStructConstPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<StructParam&, INT, INT> FreeFuncStructRef3MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT, INT)> FreeFuncStructRef3MulticastDelegate;
 	FreeFuncStructRef3MulticastDelegate += MakeDelegate(&FreeFuncStructRef3);
 	FreeFuncStructRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<const StructParam&, INT, INT> FreeFuncStructConstRef3MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT, INT)> FreeFuncStructConstRef3MulticastDelegate;
 	FreeFuncStructConstRef3MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef3);
 	FreeFuncStructConstRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=3 Member Functions
 	TestClass3 testClass3;
 
-	MulticastDelegate3<INT, INT, INT> MemberFuncInt3MulticastDelegate;
+	MulticastDelegate<void(INT, INT, INT)> MemberFuncInt3MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt3MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt3MulticastDelegate);
 	MemberFuncInt3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncInt3);
@@ -995,53 +994,53 @@ void MulticastDelegateTests()
 	MemberFuncInt3MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt3MulticastDelegate);
 
-	MulticastDelegate3<StructParam, INT, INT> MemberFuncStruct3MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT, INT)> MemberFuncStruct3MulticastDelegate;
 	MemberFuncStruct3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStruct3);
 	MemberFuncStruct3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<StructParam*, INT, INT> MemberFuncStructPtr3MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT, INT)> MemberFuncStructPtr3MulticastDelegate;
 	MemberFuncStructPtr3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructPtr3);
 	MemberFuncStructPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<const StructParam*, INT, INT> MemberFuncStructConstPtr3MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT, INT)> MemberFuncStructConstPtr3MulticastDelegate;
 	MemberFuncStructConstPtr3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructConstPtr3);
 	MemberFuncStructConstPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<StructParam&, INT, INT> MemberFuncStructRef3MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT, INT)> MemberFuncStructRef3MulticastDelegate;
 	MemberFuncStructRef3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructRef3);
 	MemberFuncStructRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<const StructParam&, INT, INT> MemberFuncStructConstRef3MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT, INT)> MemberFuncStructConstRef3MulticastDelegate;
 	MemberFuncStructConstRef3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructConstRef3);
 	MemberFuncStructConstRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=3 Static Functions
-	MulticastDelegate3<INT, INT, INT> StaticFuncInt3MulticastDelegate;
+	MulticastDelegate<void(INT, INT, INT)> StaticFuncInt3MulticastDelegate;
 	StaticFuncInt3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncInt3);
 	StaticFuncInt3MulticastDelegate(TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<StructParam, INT, INT> StaticFuncStruct3MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT, INT)> StaticFuncStruct3MulticastDelegate;
 	StaticFuncStruct3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStruct3);
 	StaticFuncStruct3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<StructParam*, INT, INT> StaticFuncStructPtr3MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT, INT)> StaticFuncStructPtr3MulticastDelegate;
 	StaticFuncStructPtr3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructPtr3);
 	StaticFuncStructPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<const StructParam*, INT, INT> StaticFuncStructConstPtr3MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT, INT)> StaticFuncStructConstPtr3MulticastDelegate;
 	StaticFuncStructConstPtr3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructConstPtr3);
 	StaticFuncStructConstPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<StructParam&, INT, INT> StaticFuncStructRef3MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT, INT)> StaticFuncStructRef3MulticastDelegate;
 	StaticFuncStructRef3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructRef3);
 	StaticFuncStructRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegate3<const StructParam&, INT, INT> StaticFuncStructConstRef3MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT, INT)> StaticFuncStructConstRef3MulticastDelegate;
 	StaticFuncStructConstRef3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructConstRef3);
 	StaticFuncStructConstRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=4 Free Functions
-	MulticastDelegate4<INT, INT, INT, INT> FreeFuncInt4MulticastDelegate;
+	MulticastDelegate<void(INT, INT, INT, INT)> FreeFuncInt4MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt4MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt4MulticastDelegate);
 	FreeFuncInt4MulticastDelegate += MakeDelegate(&FreeFuncInt4);
@@ -1054,30 +1053,30 @@ void MulticastDelegateTests()
 	FreeFuncInt4MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt4MulticastDelegate);
 
-	MulticastDelegate4<StructParam, INT, INT, INT> FreeFuncStruct4MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT, INT, INT)> FreeFuncStruct4MulticastDelegate;
 	FreeFuncStruct4MulticastDelegate += MakeDelegate(&FreeFuncStruct4);
 	FreeFuncStruct4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<StructParam*, INT, INT, INT> FreeFuncStructPtr4MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT, INT, INT)> FreeFuncStructPtr4MulticastDelegate;
 	FreeFuncStructPtr4MulticastDelegate += MakeDelegate(&FreeFuncStructPtr4);
 	FreeFuncStructPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<const StructParam*, INT, INT, INT> FreeFuncStructConstPtr4MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT, INT, INT)> FreeFuncStructConstPtr4MulticastDelegate;
 	FreeFuncStructConstPtr4MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr4);
 	FreeFuncStructConstPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<StructParam&, INT, INT, INT> FreeFuncStructRef4MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT, INT, INT)> FreeFuncStructRef4MulticastDelegate;
 	FreeFuncStructRef4MulticastDelegate += MakeDelegate(&FreeFuncStructRef4);
 	FreeFuncStructRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<const StructParam&, INT, INT, INT> FreeFuncStructConstRef4MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT, INT, INT)> FreeFuncStructConstRef4MulticastDelegate;
 	FreeFuncStructConstRef4MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef4);
 	FreeFuncStructConstRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=4 Member Functions
 	TestClass4 testClass4;
 
-	MulticastDelegate4<INT, INT, INT, INT> MemberFuncInt4MulticastDelegate;
+	MulticastDelegate<void(INT, INT, INT, INT)> MemberFuncInt4MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt4MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt4MulticastDelegate);
 	MemberFuncInt4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncInt4);
@@ -1087,53 +1086,53 @@ void MulticastDelegateTests()
 	MemberFuncInt4MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt4MulticastDelegate);
 
-	MulticastDelegate4<StructParam, INT, INT, INT> MemberFuncStruct4MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT, INT, INT)> MemberFuncStruct4MulticastDelegate;
 	MemberFuncStruct4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStruct4);
 	MemberFuncStruct4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<StructParam*, INT, INT, INT> MemberFuncStructPtr4MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT, INT, INT)> MemberFuncStructPtr4MulticastDelegate;
 	MemberFuncStructPtr4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructPtr4);
 	MemberFuncStructPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<const StructParam*, INT, INT, INT> MemberFuncStructConstPtr4MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT, INT, INT)> MemberFuncStructConstPtr4MulticastDelegate;
 	MemberFuncStructConstPtr4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructConstPtr4);
 	MemberFuncStructConstPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<StructParam&, INT, INT, INT> MemberFuncStructRef4MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT, INT, INT)> MemberFuncStructRef4MulticastDelegate;
 	MemberFuncStructRef4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructRef4);
 	MemberFuncStructRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<const StructParam&, INT, INT, INT> MemberFuncStructConstRef4MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT, INT, INT)> MemberFuncStructConstRef4MulticastDelegate;
 	MemberFuncStructConstRef4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructConstRef4);
 	MemberFuncStructConstRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=4 Static Functions
-	MulticastDelegate4<INT, INT, INT, INT> StaticFuncInt4MulticastDelegate;
+	MulticastDelegate<void(INT, INT, INT, INT)> StaticFuncInt4MulticastDelegate;
 	StaticFuncInt4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncInt4);
 	StaticFuncInt4MulticastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<StructParam, INT, INT, INT> StaticFuncStruct4MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT, INT, INT)> StaticFuncStruct4MulticastDelegate;
 	StaticFuncStruct4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStruct4);
 	StaticFuncStruct4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<StructParam*, INT, INT, INT> StaticFuncStructPtr4MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT, INT, INT)> StaticFuncStructPtr4MulticastDelegate;
 	StaticFuncStructPtr4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructPtr4);
 	StaticFuncStructPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<const StructParam*, INT, INT, INT> StaticFuncStructConstPtr4MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT, INT, INT)> StaticFuncStructConstPtr4MulticastDelegate;
 	StaticFuncStructConstPtr4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructConstPtr4);
 	StaticFuncStructConstPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<StructParam&, INT, INT, INT> StaticFuncStructRef4MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT, INT, INT)> StaticFuncStructRef4MulticastDelegate;
 	StaticFuncStructRef4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructRef4);
 	StaticFuncStructRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate4<const StructParam&, INT, INT, INT> StaticFuncStructConstRef4MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT, INT, INT)> StaticFuncStructConstRef4MulticastDelegate;
 	StaticFuncStructConstRef4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructConstRef4);
 	StaticFuncStructConstRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Free Functions
-	MulticastDelegate5<INT, INT, INT, INT, INT> FreeFuncInt5MulticastDelegate;
+	MulticastDelegate<void(INT, INT, INT, INT, INT)> FreeFuncInt5MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt5MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt5MulticastDelegate);
 	FreeFuncInt5MulticastDelegate += MakeDelegate(&FreeFuncInt5);
@@ -1146,30 +1145,30 @@ void MulticastDelegateTests()
 	FreeFuncInt5MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt5MulticastDelegate);
 
-	MulticastDelegate5<StructParam, INT, INT, INT, INT> FreeFuncStruct5MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT, INT, INT, INT)> FreeFuncStruct5MulticastDelegate;
 	FreeFuncStruct5MulticastDelegate += MakeDelegate(&FreeFuncStruct5);
 	FreeFuncStruct5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<StructParam*, INT, INT, INT, INT> FreeFuncStructPtr5MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT, INT, INT, INT)> FreeFuncStructPtr5MulticastDelegate;
 	FreeFuncStructPtr5MulticastDelegate += MakeDelegate(&FreeFuncStructPtr5);
 	FreeFuncStructPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<const StructParam*, INT, INT, INT, INT> FreeFuncStructConstPtr5MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT, INT, INT, INT)> FreeFuncStructConstPtr5MulticastDelegate;
 	FreeFuncStructConstPtr5MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr5);
 	FreeFuncStructConstPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<StructParam&, INT, INT, INT, INT> FreeFuncStructRef5MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT, INT, INT, INT)> FreeFuncStructRef5MulticastDelegate;
 	FreeFuncStructRef5MulticastDelegate += MakeDelegate(&FreeFuncStructRef5);
 	FreeFuncStructRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<const StructParam&, INT, INT, INT, INT> FreeFuncStructConstRef5MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT, INT, INT, INT)> FreeFuncStructConstRef5MulticastDelegate;
 	FreeFuncStructConstRef5MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef5);
 	FreeFuncStructConstRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Member Functions
 	TestClass5 testClass5;
 
-	MulticastDelegate5<INT, INT, INT, INT, INT> MemberFuncInt5MulticastDelegate;
+	MulticastDelegate<void(INT, INT, INT, INT, INT)> MemberFuncInt5MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt5MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt5MulticastDelegate);
 	MemberFuncInt5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncInt5);
@@ -1179,48 +1178,48 @@ void MulticastDelegateTests()
 	MemberFuncInt5MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt5MulticastDelegate);
 
-	MulticastDelegate5<StructParam, INT, INT, INT, INT> MemberFuncStruct5MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT, INT, INT, INT)> MemberFuncStruct5MulticastDelegate;
 	MemberFuncStruct5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStruct5);
 	MemberFuncStruct5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<StructParam*, INT, INT, INT, INT> MemberFuncStructPtr5MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT, INT, INT, INT)> MemberFuncStructPtr5MulticastDelegate;
 	MemberFuncStructPtr5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructPtr5);
 	MemberFuncStructPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<const StructParam*, INT, INT, INT, INT> MemberFuncStructConstPtr5MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT, INT, INT, INT)> MemberFuncStructConstPtr5MulticastDelegate;
 	MemberFuncStructConstPtr5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructConstPtr5);
 	MemberFuncStructConstPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<StructParam&, INT, INT, INT, INT> MemberFuncStructRef5MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT, INT, INT, INT)> MemberFuncStructRef5MulticastDelegate;
 	MemberFuncStructRef5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructRef5);
 	MemberFuncStructRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<const StructParam&, INT, INT, INT, INT> MemberFuncStructConstRef5MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT, INT, INT, INT)> MemberFuncStructConstRef5MulticastDelegate;
 	MemberFuncStructConstRef5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructConstRef5);
 	MemberFuncStructConstRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Static Functions
-	MulticastDelegate5<INT, INT, INT, INT, INT> StaticFuncInt5MulticastDelegate;
+	MulticastDelegate<void(INT, INT, INT, INT, INT)> StaticFuncInt5MulticastDelegate;
 	StaticFuncInt5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncInt5);
 	StaticFuncInt5MulticastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<StructParam, INT, INT, INT, INT> StaticFuncStruct5MulticastDelegate;
+	MulticastDelegate<void(StructParam, INT, INT, INT, INT)> StaticFuncStruct5MulticastDelegate;
 	StaticFuncStruct5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStruct5);
 	StaticFuncStruct5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<StructParam*, INT, INT, INT, INT> StaticFuncStructPtr5MulticastDelegate;
+	MulticastDelegate<void(StructParam*, INT, INT, INT, INT)> StaticFuncStructPtr5MulticastDelegate;
 	StaticFuncStructPtr5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructPtr5);
 	StaticFuncStructPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<const StructParam*, INT, INT, INT, INT> StaticFuncStructConstPtr5MulticastDelegate;
+	MulticastDelegate<void(const StructParam*, INT, INT, INT, INT)> StaticFuncStructConstPtr5MulticastDelegate;
 	StaticFuncStructConstPtr5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructConstPtr5);
 	StaticFuncStructConstPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<StructParam&, INT, INT, INT, INT> StaticFuncStructRef5MulticastDelegate;
+	MulticastDelegate<void(StructParam&, INT, INT, INT, INT)> StaticFuncStructRef5MulticastDelegate;
 	StaticFuncStructRef5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructRef5);
 	StaticFuncStructRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegate5<const StructParam&, INT, INT, INT, INT> StaticFuncStructConstRef5MulticastDelegate;
+	MulticastDelegate<void(const StructParam&, INT, INT, INT, INT)> StaticFuncStructConstRef5MulticastDelegate;
 	StaticFuncStructConstRef5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructConstRef5);
 	StaticFuncStructConstRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 }
@@ -1234,7 +1233,7 @@ void MulticastDelegateSafeTests()
 	// N=0 Member Functions
 	TestClass0 testClass0;
 
-	MulticastDelegateSafe0 MemberFunc0MulticastDelegate;
+	MulticastDelegateSafe<void(void)> MemberFunc0MulticastDelegate;
 	ASSERT_TRUE(MemberFunc0MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFunc0MulticastDelegate);
 	MemberFunc0MulticastDelegate += MakeDelegate(&testClass0, &TestClass0::MemberFunc0);
@@ -1247,7 +1246,7 @@ void MulticastDelegateSafeTests()
 	// N=1 Member Functions
 	TestClass1 testClass1;
 
-	MulticastDelegateSafe1<INT> MemberFuncInt1MulticastDelegate;
+	MulticastDelegateSafe<void(INT)> MemberFuncInt1MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt1MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt1MulticastDelegate);
 	MemberFuncInt1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1);
@@ -1260,7 +1259,7 @@ void MulticastDelegateSafeTests()
 	// N=2 Member Functions
 	TestClass2 testClass2;
 
-	MulticastDelegateSafe2<INT, INT> MemberFuncInt2MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT)> MemberFuncInt2MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt2MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt2MulticastDelegate);
 	MemberFuncInt2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncInt2);
@@ -1273,7 +1272,7 @@ void MulticastDelegateSafeTests()
 	// N=3 Member Functions
 	TestClass3 testClass3;
 
-	MulticastDelegateSafe3<INT, INT, INT> MemberFuncInt3MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT)> MemberFuncInt3MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt3MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt3MulticastDelegate);
 	MemberFuncInt3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncInt3);
@@ -1286,7 +1285,7 @@ void MulticastDelegateSafeTests()
 	// N=4 Member Functions
 	TestClass4 testClass4;
 
-	MulticastDelegateSafe4<INT, INT, INT, INT> MemberFuncInt4MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT)> MemberFuncInt4MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt4MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt4MulticastDelegate);
 	MemberFuncInt4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncInt4);
@@ -1299,7 +1298,7 @@ void MulticastDelegateSafeTests()
 	// N=5 Member Functions
 	TestClass5 testClass5;
 
-	MulticastDelegateSafe5<INT, INT, INT, INT, INT> MemberFuncInt5MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT, INT)> MemberFuncInt5MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt5MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt5MulticastDelegate);
 	MemberFuncInt5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncInt5);
@@ -1317,7 +1316,7 @@ void MulticastDelegateSafeAsyncTests()
 	structParam.val = TEST_INT;
 
 	// N=0 Free Functions
-	MulticastDelegateSafe0 FreeFunc0MulticastDelegate;
+	MulticastDelegateSafe<void(void)> FreeFunc0MulticastDelegate;
 	ASSERT_TRUE(FreeFunc0MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFunc0MulticastDelegate);
 	FreeFunc0MulticastDelegate += MakeDelegate(&FreeFunc0, &testThread);
@@ -1333,7 +1332,7 @@ void MulticastDelegateSafeAsyncTests()
 	// N=0 Member Functions
 	TestClass0 testClass0;
 
-	MulticastDelegateSafe0 MemberFunc0MulticastDelegate;
+	MulticastDelegateSafe<void(void)> MemberFunc0MulticastDelegate;
 	ASSERT_TRUE(MemberFunc0MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFunc0MulticastDelegate);
 	MemberFunc0MulticastDelegate += MakeDelegate(&testClass0, &TestClass0::MemberFunc0, &testThread);
@@ -1346,12 +1345,12 @@ void MulticastDelegateSafeAsyncTests()
 	ASSERT_TRUE(!MemberFunc0MulticastDelegate);
 
 	// N=0 Static Functions
-	MulticastDelegateSafe0 StaticFunc0MulticastDelegate;
+	MulticastDelegateSafe<void(void)> StaticFunc0MulticastDelegate;
 	StaticFunc0MulticastDelegate += MakeDelegate(&TestClass0::StaticFunc0, &testThread);
 	StaticFunc0MulticastDelegate();
 
 	// N=1 Free Functions
-	MulticastDelegateSafe1<INT> FreeFuncInt1MulticastDelegate;
+	MulticastDelegateSafe<void(INT)> FreeFuncInt1MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt1MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt1MulticastDelegate);
 	FreeFuncInt1MulticastDelegate += MakeDelegate(&FreeFuncInt1, &testThread);
@@ -1364,30 +1363,30 @@ void MulticastDelegateSafeAsyncTests()
 	FreeFuncInt1MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt1MulticastDelegate);
 
-	MulticastDelegateSafe1<StructParam> FreeFuncStruct1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam)> FreeFuncStruct1MulticastDelegate;
 	FreeFuncStruct1MulticastDelegate += MakeDelegate(&FreeFuncStruct1);
 	FreeFuncStruct1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<StructParam*> FreeFuncStructPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*)> FreeFuncStructPtr1MulticastDelegate;
 	FreeFuncStructPtr1MulticastDelegate += MakeDelegate(&FreeFuncStructPtr1, &testThread);
 	FreeFuncStructPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<const StructParam*> FreeFuncStructConstPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*)> FreeFuncStructConstPtr1MulticastDelegate;
 	FreeFuncStructConstPtr1MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr1, &testThread);
 	FreeFuncStructConstPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<StructParam&> FreeFuncStructRef1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&)> FreeFuncStructRef1MulticastDelegate;
 	FreeFuncStructRef1MulticastDelegate += MakeDelegate(&FreeFuncStructRef1, &testThread);
 	FreeFuncStructRef1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<const StructParam&> FreeFuncStructConstRef1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&)> FreeFuncStructConstRef1MulticastDelegate;
 	FreeFuncStructConstRef1MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef1, &testThread);
 	FreeFuncStructConstRef1MulticastDelegate(structParam);
 
 	// N=1 Member Functions
 	TestClass1 testClass1;
 
-	MulticastDelegateSafe1<INT> MemberFuncInt1MulticastDelegate;
+	MulticastDelegateSafe<void(INT)> MemberFuncInt1MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt1MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt1MulticastDelegate);
 	MemberFuncInt1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1, &testThread);
@@ -1398,54 +1397,54 @@ void MulticastDelegateSafeAsyncTests()
 	MemberFuncInt1MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt1MulticastDelegate);
 
-	MulticastDelegateSafe1<StructParam> MemberFuncStruct1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam)> MemberFuncStruct1MulticastDelegate;
 	MemberFuncStruct1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStruct1, &testThread);
 	if (MemberFuncStruct1MulticastDelegate)
 		MemberFuncStruct1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<StructParam*> MemberFuncStructPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*)> MemberFuncStructPtr1MulticastDelegate;
 	MemberFuncStructPtr1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructPtr1, &testThread);
 	MemberFuncStructPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<const StructParam*> MemberFuncStructConstPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*)> MemberFuncStructConstPtr1MulticastDelegate;
 	MemberFuncStructConstPtr1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructConstPtr1, &testThread);
 	MemberFuncStructConstPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<StructParam&> MemberFuncStructRef1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&)> MemberFuncStructRef1MulticastDelegate;
 	MemberFuncStructRef1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructRef1, &testThread);
 	MemberFuncStructRef1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<const StructParam&> MemberFuncStructConstRef1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&)> MemberFuncStructConstRef1MulticastDelegate;
 	MemberFuncStructConstRef1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructConstRef1, &testThread);
 	MemberFuncStructConstRef1MulticastDelegate(structParam);
 
 	// N=1 Static Functions
-	MulticastDelegateSafe1<INT> StaticFuncInt1MulticastDelegate;
+	MulticastDelegateSafe<void(INT)> StaticFuncInt1MulticastDelegate;
 	StaticFuncInt1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncInt1, &testThread);
 	StaticFuncInt1MulticastDelegate(TEST_INT);
 
-	MulticastDelegateSafe1<StructParam> StaticFuncStruct1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam)> StaticFuncStruct1MulticastDelegate;
 	StaticFuncStruct1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStruct1, &testThread);
 	StaticFuncStruct1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<StructParam*> StaticFuncStructPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*)> StaticFuncStructPtr1MulticastDelegate;
 	StaticFuncStructPtr1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructPtr1, &testThread);
 	StaticFuncStructPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<const StructParam*> StaticFuncStructConstPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*)> StaticFuncStructConstPtr1MulticastDelegate;
 	StaticFuncStructConstPtr1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructConstPtr1, &testThread);
 	StaticFuncStructConstPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<StructParam&> StaticFuncStructRef1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&)> StaticFuncStructRef1MulticastDelegate;
 	StaticFuncStructRef1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructRef1, &testThread);
 	StaticFuncStructRef1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<const StructParam&> StaticFuncStructConstRef1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&)> StaticFuncStructConstRef1MulticastDelegate;
 	StaticFuncStructConstRef1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructConstRef1, &testThread);
 	StaticFuncStructConstRef1MulticastDelegate(structParam);
 
 	// N=2 Free Functions
-	MulticastDelegateSafe2<INT, INT> FreeFuncInt2MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT)> FreeFuncInt2MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt2MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt2MulticastDelegate);
 	FreeFuncInt2MulticastDelegate += MakeDelegate(&FreeFuncInt2, &testThread);
@@ -1458,30 +1457,30 @@ void MulticastDelegateSafeAsyncTests()
 	FreeFuncInt2MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt2MulticastDelegate);
 
-	MulticastDelegateSafe2<StructParam, INT> FreeFuncStruct2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT)> FreeFuncStruct2MulticastDelegate;
 	FreeFuncStruct2MulticastDelegate += MakeDelegate(&FreeFuncStruct2, &testThread);
 	FreeFuncStruct2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam*, INT> FreeFuncStructPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT)> FreeFuncStructPtr2MulticastDelegate;
 	FreeFuncStructPtr2MulticastDelegate += MakeDelegate(&FreeFuncStructPtr2, &testThread);
 	FreeFuncStructPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam*, INT> FreeFuncStructConstPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT)> FreeFuncStructConstPtr2MulticastDelegate;
 	FreeFuncStructConstPtr2MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr2, &testThread);
 	FreeFuncStructConstPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam&, INT> FreeFuncStructRef2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT)> FreeFuncStructRef2MulticastDelegate;
 	FreeFuncStructRef2MulticastDelegate += MakeDelegate(&FreeFuncStructRef2, &testThread);
 	FreeFuncStructRef2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam&, INT> FreeFuncStructConstRef2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT)> FreeFuncStructConstRef2MulticastDelegate;
 	FreeFuncStructConstRef2MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef2, &testThread);
 	FreeFuncStructConstRef2MulticastDelegate(structParam, TEST_INT);
 
 	// N=2 Member Functions
 	TestClass2 testClass2;
 
-	MulticastDelegateSafe2<INT, INT> MemberFuncInt2MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT)> MemberFuncInt2MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt2MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt2MulticastDelegate);
 	MemberFuncInt2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncInt2, &testThread);
@@ -1492,54 +1491,54 @@ void MulticastDelegateSafeAsyncTests()
 	MemberFuncInt2MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt2MulticastDelegate);
 
-	MulticastDelegateSafe2<StructParam, INT> MemberFuncStruct2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT)> MemberFuncStruct2MulticastDelegate;
 	MemberFuncStruct2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStruct2, &testThread);
 	if (MemberFuncStruct2MulticastDelegate)
 		MemberFuncStruct2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam*, INT> MemberFuncStructPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT)> MemberFuncStructPtr2MulticastDelegate;
 	MemberFuncStructPtr2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructPtr2, &testThread);
 	MemberFuncStructPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam*, INT> MemberFuncStructConstPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT)> MemberFuncStructConstPtr2MulticastDelegate;
 	MemberFuncStructConstPtr2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructConstPtr2, &testThread);
 	MemberFuncStructConstPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam&, INT> MemberFuncStructRef2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT)> MemberFuncStructRef2MulticastDelegate;
 	MemberFuncStructRef2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructRef2, &testThread);
 	MemberFuncStructRef2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam&, INT> MemberFuncStructConstRef2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT)> MemberFuncStructConstRef2MulticastDelegate;
 	MemberFuncStructConstRef2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructConstRef2, &testThread);
 	MemberFuncStructConstRef2MulticastDelegate(structParam, TEST_INT);
 
 	// N=2 Static Functions
-	MulticastDelegateSafe2<INT, INT> StaticFuncInt2MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT)> StaticFuncInt2MulticastDelegate;
 	StaticFuncInt2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncInt2, &testThread);
 	StaticFuncInt2MulticastDelegate(TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam, INT> StaticFuncStruct2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT)> StaticFuncStruct2MulticastDelegate;
 	StaticFuncStruct2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStruct2, &testThread);
 	StaticFuncStruct2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam*, INT> StaticFuncStructPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT)> StaticFuncStructPtr2MulticastDelegate;
 	StaticFuncStructPtr2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructPtr2, &testThread);
 	StaticFuncStructPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam*, INT> StaticFuncStructConstPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT)> StaticFuncStructConstPtr2MulticastDelegate;
 	StaticFuncStructConstPtr2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructConstPtr2, &testThread);
 	StaticFuncStructConstPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam&, INT> StaticFuncStructRef2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT)> StaticFuncStructRef2MulticastDelegate;
 	StaticFuncStructRef2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructRef2, &testThread);
 	StaticFuncStructRef2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam&, INT> StaticFuncStructConstRef2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT)> StaticFuncStructConstRef2MulticastDelegate;
 	StaticFuncStructConstRef2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructConstRef2, &testThread);
 	StaticFuncStructConstRef2MulticastDelegate(structParam, TEST_INT);
 
 	// N=3 Free Functions
-	MulticastDelegateSafe3<INT, INT, INT> FreeFuncInt3MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT)> FreeFuncInt3MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt3MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt3MulticastDelegate);
 	FreeFuncInt3MulticastDelegate += MakeDelegate(&FreeFuncInt3, &testThread);
@@ -1552,30 +1551,30 @@ void MulticastDelegateSafeAsyncTests()
 	FreeFuncInt3MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt3MulticastDelegate);
 
-	MulticastDelegateSafe3<StructParam, INT, INT> FreeFuncStruct3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT)> FreeFuncStruct3MulticastDelegate;
 	FreeFuncStruct3MulticastDelegate += MakeDelegate(&FreeFuncStruct3, &testThread);
 	FreeFuncStruct3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam*, INT, INT> FreeFuncStructPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT)> FreeFuncStructPtr3MulticastDelegate;
 	FreeFuncStructPtr3MulticastDelegate += MakeDelegate(&FreeFuncStructPtr3, &testThread);
 	FreeFuncStructPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam*, INT, INT> FreeFuncStructConstPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT)> FreeFuncStructConstPtr3MulticastDelegate;
 	FreeFuncStructConstPtr3MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr3, &testThread);
 	FreeFuncStructConstPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam&, INT, INT> FreeFuncStructRef3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT)> FreeFuncStructRef3MulticastDelegate;
 	FreeFuncStructRef3MulticastDelegate += MakeDelegate(&FreeFuncStructRef3, &testThread);
 	FreeFuncStructRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam&, INT, INT> FreeFuncStructConstRef3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT)> FreeFuncStructConstRef3MulticastDelegate;
 	FreeFuncStructConstRef3MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef3, &testThread);
 	FreeFuncStructConstRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=3 Member Functions
 	TestClass3 testClass3;
 
-	MulticastDelegateSafe3<INT, INT, INT> MemberFuncInt3MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT)> MemberFuncInt3MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt3MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt3MulticastDelegate);
 	MemberFuncInt3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncInt3, &testThread);
@@ -1586,54 +1585,54 @@ void MulticastDelegateSafeAsyncTests()
 	MemberFuncInt3MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt3MulticastDelegate);
 
-	MulticastDelegateSafe3<StructParam, INT, INT> MemberFuncStruct3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT)> MemberFuncStruct3MulticastDelegate;
 	MemberFuncStruct3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStruct3, &testThread);
 	if (MemberFuncStruct3MulticastDelegate)
 		MemberFuncStruct3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam*, INT, INT> MemberFuncStructPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT)> MemberFuncStructPtr3MulticastDelegate;
 	MemberFuncStructPtr3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructPtr3, &testThread);
 	MemberFuncStructPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam*, INT, INT> MemberFuncStructConstPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT)> MemberFuncStructConstPtr3MulticastDelegate;
 	MemberFuncStructConstPtr3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructConstPtr3, &testThread);
 	MemberFuncStructConstPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam&, INT, INT> MemberFuncStructRef3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT)> MemberFuncStructRef3MulticastDelegate;
 	MemberFuncStructRef3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructRef3, &testThread);
 	MemberFuncStructRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam&, INT, INT> MemberFuncStructConstRef3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT)> MemberFuncStructConstRef3MulticastDelegate;
 	MemberFuncStructConstRef3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructConstRef3, &testThread);
 	MemberFuncStructConstRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=3 Static Functions
-	MulticastDelegateSafe3<INT, INT, INT> StaticFuncInt3MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT)> StaticFuncInt3MulticastDelegate;
 	StaticFuncInt3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncInt3, &testThread);
 	StaticFuncInt3MulticastDelegate(TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam, INT, INT> StaticFuncStruct3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT)> StaticFuncStruct3MulticastDelegate;
 	StaticFuncStruct3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStruct3, &testThread);
 	StaticFuncStruct3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam*, INT, INT> StaticFuncStructPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT)> StaticFuncStructPtr3MulticastDelegate;
 	StaticFuncStructPtr3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructPtr3, &testThread);
 	StaticFuncStructPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam*, INT, INT> StaticFuncStructConstPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT)> StaticFuncStructConstPtr3MulticastDelegate;
 	StaticFuncStructConstPtr3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructConstPtr3, &testThread);
 	StaticFuncStructConstPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam&, INT, INT> StaticFuncStructRef3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT)> StaticFuncStructRef3MulticastDelegate;
 	StaticFuncStructRef3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructRef3, &testThread);
 	StaticFuncStructRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam&, INT, INT> StaticFuncStructConstRef3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT)> StaticFuncStructConstRef3MulticastDelegate;
 	StaticFuncStructConstRef3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructConstRef3, &testThread);
 	StaticFuncStructConstRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=4 Free Functions
-	MulticastDelegateSafe4<INT, INT, INT, INT> FreeFuncInt4MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT)> FreeFuncInt4MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt4MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt4MulticastDelegate);
 	FreeFuncInt4MulticastDelegate += MakeDelegate(&FreeFuncInt4, &testThread);
@@ -1646,30 +1645,30 @@ void MulticastDelegateSafeAsyncTests()
 	FreeFuncInt4MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt4MulticastDelegate);
 
-	MulticastDelegateSafe4<StructParam, INT, INT, INT> FreeFuncStruct4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT)> FreeFuncStruct4MulticastDelegate;
 	FreeFuncStruct4MulticastDelegate += MakeDelegate(&FreeFuncStruct4, &testThread);
 	FreeFuncStruct4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam*, INT, INT, INT> FreeFuncStructPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT)> FreeFuncStructPtr4MulticastDelegate;
 	FreeFuncStructPtr4MulticastDelegate += MakeDelegate(&FreeFuncStructPtr4, &testThread);
 	FreeFuncStructPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam*, INT, INT, INT> FreeFuncStructConstPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT)> FreeFuncStructConstPtr4MulticastDelegate;
 	FreeFuncStructConstPtr4MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr4, &testThread);
 	FreeFuncStructConstPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam&, INT, INT, INT> FreeFuncStructRef4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT)> FreeFuncStructRef4MulticastDelegate;
 	FreeFuncStructRef4MulticastDelegate += MakeDelegate(&FreeFuncStructRef4, &testThread);
 	FreeFuncStructRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam&, INT, INT, INT> FreeFuncStructConstRef4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT)> FreeFuncStructConstRef4MulticastDelegate;
 	FreeFuncStructConstRef4MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef4, &testThread);
 	FreeFuncStructConstRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=4 Member Functions
 	TestClass4 testClass4;
 
-	MulticastDelegateSafe4<INT, INT, INT, INT> MemberFuncInt4MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT)> MemberFuncInt4MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt4MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt4MulticastDelegate);
 	MemberFuncInt4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncInt4, &testThread);
@@ -1680,54 +1679,54 @@ void MulticastDelegateSafeAsyncTests()
 	MemberFuncInt4MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt4MulticastDelegate);
 
-	MulticastDelegateSafe4<StructParam, INT, INT, INT> MemberFuncStruct4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT)> MemberFuncStruct4MulticastDelegate;
 	MemberFuncStruct4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStruct4, &testThread);
 	if (MemberFuncStruct4MulticastDelegate)
 		MemberFuncStruct4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam*, INT, INT, INT> MemberFuncStructPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT)> MemberFuncStructPtr4MulticastDelegate;
 	MemberFuncStructPtr4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructPtr4, &testThread);
 	MemberFuncStructPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam*, INT, INT, INT> MemberFuncStructConstPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT)> MemberFuncStructConstPtr4MulticastDelegate;
 	MemberFuncStructConstPtr4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructConstPtr4, &testThread);
 	MemberFuncStructConstPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam&, INT, INT, INT> MemberFuncStructRef4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT)> MemberFuncStructRef4MulticastDelegate;
 	MemberFuncStructRef4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructRef4, &testThread);
 	MemberFuncStructRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam&, INT, INT, INT> MemberFuncStructConstRef4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT)> MemberFuncStructConstRef4MulticastDelegate;
 	MemberFuncStructConstRef4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructConstRef4, &testThread);
 	MemberFuncStructConstRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=4 Static Functions
-	MulticastDelegateSafe4<INT, INT, INT, INT> StaticFuncInt4MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT)> StaticFuncInt4MulticastDelegate;
 	StaticFuncInt4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncInt4, &testThread);
 	StaticFuncInt4MulticastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam, INT, INT, INT> StaticFuncStruct4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT)> StaticFuncStruct4MulticastDelegate;
 	StaticFuncStruct4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStruct4, &testThread);
 	StaticFuncStruct4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam*, INT, INT, INT> StaticFuncStructPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT)> StaticFuncStructPtr4MulticastDelegate;
 	StaticFuncStructPtr4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructPtr4, &testThread);
 	StaticFuncStructPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam*, INT, INT, INT> StaticFuncStructConstPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT)> StaticFuncStructConstPtr4MulticastDelegate;
 	StaticFuncStructConstPtr4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructConstPtr4, &testThread);
 	StaticFuncStructConstPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam&, INT, INT, INT> StaticFuncStructRef4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT)> StaticFuncStructRef4MulticastDelegate;
 	StaticFuncStructRef4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructRef4, &testThread);
 	StaticFuncStructRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam&, INT, INT, INT> StaticFuncStructConstRef4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT)> StaticFuncStructConstRef4MulticastDelegate;
 	StaticFuncStructConstRef4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructConstRef4, &testThread);
 	StaticFuncStructConstRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Free Functions
-	MulticastDelegateSafe5<INT, INT, INT, INT, INT> FreeFuncInt5MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT, INT)> FreeFuncInt5MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt5MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt5MulticastDelegate);
 	FreeFuncInt5MulticastDelegate += MakeDelegate(&FreeFuncInt5, &testThread);
@@ -1740,30 +1739,30 @@ void MulticastDelegateSafeAsyncTests()
 	FreeFuncInt5MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt5MulticastDelegate);
 
-	MulticastDelegateSafe5<StructParam, INT, INT, INT, INT> FreeFuncStruct5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT, INT)> FreeFuncStruct5MulticastDelegate;
 	FreeFuncStruct5MulticastDelegate += MakeDelegate(&FreeFuncStruct5, &testThread);
 	FreeFuncStruct5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam*, INT, INT, INT, INT> FreeFuncStructPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT, INT)> FreeFuncStructPtr5MulticastDelegate;
 	FreeFuncStructPtr5MulticastDelegate += MakeDelegate(&FreeFuncStructPtr5, &testThread);
 	FreeFuncStructPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam*, INT, INT, INT, INT> FreeFuncStructConstPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT, INT)> FreeFuncStructConstPtr5MulticastDelegate;
 	FreeFuncStructConstPtr5MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr5, &testThread);
 	FreeFuncStructConstPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam&, INT, INT, INT, INT> FreeFuncStructRef5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT, INT)> FreeFuncStructRef5MulticastDelegate;
 	FreeFuncStructRef5MulticastDelegate += MakeDelegate(&FreeFuncStructRef5, &testThread);
 	FreeFuncStructRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam&, INT, INT, INT, INT> FreeFuncStructConstRef5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT, INT)> FreeFuncStructConstRef5MulticastDelegate;
 	FreeFuncStructConstRef5MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef5, &testThread);
 	FreeFuncStructConstRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Member Functions
 	TestClass5 testClass5;
 
-	MulticastDelegateSafe5<INT, INT, INT, INT, INT> MemberFuncInt5MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT, INT)> MemberFuncInt5MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt5MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt5MulticastDelegate);
 	MemberFuncInt5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncInt5, &testThread);
@@ -1774,49 +1773,49 @@ void MulticastDelegateSafeAsyncTests()
 	MemberFuncInt5MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt5MulticastDelegate);
 
-	MulticastDelegateSafe5<StructParam, INT, INT, INT, INT> MemberFuncStruct5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT, INT)> MemberFuncStruct5MulticastDelegate;
 	MemberFuncStruct5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStruct5, &testThread);
 	if (MemberFuncStruct5MulticastDelegate)
 		MemberFuncStruct5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam*, INT, INT, INT, INT> MemberFuncStructPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT, INT)> MemberFuncStructPtr5MulticastDelegate;
 	MemberFuncStructPtr5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructPtr5, &testThread);
 	MemberFuncStructPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam*, INT, INT, INT, INT> MemberFuncStructConstPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT, INT)> MemberFuncStructConstPtr5MulticastDelegate;
 	MemberFuncStructConstPtr5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructConstPtr5, &testThread);
 	MemberFuncStructConstPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam&, INT, INT, INT, INT> MemberFuncStructRef5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT, INT)> MemberFuncStructRef5MulticastDelegate;
 	MemberFuncStructRef5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructRef5, &testThread);
 	MemberFuncStructRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam&, INT, INT, INT, INT> MemberFuncStructConstRef5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT, INT)> MemberFuncStructConstRef5MulticastDelegate;
 	MemberFuncStructConstRef5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructConstRef5, &testThread);
 	MemberFuncStructConstRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Static Functions
-	MulticastDelegateSafe5<INT, INT, INT, INT, INT> StaticFuncInt5MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT, INT)> StaticFuncInt5MulticastDelegate;
 	StaticFuncInt5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncInt5, &testThread);
 	StaticFuncInt5MulticastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam, INT, INT, INT, INT> StaticFuncStruct5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT, INT)> StaticFuncStruct5MulticastDelegate;
 	StaticFuncStruct5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStruct5, &testThread);
 	StaticFuncStruct5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam*, INT, INT, INT, INT> StaticFuncStructPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT, INT)> StaticFuncStructPtr5MulticastDelegate;
 	StaticFuncStructPtr5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructPtr5, &testThread);
 	StaticFuncStructPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam*, INT, INT, INT, INT> StaticFuncStructConstPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT, INT)> StaticFuncStructConstPtr5MulticastDelegate;
 	StaticFuncStructConstPtr5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructConstPtr5, &testThread);
 	StaticFuncStructConstPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam&, INT, INT, INT, INT> StaticFuncStructRef5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT, INT)> StaticFuncStructRef5MulticastDelegate;
 	StaticFuncStructRef5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructRef5, &testThread);
 	StaticFuncStructRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam&, INT, INT, INT, INT> StaticFuncStructConstRef5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT, INT)> StaticFuncStructConstRef5MulticastDelegate;
 	StaticFuncStructConstRef5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructConstRef5, &testThread);
 	StaticFuncStructConstRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 }
@@ -1888,7 +1887,7 @@ void DelegateMemberAsyncWaitTests()
 	StructParam* pStructParam = &structParam;
 
 	// N=0 Free Functions
-	MulticastDelegateSafe0 FreeFunc0MulticastDelegate;
+	MulticastDelegateSafe<void(void)> FreeFunc0MulticastDelegate;
 	ASSERT_TRUE(FreeFunc0MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFunc0MulticastDelegate);
 	FreeFunc0MulticastDelegate += MakeDelegate(&FreeFunc0, &testThread, WAIT_INFINITE);
@@ -1904,7 +1903,7 @@ void DelegateMemberAsyncWaitTests()
 	// N=0 Member Functions
 	TestClass0 testClass0;
 
-	MulticastDelegateSafe0 MemberFunc0MulticastDelegate;
+	MulticastDelegateSafe<void(void)> MemberFunc0MulticastDelegate;
 	ASSERT_TRUE(MemberFunc0MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFunc0MulticastDelegate);
 	//auto d1 = MakeDelegate(&testClass0, &TestClass0::MemberFunc0, &testThread, WAIT_INFINITE);
@@ -1919,7 +1918,7 @@ void DelegateMemberAsyncWaitTests()
 	ASSERT_TRUE(!MemberFunc0MulticastDelegate);
 
 	// N=0 Static Functions
-	MulticastDelegateSafe0 StaticFunc0MulticastDelegate;
+	MulticastDelegateSafe<void(void)> StaticFunc0MulticastDelegate;
 	StaticFunc0MulticastDelegate += MakeDelegate(&TestClass0::StaticFunc0, &testThread, WAIT_INFINITE);
 	StaticFunc0MulticastDelegate();
 
@@ -1949,7 +1948,7 @@ void DelegateMemberAsyncWaitTests()
 		int ret = MemberFuncIntWithReturn0Delegate();
 
 	// N=1 Free Functions
-	MulticastDelegateSafe1<INT> FreeFuncInt1MulticastDelegate;
+	MulticastDelegateSafe<void(INT)> FreeFuncInt1MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt1MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt1MulticastDelegate);
 	FreeFuncInt1MulticastDelegate += MakeDelegate(&FreeFuncInt1, &testThread, WAIT_INFINITE);
@@ -1962,30 +1961,30 @@ void DelegateMemberAsyncWaitTests()
 	FreeFuncInt1MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt1MulticastDelegate);
 
-	MulticastDelegateSafe1<StructParam> FreeFuncStruct1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam)> FreeFuncStruct1MulticastDelegate;
 	FreeFuncStruct1MulticastDelegate += MakeDelegate(&FreeFuncStruct1);
 	FreeFuncStruct1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<StructParam*> FreeFuncStructPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*)> FreeFuncStructPtr1MulticastDelegate;
 	FreeFuncStructPtr1MulticastDelegate += MakeDelegate(&FreeFuncStructPtr1, &testThread, WAIT_INFINITE);
 	FreeFuncStructPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<const StructParam*> FreeFuncStructConstPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*)> FreeFuncStructConstPtr1MulticastDelegate;
 	FreeFuncStructConstPtr1MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr1, &testThread, WAIT_INFINITE);
 	FreeFuncStructConstPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<StructParam&> FreeFuncStructRef1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&)> FreeFuncStructRef1MulticastDelegate;
 	FreeFuncStructRef1MulticastDelegate += MakeDelegate(&FreeFuncStructRef1, &testThread, WAIT_INFINITE);
 	FreeFuncStructRef1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<const StructParam&> FreeFuncStructConstRef1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&)> FreeFuncStructConstRef1MulticastDelegate;
 	FreeFuncStructConstRef1MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef1, &testThread, WAIT_INFINITE);
 	FreeFuncStructConstRef1MulticastDelegate(structParam);
 
 	// N=1 Member Functions
 	TestClass1 testClass1;
 
-	MulticastDelegateSafe1<INT> MemberFuncInt1MulticastDelegate;
+	MulticastDelegateSafe<void(INT)> MemberFuncInt1MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt1MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt1MulticastDelegate);
 	MemberFuncInt1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1, &testThread, WAIT_INFINITE);
@@ -1996,53 +1995,53 @@ void DelegateMemberAsyncWaitTests()
 	MemberFuncInt1MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt1MulticastDelegate);
 
-	MulticastDelegateSafe1<StructParam> MemberFuncStruct1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam)> MemberFuncStruct1MulticastDelegate;
 	MemberFuncStruct1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStruct1, &testThread, WAIT_INFINITE);
 	if (MemberFuncStruct1MulticastDelegate)
 		MemberFuncStruct1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<StructParam*> MemberFuncStructPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*)> MemberFuncStructPtr1MulticastDelegate;
 	MemberFuncStructPtr1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructPtr1, &testThread, WAIT_INFINITE);
 	MemberFuncStructPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<StructParam**> MemberFuncStructPtrPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam**)> MemberFuncStructPtrPtr1MulticastDelegate;
 	MemberFuncStructPtrPtr1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructPtrPtr1, &testThread, WAIT_INFINITE);
 	MemberFuncStructPtrPtr1MulticastDelegate(&pStructParam);
 
-	MulticastDelegateSafe1<const StructParam*> MemberFuncStructConstPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*)> MemberFuncStructConstPtr1MulticastDelegate;
 	MemberFuncStructConstPtr1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructConstPtr1, &testThread, WAIT_INFINITE);
 	MemberFuncStructConstPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<StructParam&> MemberFuncStructRef1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&)> MemberFuncStructRef1MulticastDelegate;
 	MemberFuncStructRef1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructRef1, &testThread, WAIT_INFINITE);
 	MemberFuncStructRef1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<const StructParam&> MemberFuncStructConstRef1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&)> MemberFuncStructConstRef1MulticastDelegate;
 	MemberFuncStructConstRef1MulticastDelegate += MakeDelegate(&testClass1, &TestClass1::MemberFuncStructConstRef1, &testThread, WAIT_INFINITE);
 	MemberFuncStructConstRef1MulticastDelegate(structParam);
 
 	// N=1 Static Functions
-	MulticastDelegateSafe1<INT> StaticFuncInt1MulticastDelegate;
+	MulticastDelegateSafe<void(INT)> StaticFuncInt1MulticastDelegate;
 	StaticFuncInt1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncInt1, &testThread, WAIT_INFINITE);
 	StaticFuncInt1MulticastDelegate(TEST_INT);
 
-	MulticastDelegateSafe1<StructParam> StaticFuncStruct1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam)> StaticFuncStruct1MulticastDelegate;
 	StaticFuncStruct1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStruct1, &testThread, WAIT_INFINITE);
 	StaticFuncStruct1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<StructParam*> StaticFuncStructPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*)> StaticFuncStructPtr1MulticastDelegate;
 	StaticFuncStructPtr1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructPtr1, &testThread, WAIT_INFINITE);
 	StaticFuncStructPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<const StructParam*> StaticFuncStructConstPtr1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*)> StaticFuncStructConstPtr1MulticastDelegate;
 	StaticFuncStructConstPtr1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructConstPtr1, &testThread, WAIT_INFINITE);
 	StaticFuncStructConstPtr1MulticastDelegate(&structParam);
 
-	MulticastDelegateSafe1<StructParam&> StaticFuncStructRef1MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&)> StaticFuncStructRef1MulticastDelegate;
 	StaticFuncStructRef1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructRef1, &testThread, WAIT_INFINITE);
 	StaticFuncStructRef1MulticastDelegate(structParam);
 
-	MulticastDelegateSafe1<const StructParam&> StaticFuncStructConstRef1MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&)> StaticFuncStructConstRef1MulticastDelegate;
 	StaticFuncStructConstRef1MulticastDelegate += MakeDelegate(&TestClass1::StaticFuncStructConstRef1, &testThread, WAIT_INFINITE);
 	StaticFuncStructConstRef1MulticastDelegate(structParam);
 
@@ -2072,7 +2071,7 @@ void DelegateMemberAsyncWaitTests()
 		int ret = MemberFuncIntWithReturn1Delegate(TEST_INT);
 
 	// N=2 Free Functions
-	MulticastDelegateSafe2<INT, INT> FreeFuncInt2MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT)> FreeFuncInt2MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt2MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt2MulticastDelegate);
 	FreeFuncInt2MulticastDelegate += MakeDelegate(&FreeFuncInt2, &testThread, WAIT_INFINITE);
@@ -2085,30 +2084,30 @@ void DelegateMemberAsyncWaitTests()
 	FreeFuncInt2MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt2MulticastDelegate);
 
-	MulticastDelegateSafe2<StructParam, INT> FreeFuncStruct2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT)> FreeFuncStruct2MulticastDelegate;
 	FreeFuncStruct2MulticastDelegate += MakeDelegate(&FreeFuncStruct2, &testThread, WAIT_INFINITE);
 	FreeFuncStruct2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam*, INT> FreeFuncStructPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT)> FreeFuncStructPtr2MulticastDelegate;
 	FreeFuncStructPtr2MulticastDelegate += MakeDelegate(&FreeFuncStructPtr2, &testThread, WAIT_INFINITE);
 	FreeFuncStructPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam*, INT> FreeFuncStructConstPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT)> FreeFuncStructConstPtr2MulticastDelegate;
 	FreeFuncStructConstPtr2MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr2, &testThread, WAIT_INFINITE);
 	FreeFuncStructConstPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam&, INT> FreeFuncStructRef2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT)> FreeFuncStructRef2MulticastDelegate;
 	FreeFuncStructRef2MulticastDelegate += MakeDelegate(&FreeFuncStructRef2, &testThread, WAIT_INFINITE);
 	FreeFuncStructRef2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam&, INT> FreeFuncStructConstRef2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT)> FreeFuncStructConstRef2MulticastDelegate;
 	FreeFuncStructConstRef2MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef2, &testThread, WAIT_INFINITE);
 	FreeFuncStructConstRef2MulticastDelegate(structParam, TEST_INT);
 
 	// N=2 Member Functions
 	TestClass2 testClass2;
 
-	MulticastDelegateSafe2<INT, INT> MemberFuncInt2MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT)> MemberFuncInt2MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt2MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt2MulticastDelegate);
 	MemberFuncInt2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncInt2, &testThread, WAIT_INFINITE);
@@ -2119,49 +2118,49 @@ void DelegateMemberAsyncWaitTests()
 	MemberFuncInt2MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt2MulticastDelegate);
 
-	MulticastDelegateSafe2<StructParam, INT> MemberFuncStruct2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT)> MemberFuncStruct2MulticastDelegate;
 	MemberFuncStruct2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStruct2, &testThread, WAIT_INFINITE);
 	if (MemberFuncStruct2MulticastDelegate)
 		MemberFuncStruct2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam*, INT> MemberFuncStructPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT)> MemberFuncStructPtr2MulticastDelegate;
 	MemberFuncStructPtr2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructPtr2, &testThread, WAIT_INFINITE);
 	MemberFuncStructPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam*, INT> MemberFuncStructConstPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT)> MemberFuncStructConstPtr2MulticastDelegate;
 	MemberFuncStructConstPtr2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructConstPtr2, &testThread, WAIT_INFINITE);
 	MemberFuncStructConstPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam&, INT> MemberFuncStructRef2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT)> MemberFuncStructRef2MulticastDelegate;
 	MemberFuncStructRef2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructRef2, &testThread, WAIT_INFINITE);
 	MemberFuncStructRef2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam&, INT> MemberFuncStructConstRef2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT)> MemberFuncStructConstRef2MulticastDelegate;
 	MemberFuncStructConstRef2MulticastDelegate += MakeDelegate(&testClass2, &TestClass2::MemberFuncStructConstRef2, &testThread, WAIT_INFINITE);
 	MemberFuncStructConstRef2MulticastDelegate(structParam, TEST_INT);
 
 	// N=2 Static Functions
-	MulticastDelegateSafe2<INT, INT> StaticFuncInt2MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT)> StaticFuncInt2MulticastDelegate;
 	StaticFuncInt2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncInt2, &testThread, WAIT_INFINITE);
 	StaticFuncInt2MulticastDelegate(TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam, INT> StaticFuncStruct2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT)> StaticFuncStruct2MulticastDelegate;
 	StaticFuncStruct2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStruct2, &testThread, WAIT_INFINITE);
 	StaticFuncStruct2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam*, INT> StaticFuncStructPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT)> StaticFuncStructPtr2MulticastDelegate;
 	StaticFuncStructPtr2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructPtr2, &testThread, WAIT_INFINITE);
 	StaticFuncStructPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam*, INT> StaticFuncStructConstPtr2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT)> StaticFuncStructConstPtr2MulticastDelegate;
 	StaticFuncStructConstPtr2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructConstPtr2, &testThread, WAIT_INFINITE);
 	StaticFuncStructConstPtr2MulticastDelegate(&structParam, TEST_INT);
 
-	MulticastDelegateSafe2<StructParam&, INT> StaticFuncStructRef2MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT)> StaticFuncStructRef2MulticastDelegate;
 	StaticFuncStructRef2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructRef2, &testThread, WAIT_INFINITE);
 	StaticFuncStructRef2MulticastDelegate(structParam, TEST_INT);
 
-	MulticastDelegateSafe2<const StructParam&, INT> StaticFuncStructConstRef2MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT)> StaticFuncStructConstRef2MulticastDelegate;
 	StaticFuncStructConstRef2MulticastDelegate += MakeDelegate(&TestClass2::StaticFuncStructConstRef2, &testThread, WAIT_INFINITE);
 	StaticFuncStructConstRef2MulticastDelegate(structParam, TEST_INT);
 
@@ -2191,7 +2190,7 @@ void DelegateMemberAsyncWaitTests()
 		int ret = MemberFuncIntWithReturn2Delegate(TEST_INT, TEST_INT);
 
 	// N=3 Free Functions
-	MulticastDelegateSafe3<INT, INT, INT> FreeFuncInt3MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT)> FreeFuncInt3MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt3MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt3MulticastDelegate);
 	FreeFuncInt3MulticastDelegate += MakeDelegate(&FreeFuncInt3, &testThread, WAIT_INFINITE);
@@ -2204,30 +2203,30 @@ void DelegateMemberAsyncWaitTests()
 	FreeFuncInt3MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt3MulticastDelegate);
 
-	MulticastDelegateSafe3<StructParam, INT, INT> FreeFuncStruct3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT)> FreeFuncStruct3MulticastDelegate;
 	FreeFuncStruct3MulticastDelegate += MakeDelegate(&FreeFuncStruct3, &testThread, WAIT_INFINITE);
 	FreeFuncStruct3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam*, INT, INT> FreeFuncStructPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT)> FreeFuncStructPtr3MulticastDelegate;
 	FreeFuncStructPtr3MulticastDelegate += MakeDelegate(&FreeFuncStructPtr3, &testThread, WAIT_INFINITE);
 	FreeFuncStructPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam*, INT, INT> FreeFuncStructConstPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT)> FreeFuncStructConstPtr3MulticastDelegate;
 	FreeFuncStructConstPtr3MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr3, &testThread, WAIT_INFINITE);
 	FreeFuncStructConstPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam&, INT, INT> FreeFuncStructRef3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT)> FreeFuncStructRef3MulticastDelegate;
 	FreeFuncStructRef3MulticastDelegate += MakeDelegate(&FreeFuncStructRef3, &testThread, WAIT_INFINITE);
 	FreeFuncStructRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam&, INT, INT> FreeFuncStructConstRef3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT)> FreeFuncStructConstRef3MulticastDelegate;
 	FreeFuncStructConstRef3MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef3, &testThread, WAIT_INFINITE);
 	FreeFuncStructConstRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=3 Member Functions
 	TestClass3 testClass3;
 
-	MulticastDelegateSafe3<INT, INT, INT> MemberFuncInt3MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT)> MemberFuncInt3MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt3MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt3MulticastDelegate);
 	MemberFuncInt3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncInt3, &testThread, WAIT_INFINITE);
@@ -2238,49 +2237,49 @@ void DelegateMemberAsyncWaitTests()
 	MemberFuncInt3MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt3MulticastDelegate);
 
-	MulticastDelegateSafe3<StructParam, INT, INT> MemberFuncStruct3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT)> MemberFuncStruct3MulticastDelegate;
 	MemberFuncStruct3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStruct3, &testThread, WAIT_INFINITE);
 	if (MemberFuncStruct3MulticastDelegate)
 		MemberFuncStruct3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam*, INT, INT> MemberFuncStructPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT)> MemberFuncStructPtr3MulticastDelegate;
 	MemberFuncStructPtr3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructPtr3, &testThread, WAIT_INFINITE);
 	MemberFuncStructPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam*, INT, INT> MemberFuncStructConstPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT)> MemberFuncStructConstPtr3MulticastDelegate;
 	MemberFuncStructConstPtr3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructConstPtr3, &testThread, WAIT_INFINITE);
 	MemberFuncStructConstPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam&, INT, INT> MemberFuncStructRef3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT)> MemberFuncStructRef3MulticastDelegate;
 	MemberFuncStructRef3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructRef3, &testThread, WAIT_INFINITE);
 	MemberFuncStructRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam&, INT, INT> MemberFuncStructConstRef3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT)> MemberFuncStructConstRef3MulticastDelegate;
 	MemberFuncStructConstRef3MulticastDelegate += MakeDelegate(&testClass3, &TestClass3::MemberFuncStructConstRef3, &testThread, WAIT_INFINITE);
 	MemberFuncStructConstRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
 	// N=3 Static Functions
-	MulticastDelegateSafe3<INT, INT, INT> StaticFuncInt3MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT)> StaticFuncInt3MulticastDelegate;
 	StaticFuncInt3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncInt3, &testThread, WAIT_INFINITE);
 	StaticFuncInt3MulticastDelegate(TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam, INT, INT> StaticFuncStruct3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT)> StaticFuncStruct3MulticastDelegate;
 	StaticFuncStruct3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStruct3, &testThread, WAIT_INFINITE);
 	StaticFuncStruct3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam*, INT, INT> StaticFuncStructPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT)> StaticFuncStructPtr3MulticastDelegate;
 	StaticFuncStructPtr3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructPtr3, &testThread, WAIT_INFINITE);
 	StaticFuncStructPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam*, INT, INT> StaticFuncStructConstPtr3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT)> StaticFuncStructConstPtr3MulticastDelegate;
 	StaticFuncStructConstPtr3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructConstPtr3, &testThread, WAIT_INFINITE);
 	StaticFuncStructConstPtr3MulticastDelegate(&structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<StructParam&, INT, INT> StaticFuncStructRef3MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT)> StaticFuncStructRef3MulticastDelegate;
 	StaticFuncStructRef3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructRef3, &testThread, WAIT_INFINITE);
 	StaticFuncStructRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe3<const StructParam&, INT, INT> StaticFuncStructConstRef3MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT)> StaticFuncStructConstRef3MulticastDelegate;
 	StaticFuncStructConstRef3MulticastDelegate += MakeDelegate(&TestClass3::StaticFuncStructConstRef3, &testThread, WAIT_INFINITE);
 	StaticFuncStructConstRef3MulticastDelegate(structParam, TEST_INT, TEST_INT);
 
@@ -2310,7 +2309,7 @@ void DelegateMemberAsyncWaitTests()
 		int ret = MemberFuncIntWithReturn3Delegate(TEST_INT, TEST_INT, TEST_INT);
 
 	// N=4 Free Functions
-	MulticastDelegateSafe4<INT, INT, INT, INT> FreeFuncInt4MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT)> FreeFuncInt4MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt4MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt4MulticastDelegate);
 	FreeFuncInt4MulticastDelegate += MakeDelegate(&FreeFuncInt4, &testThread, WAIT_INFINITE);
@@ -2323,30 +2322,30 @@ void DelegateMemberAsyncWaitTests()
 	FreeFuncInt4MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt4MulticastDelegate);
 
-	MulticastDelegateSafe4<StructParam, INT, INT, INT> FreeFuncStruct4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT)> FreeFuncStruct4MulticastDelegate;
 	FreeFuncStruct4MulticastDelegate += MakeDelegate(&FreeFuncStruct4, &testThread, WAIT_INFINITE);
 	FreeFuncStruct4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam*, INT, INT, INT> FreeFuncStructPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT)> FreeFuncStructPtr4MulticastDelegate;
 	FreeFuncStructPtr4MulticastDelegate += MakeDelegate(&FreeFuncStructPtr4, &testThread, WAIT_INFINITE);
 	FreeFuncStructPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam*, INT, INT, INT> FreeFuncStructConstPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT)> FreeFuncStructConstPtr4MulticastDelegate;
 	FreeFuncStructConstPtr4MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr4, &testThread, WAIT_INFINITE);
 	FreeFuncStructConstPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam&, INT, INT, INT> FreeFuncStructRef4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT)> FreeFuncStructRef4MulticastDelegate;
 	FreeFuncStructRef4MulticastDelegate += MakeDelegate(&FreeFuncStructRef4, &testThread, WAIT_INFINITE);
 	FreeFuncStructRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam&, INT, INT, INT> FreeFuncStructConstRef4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT)> FreeFuncStructConstRef4MulticastDelegate;
 	FreeFuncStructConstRef4MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef4, &testThread, WAIT_INFINITE);
 	FreeFuncStructConstRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=4 Member Functions
 	TestClass4 testClass4;
 
-	MulticastDelegateSafe4<INT, INT, INT, INT> MemberFuncInt4MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT)> MemberFuncInt4MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt4MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt4MulticastDelegate);
 	MemberFuncInt4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncInt4, &testThread, WAIT_INFINITE);
@@ -2357,49 +2356,49 @@ void DelegateMemberAsyncWaitTests()
 	MemberFuncInt4MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt4MulticastDelegate);
 
-	MulticastDelegateSafe4<StructParam, INT, INT, INT> MemberFuncStruct4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT)> MemberFuncStruct4MulticastDelegate;
 	MemberFuncStruct4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStruct4, &testThread, WAIT_INFINITE);
 	if (MemberFuncStruct4MulticastDelegate)
 		MemberFuncStruct4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam*, INT, INT, INT> MemberFuncStructPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT)> MemberFuncStructPtr4MulticastDelegate;
 	MemberFuncStructPtr4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructPtr4, &testThread, WAIT_INFINITE);
 	MemberFuncStructPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam*, INT, INT, INT> MemberFuncStructConstPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT)> MemberFuncStructConstPtr4MulticastDelegate;
 	MemberFuncStructConstPtr4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructConstPtr4, &testThread, WAIT_INFINITE);
 	MemberFuncStructConstPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam&, INT, INT, INT> MemberFuncStructRef4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT)> MemberFuncStructRef4MulticastDelegate;
 	MemberFuncStructRef4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructRef4, &testThread, WAIT_INFINITE);
 	MemberFuncStructRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam&, INT, INT, INT> MemberFuncStructConstRef4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT)> MemberFuncStructConstRef4MulticastDelegate;
 	MemberFuncStructConstRef4MulticastDelegate += MakeDelegate(&testClass4, &TestClass4::MemberFuncStructConstRef4, &testThread, WAIT_INFINITE);
 	MemberFuncStructConstRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=4 Static Functions
-	MulticastDelegateSafe4<INT, INT, INT, INT> StaticFuncInt4MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT)> StaticFuncInt4MulticastDelegate;
 	StaticFuncInt4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncInt4, &testThread, WAIT_INFINITE);
 	StaticFuncInt4MulticastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam, INT, INT, INT> StaticFuncStruct4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT)> StaticFuncStruct4MulticastDelegate;
 	StaticFuncStruct4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStruct4, &testThread, WAIT_INFINITE);
 	StaticFuncStruct4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam*, INT, INT, INT> StaticFuncStructPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT)> StaticFuncStructPtr4MulticastDelegate;
 	StaticFuncStructPtr4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructPtr4, &testThread, WAIT_INFINITE);
 	StaticFuncStructPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam*, INT, INT, INT> StaticFuncStructConstPtr4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT)> StaticFuncStructConstPtr4MulticastDelegate;
 	StaticFuncStructConstPtr4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructConstPtr4, &testThread, WAIT_INFINITE);
 	StaticFuncStructConstPtr4MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<StructParam&, INT, INT, INT> StaticFuncStructRef4MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT)> StaticFuncStructRef4MulticastDelegate;
 	StaticFuncStructRef4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructRef4, &testThread, WAIT_INFINITE);
 	StaticFuncStructRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe4<const StructParam&, INT, INT, INT> StaticFuncStructConstRef4MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT)> StaticFuncStructConstRef4MulticastDelegate;
 	StaticFuncStructConstRef4MulticastDelegate += MakeDelegate(&TestClass4::StaticFuncStructConstRef4, &testThread, WAIT_INFINITE);
 	StaticFuncStructConstRef4MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT);
 
@@ -2429,7 +2428,7 @@ void DelegateMemberAsyncWaitTests()
 		int ret = MemberFuncIntWithReturn4Delegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Free Functions
-	MulticastDelegateSafe5<INT, INT, INT, INT, INT> FreeFuncInt5MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT, INT)> FreeFuncInt5MulticastDelegate;
 	ASSERT_TRUE(FreeFuncInt5MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!FreeFuncInt5MulticastDelegate);
 	FreeFuncInt5MulticastDelegate += MakeDelegate(&FreeFuncInt5, &testThread, WAIT_INFINITE);
@@ -2442,30 +2441,30 @@ void DelegateMemberAsyncWaitTests()
 	FreeFuncInt5MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt5MulticastDelegate);
 
-	MulticastDelegateSafe5<StructParam, INT, INT, INT, INT> FreeFuncStruct5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT, INT)> FreeFuncStruct5MulticastDelegate;
 	FreeFuncStruct5MulticastDelegate += MakeDelegate(&FreeFuncStruct5, &testThread, WAIT_INFINITE);
 	FreeFuncStruct5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam*, INT, INT, INT, INT> FreeFuncStructPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT, INT)> FreeFuncStructPtr5MulticastDelegate;
 	FreeFuncStructPtr5MulticastDelegate += MakeDelegate(&FreeFuncStructPtr5, &testThread, WAIT_INFINITE);
 	FreeFuncStructPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam*, INT, INT, INT, INT> FreeFuncStructConstPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT, INT)> FreeFuncStructConstPtr5MulticastDelegate;
 	FreeFuncStructConstPtr5MulticastDelegate += MakeDelegate(&FreeFuncStructConstPtr5, &testThread, WAIT_INFINITE);
 	FreeFuncStructConstPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam&, INT, INT, INT, INT> FreeFuncStructRef5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT, INT)> FreeFuncStructRef5MulticastDelegate;
 	FreeFuncStructRef5MulticastDelegate += MakeDelegate(&FreeFuncStructRef5, &testThread, WAIT_INFINITE);
 	FreeFuncStructRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam&, INT, INT, INT, INT> FreeFuncStructConstRef5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT, INT)> FreeFuncStructConstRef5MulticastDelegate;
 	FreeFuncStructConstRef5MulticastDelegate += MakeDelegate(&FreeFuncStructConstRef5, &testThread, WAIT_INFINITE);
 	FreeFuncStructConstRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Member Functions
 	TestClass5 testClass5;
 
-	MulticastDelegateSafe5<INT, INT, INT, INT, INT> MemberFuncInt5MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT, INT)> MemberFuncInt5MulticastDelegate;
 	ASSERT_TRUE(MemberFuncInt5MulticastDelegate.Empty() == true);
 	ASSERT_TRUE(!MemberFuncInt5MulticastDelegate);
 	MemberFuncInt5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncInt5, &testThread, WAIT_INFINITE);
@@ -2476,49 +2475,49 @@ void DelegateMemberAsyncWaitTests()
 	MemberFuncInt5MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFuncInt5MulticastDelegate);
 
-	MulticastDelegateSafe5<StructParam, INT, INT, INT, INT> MemberFuncStruct5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT, INT)> MemberFuncStruct5MulticastDelegate;
 	MemberFuncStruct5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStruct5, &testThread, WAIT_INFINITE);
 	if (MemberFuncStruct5MulticastDelegate)
 		MemberFuncStruct5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam*, INT, INT, INT, INT> MemberFuncStructPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT, INT)> MemberFuncStructPtr5MulticastDelegate;
 	MemberFuncStructPtr5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructPtr5, &testThread, WAIT_INFINITE);
 	MemberFuncStructPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam*, INT, INT, INT, INT> MemberFuncStructConstPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT, INT)> MemberFuncStructConstPtr5MulticastDelegate;
 	MemberFuncStructConstPtr5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructConstPtr5, &testThread, WAIT_INFINITE);
 	MemberFuncStructConstPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam&, INT, INT, INT, INT> MemberFuncStructRef5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT, INT)> MemberFuncStructRef5MulticastDelegate;
 	MemberFuncStructRef5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructRef5, &testThread, WAIT_INFINITE);
 	MemberFuncStructRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam&, INT, INT, INT, INT> MemberFuncStructConstRef5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT, INT)> MemberFuncStructConstRef5MulticastDelegate;
 	MemberFuncStructConstRef5MulticastDelegate += MakeDelegate(&testClass5, &TestClass5::MemberFuncStructConstRef5, &testThread, WAIT_INFINITE);
 	MemberFuncStructConstRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
 	// N=5 Static Functions
-	MulticastDelegateSafe5<INT, INT, INT, INT, INT> StaticFuncInt5MulticastDelegate;
+	MulticastDelegateSafe<void(INT, INT, INT, INT, INT)> StaticFuncInt5MulticastDelegate;
 	StaticFuncInt5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncInt5, &testThread, WAIT_INFINITE);
 	StaticFuncInt5MulticastDelegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam, INT, INT, INT, INT> StaticFuncStruct5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam, INT, INT, INT, INT)> StaticFuncStruct5MulticastDelegate;
 	StaticFuncStruct5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStruct5, &testThread, WAIT_INFINITE);
 	StaticFuncStruct5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam*, INT, INT, INT, INT> StaticFuncStructPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam*, INT, INT, INT, INT)> StaticFuncStructPtr5MulticastDelegate;
 	StaticFuncStructPtr5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructPtr5, &testThread, WAIT_INFINITE);
 	StaticFuncStructPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam*, INT, INT, INT, INT> StaticFuncStructConstPtr5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam*, INT, INT, INT, INT)> StaticFuncStructConstPtr5MulticastDelegate;
 	StaticFuncStructConstPtr5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructConstPtr5, &testThread, WAIT_INFINITE);
 	StaticFuncStructConstPtr5MulticastDelegate(&structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<StructParam&, INT, INT, INT, INT> StaticFuncStructRef5MulticastDelegate;
+	MulticastDelegateSafe<void(StructParam&, INT, INT, INT, INT)> StaticFuncStructRef5MulticastDelegate;
 	StaticFuncStructRef5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructRef5, &testThread, WAIT_INFINITE);
 	StaticFuncStructRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MulticastDelegateSafe5<const StructParam&, INT, INT, INT, INT> StaticFuncStructConstRef5MulticastDelegate;
+	MulticastDelegateSafe<void(const StructParam&, INT, INT, INT, INT)> StaticFuncStructConstRef5MulticastDelegate;
 	StaticFuncStructConstRef5MulticastDelegate += MakeDelegate(&TestClass5::StaticFuncStructConstRef5, &testThread, WAIT_INFINITE);
 	StaticFuncStructConstRef5MulticastDelegate(structParam, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
@@ -2587,4 +2586,3 @@ void DelegateUnitTests()
 
 	testThread.ExitThread();
 }
-#endif

@@ -138,5 +138,8 @@
     <ClCompile Include="..\..\Delegate\DelegateAsync.cpp">
       <Filter>Delegate</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Delegate\DelegateUnitTests.cpp">
+      <Filter>Delegate</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
