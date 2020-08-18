@@ -7,7 +7,8 @@
 
 namespace DelegateLib 
 {
-
+   
+/// @brief Base class for all deleter's
 class heap_arg_deleter_base
 {
 public:
@@ -17,19 +18,6 @@ public:
 /// @brief Frees heap memory for each type of heap argument
 template<typename T>
 class heap_arg_deleter : public heap_arg_deleter_base
-{
-public:
-    heap_arg_deleter(T& arg) : m_arg(arg) { }
-    virtual ~heap_arg_deleter()
-    {
-        delete &m_arg;
-    }
-private:
-    T& m_arg;
-};
-
-template<typename T>
-class heap_arg_deleter<T&> : public heap_arg_deleter_base
 {
 public:
     heap_arg_deleter(T& arg) : m_arg(arg) { }
@@ -67,7 +55,6 @@ public:
 private:
     T** m_arg;
 };
-
 
 /// @brief Append an argument to the tuple
 template <typename Arg, typename... TupleElem>
@@ -136,6 +123,7 @@ auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, c
     }
 }
 
+/// @brief Terminate the template metaprogramming argument loop
 template<typename... Ts>
 auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, std::tuple<Ts...> tup)
 {

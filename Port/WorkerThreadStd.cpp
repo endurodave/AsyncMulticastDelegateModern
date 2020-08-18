@@ -123,8 +123,6 @@ void WorkerThread::Process()
 
 				// Invoke the callback on the target thread
 				delegateMsg->GetDelegateInvoker()->DelegateInvoke(delegateMsg);
-
-				// Delete dynamic data passed through message queue
 				break;
 			}
 
