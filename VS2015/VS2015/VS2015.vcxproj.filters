@@ -89,18 +89,6 @@
     <ClInclude Include="..\..\Port\WorkerThreadWin.h">
       <Filter>Port</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Delegate\DelegateRemoteInvoker.h">
-      <Filter>Delegate</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Delegate\DelegateRemoteRecv.h">
-      <Filter>Delegate</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Delegate\DelegateRemoteSend.h">
-      <Filter>Delegate</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Delegate\DelegateTransport.h">
-      <Filter>Delegate</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Delegate\make_tuple_heap.h">
       <Filter>Delegate</Filter>
     </ClInclude>
@@ -131,9 +119,6 @@
     </ClCompile>
     <ClCompile Include="..\..\Port\WorkerThreadWin.cpp">
       <Filter>Port</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Delegate\DelegateRemoteInvoker.cpp">
-      <Filter>Delegate</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Delegate\DelegateAsync.cpp">
       <Filter>Delegate</Filter>
