@@ -25,6 +25,7 @@
 // - Check memory leaks
 // - Fix all file header comments to use correct date and article link
 // - Compile with GCC
+// - Lizard lines of code
 
 // main.cpp
 // @see https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus
