@@ -1,9 +1,9 @@
 #ifndef _DELEGATE_SP_ASYNC_H
 #define _DELEGATE_SP_ASYNC_H
 
-// Delegate.h
-// @see https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus
-// David Lafreniere, Dec 2016.
+// DelegateSpAsync.h
+// @see https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cplusplus
+// David Lafreniere, Aug 2020.
 
 
 #include "DelegateSp.h"

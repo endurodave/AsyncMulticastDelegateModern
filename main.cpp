@@ -7,20 +7,9 @@
 #include <utility>
 #include "WorkerThreadStd.h"
 
-// TODO 
-// Explain template meta programming in the article? 
-// https://en.wikibooks.org/wiki/C%2B%2B_Programming/Templates/Template_Meta-Programming
-// - Replace asserts with exceptions? noexcept keyword?
-//   have template argument to use a different allocator (just like std::list, ...)
-// - Fix all file header comments to use correct date and article link
-// - Lizard lines of code
-
 // main.cpp
-// @see https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus
-// David Lafreniere, Dec 2016.
-//
-// @see https://www.codeproject.com/Articles/5262271/Remote-Procedure-Calls-using-Cplusplus-Delegates
-// David Lafreniere, Mar 2020.
+// @see https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cplusplus
+// David Lafreniere, Aug 2020.
 
 #if 0 // Not reliable
 #if WIN32
@@ -313,7 +302,7 @@ int main(void)
     // Remove the delegate from the container
     delegateG = 0;
 
-    // Create delegate with std::string and int arguments then asychronously 
+    // Create delegate with std::string and int arguments then asynchronously 
     // invoke on a member function
     MulticastDelegateSafe<void(const std::string&, int)> delegateH;
     delegateH += MakeDelegate(&testClass, &TestClass::MemberFuncStdString, &workerThread1);

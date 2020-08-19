@@ -1,6 +1,9 @@
 #ifndef _THREAD_STD_H
 #define _THREAD_STD_H
 
+// @see https://www.codeproject.com/Articles/1169105/Cplusplus-std-thread-Event-Loop-with-Message-Queue
+// David Lafreniere, Feb 2017.
+
 #include "DelegateOpt.h"
 #include "DelegateThread.h"
 #include "DataTypes.h"

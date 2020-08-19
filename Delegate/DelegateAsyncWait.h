@@ -2,8 +2,8 @@
 #define _DELEGATE_ASYNC_WAIT_H
 
 // DelegateAsyncWait.h
-// @see https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus
-// David Lafreniere, Dec 2016.
+// @see https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cplusplus
+// David Lafreniere, Aug 2020.
 
 #include "Delegate.h"
 #include "DelegateThread.h"
