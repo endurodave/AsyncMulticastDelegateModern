@@ -283,7 +283,7 @@ int main(void)
     // Any function with the signature "void Func(const TestStruct&, float, int**)".
     MulticastDelegateSafe<void(const TestStruct&, float, int**)> delegateD;
 
-    // Add a DelegateMember1<TestStruct*> delegate to the container that will invoke on workerThread1
+    // Add a delegate to the container that will invoke on workerThread1
     delegateD += MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, &workerThread1);
 
     // Asynchronously invoke the delegate target member function TestClass::MemberFuncThreeArgs()
@@ -297,11 +297,11 @@ int main(void)
     // Remove the delegate from the container
     delegateD -= MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, &workerThread1);
 
-    // Create a singlecast delegate container that accepts Delegate1<int, int> delegates.
+    // Create a singlecast delegate container that accepts Delegate<int(int)> delegates.
     // Any function with the signature "int Func(int)".
     SinglecastDelegate<int(int)> delegateF;
 
-    // Add a DelegateFree1<int, int> delegate to the container 
+    // Add a DelegateFree<int(int)> delegate to the container 
     delegateF = MakeDelegate(&FreeFuncIntRetInt);
 
     // Invoke the delegate target free function FreeFuncInt()
