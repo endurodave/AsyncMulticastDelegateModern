@@ -34,7 +34,7 @@ public:
     DelegateMemberAsyncSp(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) : m_sync(false) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncSp() : m_thread(0), m_sync(false) { }
+    DelegateMemberAsyncSp() : m_thread(nullptr), m_sync(false) { }
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {

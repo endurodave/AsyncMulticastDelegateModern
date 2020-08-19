@@ -52,6 +52,11 @@
 //   have template argument to use a different allocator (just like std::list, ...)
 // - Check memory leaks
 // - Use nullptr, not 0 or NULL
+// - All m_thread(0) to m_thread(nullptr) (all other (0) instances too)
+
+// std::reference_wrapper
+// std::enable_shared_from_this then use shared_from_this or weak_from_this
+//https://eyakubovich.github.io/2018-08-05-smart-pointers-in-function-arguments/
 
 
 // main.cpp

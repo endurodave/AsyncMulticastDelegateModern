@@ -89,7 +89,7 @@ public:
         LockGuard::Create(&m_lock);
         Swap(rhs);
     }
-    DelegateFreeAsyncWait() : m_thread(0), m_success(false), m_timeout(0), m_refCnt(0), m_sync(false) { LockGuard::Create(&m_lock); }
+    DelegateFreeAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_refCnt(0), m_sync(false) { LockGuard::Create(&m_lock); }
     virtual ~DelegateFreeAsyncWait() { LockGuard::Destroy(&m_lock); }
 
     virtual DelegateFreeAsyncWait<RetType(Args...)>* Clone() const {
@@ -209,7 +209,7 @@ public:
         LockGuard::Create(&m_lock);
         Swap(rhs);
     }
-    DelegateMemberAsyncWait() : m_thread(0), m_success(false), m_timeout(0), m_refCnt(0), m_sync(false) { LockGuard::Create(&m_lock); }
+    DelegateMemberAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_refCnt(0), m_sync(false) { LockGuard::Create(&m_lock); }
     virtual ~DelegateMemberAsyncWait() { LockGuard::Destroy(&m_lock); }
 
     virtual DelegateMemberAsyncWait<TClass, RetType(Args...)>* Clone() const {

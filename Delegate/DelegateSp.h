@@ -25,7 +25,7 @@ public:
 
     DelegateMemberSp(ObjectPtr object, MemberFunc func) { Bind(object, func); }
     DelegateMemberSp(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
-    DelegateMemberSp() : m_object(0), m_func(0) { }
+    DelegateMemberSp() : m_object(nullptr), m_func(nullptr) { }
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func) {

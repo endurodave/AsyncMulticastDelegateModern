@@ -24,7 +24,7 @@ public:
     typedef RetType(*FreeFunc)(Args...);
 
     DelegateFreeAsync(FreeFunc func, DelegateThread* thread) : m_sync(false) { Bind(func, thread); }
-    DelegateFreeAsync() : m_thread(0), m_sync(false) { }
+    DelegateFreeAsync() : m_thread(nullptr), m_sync(false) { }
 
     /// Bind a free function to the delegate.
     void Bind(FreeFunc func, DelegateThread* thread) {
@@ -94,7 +94,7 @@ public:
         { Bind(object, func, thread); }
     DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) : m_sync(false)
         { Bind(object, func, thread); }
-    DelegateMemberAsync() : m_thread(0), m_sync(false) { }
+    DelegateMemberAsync() : m_thread(nullptr), m_sync(false) { }
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {

@@ -42,7 +42,7 @@ public:
     typedef RetType(*FreeFunc)(Args...);
 
     DelegateFree(FreeFunc func) { Bind(func); }
-    DelegateFree() : m_func(0) { }
+    DelegateFree() : m_func(nullptr) { }
 
     /// Bind a free function to the delegate.
     void Bind(FreeFunc func) { m_func = func; }
@@ -75,14 +75,13 @@ struct DelegateMember; // Not defined
 template <class TClass, class RetType, class... Args>
 class DelegateMember<TClass, RetType(Args...)> : public Delegate<RetType(Args...)> {
 public:
-    // TODO C++ modern pointers?
     typedef TClass* ObjectPtr;
     typedef RetType(TClass::*MemberFunc)(Args...);
     typedef RetType(TClass::*ConstMemberFunc)(Args...) const;
 
     DelegateMember(ObjectPtr object, MemberFunc func) { Bind(object, func); }
     DelegateMember(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
-    DelegateMember() : m_object(0), m_func(0) { }
+    DelegateMember() : m_object(nullptr), m_func(nullptr) { }
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func) {

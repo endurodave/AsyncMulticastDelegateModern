@@ -13,7 +13,7 @@ using namespace DelegateLib;
 //----------------------------------------------------------------------------
 // WorkerThread
 //----------------------------------------------------------------------------
-WorkerThread::WorkerThread(const CHAR* threadName) : m_thread(0), THREAD_NAME(threadName)
+WorkerThread::WorkerThread(const CHAR* threadName) : m_thread(nullptr), THREAD_NAME(threadName)
 {
 }
 
