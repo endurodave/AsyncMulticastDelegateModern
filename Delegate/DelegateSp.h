@@ -43,7 +43,7 @@ public:
 
     // Invoke the bound delegate function
     virtual RetType operator()(Args... args) {
-        return (*m_object.*m_func)(args...);
+        return std::invoke(m_func, m_object, args...);
     }
 
     virtual bool operator==(const DelegateBase& rhs) const {
