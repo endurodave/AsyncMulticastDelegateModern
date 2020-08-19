@@ -77,9 +77,6 @@
     <ClInclude Include="..\..\Port\ThreadMsg.h">
       <Filter>Port</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Port\ThreadWin.h">
-      <Filter>Port</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Port\UserMsgs.h">
       <Filter>Port</Filter>
     </ClInclude>
@@ -106,9 +103,6 @@
       <Filter>Delegate</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Port\Fault.cpp">
-      <Filter>Port</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Port\ThreadWin.cpp">
       <Filter>Port</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Port\WorkerThreadStd.cpp">

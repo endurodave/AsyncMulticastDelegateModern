@@ -18,11 +18,9 @@ struct DelegateMemberAsyncSp; // Not defined
 /// @brief The DelegateMemberAsyncSp delegate implemenation asynchronously binds and 
 /// and invokes class instance member functions. The std::shared_ptr<TClass> is used in 
 /// lieu of a raw TClass* pointer. 
-template <class TClass, class RetType, class... Args>
-class DelegateMemberAsyncSp<TClass, RetType(Args...)> : public DelegateMemberSp<TClass, RetType(Args...)>, public IDelegateInvoker {
+template <class TClass, class... Args>
+class DelegateMemberAsyncSp<TClass, void(Args...)> : public DelegateMemberSp<TClass, void(Args...)>, public IDelegateInvoker {
 public:
-    static_assert(std::is_same<RetType, void>::value, "RetType must be void on DelegateMemberAsyncSp.");
-
     typedef std::shared_ptr<TClass> ObjectPtr;
     typedef void (TClass::*MemberFunc)(Args...);
     typedef void (TClass::*ConstMemberFunc)(Args...) const;
@@ -39,34 +37,34 @@ public:
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateMemberSp<TClass, RetType(Args...)>::Bind(object, func);
+        DelegateMemberSp<TClass, void(Args...)>::Bind(object, func);
     }
 
     /// Bind a const member function to a delegate. 
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateMemberSp<TClass, RetType(Args...)>::Bind(object, func);
+        DelegateMemberSp<TClass, void(Args...)>::Bind(object, func);
     }
 
-    virtual DelegateMemberAsyncSp<TClass, RetType(Args...)>* Clone() const {
-        return new DelegateMemberAsyncSp<TClass, RetType(Args...)>(*this);
+    virtual DelegateMemberAsyncSp<TClass, void(Args...)>* Clone() const {
+        return new DelegateMemberAsyncSp<TClass, void(Args...)>(*this);
     }
 
     virtual bool operator==(const DelegateBase& rhs) const {
-        const DelegateMemberAsyncSp<TClass, RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberAsyncSp<TClass, RetType(Args...)>*>(&rhs);
+        const DelegateMemberAsyncSp<TClass, void(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberAsyncSp<TClass, void(Args...)>*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
-            DelegateMemberSp<TClass, RetType(Args...)>::operator == (rhs);
+            DelegateMemberSp<TClass, void(Args...)>::operator == (rhs);
     }
 
     /// Invoke delegate function asynchronously
     virtual void operator()(Args... args) {
         if (m_thread == nullptr || m_sync)
-            DelegateMemberSp<TClass, RetType(Args...)>::operator()(args...);
+            DelegateMemberSp<TClass, void(Args...)>::operator()(args...);
         else
         {
             // Create a clone instance of this delegate 
-            auto delegate = std::shared_ptr<DelegateMemberAsyncSp<TClass, RetType(Args...)>>(Clone());
+            auto delegate = std::shared_ptr<DelegateMemberAsyncSp<TClass, void(Args...)>>(Clone());
 
             // Create the delegate message
             auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, args...));
@@ -84,7 +82,7 @@ public:
 
         // Invoke the delegate function
         m_sync = true;
-        std::apply(&DelegateMemberSp<TClass, RetType(Args...)>::operator(),
+        std::apply(&DelegateMemberSp<TClass, void(Args...)>::operator(),
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
@@ -94,14 +92,14 @@ private:
     bool m_sync;
 };
 
-template <class TClass, class RetType, class... Args>
-DelegateMemberAsyncSp<TClass, RetType(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetType(TClass::*func)(Args... args), DelegateThread* thread) {
-    return DelegateMemberAsyncSp<TClass, RetType(Args...)>(object, func, thread);
+template <class TClass, class... Args>
+DelegateMemberAsyncSp<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args), DelegateThread* thread) {
+    return DelegateMemberAsyncSp<TClass, void(Args...)>(object, func, thread);
 }
 
-template <class TClass, class RetType, class... Args>
-DelegateMemberAsyncSp<TClass, RetType(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetType(TClass::*func)(Args... args) const, DelegateThread* thread) {
-    return DelegateMemberAsyncSp<TClass, RetType(Args...)>(object, func, thread);
+template <class TClass, class... Args>
+DelegateMemberAsyncSp<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args) const, DelegateThread* thread) {
+    return DelegateMemberAsyncSp<TClass, void(Args...)>(object, func, thread);
 }
 
 }

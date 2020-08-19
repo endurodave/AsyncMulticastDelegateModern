@@ -121,8 +121,7 @@ auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, c
     }
     catch (std::bad_alloc&)
     {
-        if (&heap_arg)
-            delete &heap_arg;
+        delete &heap_arg;
         throw;
     }
 }

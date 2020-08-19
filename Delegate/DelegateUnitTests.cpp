@@ -2573,3 +2573,4 @@ void DelegateUnitTests()
 
 	testThread.ExitThread();
 }
+

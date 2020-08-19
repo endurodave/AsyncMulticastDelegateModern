@@ -10,20 +10,9 @@
 // TODO 
 // Explain template meta programming in the article? 
 // https://en.wikibooks.org/wiki/C%2B%2B_Programming/Templates/Template_Meta-Programming
-// - Fix Win32 threads to use smart pointers
 // - Replace asserts with exceptions? noexcept keyword?
-// - Try creating common errors. Are the compiler error comprehesible? 
-// - All modern C++ pointers for class members? shared, unqiue_ptr, etc... 
-// - Modern delegate vs. old speed test
-// - std::mem_fn in member versions of delegates? A free function one too? std::bind better?
-// - std::function instead of raw function pointers in delegate classes
-//   std::function<void (Ts...)> f;
-// - use std::mem_fn ? 
-// - Remove Win32 threads? Just C++ threads?
 //   have template argument to use a different allocator (just like std::list, ...)
-// - Check memory leaks
 // - Fix all file header comments to use correct date and article link
-// - Compile with GCC
 // - Lizard lines of code
 
 // main.cpp
@@ -213,7 +202,7 @@ int main(void)
 #endif
 
 	// Run all unit tests (uncomment to run unit tests)
-	DelegateUnitTests();
+	//DelegateUnitTests();
 
 #ifdef WIN32
     LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds, TotalElapsedMicroseconds = { 0 };
@@ -312,7 +301,7 @@ int main(void)
     delegateF.Clear();
 
     // Create a singlecast delegate container that accepts delegates with 
-    // the singature "void Func(TestStruct**)"
+    // the signature "void Func(TestStruct**)"
     SinglecastDelegate<void(TestStruct**)> delegateG;
 
     // Make a delegate that points to a free function 

@@ -1,6 +1,8 @@
 #ifndef _DELEGATE_H
 #define _DELEGATE_H
 
+#include <functional>
+
 // Delegate.h
 // @see https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus
 // David Lafreniere, Dec 2016.
