@@ -19,7 +19,6 @@
 // - std::function instead of raw function pointers in delegate classes
 //   std::function<void (Ts...)> f;
 // - use std::mem_fn ? 
-// - use std::invoke in operator() functions?
 // - Remove Win32 threads? Just C++ threads?
 //   have template argument to use a different allocator (just like std::list, ...)
 // - Check memory leaks

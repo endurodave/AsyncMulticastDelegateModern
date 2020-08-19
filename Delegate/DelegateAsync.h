@@ -15,12 +15,10 @@ namespace DelegateLib {
 template <class R>
 struct DelegateFreeAsync; // Not defined
 
-template <class RetType, class... Args> 
-class DelegateFreeAsync<RetType(Args...)> : public DelegateFree<RetType(Args...)>, public IDelegateInvoker {
+template <class... Args> 
+class DelegateFreeAsync<void(Args...)> : public DelegateFree<void(Args...)>, public IDelegateInvoker {
 public:
-    static_assert(std::is_same<RetType, void>::value, "RetType must be void on DelegateFreeAsync.");
-
-    typedef RetType(*FreeFunc)(Args...);
+    typedef void(*FreeFunc)(Args...);
 
     DelegateFreeAsync(FreeFunc func, DelegateThread* thread) : m_sync(false) { Bind(func, thread); }
     DelegateFreeAsync() : m_thread(nullptr), m_sync(false) { }
@@ -28,28 +26,28 @@ public:
     /// Bind a free function to the delegate.
     void Bind(FreeFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateFree<RetType(Args...)>::Bind(func);
+        DelegateFree<void(Args...)>::Bind(func);
     }
 
-    virtual DelegateFreeAsync<RetType(Args...)>* Clone() const {
-        return new DelegateFreeAsync<RetType(Args...)>(*this);
+    virtual DelegateFreeAsync<void(Args...)>* Clone() const {
+        return new DelegateFreeAsync<void(Args...)>(*this);
     }
 
     virtual bool operator==(const DelegateBase& rhs) const {
-        const DelegateFreeAsync<RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateFreeAsync<RetType(Args...)>*>(&rhs);
+        const DelegateFreeAsync<void(Args...)>* derivedRhs = dynamic_cast<const DelegateFreeAsync<void(Args...)>*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
-            DelegateFree<RetType(Args...)>::operator == (rhs);
+            DelegateFree<void(Args...)>::operator == (rhs);
     }
 
     // Invoke delegate function asynchronously
     virtual void operator()(Args... args) {
         if (m_thread == nullptr || m_sync)
-            DelegateFree<RetType(Args...)>::operator()(args...);
+            DelegateFree<void(Args...)>::operator()(args...);
         else
         {
             // Create a clone instance of this delegate 
-            auto delegate = std::shared_ptr<DelegateFreeAsync<RetType(Args...)>>(Clone());
+            auto delegate = std::shared_ptr<DelegateFreeAsync<void(Args...)>>(Clone());
 
             // Create the delegate message
             auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, args...));
@@ -67,7 +65,7 @@ public:
 
         // Invoke the delegate function
         m_sync = true;
-        std::apply(&DelegateFree<RetType(Args...)>::operator(), 
+        std::apply(&DelegateFree<void(Args...)>::operator(), 
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
@@ -79,11 +77,9 @@ private:
 template <class C, class R>
 struct DelegateMemberAsync; // Not defined
 
-template <class TClass, class RetType, class... Args>
-class DelegateMemberAsync<TClass, RetType(Args...)> : public DelegateMember<TClass, RetType(Args...)>, public IDelegateInvoker {
+template <class TClass, class... Args>
+class DelegateMemberAsync<TClass, void(Args...)> : public DelegateMember<TClass, void(Args...)>, public IDelegateInvoker {
 public:
-    static_assert(std::is_same<RetType, void>::value, "RetType must be void on DelegateMemberAsync.");
-
     typedef TClass* ObjectPtr;
     typedef void (TClass::*MemberFunc)(Args...);
     typedef void (TClass::*ConstMemberFunc)(Args...) const;
@@ -98,34 +94,34 @@ public:
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateMember<TClass, RetType(Args...)>::Bind(object, func);
+        DelegateMember<TClass, void(Args...)>::Bind(object, func);
     }
 
     /// Bind a const member function to a delegate. 
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateMember<TClass, RetType(Args...)>::Bind(object, func);
+        DelegateMember<TClass, void(Args...)>::Bind(object, func);
     }
 
-    virtual DelegateMemberAsync<TClass, RetType(Args...)>* Clone() const {
-        return new DelegateMemberAsync<TClass, RetType(Args...)>(*this);
+    virtual DelegateMemberAsync<TClass, void(Args...)>* Clone() const {
+        return new DelegateMemberAsync<TClass, void(Args...)>(*this);
     }
 
     virtual bool operator==(const DelegateBase& rhs) const {
-        const DelegateMemberAsync<TClass, RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberAsync<TClass, RetType(Args...)>*>(&rhs);
+        const DelegateMemberAsync<TClass, void(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberAsync<TClass, void(Args...)>*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
-            DelegateMember<TClass, RetType(Args...)>::operator == (rhs);
+            DelegateMember<TClass, void(Args...)>::operator == (rhs);
     }
 
     /// Invoke delegate function asynchronously
     virtual void operator()(Args... args) {
         if (m_thread == nullptr || m_sync)
-            DelegateMember<TClass, RetType(Args...)>::operator()(args...);
+            DelegateMember<TClass, void(Args...)>::operator()(args...);
         else
         {
             // Create a clone instance of this delegate 
-            auto delegate = std::shared_ptr<DelegateMemberAsync<TClass, RetType(Args...)>>(Clone());
+            auto delegate = std::shared_ptr<DelegateMemberAsync<TClass, void(Args...)>>(Clone());
 
             // Create the delegate message
             auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, args...));
@@ -143,7 +139,7 @@ public:
 
         // Invoke the delegate function
         m_sync = true;
-        std::apply(&DelegateMember<TClass, RetType(Args...)>::operator(),
+        std::apply(&DelegateMember<TClass, void(Args...)>::operator(),
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
@@ -153,19 +149,19 @@ private:
     bool m_sync;
 };
 
-template <class TClass, class RetType, class... Args>
-DelegateMemberAsync<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args), DelegateThread* thread) {
-    return DelegateMemberAsync<TClass, RetType(Args...)>(object, func, thread);
+template <class TClass, class... Args>
+DelegateMemberAsync<TClass, void(Args...)> MakeDelegate(TClass* object, void(TClass::*func)(Args... args), DelegateThread* thread) {
+    return DelegateMemberAsync<TClass, void(Args...)>(object, func, thread);
 }
 
-template <class TClass, class RetType, class... Args>
-DelegateMemberAsync<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args) const, DelegateThread* thread) {
-    return DelegateMemberAsync<TClass, RetType(Args...)>(object, func, thread);
+template <class TClass, class... Args>
+DelegateMemberAsync<TClass, void(Args...)> MakeDelegate(TClass* object, void(TClass::*func)(Args... args) const, DelegateThread* thread) {
+    return DelegateMemberAsync<TClass, void(Args...)>(object, func, thread);
 }
 
-template <class RetType, class... Args>
-DelegateFreeAsync<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args), DelegateThread* thread) {
-    return DelegateFreeAsync<RetType(Args...)>(func, thread);
+template <class... Args>
+DelegateFreeAsync<void(Args...)> MakeDelegate(void(*func)(Args... args), DelegateThread* thread) {
+    return DelegateFreeAsync<void(Args...)>(func, thread);
 }
 
 }
