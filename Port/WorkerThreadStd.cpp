@@ -29,7 +29,7 @@ WorkerThread::~WorkerThread()
 BOOL WorkerThread::CreateThread()
 {
 	if (!m_thread)
-		m_thread = std::shared_ptr<std::thread>(new thread(&WorkerThread::Process, this));
+		m_thread = std::unique_ptr<std::thread>(new thread(&WorkerThread::Process, this));
 	return TRUE;
 }
 

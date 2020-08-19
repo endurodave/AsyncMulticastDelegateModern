@@ -43,7 +43,7 @@ private:
 	/// Entry point for the thread
 	void Process();
 
-	std::shared_ptr<std::thread> m_thread;
+	std::unique_ptr<std::thread> m_thread;
 	std::queue<std::shared_ptr<ThreadMsg>> m_queue;
 	std::mutex m_mutex;
 	std::condition_variable m_cv;
