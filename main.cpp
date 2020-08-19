@@ -5,59 +5,26 @@
 #include <chrono>
 #include <thread>
 #include <utility>
-#if USE_STD_THREADS
 #include "WorkerThreadStd.h"
-#elif USE_WIN32_THREADS
-#include "WorkerThreadWin.h"
-#endif
 
 // TODO 
 // Explain template meta programming in the article? 
 // https://en.wikibooks.org/wiki/C%2B%2B_Programming/Templates/Template_Meta-Programming
-// - Fix remote delegates
-// - Fix unit tests
 // - Fix Win32 threads to use smart pointers
-// - New C++ loop styles
-// - && arguments supported?
-// - DelegateThread* thread to smart pointer?
 // - Replace asserts with exceptions? noexcept keyword?
-// - Fix MulticastDelegate class TODO's
-// - New namespace? DelegateLib -> mcd
 // - Try creating common errors. Are the compiler error comprehesible? 
 // - All modern C++ pointers for class members? shared, unqiue_ptr, etc... 
-// - Lambda expressions supported?
-// - Use && to prevent MakeDelegate copy?
-// - Handle && function arguments
-// - Use void(int) form for defining delegates?
-// - Handle non-void return values?
-// - static assert if use non-void return value in async?
-// - Use std::function in delegate classes? Heavyweight solution?
-// - Use std::forward on arguments in function invocation to save processing time?
-//      f(std::forward<Args>(args)...);
-// - Use std::forward in DelegateArgs::New()?
-// - noexcept keyword?
-// - lambda support
 // - Modern delegate vs. old speed test
 // - std::mem_fn in member versions of delegates? A free function one too? std::bind better?
 // - std::function instead of raw function pointers in delegate classes
 //   std::function<void (Ts...)> f;
 // - use std::mem_fn ? 
 // - use std::invoke in operator() functions?
-// - Using in class instead of typedef?
-//     https://stackoverflow.com/questions/23323547/perfect-forwarding-results-in-an-error-i-dont-understand
-//     using Fn = ReturnType(*)(args...);
-// - GoogleTest
 // - Remove Win32 threads? Just C++ threads?
-// - Use allocator to speed library? Make delegates use std::allocator and 
 //   have template argument to use a different allocator (just like std::list, ...)
 // - Check memory leaks
-// - Use nullptr, not 0 or NULL
-// - All m_thread(0) to m_thread(nullptr) (all other (0) instances too)
-
-// std::reference_wrapper
-// std::enable_shared_from_this then use shared_from_this or weak_from_this
-//https://eyakubovich.github.io/2018-08-05-smart-pointers-in-function-arguments/
-
+// - Fix all file header comments to use correct date and article link
+// - Compile with GCC
 
 // main.cpp
 // @see https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus
@@ -106,7 +73,6 @@ public:
 	}
 
 private:
-	//void CallbackFunction(const SystemModeChanged& data) TODO
     void CallbackFunction(const SystemModeChanged& data)
 	{
 		m_numberOfCallbacks++;
@@ -200,7 +166,7 @@ public:
 	int MemberFuncStdStringRetInt(std::string& s)
 	{
 		s = "Hello world";
-		return 2016;
+		return 2020;
 	}
 
 	static void StaticFunc(TestStruct* value)
@@ -218,26 +184,6 @@ public:
 		cout << "TestFuncNoRet " << endl;
 	}
 };
-
-// Class template specialization "tells" the delegate library that TestStructNoCopy* function 
-// arguments not to create a heap copy of TestStructNoCopy for traveling through the
-// message queue. Instead the pointer argument is passed to the asynchronously invoked callback 
-// function as is. 
-// TODO - Doesn't work now. Pass as void*? Overload new/delete in TestStructNoCopy to do nothing thus preventing new/delete
-// Smart pointer will prevent copying? 
-// TODO - This will not work. No more "DelegateArg" class
-#if 0
-namespace DelegateLib
-{
-	template <>
-	class DelegateArg<TestStructNoCopy *>
-	{
-	public:
-		static TestStructNoCopy* New(TestStructNoCopy* param) { return param; }
-		static void Delete(TestStructNoCopy* param) {}
-	};
-}
-#endif
 
 // An instance of TestStructNoCopy guaranteed to exist when the asynchronous callback occurs.  
 static TestStructNoCopy testStructNoCopy(999);
@@ -348,24 +294,6 @@ int main(void)
     // Remove the delegate from the container
     delegateD -= MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, &workerThread1);
 
-#if 0 // TestStructNoCopy does not work in modern C++ implementation
-    // Create a thread-safe multicast delegate container that accepts Delegate<TestStructNoCopy*> delegates
-    // Any function with the signature "void Func(TestStructNoCopy*)".
-    MulticastDelegateSafe<void(TestStructNoCopy*)> delegateE;     // TODO FIX
-
-    // Add a DelegateMember1<TestStructNoCopy*> delegate to the container that will invoke on workerThread1
-    delegateE += MakeDelegate(&testClass, &TestClass::MemberFuncNoCopy, &workerThread1);
-
-    // Asynchronously invoke the delegate target member function TestClass::MemberFuncNoCopy().
-    // TestStructNoCopy will not be copied and created on the heap because of DelegateParam<TestStructNoCopy *>. 
-    // Developer must ensure the testStructNoCopy instance exists when the asynchronous callback occurs. 
-    if (delegateE)
-        delegateE(&testStructNoCopy);
-
-    // Remove the delegate from the container
-    delegateE -= MakeDelegate(&testClass, &TestClass::MemberFuncNoCopy, &workerThread1);
-#endif
-
     // Create a singlecast delegate container that accepts Delegate1<int, int> delegates.
     // Any function with the signature "int Func(int)".
     SinglecastDelegate<int(int)> delegateF;
@@ -398,7 +326,7 @@ int main(void)
     // invoke on a member function
     MulticastDelegateSafe<void(const std::string&, int)> delegateH;
     delegateH += MakeDelegate(&testClass, &TestClass::MemberFuncStdString, &workerThread1);
-    delegateH("Hello world", 2016);
+    delegateH("Hello world", 2020);
     delegateH.Clear();
 
     // Create a asynchronous blocking delegate and invoke. This thread will block until the 
@@ -414,14 +342,14 @@ int main(void)
     // Create a shared_ptr, create a delegate, then synchronously invoke delegate function
     std::shared_ptr<TestClass> spObject(new TestClass());
     auto delegateMemberSp = MakeDelegate(spObject, &TestClass::MemberFuncStdString);
-    delegateMemberSp("Hello world using shared_ptr", 2016);
+    delegateMemberSp("Hello world using shared_ptr", 2020);
 
     // Example of a bug where the testClassHeap is deleted before the asychronous delegate 
     // is invoked on the workerThread1. In other words, by the time workerThread1 calls
     // the bound delegate function the testClassHeap instance is deleted and no longer valid.
     TestClass* testClassHeap = new TestClass();
     auto delegateMemberAsync = MakeDelegate(testClassHeap, &TestClass::MemberFuncStdString, &workerThread1);
-    delegateMemberAsync("Function async invoked on deleted object. Bug!", 2016);
+    delegateMemberAsync("Function async invoked on deleted object. Bug!", 2020);
     delegateMemberAsync.Clear();
     delete testClassHeap;
 
@@ -429,7 +357,7 @@ int main(void)
     // is only deleted after workerThread1 invokes the callback function thus solving the bug.
     std::shared_ptr<TestClass> testClassSp(new TestClass());
     auto delegateMemberSpAsync = MakeDelegate(testClassSp, &TestClass::MemberFuncStdString, &workerThread1);
-    delegateMemberSpAsync("Function async invoked using smart pointer. Bug solved!", 2016);
+    delegateMemberSpAsync("Function async invoked using smart pointer. Bug solved!", 2020);
     delegateMemberSpAsync.Clear();
     testClassSp.reset();
 

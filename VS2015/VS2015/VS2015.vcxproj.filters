@@ -86,9 +86,6 @@
     <ClInclude Include="..\..\Port\WorkerThreadStd.h">
       <Filter>Port</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Port\WorkerThreadWin.h">
-      <Filter>Port</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Delegate\make_tuple_heap.h">
       <Filter>Delegate</Filter>
     </ClInclude>
@@ -115,9 +112,6 @@
       <Filter>Port</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Port\WorkerThreadStd.cpp">
-      <Filter>Port</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Port\WorkerThreadWin.cpp">
       <Filter>Port</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Delegate\DelegateAsync.cpp">

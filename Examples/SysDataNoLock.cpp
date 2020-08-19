@@ -1,9 +1,5 @@
 #include "SysDataNoLock.h"
-#if USE_STD_THREADS
-	#include "WorkerThreadStd.h"
-#elif USE_WIN32_THREADS
-	#include "WorkerThreadWin.h"
-#endif
+#include "WorkerThreadStd.h"
 
 WorkerThread workerThread2("WorkerThread2");
 

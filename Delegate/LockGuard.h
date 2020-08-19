@@ -3,18 +3,9 @@
 
 #include "DelegateOpt.h"
 #include "DataTypes.h"
+#include <mutex>
 
-#if USE_WIN32_THREADS
-	// On WIN32 API, the lock is a critical section
-	#define LOCK CRITICAL_SECTION
-#elif USE_STD_THREADS
-	#include <mutex>
-	// On std API, the lock is a mutex
-	#define LOCK std::mutex
-#else
-	#error Must implement the LockGuard class on non-Windows platforms
-	#define LOCK int
-#endif
+#define LOCK std::mutex
 
 namespace DelegateLib {
 

@@ -8,13 +8,8 @@ namespace DelegateLib {
 //------------------------------------------------------------------------------
 LockGuard::LockGuard(LOCK* lock)
 {
-#if USE_WIN32_THREADS
-	m_lock = lock;
-	EnterCriticalSection(m_lock);
-#elif USE_STD_THREADS
 	m_lock = lock;
 	m_lock->lock();
-#endif
 }
 
 //------------------------------------------------------------------------------
@@ -22,11 +17,7 @@ LockGuard::LockGuard(LOCK* lock)
 //------------------------------------------------------------------------------
 LockGuard::~LockGuard()
 {
-#if USE_WIN32_THREADS
-	LeaveCriticalSection(m_lock);
-#elif USE_STD_THREADS
 	m_lock->unlock();
-#endif
 }
 
 //------------------------------------------------------------------------------
@@ -34,10 +25,6 @@ LockGuard::~LockGuard()
 //------------------------------------------------------------------------------
 void LockGuard::Create(LOCK* lock)
 {
-#if USE_WIN32_THREADS
-	BOOL lockSuccess = InitializeCriticalSectionAndSpinCount(lock, 0x00000400); 
-	ASSERT_TRUE(lockSuccess != 0);
-#endif
 }
 
 //------------------------------------------------------------------------------
@@ -45,9 +32,6 @@ void LockGuard::Create(LOCK* lock)
 //------------------------------------------------------------------------------
 void LockGuard::Destroy(LOCK* lock)
 {
-#if USE_WIN32_THREADS
-	DeleteCriticalSection(lock);
-#endif
 }
 
 }

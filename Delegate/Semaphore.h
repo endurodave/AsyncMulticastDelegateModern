@@ -3,20 +3,11 @@
 
 #include "DelegateOpt.h"
 #include "DataTypes.h"
+#include <condition_variable>
+#include <mutex>
+#include <atomic>
 
-#if USE_WIN32_THREADS
-	// On Windows API, the semaphore is a Windows handle
-	#define SEMA HANDLE
-#elif USE_STD_THREADS	
-	#include <condition_variable>
-	#include <mutex>
-	#include <atomic>
-	// On std API, the semaphore is a condition variable
-	#define SEMA std::condition_variable
-#else
-	#error Must implement the Semaphore class on non-Windows platforms
-	#define SEMA int
-#endif
+#define SEMA std::condition_variable
 
 namespace DelegateLib {
 
@@ -48,11 +39,8 @@ private:
 	Semaphore& operator=(const Semaphore&) = delete;
 
 	SEMA m_sema;
-
-#if USE_STD_THREADS	
 	std::mutex m_lock;
 	std::atomic<bool> m_flag;
-#endif
 };
 
 }

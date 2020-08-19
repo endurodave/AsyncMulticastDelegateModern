@@ -169,7 +169,6 @@
     <ClInclude Include="..\..\Port\ThreadWin.h" />
     <ClInclude Include="..\..\Port\UserMsgs.h" />
     <ClInclude Include="..\..\Port\WorkerThreadStd.h" />
-    <ClInclude Include="..\..\Port\WorkerThreadWin.h" />
     <ClInclude Include="..\..\stdafx.h" />
     <ClInclude Include="..\..\targetver.h" />
   </ItemGroup>
@@ -184,7 +183,6 @@
     <ClCompile Include="..\..\Port\Fault.cpp" />
     <ClCompile Include="..\..\Port\ThreadWin.cpp" />
     <ClCompile Include="..\..\Port\WorkerThreadStd.cpp" />
-    <ClCompile Include="..\..\Port\WorkerThreadWin.cpp" />
     <ClCompile Include="..\..\stdafx.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

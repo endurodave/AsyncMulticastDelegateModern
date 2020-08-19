@@ -1,6 +1,4 @@
 #include "DelegateOpt.h"
-#if USE_STD_THREADS
-
 #include "WorkerThreadStd.h"
 #include "ThreadMsg.h"
 
@@ -137,4 +135,3 @@ void WorkerThread::Process()
 	}
 }
 
-#endif

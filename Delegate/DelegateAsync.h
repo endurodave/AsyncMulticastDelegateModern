@@ -15,7 +15,6 @@ namespace DelegateLib {
 template <class R>
 struct DelegateFreeAsync; // Not defined
 
-// TODO - remove class RetType and replace with void? Then get rid of static_assert below.
 template <class RetType, class... Args> 
 class DelegateFreeAsync<RetType(Args...)> : public DelegateFree<RetType(Args...)>, public IDelegateInvoker {
 public:

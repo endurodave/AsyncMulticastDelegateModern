@@ -1,10 +1,6 @@
 #include "DelegateLib.h"
 #include <iostream>
-#if USE_STD_THREADS
-	#include "WorkerThreadStd.h"
-#elif USE_WIN32_THREADS
-	#include "WorkerThreadWin.h"
-#endif
+#include "WorkerThreadStd.h"
 
 using namespace DelegateLib;
 
@@ -1822,7 +1818,6 @@ void MulticastDelegateSafeAsyncTests()
 
 void DelegateMemberSpTests()
 {
-#if USE_CPLUSPLUS_11
 	std::shared_ptr<TestClass0> testClass0(new TestClass0());
 	auto DelegateMemberSp0 = MakeDelegate(testClass0, &TestClass0::MemberFunc0);
 	DelegateMemberSp0();
@@ -1846,12 +1841,10 @@ void DelegateMemberSpTests()
 	std::shared_ptr<TestClass5> testClass5(new TestClass5());
 	auto DelegateMemberSp5 = MakeDelegate(testClass5, &TestClass5::MemberFuncInt5);
 	DelegateMemberSp5(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
-#endif
 }
 
 void DelegateMemberAsyncSpTests()
 {
-#if USE_CPLUSPLUS_11
 	std::shared_ptr<TestClass0> testClass0(new TestClass0());
 	auto DelegateMemberAsyncSp0 = MakeDelegate(testClass0, &TestClass0::MemberFunc0, &testThread);
 	DelegateMemberAsyncSp0();
@@ -1875,12 +1868,10 @@ void DelegateMemberAsyncSpTests()
 	std::shared_ptr<TestClass5> testClass5(new TestClass5());
 	auto DelegateMemberAsyncSp5 = MakeDelegate(testClass5, &TestClass5::MemberFuncInt5, &testThread);
 	DelegateMemberAsyncSp5(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
-#endif
 }
 
 void DelegateMemberAsyncWaitTests()
 {
-#if USE_CPLUSPLUS_11
 	const int LOOP_CNT = 100;
 	StructParam structParam;
 	structParam.val = TEST_INT;
@@ -2545,7 +2536,6 @@ void DelegateMemberAsyncWaitTests()
 	MemberFuncIntWithReturn5Delegate = MakeDelegate(&testClass5, &TestClass5::MemberFuncIntWithReturn5, &testThread, 1);
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = MemberFuncIntWithReturn5Delegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
-#endif
 }
 
 void DelegateUnitTests()
@@ -2569,11 +2559,8 @@ void DelegateUnitTests()
 		MulticastDelegateSafeTests();
 		MulticastDelegateSafeAsyncTests();
 		DelegateMemberAsyncWaitTests();
-
-#if USE_CPLUSPLUS_11
 		DelegateMemberSpTests();
 		DelegateMemberAsyncSpTests();
-#endif
 	}
 
 #ifdef WIN32

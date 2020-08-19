@@ -8,11 +8,6 @@
 #include "SinglecastDelegate.h"
 #include "DelegateAsync.h"
 #include "DelegateAsyncWait.h"
-#include "DelegateRemoteSend.h"
-#include "DelegateRemoteRecv.h"
-
-#if USE_CPLUSPLUS_11
 #include "DelegateSpAsync.h"
-#endif
 
 #endif

@@ -2,8 +2,6 @@
 #define _THREAD_STD_H
 
 #include "DelegateOpt.h"
-#if USE_STD_THREADS
-
 #include "DelegateThread.h"
 #include "DataTypes.h"
 #include <thread>
@@ -54,4 +52,3 @@ private:
 
 #endif 
 
-#endif
