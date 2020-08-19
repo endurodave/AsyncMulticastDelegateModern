@@ -17,10 +17,9 @@ public:
 	/// for getting the DelegateMsg into an OS message queue. Once DelegateMsg
 	/// is on the correct thread of control, the DelegateInvoker::DelegateInvoke() function
 	/// must be called to execute the callback. 
-	/// @param[in] msg - a pointer to the callback message that must be created dynamically
-	///		using operator new. 
-	/// @pre Caller *must* create the DelegateMsg argument dynamically using operator new.
-	/// @post The destination thread must delete the msg instance by calling DelegateInvoke().
+	/// @param[in] msg - a pointer to the callback message that must be created dynamically.
+	/// @pre Caller *must* create the DelegateMsg argument dynamically.
+	/// @post The destination thread calls DelegateInvoke().
 	virtual void DispatchDelegate(std::shared_ptr<DelegateMsgBase> msg) = 0;
 };
 

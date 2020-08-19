@@ -22,7 +22,7 @@ public:
 	}
 
 	INT GetId() const { return m_id; } 
-    std::shared_ptr<DelegateLib::DelegateMsgBase>& GetData() { return m_data; }
+    std::shared_ptr<DelegateLib::DelegateMsgBase> GetData() { return m_data; }
 
 private:
 	INT m_id;

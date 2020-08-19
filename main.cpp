@@ -34,6 +34,7 @@
 // David Lafreniere, Mar 2020.
 
 #if 0 // Not reliable
+#if WIN32
 struct DumpLeaks
 {
     ~DumpLeaks() {
@@ -42,6 +43,7 @@ struct DumpLeaks
     }
 };
 static DumpLeaks dumpLeaks;
+#endif
 #endif
 
 using namespace std;

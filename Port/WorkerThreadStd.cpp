@@ -116,7 +116,6 @@ void WorkerThread::Process()
 				ASSERT_TRUE(msg->GetData() != NULL);
 
 				// Convert the ThreadMsg void* data back to a DelegateMsg* 
-				//DelegateMsgBase* delegateMsg = static_cast<DelegateMsgBase*>(msg->GetData());
                 auto delegateMsg = msg->GetData();
 
 				// Invoke the callback on the target thread

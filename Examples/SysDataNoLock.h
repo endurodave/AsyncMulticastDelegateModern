@@ -11,7 +11,7 @@ using namespace DelegateLib;
 class SysDataNoLock
 {
 public:
-	/// Clients register with MulticastDelegateSafe1 to get callbacks when system mode changes
+	/// Clients register with MulticastDelegateSafe to get callbacks when system mode changes
 	MulticastDelegateSafe<void(const SystemModeChanged&)> SystemModeChangedDelegate;
 
 	/// Get singleton instance of this class

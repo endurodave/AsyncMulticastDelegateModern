@@ -37,7 +37,6 @@ class SysData
 {
 public:
 	/// Clients register with MulticastDelegateSafe1 to get callbacks when system mode changes
-	//MulticastDelegateSafe<void(const SystemModeChanged&)> SystemModeChangedDelegate;
     MulticastDelegateSafe<void(const SystemModeChanged&)> SystemModeChangedDelegate;
 
 	/// Get singleton instance of this class
