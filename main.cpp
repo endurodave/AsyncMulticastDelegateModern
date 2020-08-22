@@ -343,7 +343,7 @@ int main(void)
     // Example of a shared_ptr argument that does not copy the function
     // argument data. 
     auto delegateJ = MakeDelegate(&testClass, &TestClass::MemberFuncNoCopy, &workerThread1);
-    std::shared_ptr<TestStructNoCopy> testStructNoCopy(new TestStructNoCopy(987));
+    std::shared_ptr<TestStructNoCopy> testStructNoCopy = std::make_shared<TestStructNoCopy>(987);
     delegateJ(testStructNoCopy);
 
     // Create a SysDataClient instance on the stack
