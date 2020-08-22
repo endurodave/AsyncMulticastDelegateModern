@@ -65,6 +65,8 @@ private:
 struct TestStruct
 {
 	int x;
+    TestStruct() { x = 0; }
+    TestStruct(const TestStruct& d) { x = d.x; }
     ~TestStruct() {}
 };
 
@@ -133,7 +135,7 @@ public:
 		cout << "MemberFuncThreeArgs " << value.x << " " << f << " " << (**i) << endl;
 	}
 
-	void MemberFuncNoCopy(TestStructNoCopy* value)
+	void MemberFuncNoCopy(std::shared_ptr<TestStructNoCopy> value)
 	{
 		cout << "MemberFuncNoCopy " << value->x << endl;
 	}
@@ -164,9 +166,6 @@ public:
 		cout << "TestFuncNoRet " << endl;
 	}
 };
-
-// An instance of TestStructNoCopy guaranteed to exist when the asynchronous callback occurs.  
-static TestStructNoCopy testStructNoCopy(999);
 
 extern void DelegateUnitTests();
 
@@ -340,6 +339,12 @@ int main(void)
     delegateMemberSpAsync("Function async invoked using smart pointer. Bug solved!", 2020);
     delegateMemberSpAsync.Clear();
     testClassSp.reset();
+
+    // Example of a shared_ptr argument that does not copy the function
+    // argument data. 
+    auto delegateJ = MakeDelegate(&testClass, &TestClass::MemberFuncNoCopy, &workerThread1);
+    std::shared_ptr<TestStructNoCopy> testStructNoCopy(new TestStructNoCopy(987));
+    delegateJ(testStructNoCopy);
 
     // Create a SysDataClient instance on the stack
     SysDataClient sysDataClient;
