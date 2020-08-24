@@ -5,7 +5,9 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 
 <h2>Preface</h2>
 
-<p>This article is a modern C++ implementation of a previous article I wrote entitled &ldquo;<a href="https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus">Asynchronous Multicast Delegates in C++</a>&rdquo;. Unlike the previous delegate library which built under C++03, the modern version uses C++17 features. Variadic templates and template metaprogramming improve library usage and significantly reduce the source code line count. While the basic idea between the articles is similar, the modern C++ version is a&nbsp;complete re-write.</p>
+<p>This article documents a modern C++ implementation of asynchronous delegates. The library implements anonymous synchronous and asynchronous function callbacks. The target function is invoked with all arguments on the registrar&#39;s desired thread of control.</p>
+
+<p>The previous article I wrote entitled &ldquo;<a href="https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus">Asynchronous Multicast Delegates in C++</a>&rdquo; built under C++03. This &quot;modern&quot; version uses C++17 features. Variadic templates and template metaprogramming improve library usability and significantly reduces the source code line count. While the basic idea between the articles is similar, this new version is a complete re-write.</p>
 
 <p>I&rsquo;ve created four versions of the &ldquo;asynchronous callback&rdquo; idea; three C++ versions and one C version. See the <strong>References</strong> section at the end of the article for links to the other implementations.</p>
 
@@ -31,7 +33,7 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 	<li><strong>Visual Studio and Eclipse</strong> - VC++ and GCC projects included</li>
 	<li><strong>Unit Tests</strong> - extensive unit testing of the delegate library included</li>
 	<li><strong>No External Libraries</strong> &ndash; delegate does not rely upon external libraries</li>
-	<li><strong>Ease of Use</strong> &ndash; function signature template arguments (e.g. <code>MulticastDelegate&lt;void(TestStruct*)&gt;</code>)</li>
+	<li><strong>Ease of Use</strong> &ndash; function signature template arguments (e.g., <code>MulticastDelegate&lt;void(TestStruct*)&gt;</code>)</li>
 </ol>
 
 <p>The delegate implementation significantly eases multithreaded application development by executing the delegate function with all of the function arguments on the thread of control that you specify. The framework handles all of the low-level machinery to safely invoke any function signature on a target thread. Windows 2017 and Eclipse projects are included for easy experimentation.</p>
@@ -55,17 +57,17 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 <p>The primary delegate classes are listed below:</p>
 
 <ul class="class">
-	<li>DelegateFree&lt;&gt;</li>
-	<li>DelegateFreeAsync&lt;&gt;</li>
-	<li>DelegateFreeAsyncWait&lt;&gt;</li>
-	<li>DelegateMember&lt;&gt;</li>
-	<li>DelegateMemberAsync&lt;&gt;</li>
-	<li>DelegateMemberAsyncWait&lt;&gt;</li>
-	<li>DelegateMemberSp&lt;&gt;</li>
-	<li>DelegateMemberSpAsync&lt;&gt;</li>
+	<li><code>DelegateFree&lt;&gt;</code></li>
+	<li><code>DelegateFreeAsync&lt;&gt;</code></li>
+	<li><code>DelegateFreeAsyncWait&lt;&gt;</code></li>
+	<li><code>DelegateMember&lt;&gt;</code></li>
+	<li><code>DelegateMemberAsync&lt;&gt;</code></li>
+	<li><code>DelegateMemberAsyncWait&lt;&gt;</code></li>
+	<li><code>DelegateMemberSp&lt;&gt;</code></li>
+	<li><code>DelegateMemberSpAsync&lt;&gt;</code></li>
 </ul>
 
-<p><code>DelegateFree&lt;&gt;</code> binds to a free or static member function. <code>DelegateMember&lt;&gt; </code>binds to a class instance member function. <code>DelegateMemberSp&lt;&gt;</code> binds to a class instance member function using a std::shared_ptr instead of a raw object pointer. All versions offer synchronous function invocation.</p>
+<p><code>DelegateFree&lt;&gt;</code> binds to a free or static member function. <code>DelegateMember&lt;&gt; </code>binds to a class instance member function. <code>DelegateMemberSp&lt;&gt;</code> binds to a class instance member function using a <code>std::shared_ptr</code> instead of a raw object pointer. All versions offer synchronous function invocation.</p>
 
 <p><code>DelegateFreeAsync&lt;&gt;</code>, <code>DelegateMemberAsync&lt;&gt;</code> and <code>DelegateMemberSpAsync&lt;&gt;</code> operate in the same way as their synchronous counterparts; except these versions offer non-blocking asynchronous function execution on a specified thread of control.</p>
 
@@ -74,14 +76,14 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 <p>The three main delegate container classes are:</p>
 
 <ul class="class">
-	<li>SinglecastDelegate&lt;&gt;</li>
-	<li>MulticastDelegate&lt;&gt;</li>
-	<li>MulticastDelegateSafe&lt;&gt;</li>
+	<li><code>SinglecastDelegate&lt;&gt;</code></li>
+	<li><code>MulticastDelegate&lt;&gt;</code></li>
+	<li><code>MulticastDelegateSafe&lt;&gt;</code></li>
 </ul>
 
-<p><code>SinglecastDelegate&lt;&gt;</code> is a delegate container accepting a single delegate. The advantage of the single cast version is that it is slightly smaller and allows a return type other than void in the bound function.</p>
+<p><code>SinglecastDelegate&lt;&gt;</code> is a delegate container accepting a single delegate. The advantage of the single cast version is that it is slightly smaller and allows a return type other than <code>void</code> in the bound function.</p>
 
-<p><code>MulticastDelegate&lt;&gt;</code> is a delegate container implemented as a singly-linked list accepting multiple delegates. Only a delegate bound to a function with a void return type may be added to a multicast delegate container.</p>
+<p><code>MulticastDelegate&lt;&gt;</code> is a delegate container implemented as a singly-linked list accepting multiple delegates. Only a delegate bound to a function with a <code>void</code> return type may be added to a multicast delegate container.</p>
 
 <p><code>MultcastDelegateSafe&lt;&gt;</code> is a thread-safe container implemented as a singly-linked list accepting multiple delegates. Always use the thread-safe version if multiple threads access the container instance.</p>
 
@@ -91,7 +93,7 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 
 <p>All delegates are created with the overloaded <code>MakeDelegate()</code> template function. The compiler uses template argument deduction to select the correct <code>MakeDelegate()</code> version eliminating the need to manually specify the template arguments. For example, here is a simple free function.</p>
 
-<pre>
+<pre lang="C++">
 void FreeFuncInt(int value)
 {
       cout &lt;&lt; &quot;FreeCallback &quot; &lt;&lt; value &lt;&lt; endl;
@@ -99,141 +101,141 @@ void FreeFuncInt(int value)
 
 <p>To bind the free function to a delegate, create a <code>DelegateFree&lt;void(int)&gt;</code> instance using <code>MakeDelegate()</code>. The <code>DelegateFree </code>template argument is the complete function&#39;s signature: <code>void(int)</code>. <code>MakeDelegate()</code> returns a <code>DelegateFree&lt;void(int)&gt;</code> object and the following line invokes the function <code>FreeFuncInt</code> using the delegate.</p>
 
-<pre>
+<pre lang="C++">
 // Create a delegate bound to a free function then invoke
 DelegateFree&lt;void(int)&gt; delegateFree = MakeDelegate(&amp;FreeFuncInt);
 delegateFree(123);</pre>
 
-<p>A member function is bound to a delegate in the same way, only this time <code>MakeDelegate()</code> uses two arguments: a class instance and a member function pointer. The two <code>DelegateMember </code>template arguments are the class name (i.e.&nbsp;<code>TestClass</code>) and the bound function signature (i.e.&nbsp;<code>void(TestStruct*)</code>).</p>
+<p>A member function is bound to a delegate in the same way, only this time <code>MakeDelegate()</code> uses two arguments: a class instance and a member function pointer. The two <code>DelegateMember </code>template arguments are the class name (i.e., <code>TestClass</code>) and the bound function signature (i.e. <code>void(TestStruct*)</code>).</p>
 
-<pre>
+<pre lang="C++">
 // Create a delegate bound to a member function then invoke    
 DelegateMember&lt;TestClass, void(TestStruct*)&gt; delegateMember = 
-&nbsp;     MakeDelegate(&amp;testClass, &amp;TestClass::MemberFunc);    
+      MakeDelegate(&amp;testClass, &amp;TestClass::MemberFunc);    
 delegateMember(&amp;testStruct);</pre>
 
-<p>Rather than create a concrete free or member delegate, typically a delegate container is used to hold one or more delegates. A delegate container can hold any delegate type. For example, a multicast delegate container that binds to any function with a <code>void (int)</code> function signature is shown below.</p>
+<p>Rather than create a concrete free or member delegate, typically a delegate container is used to hold one or more delegates. A delegate container can hold any delegate type. For example, a multicast delegate container that binds to any function with a <code>void (int)</code> function signature is shown below:</p>
 
-<pre>
+<pre lang="C++">
 MulticastDelegate&lt;void(int)&gt; delegateA;</pre>
 
-<p>A single cast delegate is created in the same way.</p>
+<p>A single cast delegate is created in the same way:</p>
 
-<pre>
+<pre lang="C++">
 SinglecastDelegate&lt;void(int)&gt; delegateB;</pre>
 
-<p>A function signature that returns a value is also possible. The delegate container accepts functions with one <code>float </code>argument and returns an&nbsp;<code>int</code>.</p>
+<p>A function signature that returns a value is also possible. The delegate container accepts functions with one <code>float </code>argument and returns an <code>int</code>.</p>
 
-<pre>
+<pre lang="C++">
 SinglecastDelegate&lt;int(float)&gt; delegateC;</pre>
 
 <p>A <code>SinglecastDelegate&lt;&gt;</code> may bind to a function that returns a value whereas a multicast versions cannot. The reason is that when multiple callbacks are invoked, which callback function return value should be used? The correct answer is none, so multicast containers only accept delegates with function signatures using <code>void </code>as the return type.</p>
 
 <p><code>MulticastDelegate </code>containers bind to one or more functions.</p>
 
-<pre>
+<pre lang="C++">
 MulticastDelegate&lt;void(int, int)&gt; delegateD;
 
 MulticastDelegate&lt;void(float, int, char)&gt; delegateE;</pre>
 
 <p>Of course, more than just built-in pass by value argument types are supported.</p>
 
-<pre>
+<pre lang="C++">
 MulticastDelegate&lt;void(const MyClass&amp;, MyStruct*, Data**)&gt; delegateF;</pre>
 
-<p>Creating a delegate instance and adding it to the multicast delegate container is accomplished with the overloaded <code>MakeDelegate()</code> function and <code>operator+=</code>. Binding a free function or static function only requires a single function pointer argument.</p>
+<p>Creating a delegate instance and adding it to the multicast delegate container is accomplished with the overloaded <code>MakeDelegate()</code> function and <code>operator+=</code>. Binding a free function or <code>static</code> function only requires a single function pointer argument.</p>
 
-<pre>
+<pre lang="C++">
 delegateA += MakeDelegate(&amp;FreeFuncInt);</pre>
 
 <p>An instance member function can also be added to any delegate container. For member functions, the first argument to <code>MakeDelegate()</code> is a pointer to the class instance. The second argument is a pointer to the member function.</p>
 
-<pre>
+<pre lang="C++">
 delegateA += MakeDelegate(&amp;testClass, &amp;TestClass::MemberFunc);</pre>
 
 <p>Check for registered clients first, and then invoke callbacks for all registered delegates. If multiple delegates are stored within <code>MulticastDelegate&lt;void(int)&gt;</code>, each one is called sequentially.</p>
 
-<pre>
+<pre lang="C++">
 // Invoke the delegate target functions
 if (delegateA)
       delegateA(123);</pre>
 
 <p>Removing a delegate instance from the delegate container uses <code>operator-=</code>.</p>
 
-<pre>
+<pre lang="C++">
 delegateA -= MakeDelegate(&amp;FreeFuncInt);</pre>
 
 <p>Alternatively, <code>Clear()</code> is used to remove all delegates within the container.</p>
 
-<pre>
+<pre lang="C++">
 delegateA.Clear();</pre>
 
 <p>A delegate is added to the single cast container using <code>operator=</code>.</p>
 
-<pre>
+<pre lang="C++">
 SinglecastDelegate&lt;int(int)&gt; delegateF;
 delegateF = MakeDelegate(&amp;FreeFuncIntRetInt);</pre>
 
-<p>Removal is with <code>Clear()</code> or assigning 0.</p>
+<p>Removal is with <code>Clear()</code> or assigning <code>0</code>.</p>
 
-<pre>
+<pre lang="C++">
 delegateF.Clear();
 delegateF = 0;</pre>
 
 <h3>Asynchronous Non-Blocking Delegates</h3>
 
-<p>Up until this point, the delegates have all been synchronous. The asynchronous features are layered on top of the synchronous delegate implementation. To use asynchronous delegates, a thread-safe delegate container safely accessible by multiple threads is required. Locks protect the class API against simultaneous access. The &ldquo;Safe&rdquo; version is shown below.</p>
+<p>Up until this point, the delegates have all been synchronous. The asynchronous features are layered on top of the synchronous delegate implementation. To use asynchronous delegates, a thread-safe delegate container safely accessible by multiple threads is required. Locks protect the class API against simultaneous access. The &ldquo;<code>Safe</code>&rdquo; version is shown below.</p>
 
-<pre>
+<pre lang="C++">
 MulticastDelegateSafe&lt;void(TestStruct*)&gt; delegateC;</pre>
 
 <p>A thread pointer as the last argument to <code>MakeDelegate()</code> forces creation of an asynchronous delegate. In this case, adding a thread argument causes <code>MakeDelegate()</code> to return a <code>DelegateMemberAsync&lt;&gt;</code> as opposed to <code>DelegateMember&lt;&gt;</code>.</p>
 
-<pre>
+<pre lang="C++">
 delegateC += MakeDelegate(&amp;testClass, &amp;TestClass::MemberFunc, &amp;workerThread1);</pre>
 
 <p>Invocation is the same as the synchronous version, yet this time the callback function <code>TestClass::MemberFunc()</code> is called from <code>workerThread1</code>.</p>
 
-<pre>
+<pre lang="C++">
 if (delegateC)
       delegateC(&amp;testStruct);</pre>
 
-<p>Here is another example of an asynchronous delegate being invoked on <code>workerThread1 </code>with <code>std::string</code> and int arguments.</p>
+<p>Here is another example of an asynchronous delegate being invoked on <code>workerThread1 </code>with <code>std::string</code> and <code>int </code>arguments.</p>
 
-<pre>
+<pre lang="C++">
 // Create delegate with std::string and int arguments then asynchronously    
 // invoke on a member function
 MulticastDelegateSafe&lt;void(const std::string&amp;, int)&gt; delegateH;
 delegateH += MakeDelegate(&amp;testClass, &amp;TestClass::MemberFuncStdString, &amp;workerThread1);
 delegateH(&quot;Hello world&quot;, 2020);</pre>
 
-<p>Usage of the library is consistent between synchronous and asynchronous delegates. The only difference is the addition of a thread pointer argument to <code>MakeDelegate()</code>. Remember to always use the thread-safe <code>MulticastDelegateSafe&lt;&gt;</code> containers when using asynchronous delegates to callback across thread boundaries.</p>
+<p>Usage of the library is consistent between synchronous and asynchronous delegates. The only difference is the addition of a thread pointer argument to <code>MakeDelegate()</code>. Always remember to use the thread-safe <code>MulticastDelegateSafe&lt;&gt;</code> containers when using asynchronous delegates to callback across thread boundaries.</p>
 
-<p>The default behavior of the delegate library when invoking non-blocking asynchronous delegates is that arguments not passed by value are copied into heap memory for safe transport to the destination thread. This means all arguments will be duplicated. If your data is something other than plain old data (POD) and can&rsquo;t be bitwise copied, then be sure to implement an appropriate copy constructor to handle the copying yourself.</p>
+<p>The default behavior of the delegate library when invoking non-blocking asynchronous delegates is that arguments&nbsp;are copied into heap memory for safe transport to the destination thread. This means all arguments will be duplicated. If your data is something other than plain old data (POD) and can&rsquo;t be bitwise copied, then be sure to implement an appropriate copy constructor to handle the copying yourself.</p>
 
 <p>For more examples, see <em>main.cpp</em> and <em>DelegateUnitTests.cpp</em> within the attached source code.</p>
 
-<h4><strong>Bind to std::shared_ptr</strong></h4>
+<h3>Bind to std::shared_ptr</h3>
 
 <p>Binding to instance member function requires a pointer to an object. The delegate library supports binding with a raw pointer and a <code>std::shared_ptr</code> smart pointer. Usage is what you&rsquo;d expect; just use a <code>std::shared_ptr</code> in place of the raw object pointer in the call to <code>MakeDelegate()</code>. Depending on if a thread argument is passed to <code>MakeDelegate()</code> or not, a <code>DelegateMemberSp&lt;&gt;</code> or <code>DelegateMemberSpAsync&lt;&gt;</code> instance is returned.</p>
 
-<pre>
+<pre lang="C++">
 // Create a shared_ptr, create a delegate, then synchronously invoke delegate function
 std::shared_ptr&lt;TestClass&gt; spObject(new TestClass());
 auto delegateMemberSp = MakeDelegate(spObject, &amp;TestClass::MemberFuncStdString);
 delegateMemberSp(&quot;Hello world using shared_ptr&quot;, 2020);</pre>
 
-<h4>Caution Using Raw Object Pointers</h4>
+<h3>Caution Using Raw Object Pointers</h3>
 
-<p>Certain asynchronous delegate usage patterns can cause a callback invocation to occur on a deleted object. The problem is this: an object function is bound to a delegate and invoked asynchronously, but before the invocation occurs on the target thread, the target object is deleted. In other words, it is possible for an object bound to a delegate to be deleted before the target thread message queue has had a chance to invoke the callback. The following code exposes the issue.</p>
+<p>Certain asynchronous delegate usage patterns can cause a callback invocation to occur on a deleted object. The problem is this: an object function is bound to a delegate and invoked asynchronously, but before the invocation occurs on the target thread, the target object is deleted. In other words, it is possible for an object bound to a delegate to be deleted before the target thread message queue has had a chance to invoke the callback. The following code exposes the issue:</p>
 
-<pre>
+<pre lang="C++">
     // Example of a bug where the testClassHeap is deleted before the asychronous delegate
     // is invoked on the workerThread1. In other words, by the time workerThread1 calls
     // the bound delegate function the testClassHeap instance is deleted and no longer valid.
     TestClass* testClassHeap = new TestClass();
     auto delegateMemberAsync = 
-&nbsp;          MakeDelegate(testClassHeap, &amp;TestClass::MemberFuncStdString, &amp;workerThread1);
+           MakeDelegate(testClassHeap, &amp;TestClass::MemberFuncStdString, &amp;workerThread1);
     delegateMemberAsync(&quot;Function async invoked on deleted object. Bug!&quot;, 2020);
     delegateMemberAsync.Clear();
     delete testClassHeap;</pre>
@@ -242,39 +244,41 @@ delegateMemberSp(&quot;Hello world using shared_ptr&quot;, 2020);</pre>
 
 <p>Fortunately, C++ smart pointers are just the ticket to solve these complex object lifetime issues. A <code>DelegateMemberSpAsync&lt;&gt;</code> delegate binds using a <code>std::shared_ptr</code> instead of a raw object pointer. Now that the delegate has a shared pointer, the danger of the object being prematurely deleted is eliminated. The shared pointer will only delete the object pointed to once all references are no longer in use. In the code snippet below, all references to <code>testClassSp </code>are removed by the client code yet the delegate&rsquo;s copy placed into the queue prevents <code>TestClass </code>deletion until after the asynchronous delegate callback occurs.</p>
 
-<pre>
+<pre lang="C++">
     // Example of the smart pointer function version of the delegate. The testClassSp instance
     // is only deleted after workerThread1 invokes the callback function thus solving the bug.
     std::shared_ptr&lt;TestClass&gt; testClassSp(new TestClass());
-    auto delegateMemberSpAsync = MakeDelegate(testClassSp, &amp;TestClass::MemberFuncStdString, &amp;workerThread1);
+    auto delegateMemberSpAsync = MakeDelegate
+         (testClassSp, &amp;TestClass::MemberFuncStdString, &amp;workerThread1);
     delegateMemberSpAsync(&quot;Function async invoked using smart pointer. Bug solved!&quot;, 2020);
     delegateMemberSpAsync.Clear();
     testClassSp.reset();</pre>
 
 <p>Actually, this technique can be used to call an object function, and then the object automatically deletes after the callback occurs. Using the above example, create a shared pointer instance, bind a delegate, and invoke the delegate. Now <code>testClassSp</code> can go out of scope and <code>TestClass::MemberFuncStdString</code> will still be safely called on <code>workerThread1</code>. The <code>TestClass </code>instance will delete by way of <code>std::shared_ptr&lt;TestClass&gt;</code> once the smart pointer reference count goes to 0 after the callback completes without any extra programmer involvement.</p>
 
-<pre>
+<pre lang="C++">
 std::shared_ptr&lt;TestClass&gt; testClassSp(new TestClass());
 auto delegateMemberSpAsync =
     MakeDelegate(testClassSp, &amp;TestClass::MemberFuncStdString, &amp;workerThread1);
 delegateMemberSpAsync(&quot;testClassSp deletes after delegate invokes&quot;, 2020);</pre>
 
-<h4>Asynchronous Blocking Delegates</h4>
+<h3>Asynchronous Blocking Delegates</h3>
 
-<p>A blocking delegate waits until the target thread executes the bound delegate function. Unlike non-blocking delegates, the blocking versions do not copy argument data onto the heap. They also allow function return types other than void whereas the non-blocking delegates only bind to functions returning void. Since the function arguments are passed to the destination thread unmodified, the function executes just as you&#39;d expect a synchronous version including incoming/outgoing pointers and references.</p>
+<p>A blocking delegate waits until the target thread executes the bound delegate function. Unlike non-blocking delegates, the blocking versions do not copy argument data onto the heap. They also allow function return types other than <code>void</code> whereas the non-blocking delegates only bind to functions returning <code>void</code>. Since the function arguments are passed to the destination thread unmodified, the function executes just as you&#39;d expect a synchronous version including incoming/outgoing pointers and references.</p>
 
 <p>Stack arguments passed by pointer/reference need not be thread-safe. The reason is that the calling thread blocks waiting for the destination thread to complete. This means that the delegate implementation guarantees only one thread is able to access stack allocated argument data.</p>
 
 <p>A blocking delegate must specify a timeout in milliseconds or <code>WAIT_INFINITE</code>. Unlike a non-blocking asynchronous delegate, which is guaranteed to be invoked, if the timeout expires on a blocking delegate, the function is not invoked. Use <code>IsSuccess()</code> to determine if the delegate succeeded or not.</p>
 
-<p>Adding a timeout as the last argument to <code>MakeDelegate()</code> causes a <code>DelegateFreeAsyncWait&lt;&gt;</code> or <code>DelegateMemberAsyncWait&lt;&gt;</code> instance to be returned depending on if a free or member function is being bound. A &quot;Wait&quot; delegate is typically not added to a delegate container. The typical usage pattern is to create a delegate and function arguments on the stack, then invoke. The code fragment below creates a blocking delegate with the function signature <code>int (std::string&amp;</code>). The function is called on <code>workerThread1</code>. The function <code>MemberFuncStdStringRetInt()</code> will update the outgoing string msg and return an integer to the caller.</p>
+<p>Adding a timeout as the last argument to <code>MakeDelegate()</code> causes a <code>DelegateFreeAsyncWait&lt;&gt;</code> or <code>DelegateMemberAsyncWait&lt;&gt;</code> instance to be returned depending on if a free or member function is being bound. A &quot;<code>Wait</code>&quot; delegate is typically not added to a delegate container. The typical usage pattern is to create a delegate and function arguments on the stack, then invoke. The code fragment below creates a blocking delegate with the function signature <code>int (std::string&amp;</code>). The function is called on <code>workerThread1</code>. The function <code>MemberFuncStdStringRetInt()</code> will update the outgoing <code>string msg</code> and return an integer to the caller.</p>
 
-<pre>
+<pre lang="C++">
     // Create a asynchronous blocking delegate and invoke. This thread will block until the
     // msg and year stack values are set by MemberFuncStdStringRetInt on workerThread1.
     auto delegateI = 
-&nbsp;         MakeDelegate(&amp;testClass, &amp;TestClass::MemberFuncStdStringRetInt, &amp;workerThread1, WAIT_INFINITE);
-    std::string msg;
+          MakeDelegate(&amp;testClass, &amp;TestClass::MemberFuncStdStringRetInt, 
+                       &amp;workerThread1, WAIT_INFINITE);
+    std::string msg = &quot;Hello from&quot;;
     int year = delegateI(msg);
     if (delegateI.IsSuccess())
     {
@@ -286,23 +290,23 @@ delegateMemberSpAsync(&quot;testClassSp deletes after delegate invokes&quot;, 20
 <p>The delegate library contains numerous classes. A single include <em>DelegateLib.h</em> provides access to all delegate library features. The library is wrapped within a <code>DelegateLib </code>namespace. Included unit tests help ensure a robust implementation. The table below shows the delegate class hierarchy.</p>
 
 <ul class="class">
-	<li>DelegateBase</li>
-	<li>Delegate&lt;&gt;</li>
-	<li>DelegateFree&lt;&gt;</li>
-	<li>DelegateFreeAsync&lt;&gt;</li>
-	<li>DelegateFreeAsyncWaitBase&lt;&gt;</li>
-	<li>DelegateFreeAsyncWait&lt;&gt;</li>
-	<li>DelegateMember&lt;&gt;</li>
-	<li>DelegateMemberAsync&lt;&gt;</li>
-	<li>DelegateMemberAsyncWaitBase&lt;&gt;</li>
-	<li>DelegateMemberAsyncWait&lt;&gt;</li>
-	<li>DelegateMemberSp&lt;&gt;</li>
-	<li>DelegateMemberSpAsync&lt;&gt;</li>
+	<li><code>DelegateBase</code></li>
+	<li><code>Delegate&lt;&gt;</code></li>
+	<li><code>DelegateFree&lt;&gt;</code></li>
+	<li><code>DelegateFreeAsync&lt;&gt;</code></li>
+	<li><code>DelegateFreeAsyncWaitBase&lt;&gt;</code></li>
+	<li><code>DelegateFreeAsyncWait&lt;&gt;</code></li>
+	<li><code>DelegateMember&lt;&gt;</code></li>
+	<li><code>DelegateMemberAsync&lt;&gt;</code></li>
+	<li><code>DelegateMemberAsyncWaitBase&lt;&gt;</code></li>
+	<li><code>DelegateMemberAsyncWait&lt;&gt;</code></li>
+	<li><code>DelegateMemberSp&lt;&gt;</code></li>
+	<li><code>DelegateMemberSpAsync&lt;&gt;</code></li>
 </ul>
 
 <p><code>DelegateBase</code> is a non-template, abstract base class common to all delegate instances. Comparison operators and a <code>Clone()</code> method define the interface.</p>
 
-<pre>
+<pre lang="C++">
 class DelegateBase {
 public:
     virtual ~DelegateBase() {}
@@ -324,7 +328,7 @@ public:
 
 <p>The <code>Clone()</code> function is required by the delegate container classes. The delegate container needs to make copies of the delegate for storage into the list. Since the delegate container only knows about abstract base <code>Delegate&lt;&gt;</code> instances, it must use the <code>Clone()</code> function when creating a duplicate copy.</p>
 
-<pre>
+<pre lang="C++">
 template &lt;class R&gt;
 struct Delegate; // Not defined
 
@@ -335,13 +339,13 @@ public:
     virtual Delegate* Clone() const = 0;
 };</pre>
 
-<p><code>RetType </code>is the bound funciton return type. The <code>Args </code>parameter pack is zero or more bound function arguments. <code>operator()</code> invokes the bound function either synchronously or asynchronously depending on the derived class implementation.&nbsp;</p>
+<p><code>RetType </code>is the bound funciton return type. The <code>Args </code>parameter pack is zero or more bound function arguments. <code>operator()</code> invokes the bound function either synchronously or asynchronously depending on the derived class implementation.</p>
 
 <p>Efficiently storing instance member functions and free functions within the same class proves difficult. Instead, two classes were created for each type of bound function. <code>DelegateMember&lt;&gt;</code> handles instance member functions. <code>DelegateFree&lt;&gt;</code> handles free and static functions.</p>
 
 <p><code>Clone()</code> creates a new instance of the class. <code>Bind()</code> takes a class instance and a member function pointer. The function <code>operator() </code>allows invoking the delegate function assigned with <code>Bind()</code>.</p>
 
-<pre>
+<pre lang="C++">
 template &lt;class C, class R&gt;
 struct DelegateMember; // Not defined
 
@@ -376,7 +380,8 @@ public:
     }
 
     virtual bool operator==(const DelegateBase&amp; rhs) const {
-        const DelegateMember&lt;TClass, RetType(Args...)&gt;* derivedRhs = dynamic_cast&lt;const DelegateMember&lt;TClass, RetType(Args...)&gt;*&gt;(&amp;rhs);
+        const DelegateMember&lt;TClass, RetType(Args...)&gt;* 
+        derivedRhs = dynamic_cast&lt;const DelegateMember&lt;TClass, RetType(Args...)&gt;*&gt;(&amp;rhs);
         return derivedRhs &amp;&amp;
             m_func == derivedRhs-&gt;m_func &amp;&amp;
             m_object == derivedRhs-&gt;m_object;
@@ -388,16 +393,15 @@ public:
     explicit operator bool() const { return !Empty(); }
 
 private:
-    ObjectPtr m_object;        // Pointer to a class object
+    ObjectPtr m_object;      // Pointer to a class object
     MemberFunc m_func;       // Pointer to an instance member function
-};
-</pre>
+};</pre>
 
-<p>Notice <code>std::invoke</code> is used to invoke the bound function within <code>operator()</code>. With the <code>RetVal </code>and <code>Args </code>parameter pack template argument this single <code>DelegateMember </code>class handles all target function signatures.&nbsp;</p>
+<p>Notice <code>std::invoke</code> is used to invoke the bound function within <code>operator()</code>. With the <code>RetVal </code>and <code>Args </code>parameter pack template argument this single <code>DelegateMember </code>class handles all target function signatures.</p>
 
-<p><code>DelegateFree&lt;&gt;</code> binds to a free or static member function. Notice it inherits from <code>Delegate&lt;&gt;</code> just like <code>DelegateMember&lt;&gt;</code>. &nbsp;<code>Bind()</code> takes a function pointer and operator() allows subsequent invocation of the bound function.</p>
+<p><code>DelegateFree&lt;&gt;</code> binds to a free or static member function. Notice it inherits from <code>Delegate&lt;&gt;</code> just like <code>DelegateMember&lt;&gt;</code>. <code>Bind()</code> takes a function pointer and <code>operator()</code> allows subsequent invocation of the bound function.</p>
 
-<pre>
+<pre lang="C++">
 template &lt;class R&gt;
 struct DelegateFree; // Not defined
 
@@ -420,7 +424,8 @@ public:
     }
 
     virtual bool operator==(const DelegateBase&amp; rhs) const {
-        const DelegateFree&lt;RetType(Args...)&gt;* derivedRhs = dynamic_cast&lt;const DelegateFree&lt;RetType(Args...)&gt;*&gt;(&amp;rhs);
+        const DelegateFree&lt;RetType(Args...)&gt;* 
+        derivedRhs = dynamic_cast&lt;const DelegateFree&lt;RetType(Args...)&gt;*&gt;(&amp;rhs);
         return derivedRhs &amp;&amp;
             m_func == derivedRhs-&gt;m_func;
     }
@@ -434,23 +439,26 @@ private:
     FreeFunc m_func;        // Pointer to a free function
 };</pre>
 
-<p><code>DelegateMemberAsync&lt;&gt;</code> is the non-blocking asynchronous version of the delegate allowing invocation on a client specified thread of control. The <code>operator()</code> function doesn&rsquo;t actually call the target function, but instead packages the delegate and all function arguments onto the heap into a <code>DelegateMsg&lt;&gt;</code> instance for sending through the message queue using <code>DispatchDelegate()</code>.</p>
+<p><code>DelegateMemberAsync&lt;&gt;</code> is the non-blocking asynchronous version of the delegate allowing invocation on a client specified thread of control. The <code>operator()</code> function doesn&rsquo;t actually call the target function, but instead packages the delegate and all function arguments onto the heap into a <code>DelegateMsgHeapArgs&lt;&gt;</code> instance for sending through the message queue using <code>DispatchDelegate()</code>. After <code>operator()</code> is called, the <code>DelegateInvoke()</code> function is called by the target thread to actually invoke the bound function.&nbsp;</p>
 
-<pre>
+<pre lang="C++">
 template &lt;class C, class R&gt;
 struct DelegateMemberAsync; // Not defined
 
 template &lt;class TClass, class... Args&gt;
-class DelegateMemberAsync&lt;TClass, void(Args...)&gt; : public DelegateMember&lt;TClass, void(Args...)&gt;, public IDelegateInvoker {
+class DelegateMemberAsync&lt;TClass, void(Args...)&gt; : 
+      public DelegateMember&lt;TClass, void(Args...)&gt;, public IDelegateInvoker {
 public:
     typedef TClass* ObjectPtr;
     typedef void (TClass::*MemberFunc)(Args...);
     typedef void (TClass::*ConstMemberFunc)(Args...) const;
 
-    // Contructors take a class instance, member function, and callback thread
-    DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread* thread) : m_sync(false)
+    // Constructors take a class instance, member function, and callback thread
+    DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread* thread) : 
+                        m_sync(false)
         { Bind(object, func, thread); }
-    DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) : m_sync(false)
+    DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) : 
+                        m_sync(false)
         { Bind(object, func, thread); }
     DelegateMemberAsync() : m_thread(nullptr), m_sync(false) { }
 
@@ -471,7 +479,8 @@ public:
     }
 
     virtual bool operator==(const DelegateBase&amp; rhs) const {
-        const DelegateMemberAsync&lt;TClass, void(Args...)&gt;* derivedRhs = dynamic_cast&lt;const DelegateMemberAsync&lt;TClass, void(Args...)&gt;*&gt;(&amp;rhs);
+        const DelegateMemberAsync&lt;TClass, void(Args...)&gt;* 
+        derivedRhs = dynamic_cast&lt;const DelegateMemberAsync&lt;TClass, void(Args...)&gt;*&gt;(&amp;rhs);
         return derivedRhs &amp;&amp;
             m_thread == derivedRhs-&gt;m_thread &amp;&amp;
             DelegateMember&lt;TClass, void(Args...)&gt;::operator == (rhs);
@@ -484,10 +493,12 @@ public:
         else
         {
             // Create a clone instance of this delegate 
-            auto delegate = std::shared_ptr&lt;DelegateMemberAsync&lt;TClass, void(Args...)&gt;&gt;(Clone());
+            auto delegate = 
+            std::shared_ptr&lt;DelegateMemberAsync&lt;TClass, void(Args...)&gt;&gt;(Clone());
 
             // Create the delegate message
-            auto msg = std::shared_ptr&lt;DelegateMsg&lt;Args...&gt;&gt;(new DelegateMsg&lt;Args...&gt;(delegate, args...));
+            auto msg = std::shared_ptr&lt;DelegateMsgHeapArgs&lt;Args...&gt;&gt;
+                       (new DelegateMsgHeapArgs&lt;Args...&gt;(delegate, args...));
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
@@ -498,7 +509,7 @@ public:
     /// Called by the target thread to invoke the delegate function 
     virtual void DelegateInvoke(std::shared_ptr&lt;DelegateMsgBase&gt; msg) {
         // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = static_cast&lt;DelegateMsg&lt;Args...&gt;*&gt;(msg.get());
+        auto delegateMsg = static_cast&lt;DelegateMsgHeapArgs&lt;Args...&gt;*&gt;(msg.get());
 
         // Invoke the delegate function
         m_sync = true;
@@ -512,24 +523,82 @@ private:
     bool m_sync;
 };</pre>
 
-<p>Unlike the synchronous delegates that use <code>std::invoke</code>, the asynchronous versions use <code>std::apply</code> to invoke the bound function on the target thread with a tuple of arguments previously created by&nbsp;<code>make_tuple_heap()</code>.&nbsp;</p>
+<p>Unlike the synchronous delegates that use <code>std::invoke</code>, the asynchronous versions use <code>std::apply</code> to invoke the bound function on the target thread with a tuple of arguments previously created by <code>make_tuple_heap()</code>&nbsp;and sent through the message queue.</p>
 
-<pre>
+<pre lang="C++">
 // Invoke the delegate function 
 m_sync = true;
 std::apply(&amp;DelegateMember&lt;TClass, void(Args...)&gt;::operator(), 
-&nbsp;   std::tuple_cat(std::make_tuple(this), delegateMsg-&gt;GetArgs()));</pre>
+    std::tuple_cat(std::make_tuple(this), delegateMsg-&gt;GetArgs()));</pre>
 
-<p><code>DelegateMemberAsyncWait&lt;&gt;</code> is a blocking asynchronous delegate that binds to a class instance member function.</p>
+<p><code>DelegateMemberAsyncWait&lt;&gt;</code> is a blocking asynchronous delegate that binds to a class instance member function. The two main functions are shown below. When <code>operator() </code>is called it&nbsp;blocks waiting for&nbsp;<code>DelegateInvoke()</code> will be called on the target thread or the&nbsp;timeout to expire. The &quot;<code>Wait</code>&quot; versions do&nbsp;not use <code>make_tuple_heap()</code> as the original data types are directly passed to the target thread to support output arguments.</p>
+
+<pre lang="c++">
+template &lt;class C, class R&gt;
+struct DelegateMemberAsyncWait; // Not defined
+
+template &lt;class TClass, class RetType, class... Args&gt;
+class DelegateMemberAsyncWait&lt;TClass, RetType(Args...)&gt; : public DelegateMember&lt;TClass, RetType(Args...)&gt;, public IDelegateInvoker {
+public:
+    /// ...
+
+    /// Invoke delegate function asynchronously
+    virtual RetType operator()(Args... args) {
+        if (this-&gt;m_thread == nullptr || m_sync)
+            return DelegateMember&lt;TClass, RetType(Args...)&gt;::operator()(args...);
+        else {
+            // Create a clone instance of this delegate 
+            auto delegate = std::shared_ptr&lt;DelegateMemberAsyncWait&lt;TClass, RetType(Args...)&gt;&gt;(Clone());
+            delegate-&gt;m_refCnt = 2;
+            delegate-&gt;m_sema.Create();
+            delegate-&gt;m_sema.Reset();
+
+            // Create a new message instance 
+            auto msg = std::shared_ptr&lt;DelegateMsg&lt;Args...&gt;&gt;(new DelegateMsg&lt;Args...&gt;(delegate, args...)); 
+
+            // Dispatch message onto the callback destination thread. DelegateInvoke()
+            // will be called by the target thread. 
+            this-&gt;m_thread-&gt;DispatchDelegate(msg);
+
+            // Wait for target thread to execute the delegate function
+            if ((m_success = delegate-&gt;m_sema.Wait(m_timeout)))
+                m_invoke = delegate-&gt;m_invoke;
+
+            {
+                LockGuard lockGuard(&amp;delegate-&gt;m_lock);
+                delegate-&gt;m_refCnt--;
+            }
+            return m_invoke.GetRetVal();
+        }
+    }
+
+    /// Called by the target thread to invoke the delegate function 
+    virtual void DelegateInvoke(std::shared_ptr&lt;DelegateMsgBase&gt; msg) {
+        // Typecast the base pointer to back to the templatized instance
+        auto delegateMsg = static_cast&lt;DelegateMsg&lt;Args...&gt;*&gt;(msg.get());
+
+        LockGuard lockGuard(&amp;this-&gt;m_lock);
+        if (this-&gt;m_refCnt == 2) {
+            // Invoke the delegate function then signal the waiting thread
+            m_sync = true;
+            m_invoke(this, delegateMsg-&gt;GetArgs());
+            this-&gt;m_sema.Signal();
+        }
+
+        this-&gt;m_refCnt--;
+    }
+
+    /// ...</pre>
 
 <h3>Heap Template Parameter Pack</h3>
 
-<p>Non-blocking asynchronous invocations means that all argument data must be copied into the heap for transport to the destination thread. Arguments come in different styles: by value, by reference, pointer and pointer to pointer. For non-blocking delegates, anything other than pass by value needs to have the data pointed to created on the heap to ensure the data is valid on the destination thread. The key to being able to save each parameter into <code>DelegateMsg&lt;&gt;</code> is the <code>make_tuple_heap</code> &nbsp;function. This template metaprogramming function creates a <code>tuple </code>of arguments where each tuple element is created on the heap.</p>
+<p>Non-blocking asynchronous invocations means that all argument data must be copied into the heap for transport to the destination thread. Arguments come in different styles: by value, by reference, pointer and pointer to pointer. For non-blocking delegates, anything other than pass by value needs to have the data&nbsp;created on the heap to ensure the data is valid on the destination thread. The key to being able to save each parameter into <code>DelegateMsgHeapArgs&lt;&gt;</code> is the <code>make_tuple_heap()</code> function. This template metaprogramming function creates a <code>tuple </code>of arguments where each tuple element is created on the heap.</p>
 
-<pre>
+<pre lang="C++">
 /// @brief Terminate the template metaprogramming argument loop
 template&lt;typename... Ts&gt;
-auto make_tuple_heap(std::list&lt;std::shared_ptr&lt;heap_arg_deleter_base&gt;&gt;&amp; heapArgs, std::tuple&lt;Ts...&gt; tup)
+auto make_tuple_heap(std::list&lt;std::shared_ptr&lt;heap_arg_deleter_base&gt;&gt;&amp; heapArgs, 
+                     std::tuple&lt;Ts...&gt; tup)
 {
     return tup;
 }
@@ -540,22 +609,24 @@ auto make_tuple_heap(std::list&lt;std::shared_ptr&lt;heap_arg_deleter_base&gt;&g
 /// argument heap memory block that will be automatically deleted after the bound
 /// function is invoked on the target thread. 
 template&lt;typename Arg1, typename... Args, typename... Ts&gt;
-auto make_tuple_heap(std::list&lt;std::shared_ptr&lt;heap_arg_deleter_base&gt;&gt;&amp; heapArgs, std::tuple&lt;Ts...&gt; tup, Arg1 arg1, Args... args)
+auto make_tuple_heap(std::list&lt;std::shared_ptr&lt;heap_arg_deleter_base&gt;&gt;&amp; heapArgs, 
+                     std::tuple&lt;Ts...&gt; tup, Arg1 arg1, Args... args)
 {
     auto new_tup = tuple_append(heapArgs, tup, arg1);
     return make_tuple_heap(heapArgs, new_tup, args...);
 }</pre>
 
-<p>Template metaprogramming uses the C+ template system to perform compile-time computations within the code.&nbsp; Notice the recurive compiler call of <code>make_tuple_heap()</code> as <code>Arg1 </code>template parameter&nbsp;getting consumed by the function until no arguments remain and the recursion is terminated. The snippet above from <em>make_tuple_heap.h</em> shows the concatenation of heap allocated tuple function arguments. This allows for the arguments to be copied into dynamic memory for transport to the target thread through a message queue.&nbsp;</p>
+<p>Template metaprogramming uses the C++ template system to perform compile-time computations within the code. Notice the recursive compiler call of <code>make_tuple_heap()</code> as the&nbsp;<code>Arg1 </code>template parameter gets&nbsp;consumed by the function until no arguments remain and the recursion is terminated. The snippet above shows the concatenation of heap allocated tuple function arguments. This allows for the arguments to be copied into dynamic memory for transport to the target thread through a message queue.</p>
 
-<p>This bit of code inside <em>make_tuple_heap.h</em> was tricky to create in that each argument must have memory allocated, copied, appended to the tuple, then subsequently deallocated based on its type. To further complicate things, this all has to be done generically with N number of disparte template argument parameters. This was the key to getting a template parameter pack of arguments through a message queue. <code>DelegateMsg </code>then stores the tuple&nbsp;parameters for easy usage by the target thread.&nbsp;</p>
+<p>This bit of code inside <em>make_tuple_heap.h</em> was tricky to create in that each argument must have memory allocated, data copied, appended to the tuple, then subsequently deallocated all based on its type. To further complicate things, this all has to be done generically with N number of disparte template argument parameters. This was the key to getting a template parameter pack of arguments through a message queue. <code>DelegateMsgHeapArgs&nbsp;</code>then stores the tuple parameters for easy usage by the target thread. The target thread uses&nbsp;<code>std::apply()</code> to invoke the bound function with the heap allocated tuple argument(s).&nbsp;</p>
 
-<p>The pointer argument <code>tuple_append()</code> is shown below. It creates dynamic memory for the argument, copies, adds to a deleter list for subsequent later cleanup after the target function is invoked, and finally returns the appended tuple.&nbsp;</p>
+<p>The pointer argument <code>tuple_append()</code>&nbsp;implementation is shown below. It creates dynamic memory for the argument, argument data copied, adds to a deleter list for subsequent later cleanup after the target function is invoked, and finally returns the appended tuple.</p>
 
-<pre>
+<pre lang="C++">
 /// @brief Append a pointer argument to the tuple
 template &lt;typename Arg, typename... TupleElem&gt;
-auto tuple_append(std::list&lt;std::shared_ptr&lt;heap_arg_deleter_base&gt;&gt;&amp; heapArgs, const std::tuple&lt;TupleElem...&gt; &amp;tup, Arg* arg)
+auto tuple_append(std::list&lt;std::shared_ptr&lt;heap_arg_deleter_base&gt;&gt;&amp; heapArgs, 
+                  const std::tuple&lt;TupleElem...&gt; &amp;tup, Arg* arg)
 {
     Arg* heap_arg = nullptr;
     try
@@ -575,9 +646,9 @@ auto tuple_append(std::list&lt;std::shared_ptr&lt;heap_arg_deleter_base&gt;&gt;&
     }
 }</pre>
 
-<p>The pointer argument deleter is implented below. When the target function invocation is complete, the <code>heap_arg_deleter </code>destructor will call and <code>delete </code>the heap argument memory. The heap argument cannot be a changed to a smart pointer because it would change the argument type. Therefore, the <code>heap_arg_deleter </code>is used as a&nbsp;smart pointer wrapper around the non-smart heap argument.</p>
+<p>The pointer argument deleter is implemented below. When the target function invocation is complete, the <code>heap_arg_deleter </code>destructor will&nbsp;<code>delete </code>the heap argument memory. The heap argument cannot be a changed to a smart pointer because it would change the argument type used in the target function signature. Therefore, the <code>heap_arg_deleter </code>is used as a smart pointer wrapper around the (potentially) non-smart heap argument.</p>
 
-<pre>
+<pre lang="C++">
 /// @brief Frees heap memory for pointer heap argument
 template&lt;typename T&gt;
 class heap_arg_deleter&lt;T*&gt; : public heap_arg_deleter_base
@@ -592,16 +663,34 @@ private:
     T* m_arg;
 };</pre>
 
-<h3>Array Argument Heap Copy</h3>
+<h4>Argument Heap Copy</h4>
+
+<p>Non-blocking asynchronous invocations means that all argument data must be copied into the heap for transport to the destination thread. This means all arguments, regardless of the argument type, will be duplicated including: value, pointer, pointer to pointer, reference. If your data is something other than plain old data (POD) and can&rsquo;t be bitwise copied, then be sure to implement an appropriate copy constructor to handle the copying yourself.</p>
+
+<p>For instance, invoking this function asynchronously the argument <code>TestStruct </code>will be copied.</p>
+
+<pre lang="c++">
+void TestFunc(TestStruct* data);</pre>
+
+<h4>Bypassing Argument Heap Copy</h4>
+
+<p>Occasionally, you may not want the delegate library to copy your arguments. Instead, you just want the destination thread to have a pointer to the original copy. Here is how to really send a pointer without duplicating the object pointed to. Use a <code>shared_ptr</code> as the function argument prevents object copying.&nbsp;</p>
+
+<p>For instance, invoking this function asynchronously will not copy the <code>TestStruct </code>object.</p>
+
+<pre lang="c++">
+void TestFunc(std::shared_ptr&lt;TestStruct&gt; data);</pre>
+
+<h4>Array Argument Heap Copy</h4>
 
 <p>Array function arguments are adjusted to a pointer per the C standard. In short, any function parameter declared as <code>T a[]</code> or <code>T a[N]</code> is treated as though it were declared as <code>T *a</code>. Since the array size is not known, the library cannot copy the entire array. For instance, the function below:</p>
 
-<pre>
+<pre lang="C++">
 void ArrayFunc(char a[]) {}</pre>
 
-<p>Requires a delegate argument <code>char*</code> because the <code>char a[]</code> was &ldquo;adjusted&rdquo; to <code>char *a</code>.</p>
+<p>requires a delegate argument <code>char*</code> because the <code>char a[]</code> was &ldquo;adjusted&rdquo; to <code>char *a</code>.</p>
 
-<pre>
+<pre lang="C++">
 MulticastDelegateSafe1&lt;char*&gt; delegateArrayFunc;
 delegateArrayFunc += MakeDelegate(&amp;ArrayFunc, &amp;workerThread1);</pre>
 
@@ -609,9 +698,9 @@ delegateArrayFunc += MakeDelegate(&amp;ArrayFunc, &amp;workerThread1);</pre>
 
 <h3>Worker Thread (std::thread)</h3>
 
-<p>The <code>std::thread</code> implemented thread loop is shown below.</p>
+<p>The <code>std::thread</code> implemented thread loop is shown below. The loop calls the <code>DelegateInvoke()</code>&nbsp;function on each asynchronous delegate instance.</p>
 
-<pre>
+<pre lang="C++">
 void WorkerThread::Process()
 {
     while (1)
@@ -655,22 +744,24 @@ void WorkerThread::Process()
     }
 }</pre>
 
+<p>Any project-specific thread loop can call <code>DelegateInvoke()</code>. This is just one example. The only requirement is that your worker thread class inherit from&nbsp;<code>DelegateLib::DelegateThread</code> and implement the&nbsp;<code>DispatchDelegate()</code> abstract function. <code>DisplatchDelegate()</code> will insert the shared message pointer into the thread queue for processing.&nbsp;</p>
+
 <h2>Delegate Containers</h2>
 
 <p>Delegate containers store one or more delegates. The delegate container hierarchy is shown below:</p>
 
 <ul class="class">
-	<li>MulticastDelegateBase</li>
-	<li>MulticastDelegate&lt;&gt;</li>
-	<li>MulticastDelegateSafe&lt;&gt;</li>
-	<li>SinglecastDelegate&lt;&gt;</li>
+	<li><code>MulticastDelegateBase</code></li>
+	<li><code>MulticastDelegate&lt;&gt;</code></li>
+	<li><code>MulticastDelegateSafe&lt;&gt;</code></li>
+	<li><code>SinglecastDelegate&lt;&gt;</code></li>
 </ul>
 
 <p><code>MulticastDelegate&lt;&gt;</code> provides the function <code>operator()</code> to sequentially invoke each delegate within the list.</p>
 
 <p><code>MulticastDelegateSafe&lt;&gt;</code> provides a thread-safe wrapper around the delegate API. Each function provides a lock guard to protect against simultaneous access. The Resource Acquisition is Initialization (RAII) technique is used for the locks.</p>
 
-<pre>
+<pre lang="C++">
 template &lt;class R&gt;
 struct MulticastDelegateSafe; // Not defined
 
@@ -719,9 +810,9 @@ private:
 
 <h2>SysData Example</h2>
 
-<p>A few real-world examples will demonstrate common delegate usage patterns. First, <code>SysData </code>is a simple class showing how to expose an outgoing asynchronous interface. The class stores system data and provides asynchronous subscriber notifications when the mode changes. The class interface is shown below.</p>
+<p>A few real-world examples will demonstrate common delegate usage patterns. First, <code>SysData </code>is a simple class showing how to expose an outgoing asynchronous interface. The class stores system data and provides asynchronous subscriber notifications when the mode changes. The class interface is shown below:</p>
 
-<pre>
+<pre lang="C++">
 class SysData
 {
 public:
@@ -748,7 +839,7 @@ private:
 
 <p>The subscriber interface for receiving callbacks is <code>SystemModeChangedDelegate</code>. Calling <code>SetSystemMode()</code> saves the new mode into <code>m_systemMode </code>and notifies all registered subscribers.</p>
 
-<pre>
+<pre lang="C++">
 void SysData::SetSystemMode(SystemMode::Type systemMode)
 {
     LockGuard lockGuard(&amp;m_lock);
@@ -770,19 +861,21 @@ void SysData::SetSystemMode(SystemMode::Type systemMode)
 
 <p><code>SysDataClient </code>is a delegate subscriber and registers for <code>SysData::SystemModeChangedDelegate</code> notifications within the constructor.</p>
 
-<pre>
+<pre lang="C++">
     // Constructor
     SysDataClient() :
         m_numberOfCallbacks(0)
     {
         // Register for async delegate callbacks
-        SysData::GetInstance().SystemModeChangedDelegate += MakeDelegate(this, &amp;SysDataClient::CallbackFunction, &amp;workerThread1);
-        SysDataNoLock::GetInstance().SystemModeChangedDelegate += MakeDelegate(this, &amp;SysDataClient::CallbackFunction, &amp;workerThread1);
+        SysData::GetInstance().SystemModeChangedDelegate += 
+                 MakeDelegate(this, &amp;SysDataClient::CallbackFunction, &amp;workerThread1);
+        SysDataNoLock::GetInstance().SystemModeChangedDelegate += 
+                       MakeDelegate(this, &amp;SysDataClient::CallbackFunction, &amp;workerThread1);
     }</pre>
 
 <p><code>SysDataClient::CallbackFunction()</code> is now called on <code>workerThread1 </code>when the system mode changes.</p>
 
-<pre>
+<pre lang="C++">
     void CallbackFunction(const SystemModeChanged&amp; data)
     {
         m_numberOfCallbacks++;
@@ -791,7 +884,7 @@ void SysData::SetSystemMode(SystemMode::Type systemMode)
 
 <p>When <code>SetSystemMode()</code> is called, anyone interested in the mode changes are notified synchronously or asynchronously depending on the delegate type registered.</p>
 
-<pre>
+<pre lang="C++">
 // Set new SystemMode values. Each call will invoke callbacks to all
 // registered client subscribers.
 SysData::GetInstance().SetSystemMode(SystemMode::STARTING);
@@ -799,9 +892,9 @@ SysData::GetInstance().SetSystemMode(SystemMode::NORMAL);</pre>
 
 <h2>SysDataNoLock Example</h2>
 
-<p>SysDataNoLock is an alternate implementation that uses a private <code>MulticastDelegateSafe&lt;&gt;</code> for setting the system mode asynchronously and without locks.</p>
+<p><code>SysDataNoLock</code> is an alternate implementation that uses a <code>private</code> <code>MulticastDelegateSafe&lt;&gt;</code> for setting the system mode asynchronously and without locks.</p>
 
-<pre>
+<pre lang="C++">
 class SysDataNoLock
 {
 public:
@@ -842,28 +935,29 @@ private:
     SystemMode::Type m_systemMode;
 };</pre>
 
-<p>The constructor registers <code>SetSystemModePrivate()</code> with the private <code>SetSystemModeDelegate</code>.</p>
+<p>The constructor registers <code>SetSystemModePrivate()</code> with the <code>private</code> <code>SetSystemModeDelegate</code>.</p>
 
-<pre>
+<pre lang="C++">
 SysDataNoLock::SysDataNoLock() :
     m_systemMode(SystemMode::STARTING)
 {
-    SetSystemModeDelegate += MakeDelegate(this, &amp;SysDataNoLock::SetSystemModePrivate, &amp;workerThread2);
+    SetSystemModeDelegate += MakeDelegate
+                 (this, &amp;SysDataNoLock::SetSystemModePrivate, &amp;workerThread2);
     workerThread2.CreateThread();
 }</pre>
 
 <p>The <code>SetSystemMode()</code> function below is an example of an asynchronous incoming interface. To the caller, it looks like a normal function, but under the hood, a private member call is invoked asynchronously using a delegate. In this case, invoking <code>SetSystemModeDelegate</code> causes <code>SetSystemModePrivate()</code> to be called on <code>workerThread2</code>.</p>
 
-<pre>
+<pre lang="C++">
 void SysDataNoLock::SetSystemMode(SystemMode::Type systemMode)
 {
     // Invoke the private callback. SetSystemModePrivate() will be called on workerThread2.
     SetSystemModeDelegate(systemMode);
 }</pre>
 
-<p>Since this private function is always invoked asynchronously on <code>workerThread2</code>, it doesn&#39;t require locks.</p>
+<p>Since this <code>private</code> function is always invoked asynchronously on <code>workerThread2</code>, it doesn&#39;t require locks.</p>
 
-<pre>
+<pre lang="C++">
 void SysDataNoLock::SetSystemModePrivate(SystemMode::Type systemMode)
 {
       // Create the callback data
@@ -872,10 +966,8 @@ void SysDataNoLock::SetSystemModePrivate(SystemMode::Type systemMode)
       callbackData.PreviousSystemMode = m_systemMode;
       callbackData.CurrentSystemMode = systemMode;
 
-
       // Update the system mode
       m_systemMode = systemMode;
-
 
       // Callback all registered subscribers
       if (SystemModeChangedDelegate)
@@ -884,16 +976,17 @@ void SysDataNoLock::SetSystemModePrivate(SystemMode::Type systemMode)
 
 <h2>SysDataNoLock Reinvoke Example</h2>
 
-<p>While creating a separate private function to create an asynchronous API does work, with delegates, it&#39;s possible to just reinvoke the same exact function just on a different thread. Perform a simple check whether the caller is executing on the desired thread of control. If not, a temporary asynchronous delegate is created on the stack and then invoked. The delegate and all the caller&rsquo;s original function arguments are duplicated on the heap and the function is reinvoked on <code>workerThread2</code>. This is an elegant way to create asynchronous APIs with the absolute minimum of effort.</p>
+<p>While creating a separate <code>private</code> function to create an asynchronous API does work, with delegates, it&#39;s possible to just reinvoke the same exact function just on a different thread. Perform a simple check whether the caller is executing on the desired thread of control. If not, a temporary asynchronous delegate is created on the stack and then invoked. The delegate and all the caller&rsquo;s original function arguments are duplicated on the heap and the function is reinvoked on <code>workerThread2</code>. This is an elegant way to create asynchronous APIs with the absolute minimum of effort.</p>
 
-<pre>
+<pre lang="C++">
 void SysDataNoLock::SetSystemModeAsyncAPI(SystemMode::Type systemMode)
 {
     // Is the caller executing on workerThread2?
     if (workerThread2.GetThreadId() != WorkerThread::GetCurrentThreadId())
     {
         // Create an asynchronous delegate and re-invoke the function call on workerThread2
-        auto delegate = MakeDelegate(this, &amp;SysDataNoLock::SetSystemModeAsyncAPI, &amp;workerThread2);
+        auto delegate = 
+             MakeDelegate(this, &amp;SysDataNoLock::SetSystemModeAsyncAPI, &amp;workerThread2);
         delegate(systemMode);
         return;
     }
@@ -915,7 +1008,7 @@ void SysDataNoLock::SetSystemModeAsyncAPI(SystemMode::Type systemMode)
 
 <p>A blocking asynchronous API can be hidden inside a class member function. The function below sets the current mode on <code>workerThread2 </code>and returns the previous mode. A blocking delegate is created on the stack and invoked if the caller isn&#39;t executing on <code>workerThread2</code>. To the caller, the function appears synchronous, but the delegate ensures that the call is executed on the proper thread before returning.</p>
 
-<pre>
+<pre lang="C++">
 SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type systemMode)
 {
     // Is the caller executing on workerThread2?
@@ -923,7 +1016,8 @@ SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type syste
     {
         // Create an asynchronous delegate and re-invoke the function call on workerThread2
         auto delegate =
-            MakeDelegate(this, &amp;SysDataNoLock::SetSystemModeAsyncWaitAPI, &amp;workerThread2, WAIT_INFINITE);
+            MakeDelegate(this, &amp;SysDataNoLock::SetSystemModeAsyncWaitAPI, 
+                         &amp;workerThread2, WAIT_INFINITE);
         return delegate(systemMode);
     }
 
@@ -944,9 +1038,9 @@ SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type syste
 
 <h2>Timer Example</h2>
 
-<p>Once a delegate framework is in place, creating a timer callback service is trivial. Many systems need a way to generate a callback based on a timeout. Maybe it&#39;s a periodic timeout for some low speed polling or maybe an error timeout in case something doesn&#39;t occur within the expected time frame. Either way, the callback must occur on a specified thread of control. A <code>SinglecastDelegate&lt;&gt; </code>used inside a Timer class solves this nicely.</p>
+<p>Once a delegate framework is in place, creating a timer callback service is trivial. Many systems need a way to generate a callback based on a timeout. Maybe it&#39;s a periodic timeout for some low speed polling or maybe an error timeout in case something doesn&#39;t occur within the expected time frame. Either way, the callback must occur on a specified thread of control. A <code>SinglecastDelegate&lt;&gt; </code>used inside a <code>Timer</code> class solves this nicely.</p>
 
-<pre>
+<pre lang="C++">
 class Timer
 {
 public:
@@ -960,7 +1054,7 @@ public:
 
 <p>Users create an instance of the timer and register for the expiration. In this case, <code>MyClass::MyCallback() </code>is called in 1000ms.</p>
 
-<pre>
+<pre lang="C++">
 m_timer.Expired = MakeDelegate(&amp;myClass, &amp;MyClass::MyCallback, &amp;myThread);
 m_timer.Start(1000);</pre>
 
@@ -972,64 +1066,64 @@ m_timer.Start(1000);</pre>
 
 <p>Synchronous delegates are created using one argument for free functions and two for instance member functions.</p>
 
-<pre>
+<pre lang="C++">
 auto freeDelegate = MakeDelegate(&amp;MyFreeFunc);
 auto memberDelegate = MakeDelegate(&amp;myClass, &amp;MyClass::MyMemberFunc);</pre>
 
 <p>Adding the thread argument creates a non-blocking asynchronous delegate.</p>
 
-<pre>
+<pre lang="C++">
 auto freeDelegate = MakeDelegate(&amp;MyFreeFunc, &amp;myThread);
 auto memberDelegate = MakeDelegate(&amp;myClass, &amp;MyClass::MyMemberFunc, &amp;myThread);</pre>
 
-<p>A std::shared_ptr can replace a raw instance pointer on synchronous and non-blocking asynchronous member delegates.</p>
+<p>A <code>std::shared_ptr</code> can replace a raw instance pointer on synchronous and non-blocking asynchronous member delegates.</p>
 
-<pre>
+<pre lang="C++">
 std::shared_ptr&lt;MyClass&gt; myClass(new MyClass());
 auto memberDelegate = MakeDelegate(myClass, &amp;MyClass::MyMemberFunc, &amp;myThread);</pre>
 
-<p>Adding a timeout argument creates a blocking asynchronous delegate.</p>
+<p>Adding a <code>timeout</code> argument creates a blocking asynchronous delegate.</p>
 
-<pre>
+<pre lang="C++">
 auto freeDelegate = MakeDelegate(&amp;MyFreeFunc, &amp;myThread, WAIT_INFINITE);
 auto memberDelegate = MakeDelegate(&amp;myClass, &amp;MyClass::MyMemberFunc, &amp;myThread, 5000);</pre>
 
 <p>Delegates are added/removed from multicast containers using <code>operator+=</code> and <code>operator-=</code>. All containers accept all delegate types.</p>
 
-<pre>
+<pre lang="C++">
 MulticastDelegate&lt;void(int)&gt; multicastContainer;
 multicastContainer += MakeDelegate(&amp;MyFreeFunc);
 multicastContainer -= MakeDelegate(&amp;MyFreeFunc);</pre>
 
 <p>Use the thread-safe multicast delegate container when using asynchronous delegates to allow multiple threads to safely add/remove from the container.</p>
 
-<pre>
+<pre lang="C++">
 MulticastDelegateSafe&lt;void(int)&gt; multicastContainer;
 multicastContainer += MakeDelegate(&amp;MyFreeFunc, &amp;myThread);
 multicastContainer -= MakeDelegate(&amp;MyFreeFunc, &amp;myThread);</pre>
 
 <p>Single cast delegates are added and removed using <code>operator=</code>.</p>
 
-<pre>
+<pre lang="C++">
 SinglecastDelegate&lt;void(int)&gt; singlecastContainer;
 singlecastContainer = MakeDelegate(&amp;MyFreeFunc);
 singlecastContainer = 0;</pre>
 
 <p>All delegates and delegate containers are invoked using <code>operator()</code>.</p>
 
-<pre>
+<pre lang="C++">
 if (myDelegate)
       myDelegate(123);</pre>
 
 <p>Use <code>IsSuccess()</code> on blocking delegates before using the return value or outgoing arguments.</p>
 
-<pre>
+<pre lang="C++">
 if (myDelegate) 
 {
      int outInt = 0;
      int retVal = myDelegate(&amp;outInt);
      if (myDelegate.IsSuccess()) 
-&nbsp;    {
+     {
           cout &lt;&lt; outInt &lt;&lt; retVal;
      }
 }</pre>
@@ -1038,14 +1132,14 @@ if (myDelegate)
 
 <p>I&rsquo;ve documented four different asynchronous multicast callback implementations here on CodeProject. Each version has its own unique features and advantages. The sections below highlight the main differences between each solution. See the <strong>References </strong>section below for links to each article.</p>
 
-<p><strong>Asynchronous Multicast Callbacks in C</strong></p>
+<h3>Asynchronous Multicast Callbacks in C</h3>
 
 <ul>
 	<li>Implemented in C</li>
 	<li>Callback function is a free or static member only</li>
 	<li>One callback argument supported</li>
 	<li>Callback argument must be a pointer type</li>
-	<li>Callback argument data copied with memcpy</li>
+	<li>Callback argument data copied with <code>memcpy</code></li>
 	<li>Type-safety provided by macros</li>
 	<li>Static array holds registered subscriber callbacks</li>
 	<li>Number of registered subscribers fixed at compile time</li>
@@ -1053,7 +1147,7 @@ if (myDelegate)
 	<li>Compact implementation</li>
 </ul>
 
-<p><strong>Asynchronous Multicast Callbacks with Inter-Thread Messaging</strong></p>
+<h3>Asynchronous Multicast Callbacks with Inter-Thread Messaging</h3>
 
 <ul>
 	<li>Implemented in C++</li>
@@ -1069,7 +1163,7 @@ if (myDelegate)
 	<li>Compact implementation</li>
 </ul>
 
-<p><strong>Asynchronous Multicast Delegates in C++</strong></p>
+<h3>Asynchronous Multicast Delegates in C++</h3>
 
 <ul>
 	<li>Implemented in C++</li>
@@ -1086,10 +1180,10 @@ if (myDelegate)
 	<li>Larger implementation</li>
 </ul>
 
-<p><strong>Asynchronous Multicast Delegates in Modern C++</strong></p>
+<h3>Asynchronous Multicast Delegates in Modern C++</h3>
 
 <ul>
-	<li>Implemented in C++ (i.e. C++17)</li>
+	<li>Implemented in C++ (i.e., C++17)</li>
 	<li>C++ delegate paradigm</li>
 	<li>Function signature delegate arguments</li>
 	<li>Any callback function type (member, static, free)</li>
@@ -1107,17 +1201,17 @@ if (myDelegate)
 
 <h2>Limitations</h2>
 
-<p>Lambda functions are not currenlty supported as a target bound function.&nbsp;</p>
+<p>Lambda functions are not currently supported as a target bound function.</p>
 
-<p><a href="https://www.codeproject.com/Articles/5262271/Remote-Procedure-Calls-using-Cplusplus-Delegates">Remote delegates</a>&nbsp;that invoke a function located in a separate process or CPU are not currently supported by the delegate library.&nbsp;</p>
+<p><a href="https://www.codeproject.com/Articles/5262271/Remote-Procedure-Calls-using-Cplusplus-Delegates">Remote delegates</a> that invoke a function located in a separate process or CPU are not currently supported by the delegate library.</p>
 
-<p>A fixed block allocator is not currently supported. All dynamic memory is obtained from the heap using <code>operator new</code> and <code>delete</code>.&nbsp;</p>
+<p>A fixed block allocator is not currently supported. All dynamic memory is obtained from the heap using <code>operator new</code> and <code>delete</code>.</p>
 
 <h2>References</h2>
 
 <ul>
-	<li><strong><a href="https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus">Asynchronous Multicast Delegates in C++</a></strong>&nbsp;- by David Lafreniere</li>
-	<li><a href="https://www.codeproject.com/Articles/5262271/Remote-Procedure-Calls-using-Cplusplus-Delegates"><strong>Remote Procedure Calls using C++ Delegates</strong></a>&nbsp;- by David Lafreniere</li>
+	<li><strong><a href="https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus">Asynchronous Multicast Delegates in C++</a></strong> - by David Lafreniere</li>
+	<li><a href="https://www.codeproject.com/Articles/5262271/Remote-Procedure-Calls-using-Cplusplus-Delegates"><strong>Remote Procedure Calls using C++ Delegates</strong></a> - by David Lafreniere</li>
 	<li><a href="https://www.codeproject.com/Articles/1272894/Asynchronous-Multicast-Callbacks-in-C"><strong>Asynchronous Multicast Callbacks in C</strong></a> - by David Lafreniere</li>
 	<li><a href="https://www.codeproject.com/Articles/1092727/Asynchronous-Multicast-Callbacks-with-Inter-Thread"><strong>Asynchronous Multicast Callbacks with Inter-Thread Messaging</strong></a> - by David Lafreniere</li>
 	<li><a href="https://www.codeproject.com/Articles/1191232/Type-Safe-Multicast-Callbacks-in-C"><strong>Type-Safe Multicast Callbacks in C</strong></a> - by David Lafreniere</li>
@@ -1129,6 +1223,8 @@ if (myDelegate)
 <p>I&rsquo;ve done quite a bit of multithreaded application development over the years. Invoking a function on a destination thread with data has always been a hand-crafted, time consuming process. This library generalizes those constructs and encapsulates them into a user-friendly delegate library.</p>
 
 <p>The article proposes a modern C++ multicast delegate implementation supporting synchronous and asynchronous function invocation. Non-blocking asynchronous delegates offer fire-and-forget invocation whereas the blocking versions allow waiting for a return value and outgoing reference arguments from the target thread. Multicast delegate containers expand the delegate&rsquo;s usefulness by allowing multiple clients to register for callback notification. Multithreaded application development is simplified by letting the library handle the low-level threading details of invoking functions and moving data across thread boundaries. The inter-thread code is neatly hidden away within the library and users only interact with an easy to use delegate API.</p>
+
+
 
 
 
