@@ -67,7 +67,7 @@ public:
             auto delegate = std::shared_ptr<DelegateMemberAsyncSp<TClass, void(Args...)>>(Clone());
 
             // Create the delegate message
-            auto msg = std::shared_ptr<DelegateMsg<Args...>>(new DelegateMsg<Args...>(delegate, args...));
+            auto msg = std::shared_ptr<DelegateMsgHeapArgs<Args...>>(new DelegateMsgHeapArgs<Args...>(delegate, args...));
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
@@ -78,7 +78,7 @@ public:
     /// Called by the target thread to invoke the delegate function 
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
         // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
+        auto delegateMsg = static_cast<DelegateMsgHeapArgs<Args...>*>(msg.get());
 
         // Invoke the delegate function
         m_sync = true;
