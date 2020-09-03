@@ -86,6 +86,9 @@
     <ClInclude Include="..\..\Delegate\make_tuple_heap.h">
       <Filter>Delegate</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Port\Timer.h">
+      <Filter>Port</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Examples\SysData.cpp">
@@ -113,6 +116,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Delegate\DelegateUnitTests.cpp">
       <Filter>Delegate</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Port\Timer.cpp">
+      <Filter>Port</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

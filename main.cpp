@@ -6,6 +6,7 @@
 #include <thread>
 #include <utility>
 #include "WorkerThreadStd.h"
+#include "Timer.h"
 
 // main.cpp
 // @see https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cplusplus
@@ -167,6 +168,12 @@ public:
 	}
 };
 
+void TimerExpiredCb(void)
+{
+    static int count = 0;
+    cout << "TimerExpiredCb " << count++ << endl;
+}
+
 extern void DelegateUnitTests();
 
 //------------------------------------------------------------------------------
@@ -184,10 +191,11 @@ int main(void)
 	workerThread1.CreateThread();
 	SysDataNoLock::GetInstance();
 
-#if USE_WIN32_THREADS
-	// Start the worker threads
-	ThreadWin::StartAllThreads();
-#endif
+    // Create a timer that expires every 250mS and calls 
+    // TimerExpiredCb on workerThread1 upon expiration
+    Timer timer;
+    timer.Expired = MakeDelegate(&TimerExpiredCb, &workerThread1);
+    timer.Start(250);
 
 	// Run all unit tests (uncomment to run unit tests)
 	//DelegateUnitTests();
@@ -374,6 +382,11 @@ int main(void)
     ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
     std::cout << "Elapsed Time: " << (float)ElapsedMicroseconds.QuadPart / 1000000.0f << " seconds" << std::endl;
 #endif
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    timer.Stop();
+    timer.Expired.Clear();
 
    	workerThread1.ExitThread();
 

@@ -166,6 +166,7 @@
     <ClInclude Include="..\..\Port\DataTypes.h" />
     <ClInclude Include="..\..\Port\Fault.h" />
     <ClInclude Include="..\..\Port\ThreadMsg.h" />
+    <ClInclude Include="..\..\Port\Timer.h" />
     <ClInclude Include="..\..\Port\UserMsgs.h" />
     <ClInclude Include="..\..\Port\WorkerThreadStd.h" />
     <ClInclude Include="..\..\stdafx.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="..\..\Examples\SysDataNoLock.cpp" />
     <ClCompile Include="..\..\main.cpp" />
     <ClCompile Include="..\..\Port\Fault.cpp" />
+    <ClCompile Include="..\..\Port\Timer.cpp" />
     <ClCompile Include="..\..\Port\WorkerThreadStd.cpp" />
     <ClCompile Include="..\..\stdafx.cpp" />
   </ItemGroup>

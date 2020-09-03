@@ -46,10 +46,14 @@ private:
 	/// Entry point for the thread
 	void Process();
 
+    /// Entry point for timer thread
+    void TimerThread();
+
 	std::unique_ptr<std::thread> m_thread;
 	std::queue<std::shared_ptr<ThreadMsg>> m_queue;
 	std::mutex m_mutex;
 	std::condition_variable m_cv;
+    std::atomic<bool> m_timerExit;
 	const CHAR* THREAD_NAME;
 };
 

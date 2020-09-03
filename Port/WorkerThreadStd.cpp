@@ -1,17 +1,19 @@
 #include "DelegateOpt.h"
 #include "WorkerThreadStd.h"
 #include "ThreadMsg.h"
+#include "Timer.h"
 
 using namespace std;
 using namespace DelegateLib;
 
 #define MSG_DISPATCH_DELEGATE	1
 #define MSG_EXIT_THREAD			2
+#define MSG_TIMER				3
 
 //----------------------------------------------------------------------------
 // WorkerThread
 //----------------------------------------------------------------------------
-WorkerThread::WorkerThread(const CHAR* threadName) : m_thread(nullptr), THREAD_NAME(threadName)
+WorkerThread::WorkerThread(const CHAR* threadName) : m_thread(nullptr), m_timerExit(false), THREAD_NAME(threadName)
 {
 }
 
@@ -89,10 +91,31 @@ void WorkerThread::DispatchDelegate(std::shared_ptr<DelegateLib::DelegateMsgBase
 }
 
 //----------------------------------------------------------------------------
+// TimerThread
+//----------------------------------------------------------------------------
+void WorkerThread::TimerThread()
+{
+    while (!m_timerExit)
+    {
+        std::this_thread::sleep_for(100ms);
+
+        std::shared_ptr<ThreadMsg> threadMsg (new ThreadMsg(MSG_TIMER, 0));
+
+        // Add timer msg to queue and notify worker thread
+        std::unique_lock<std::mutex> lk(m_mutex);
+        m_queue.push(threadMsg);
+        m_cv.notify_one();
+    }
+}
+
+//----------------------------------------------------------------------------
 // Process
 //----------------------------------------------------------------------------
 void WorkerThread::Process()
 {
+    m_timerExit = false;
+    std::thread timerThread(&WorkerThread::TimerThread, this);
+
 	while (1)
 	{
 		std::shared_ptr<ThreadMsg> msg;
@@ -123,9 +146,15 @@ void WorkerThread::Process()
 				break;
 			}
 
+            case MSG_TIMER:
+                Timer::ProcessTimers();
+                break;
+
 			case MSG_EXIT_THREAD:
 			{
-				return;
+                m_timerExit = true;
+                timerThread.join();
+                return;
 			}
 
 			default:
