@@ -278,7 +278,7 @@ delegateMemberSpAsync(&quot;testClassSp deletes after delegate invokes&quot;, 20
     auto delegateI = 
           MakeDelegate(&amp;testClass, &amp;TestClass::MemberFuncStdStringRetInt, 
                        &amp;workerThread1, WAIT_INFINITE);
-    std::string msg = &quot;Hello from&quot;;
+    std::string msg;
     int year = delegateI(msg);
     if (delegateI.IsSuccess())
     {
@@ -1038,27 +1038,30 @@ SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type syste
 
 <h2>Timer Example</h2>
 
-<p>Once a delegate framework is in place, creating a timer callback service is trivial. Many systems need a way to generate a callback based on a timeout. Maybe it&#39;s a periodic timeout for some low speed polling or maybe an error timeout in case something doesn&#39;t occur within the expected time frame. Either way, the callback must occur on a specified thread of control. A <code>SinglecastDelegate&lt;&gt; </code>used inside a <code>Timer</code> class solves this nicely.</p>
+<p>Once a delegate framework is in place, creating a timer callback service is trivial. Many systems need a way to generate a callback based on a timeout. Maybe it&#39;s a periodic timeout for some low speed polling or maybe an error timeout in case something doesn&#39;t occur within the expected time frame. Either way, the callback must occur on a specified thread of control. A <code>SinglecastDelegate&lt;void(void)&gt; </code>used inside a <code>Timer</code> class solves this nicely.</p>
 
 <pre lang="C++">
-class Timer
+/// @brief A timer class provides periodic timer callbacks on the client&#39;s&nbsp;
+/// thread of control. Timer is thread safe.
+class Timer&nbsp;
 {
 public:
-    SinglecastDelegate&lt;&gt; Expired;
+&nbsp;&nbsp; &nbsp;static const DWORD MS_PER_TICK;
 
-    void Start(UINT32 timeout);
-    void Stop();
+&nbsp;&nbsp; &nbsp;/// Client&#39;s register with Expired to get timer callbacks
+&nbsp;&nbsp; &nbsp;SinglecastDelegate&lt;void(void)&gt; Expired;
 
-    //...
-};</pre>
+&nbsp;&nbsp; &nbsp;/// Constructor
+&nbsp;&nbsp; &nbsp;Timer(void);
+
+&nbsp;&nbsp; &nbsp;/// Destructor
+&nbsp;&nbsp; &nbsp;~Timer(void);</pre>
 
 <p>Users create an instance of the timer and register for the expiration. In this case, <code>MyClass::MyCallback() </code>is called in 1000ms.</p>
 
 <pre lang="C++">
 m_timer.Expired = MakeDelegate(&amp;myClass, &amp;MyClass::MyCallback, &amp;myThread);
 m_timer.Start(1000);</pre>
-
-<p>A <code>Timer </code>implementation isn&#39;t offered in the examples. However, the implementation is quite easy leveraging the delegate library.</p>
 
 <h2>Summary</h2>
 
@@ -1223,8 +1226,6 @@ if (myDelegate)
 <p>I&rsquo;ve done quite a bit of multithreaded application development over the years. Invoking a function on a destination thread with data has always been a hand-crafted, time consuming process. This library generalizes those constructs and encapsulates them into a user-friendly delegate library.</p>
 
 <p>The article proposes a modern C++ multicast delegate implementation supporting synchronous and asynchronous function invocation. Non-blocking asynchronous delegates offer fire-and-forget invocation whereas the blocking versions allow waiting for a return value and outgoing reference arguments from the target thread. Multicast delegate containers expand the delegate&rsquo;s usefulness by allowing multiple clients to register for callback notification. Multithreaded application development is simplified by letting the library handle the low-level threading details of invoking functions and moving data across thread boundaries. The inter-thread code is neatly hidden away within the library and users only interact with an easy to use delegate API.</p>
-
-
 
 
 
