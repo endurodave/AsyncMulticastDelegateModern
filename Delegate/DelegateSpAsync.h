@@ -46,11 +46,11 @@ public:
         DelegateMemberSp<TClass, void(Args...)>::Bind(object, func);
     }
 
-    virtual DelegateMemberAsyncSp<TClass, void(Args...)>* Clone() const {
+    virtual DelegateMemberAsyncSp<TClass, void(Args...)>* Clone() const override {
         return new DelegateMemberAsyncSp<TClass, void(Args...)>(*this);
     }
 
-    virtual bool operator==(const DelegateBase& rhs) const {
+    virtual bool operator==(const DelegateBase& rhs) const override {
         const DelegateMemberAsyncSp<TClass, void(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberAsyncSp<TClass, void(Args...)>*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
@@ -58,7 +58,7 @@ public:
     }
 
     /// Invoke delegate function asynchronously
-    virtual void operator()(Args... args) {
+    virtual void operator()(Args... args) override {
         if (m_thread == nullptr || m_sync)
             DelegateMemberSp<TClass, void(Args...)>::operator()(args...);
         else

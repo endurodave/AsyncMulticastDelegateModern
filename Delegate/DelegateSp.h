@@ -39,14 +39,14 @@ public:
         m_func = reinterpret_cast<MemberFunc>(func);
     }
 
-    virtual DelegateMemberSp* Clone() const { return new DelegateMemberSp(*this); }
+    virtual DelegateMemberSp* Clone() const override { return new DelegateMemberSp(*this); }
 
     // Invoke the bound delegate function
-    virtual RetType operator()(Args... args) {
+    virtual RetType operator()(Args... args) override {
         return std::invoke(m_func, m_object, args...);
     }
 
-    virtual bool operator==(const DelegateBase& rhs) const {
+    virtual bool operator==(const DelegateBase& rhs) const override {
         const DelegateMemberSp<TClass, RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberSp<TClass, RetType(Args...)>*>(&rhs);
         return derivedRhs &&
             m_func == derivedRhs->m_func &&

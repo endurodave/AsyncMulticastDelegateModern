@@ -11,7 +11,8 @@ namespace DelegateLib {
 
 class DelegateBase {
 public:
-    virtual ~DelegateBase() {}
+    DelegateBase() = default;
+    virtual ~DelegateBase() noexcept = default;
 
     /// Derived class must implement operator== to compare objects.
     virtual bool operator==(const DelegateBase& rhs) const = 0;

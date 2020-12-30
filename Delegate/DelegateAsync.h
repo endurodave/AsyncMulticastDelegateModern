@@ -29,11 +29,11 @@ public:
         DelegateFree<void(Args...)>::Bind(func);
     }
 
-    virtual DelegateFreeAsync<void(Args...)>* Clone() const {
+    virtual DelegateFreeAsync<void(Args...)>* Clone() const override {
         return new DelegateFreeAsync<void(Args...)>(*this);
     }
 
-    virtual bool operator==(const DelegateBase& rhs) const {
+    virtual bool operator==(const DelegateBase& rhs) const override {
         const DelegateFreeAsync<void(Args...)>* derivedRhs = dynamic_cast<const DelegateFreeAsync<void(Args...)>*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
@@ -41,7 +41,7 @@ public:
     }
 
     // Invoke delegate function asynchronously
-    virtual void operator()(Args... args) {
+    virtual void operator()(Args... args) override {
         if (m_thread == nullptr || m_sync)
             DelegateFree<void(Args...)>::operator()(args...);
         else
@@ -103,11 +103,11 @@ public:
         DelegateMember<TClass, void(Args...)>::Bind(object, func);
     }
 
-    virtual DelegateMemberAsync<TClass, void(Args...)>* Clone() const {
+    virtual DelegateMemberAsync<TClass, void(Args...)>* Clone() const override {
         return new DelegateMemberAsync<TClass, void(Args...)>(*this);
     }
 
-    virtual bool operator==(const DelegateBase& rhs) const {
+    virtual bool operator==(const DelegateBase& rhs) const override {
         const DelegateMemberAsync<TClass, void(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberAsync<TClass, void(Args...)>*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
@@ -115,7 +115,7 @@ public:
     }
 
     /// Invoke delegate function asynchronously
-    virtual void operator()(Args... args) {
+    virtual void operator()(Args... args) override {
         if (m_thread == nullptr || m_sync)
             DelegateMember<TClass, void(Args...)>::operator()(args...);
         else

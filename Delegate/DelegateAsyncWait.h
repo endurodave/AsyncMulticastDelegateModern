@@ -92,7 +92,7 @@ public:
     DelegateFreeAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_refCnt(0), m_sync(false) { LockGuard::Create(&m_lock); }
     virtual ~DelegateFreeAsyncWait() { LockGuard::Destroy(&m_lock); }
 
-    virtual DelegateFreeAsyncWait<RetType(Args...)>* Clone() const {
+    virtual DelegateFreeAsyncWait<RetType(Args...)>* Clone() const override {
         return new DelegateFreeAsyncWait<RetType(Args...)>(*this);
     }
 
@@ -102,7 +102,7 @@ public:
         DelegateFree<RetType(Args...)>::Bind(func);
     }
 
-    virtual bool operator==(const DelegateBase& rhs) const {
+    virtual bool operator==(const DelegateBase& rhs) const override {
         const DelegateFreeAsyncWait<RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateFreeAsyncWait<RetType(Args...)>*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
@@ -118,7 +118,7 @@ public:
     }
 
     /// Invoke delegate function asynchronously
-    virtual RetType operator()(Args... args) {
+    virtual RetType operator()(Args... args) override {
         if (this->m_thread == nullptr || m_sync)
             return DelegateFree<RetType(Args...)>::operator()(args...);
         else {
@@ -212,7 +212,7 @@ public:
     DelegateMemberAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_refCnt(0), m_sync(false) { LockGuard::Create(&m_lock); }
     virtual ~DelegateMemberAsyncWait() { LockGuard::Destroy(&m_lock); }
 
-    virtual DelegateMemberAsyncWait<TClass, RetType(Args...)>* Clone() const {
+    virtual DelegateMemberAsyncWait<TClass, RetType(Args...)>* Clone() const override {
         return new DelegateMemberAsyncWait<TClass, RetType(Args...)>(*this);
     }
 
@@ -228,7 +228,7 @@ public:
         DelegateMember<TClass, RetType(Args...)>::Bind(object, func);
     }
 
-    virtual bool operator==(const DelegateBase& rhs) const {
+    virtual bool operator==(const DelegateBase& rhs) const override {
         const DelegateMemberAsyncWait<TClass, RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberAsyncWait<TClass, RetType(Args...)>*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
@@ -244,7 +244,7 @@ public:
     }
 
     /// Invoke delegate function asynchronously
-    virtual RetType operator()(Args... args) {
+    virtual RetType operator()(Args... args) override {
         if (this->m_thread == nullptr || m_sync)
             return DelegateMember<TClass, RetType(Args...)>::operator()(args...);
         else {
