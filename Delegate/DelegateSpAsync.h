@@ -67,7 +67,7 @@ public:
             auto delegate = std::shared_ptr<DelegateMemberAsyncSp<TClass, void(Args...)>>(Clone());
 
             // Create the delegate message
-            auto msg = std::shared_ptr<DelegateMsgHeapArgs<Args...>>(new DelegateMsgHeapArgs<Args...>(delegate, args...));
+            auto msg = std::make_shared<DelegateMsgHeapArgs<Args...>>(delegate, args...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
