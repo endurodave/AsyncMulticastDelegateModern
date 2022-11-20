@@ -198,15 +198,7 @@ int main(void)
     timer.Start(250);
 
 	// Run all unit tests (uncomment to run unit tests)
-	//DelegateUnitTests();
-
-#ifdef WIN32
-    LARGE_INTEGER StartingTime, EndingTime, ElapsedMicroseconds, TotalElapsedMicroseconds = { 0 };
-    LARGE_INTEGER Frequency;
-
-    QueryPerformanceFrequency(&Frequency);
-    QueryPerformanceCounter(&StartingTime);
-#endif
+	DelegateUnitTests();
 
     // Create a delegate bound to a free function then invoke
     DelegateFree<void(int)> delegateFree = MakeDelegate(&FreeFuncInt);
@@ -375,18 +367,10 @@ int main(void)
     previousMode = SysDataNoLock::GetInstance().SetSystemModeAsyncWaitAPI(SystemMode::STARTING);
     previousMode = SysDataNoLock::GetInstance().SetSystemModeAsyncWaitAPI(SystemMode::NORMAL);
 
-#ifdef WIN32
-    QueryPerformanceCounter(&EndingTime);
-    ElapsedMicroseconds.QuadPart = EndingTime.QuadPart - StartingTime.QuadPart;
-    ElapsedMicroseconds.QuadPart *= 1000000;
-    ElapsedMicroseconds.QuadPart /= Frequency.QuadPart;
-    std::cout << "Elapsed Time: " << (float)ElapsedMicroseconds.QuadPart / 1000000.0f << " seconds" << std::endl;
-#endif
-
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-
     timer.Stop();
     timer.Expired.Clear();
+
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
    	workerThread1.ExitThread();
 

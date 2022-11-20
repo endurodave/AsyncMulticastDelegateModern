@@ -1,6 +1,6 @@
-#include "stdafx.h"
 #include "Timer.h"
 #include "Fault.h"
+#include <chrono>
 
 using namespace std;
 
@@ -8,7 +8,6 @@ LOCK Timer::m_lock;
 BOOL Timer::m_lockInit = FALSE;
 BOOL Timer::m_timerStopped = FALSE;
 list<Timer*> Timer::m_timers;
-const DWORD Timer::MS_PER_TICK = (1000 / CLOCKS_PER_SEC);
 
 //------------------------------------------------------------------------------
 // TimerDisabled
@@ -50,9 +49,9 @@ void Timer::Start(DWORD timeout)
 {
 	LockGuard lockGuard(&m_lock);
 
-	m_timeout = timeout / MS_PER_TICK;
+	m_timeout = timeout;
     ASSERT_TRUE(m_timeout != 0);
-	m_expireTime = GetTickCount();
+	m_expireTime = GetTime();
 	m_enabled = TRUE;
 
 	// Remove the existing entry, if any, to prevent duplicates in the list
@@ -82,17 +81,17 @@ void Timer::CheckExpired()
 		return;
 
 	// Has the timer expired?
-    if (Difference(m_expireTime, GetTickCount()) < m_timeout)
+    if (Difference(m_expireTime, GetTime()) < m_timeout)
         return;
 
     // Increment the timer to the next expiration
 	m_expireTime += m_timeout;
 
 	// Is the timer already expired after we incremented above?
-    if (Difference(m_expireTime, GetTickCount()) > m_timeout)
+    if (Difference(m_expireTime, GetTime()) > m_timeout)
 	{
 		// The timer has fallen behind so set time expiration further forward.
-		m_expireTime = GetTickCount();
+		m_expireTime = GetTime();
 	}
 
 	// Call the client's expired callback function
@@ -129,5 +128,13 @@ void Timer::ProcessTimers()
 		if ((*it) != NULL)
 			(*it)->CheckExpired();
 	}
+}
+
+DWORD Timer::GetTime()
+{
+    unsigned long milliseconds_since_epoch =
+        std::chrono::duration_cast<std::chrono::milliseconds>
+        (std::chrono::system_clock::now().time_since_epoch()).count();
+    return (DWORD)milliseconds_since_epoch;
 }
 
