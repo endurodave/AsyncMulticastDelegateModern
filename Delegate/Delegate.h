@@ -50,14 +50,14 @@ public:
     /// Bind a free function to the delegate.
     void Bind(FreeFunc func) { m_func = func; }
 
-    virtual DelegateFree* Clone() const { return new DelegateFree(*this); }
+    virtual DelegateFree* Clone() const override { return new DelegateFree(*this); }
 
     /// Invoke the bound delegate function. 
-    virtual RetType operator()(Args... args) {
+    virtual RetType operator()(Args... args) override {
         return std::invoke(m_func, args...);
     }
 
-    virtual bool operator==(const DelegateBase& rhs) const {
+    virtual bool operator==(const DelegateBase& rhs) const override {
         const DelegateFree<RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateFree<RetType(Args...)>*>(&rhs);
         return derivedRhs &&
             m_func == derivedRhs->m_func;
@@ -98,14 +98,14 @@ public:
         m_func = reinterpret_cast<MemberFunc>(func);
     }
 
-    virtual DelegateMember* Clone() const { return new DelegateMember(*this); }
+    virtual DelegateMember* Clone() const override { return new DelegateMember(*this); }
 
     // Invoke the bound delegate function
-    virtual RetType operator()(Args... args) {
+    virtual RetType operator()(Args... args) override {
         return std::invoke(m_func, m_object, args...);
     }
 
-    virtual bool operator==(const DelegateBase& rhs) const {
+    virtual bool operator==(const DelegateBase& rhs) const override {
         const DelegateMember<TClass, RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateMember<TClass, RetType(Args...)>*>(&rhs);
         return derivedRhs &&
             m_func == derivedRhs->m_func &&

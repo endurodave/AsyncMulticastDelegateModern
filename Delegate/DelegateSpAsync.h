@@ -76,7 +76,7 @@ public:
     }
 
     /// Called by the target thread to invoke the delegate function 
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
         // Typecast the base pointer to back to the templatized instance
         auto delegateMsg = static_cast<DelegateMsgHeapArgs<Args...>*>(msg.get());
 
