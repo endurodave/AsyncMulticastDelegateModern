@@ -81,16 +81,14 @@ public:
     typedef RetType(*FreeFunc)(Args...);
 
     // Contructors take a free function, delegate thread and timeout
-    DelegateFreeAsyncWait(FreeFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_refCnt(0), m_sync(false) {
+    DelegateFreeAsyncWait(FreeFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_sync(false) {
         Bind(func, thread);
-        LockGuard::Create(&m_lock);
     }
-    DelegateFreeAsyncWait(const DelegateFreeAsyncWait& rhs) : DelegateFree<RetType(Args...)>(rhs), m_refCnt(0), m_sync(false) {
-        LockGuard::Create(&m_lock);
+    DelegateFreeAsyncWait(const DelegateFreeAsyncWait& rhs) : DelegateFree<RetType(Args...)>(rhs), m_sync(false) {
         Swap(rhs);
     }
-    DelegateFreeAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_refCnt(0), m_sync(false) { LockGuard::Create(&m_lock); }
-    virtual ~DelegateFreeAsyncWait() { LockGuard::Destroy(&m_lock); }
+    DelegateFreeAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_sync(false) { }
+    virtual ~DelegateFreeAsyncWait() { }
 
     virtual DelegateFreeAsyncWait<RetType(Args...)>* Clone() const override {
         return new DelegateFreeAsyncWait<RetType(Args...)>(*this);
@@ -124,7 +122,6 @@ public:
         else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<DelegateFreeAsyncWait<RetType(Args...)>>(Clone());
-            delegate->m_refCnt = 2;
             delegate->m_sema.Create();
             delegate->m_sema.Reset();
 
@@ -139,10 +136,6 @@ public:
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
                 m_invoke = delegate->m_invoke;
 
-            {
-                LockGuard lockGuard(&delegate->m_lock);
-                delegate->m_refCnt--;
-            }
             return m_invoke.GetRetVal();
         }
     }
@@ -152,15 +145,10 @@ public:
         // Typecast the base pointer to back to the templatized instance
         auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
 
-        LockGuard lockGuard(&this->m_lock);
-        if (this->m_refCnt == 2) {
-            // Invoke the delegate function then signal the waiting thread
-            m_sync = true;
-            m_invoke(this, delegateMsg->GetArgs());
-            this->m_sema.Signal();
-        }
-
-        this->m_refCnt--;
+        // Invoke the delegate function then signal the waiting thread
+        m_sync = true;
+        m_invoke(this, delegateMsg->GetArgs());
+        this->m_sema.Signal();
     }
 
     /// Returns true if asynchronous function successfully invoked on target thread
@@ -180,8 +168,6 @@ private:
     bool m_success;					// Set to true if async function succeeds
     int m_timeout;					// Time in mS to wait for async function to invoke
     Semaphore m_sema;				// Semaphore to signal waiting thread
-    LOCK m_lock;					// Lock to synchronize threads
-    int m_refCnt;					// Ref count to determine when to delete objects
     bool m_sync;                    // Set true when synchronous invocation is required
     DelegateFreeAsyncWaitInvoke<RetType(Args...)> m_invoke;
 };
@@ -197,20 +183,17 @@ public:
     typedef RetType(TClass::*ConstMemberFunc)(Args...) const;
 
     // Contructors take a class instance, member function, and delegate thread
-    DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_refCnt(0), m_sync(false) {
+    DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_sync(false) {
         Bind(object, func, thread);
-        LockGuard::Create(&m_lock);
     }
-    DelegateMemberAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_refCnt(0), m_sync(false) {
+    DelegateMemberAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_sync(false) {
         Bind(object, func, thread);
-        LockGuard::Create(&m_lock);
     }
-    DelegateMemberAsyncWait(const DelegateMemberAsyncWait& rhs) : DelegateMember<TClass, RetType(Args...)>(rhs), m_refCnt(0), m_sync(false) {
-        LockGuard::Create(&m_lock);
+    DelegateMemberAsyncWait(const DelegateMemberAsyncWait& rhs) : DelegateMember<TClass, RetType(Args...)>(rhs), m_sync(false) {
         Swap(rhs);
     }
-    DelegateMemberAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_refCnt(0), m_sync(false) { LockGuard::Create(&m_lock); }
-    virtual ~DelegateMemberAsyncWait() { LockGuard::Destroy(&m_lock); }
+    DelegateMemberAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_sync(false) { }
+    virtual ~DelegateMemberAsyncWait() { }
 
     virtual DelegateMemberAsyncWait<TClass, RetType(Args...)>* Clone() const override {
         return new DelegateMemberAsyncWait<TClass, RetType(Args...)>(*this);
@@ -250,7 +233,6 @@ public:
         else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<DelegateMemberAsyncWait<TClass, RetType(Args...)>>(Clone());
-            delegate->m_refCnt = 2;
             delegate->m_sema.Create();
             delegate->m_sema.Reset();
 
@@ -265,10 +247,6 @@ public:
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
                 m_invoke = delegate->m_invoke;
 
-            {
-                LockGuard lockGuard(&delegate->m_lock);
-                delegate->m_refCnt--;
-            }
             return m_invoke.GetRetVal();
         }
     }
@@ -278,15 +256,10 @@ public:
         // Typecast the base pointer to back to the templatized instance
         auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
 
-        LockGuard lockGuard(&this->m_lock);
-        if (this->m_refCnt == 2) {
-            // Invoke the delegate function then signal the waiting thread
-            m_sync = true;
-            m_invoke(this, delegateMsg->GetArgs());
-            this->m_sema.Signal();
-        }
-
-        this->m_refCnt--;
+        // Invoke the delegate function then signal the waiting thread
+        m_sync = true;
+        m_invoke(this, delegateMsg->GetArgs());
+        this->m_sema.Signal();
     }
 
     /// Returns true if asynchronous function successfully invoked on target thread
@@ -306,8 +279,6 @@ private:
     bool m_success;					// Set to true if async function succeeds
     int m_timeout;					// Time in mS to wait for async function to invoke
     Semaphore m_sema;				// Semaphore to signal waiting thread
-    LOCK m_lock;					// Lock to synchronize threads
-    int m_refCnt;					// Ref count to determine when to delete objects
     bool m_sync;                    // Set true when synchronous invocation is required
     DelegateMemberAsyncWaitInvoke<TClass, RetType(Args...)> m_invoke;
 };
