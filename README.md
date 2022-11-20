@@ -549,7 +549,6 @@ public:
         else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr&lt;DelegateMemberAsyncWait&lt;TClass, RetType(Args...)&gt;&gt;(Clone());
-            delegate-&gt;m_refCnt = 2;
             delegate-&gt;m_sema.Create();
             delegate-&gt;m_sema.Reset();
 
@@ -564,10 +563,6 @@ public:
             if ((m_success = delegate-&gt;m_sema.Wait(m_timeout)))
                 m_invoke = delegate-&gt;m_invoke;
 
-            {
-                LockGuard lockGuard(&amp;delegate-&gt;m_lock);
-                delegate-&gt;m_refCnt--;
-            }
             return m_invoke.GetRetVal();
         }
     }
@@ -577,15 +572,10 @@ public:
         // Typecast the base pointer to back to the templatized instance
         auto delegateMsg = static_cast&lt;DelegateMsg&lt;Args...&gt;*&gt;(msg.get());
 
-        LockGuard lockGuard(&amp;this-&gt;m_lock);
-        if (this-&gt;m_refCnt == 2) {
-            // Invoke the delegate function then signal the waiting thread
-            m_sync = true;
-            m_invoke(this, delegateMsg-&gt;GetArgs());
-            this-&gt;m_sema.Signal();
-        }
-
-        this-&gt;m_refCnt--;
+        // Invoke the delegate function then signal the waiting thread
+        m_sync = true;
+        m_invoke(this, delegateMsg-&gt;GetArgs());
+        this-&gt;m_sema.Signal();
     }
 
     /// ...</pre>
