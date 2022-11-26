@@ -2,7 +2,7 @@
 #define _SYS_DATA_NO_LOCK_H
 
 #include "DelegateLib.h"
-#include "SysData.h"
+#include "SysDataTypes.h"
 
 using namespace DelegateLib;
 
