@@ -3,40 +3,16 @@
 
 #include "DelegateLib.h"
 #include "LockGuard.h"
+#include "SysDataTypes.h"
 
 using namespace DelegateLib;
-
-struct SystemMode
-{
-	enum Type
-	{
-		STARTING,
-		NORMAL,
-		SERVICE,
-		SYS_INOP
-	};
-};
-
-/// @brief Structure to hold system mode callback data. 
-class SystemModeChanged
-{
-public:
-	SystemModeChanged() : 
-		PreviousSystemMode(SystemMode::STARTING), 
-		CurrentSystemMode(SystemMode::STARTING)
-	{
-	}
-
-	SystemMode::Type PreviousSystemMode;
-	SystemMode::Type CurrentSystemMode;
-};
 
 /// @brief SysData stores common data accessible by any system thread. This class
 /// is thread-safe.
 class SysData
 {
 public:
-	/// Clients register with MulticastDelegateSafe1 to get callbacks when system mode changes
+	/// Clients register with MulticastDelegateSafe to get callbacks when system mode changes
     MulticastDelegateSafe<void(const SystemModeChanged&)> SystemModeChangedDelegate;
 
 	/// Get singleton instance of this class
