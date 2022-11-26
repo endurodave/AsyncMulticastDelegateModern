@@ -111,9 +111,6 @@
     <ClCompile Include="..\..\Port\WorkerThreadStd.cpp">
       <Filter>Port</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Delegate\DelegateAsync.cpp">
-      <Filter>Delegate</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Delegate\DelegateUnitTests.cpp">
       <Filter>Delegate</Filter>
     </ClCompile>

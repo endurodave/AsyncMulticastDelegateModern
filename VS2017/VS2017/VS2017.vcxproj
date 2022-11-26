@@ -173,7 +173,6 @@
     <ClInclude Include="..\..\targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Delegate\DelegateAsync.cpp" />
     <ClCompile Include="..\..\Delegate\DelegateUnitTests.cpp" />
     <ClCompile Include="..\..\Delegate\LockGuard.cpp" />
     <ClCompile Include="..\..\Delegate\Semaphore.cpp" />
