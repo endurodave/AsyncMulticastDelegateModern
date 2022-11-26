@@ -13,7 +13,7 @@ using namespace DelegateLib;
 //----------------------------------------------------------------------------
 // WorkerThread
 //----------------------------------------------------------------------------
-WorkerThread::WorkerThread(const CHAR* threadName) : m_thread(nullptr), m_timerExit(false), THREAD_NAME(threadName)
+WorkerThread::WorkerThread(const char* threadName) : m_thread(nullptr), m_timerExit(false), THREAD_NAME(threadName)
 {
 }
 
@@ -28,11 +28,11 @@ WorkerThread::~WorkerThread()
 //----------------------------------------------------------------------------
 // CreateThread
 //----------------------------------------------------------------------------
-BOOL WorkerThread::CreateThread()
+bool WorkerThread::CreateThread()
 {
 	if (!m_thread)
 		m_thread = std::unique_ptr<std::thread>(new thread(&WorkerThread::Process, this));
-	return TRUE;
+	return true;
 }
 
 //----------------------------------------------------------------------------

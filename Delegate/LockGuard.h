@@ -2,7 +2,6 @@
 #define _LOCK_GUARD_H
 
 #include "DelegateOpt.h"
-#include "DataTypes.h"
 #include <mutex>
 
 #define LOCK std::mutex

@@ -163,7 +163,6 @@
     <ClInclude Include="..\..\Examples\SysData.h" />
     <ClInclude Include="..\..\Examples\SysDataNoLock.h" />
     <ClInclude Include="..\..\Examples\SysDataTypes.h" />
-    <ClInclude Include="..\..\Port\DataTypes.h" />
     <ClInclude Include="..\..\Port\Fault.h" />
     <ClInclude Include="..\..\Port\ThreadMsg.h" />
     <ClInclude Include="..\..\Port\Timer.h" />

@@ -23,25 +23,25 @@ public:
 
 	/// Starts a timer for callbacks on the specified timeout interval.
 	/// @param[in]	timeout - the timeout in milliseconds.
-	void Start(DWORD timeout);
+	void Start(unsigned long timeout);
 
 	/// Stops a timer.
 	void Stop();
 
 	/// Gets the enabled state of a timer.
 	/// @return		TRUE if the timer is enabled, FALSE otherwise.
-	BOOL Enabled() { return m_enabled; }
+	bool Enabled() { return m_enabled; }
 
 	/// Get the current time in ticks. 
 	/// @return The current time in ticks. 
-    static DWORD GetTime();
+    static unsigned long GetTime();
 
 	/// Computes the time difference in ticks between two tick values taking into
 	/// account rollover.
 	/// @param[in] 	time1 - time stamp 1 in ticks.
 	/// @param[in] 	time2 - time stamp 2 in ticks.
 	/// @return		The time difference in ticks.
-	static DWORD Difference(DWORD time1, DWORD time2);
+	static unsigned long Difference(unsigned long time1, unsigned long time2);
 
 	/// Called on a periodic basic to service all timer instances. 
 	static void ProcessTimers();
@@ -62,12 +62,12 @@ private:
 	static LOCK m_lock;
 
 	/// TRUE if lock initialized.
-	static BOOL m_lockInit;
+	static bool m_lockInit;
 
-	DWORD m_timeout;		// in ticks
-	DWORD m_expireTime;		// in ticks
-	BOOL m_enabled;
-	static BOOL m_timerStopped;
+	unsigned long m_timeout;		// in ticks
+	unsigned long m_expireTime;		// in ticks
+	bool m_enabled;
+	static bool m_timerStopped;
 };
 
 #endif

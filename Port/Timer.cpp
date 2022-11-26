@@ -5,8 +5,8 @@
 using namespace std;
 
 LOCK Timer::m_lock;
-BOOL Timer::m_lockInit = FALSE;
-BOOL Timer::m_timerStopped = FALSE;
+bool Timer::m_lockInit = false;
+bool Timer::m_timerStopped = false;
 list<Timer*> Timer::m_timers;
 
 //------------------------------------------------------------------------------
@@ -23,14 +23,14 @@ static bool TimerDisabled (Timer* value)
 Timer::Timer() 
 {
 	// Create the thread mutex
-	if (m_lockInit == FALSE)
+	if (m_lockInit == false)
 	{
 		LockGuard::Create(&m_lock);
-		m_lockInit = TRUE;
+		m_lockInit = true;
 	}
 
 	LockGuard lockGuard(&m_lock);
-	m_enabled = FALSE;
+	m_enabled = false;
 }
 
 //------------------------------------------------------------------------------
@@ -45,14 +45,14 @@ Timer::~Timer()
 //------------------------------------------------------------------------------
 // Start
 //------------------------------------------------------------------------------
-void Timer::Start(DWORD timeout)
+void Timer::Start(unsigned long timeout)
 {
 	LockGuard lockGuard(&m_lock);
 
 	m_timeout = timeout;
     ASSERT_TRUE(m_timeout != 0);
 	m_expireTime = GetTime();
-	m_enabled = TRUE;
+	m_enabled = true;
 
 	// Remove the existing entry, if any, to prevent duplicates in the list
 	m_timers.remove(this);
@@ -68,8 +68,8 @@ void Timer::Stop()
 {
 	LockGuard lockGuard(&m_lock);
 
-	m_enabled = FALSE;
-	m_timerStopped = TRUE;
+	m_enabled = false;
+	m_timerStopped = true;
 }
 
 //------------------------------------------------------------------------------
@@ -102,7 +102,7 @@ void Timer::CheckExpired()
 //------------------------------------------------------------------------------
 // Difference
 //------------------------------------------------------------------------------
-DWORD Timer::Difference(DWORD time1, DWORD time2)
+unsigned long Timer::Difference(unsigned long time1, unsigned long time2)
 {
 	return (time2 - time1);
 }
@@ -118,7 +118,7 @@ void Timer::ProcessTimers()
 	if (m_timerStopped)
 	{
 		m_timers.remove_if(TimerDisabled);
-		m_timerStopped = FALSE;
+		m_timerStopped = false;
 	}
 
 	// Iterate through each timer and check for expirations
@@ -130,11 +130,11 @@ void Timer::ProcessTimers()
 	}
 }
 
-DWORD Timer::GetTime()
+unsigned long Timer::GetTime()
 {
     unsigned long milliseconds_since_epoch =
         std::chrono::duration_cast<std::chrono::milliseconds>
         (std::chrono::system_clock::now().time_since_epoch()).count();
-    return (DWORD)milliseconds_since_epoch;
+    return (unsigned long)milliseconds_since_epoch;
 }
 

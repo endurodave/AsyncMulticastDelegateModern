@@ -2,7 +2,6 @@
 #define _SEMAPHORE_H
 
 #include "DelegateOpt.h"
-#include "DataTypes.h"
 #include <condition_variable>
 #include <mutex>
 #include <atomic>

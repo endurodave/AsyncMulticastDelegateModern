@@ -6,7 +6,6 @@
 
 #include "DelegateOpt.h"
 #include "DelegateThread.h"
-#include "DataTypes.h"
 #include <thread>
 #include <queue>
 #include <mutex>
@@ -19,14 +18,14 @@ class WorkerThread : public DelegateLib::DelegateThread
 {
 public:
 	/// Constructor
-	WorkerThread(const CHAR* threadName);
+	WorkerThread(const char* threadName);
 
 	/// Destructor
 	~WorkerThread();
 
 	/// Called once to create the worker thread
 	/// @return TRUE if thread is created. FALSE otherise. 
-	BOOL CreateThread();
+	bool CreateThread();
 
 	/// Called once a program exit to exit the worker thread
 	void ExitThread();
@@ -54,7 +53,7 @@ private:
 	std::mutex m_mutex;
 	std::condition_variable m_cv;
     std::atomic<bool> m_timerExit;
-	const CHAR* THREAD_NAME;
+	const char* THREAD_NAME;
 };
 
 #endif 

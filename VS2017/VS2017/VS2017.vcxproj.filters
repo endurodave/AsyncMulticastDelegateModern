@@ -68,9 +68,6 @@
     <ClInclude Include="..\..\Delegate\DelegateOpt.h">
       <Filter>Delegate</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Port\DataTypes.h">
-      <Filter>Port</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Port\Fault.h">
       <Filter>Port</Filter>
     </ClInclude>
