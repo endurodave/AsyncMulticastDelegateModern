@@ -24,6 +24,8 @@ public:
     typedef std::shared_ptr<TClass> ObjectPtr;
     typedef void (TClass::*MemberFunc)(Args...);
     typedef void (TClass::*ConstMemberFunc)(Args...) const;
+    using ClassType = DelegateMemberAsyncSp<TClass, void(Args...)>;
+    using BaseType = DelegateMemberSp<TClass, void(Args...)>;
 
     // Contructors take a class instance, member function, and callback thread
     DelegateMemberAsyncSp(ObjectPtr object, MemberFunc func, DelegateThread* thread) : m_sync(false) {
@@ -37,34 +39,34 @@ public:
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateMemberSp<TClass, void(Args...)>::Bind(object, func);
+        BaseType::Bind(object, func);
     }
 
     /// Bind a const member function to a delegate. 
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateMemberSp<TClass, void(Args...)>::Bind(object, func);
+        BaseType::Bind(object, func);
     }
 
-    virtual DelegateMemberAsyncSp<TClass, void(Args...)>* Clone() const override {
-        return new DelegateMemberAsyncSp<TClass, void(Args...)>(*this);
+    virtual ClassType* Clone() const override {
+        return new ClassType(*this);
     }
 
     virtual bool operator==(const DelegateBase& rhs) const override {
-        const DelegateMemberAsyncSp<TClass, void(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberAsyncSp<TClass, void(Args...)>*>(&rhs);
+        auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
-            DelegateMemberSp<TClass, void(Args...)>::operator == (rhs);
+            BaseType::operator == (rhs);
     }
 
     /// Invoke delegate function asynchronously
     virtual void operator()(Args... args) override {
         if (m_thread == nullptr || m_sync)
-            DelegateMemberSp<TClass, void(Args...)>::operator()(args...);
+            BaseType::operator()(args...);
         else
         {
             // Create a clone instance of this delegate 
-            auto delegate = std::shared_ptr<DelegateMemberAsyncSp<TClass, void(Args...)>>(Clone());
+            auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create the delegate message
             auto msg = std::make_shared<DelegateMsgHeapArgs<Args...>>(delegate, args...);
@@ -82,7 +84,7 @@ public:
 
         // Invoke the delegate function
         m_sync = true;
-        std::apply(&DelegateMemberSp<TClass, void(Args...)>::operator(),
+        std::apply(&BaseType::operator(),
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 

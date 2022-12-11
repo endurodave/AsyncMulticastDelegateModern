@@ -9,6 +9,7 @@
 #include "DelegateThread.h"
 #include "DelegateInvoker.h"
 #include "Semaphore.h"
+#include <optional>
 
 /// @brief Asynchronous member delegate that invokes the target function on the specified thread of control
 /// and waits for the function to be executed or a timeout occurs. Use IsSuccess() to determine if asynchronous 
@@ -79,6 +80,8 @@ template <class RetType, class... Args>
 class DelegateFreeAsyncWait<RetType(Args...)> : public DelegateFree<RetType(Args...)>, public IDelegateInvoker {
 public:
     typedef RetType(*FreeFunc)(Args...);
+    using ClassType = DelegateFreeAsyncWait<RetType(Args...)>;
+    using BaseType = DelegateFree<RetType(Args...)>;
 
     // Contructors take a free function, delegate thread and timeout
     DelegateFreeAsyncWait(FreeFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_sync(false) {
@@ -90,26 +93,26 @@ public:
     DelegateFreeAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_sync(false) { }
     virtual ~DelegateFreeAsyncWait() { }
 
-    virtual DelegateFreeAsyncWait<RetType(Args...)>* Clone() const override {
-        return new DelegateFreeAsyncWait<RetType(Args...)>(*this);
+    virtual ClassType* Clone() const override {
+        return new ClassType(*this);
     }
 
     /// Bind a free function to a delegate. 
     void Bind(FreeFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateFree<RetType(Args...)>::Bind(func);
+        BaseType::Bind(func);
     }
 
     virtual bool operator==(const DelegateBase& rhs) const override {
-        const DelegateFreeAsyncWait<RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateFreeAsyncWait<RetType(Args...)>*>(&rhs);
+        auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
-            DelegateFree<RetType(Args...)>::operator==(rhs);
+            BaseType::operator==(rhs);
     }
 
     DelegateFreeAsyncWait& operator=(const DelegateFreeAsyncWait& rhs) {
         if (&rhs != this) {
-            DelegateFree<RetType(Args...)>::operator=(rhs);
+            BaseType::operator=(rhs);
             Swap(rhs);
         }
         return *this;
@@ -118,10 +121,10 @@ public:
     /// Invoke delegate function asynchronously
     virtual RetType operator()(Args... args) override {
         if (this->m_thread == nullptr || m_sync)
-            return DelegateFree<RetType(Args...)>::operator()(args...);
+            return BaseType::operator()(args...);
         else {
             // Create a clone instance of this delegate 
-            auto delegate = std::shared_ptr<DelegateFreeAsyncWait<RetType(Args...)>>(Clone());
+            auto delegate = std::shared_ptr<ClassType>(Clone());
             delegate->m_sema.Create();
             delegate->m_sema.Reset();
 
@@ -138,6 +141,16 @@ public:
 
             return m_invoke.GetRetVal();
         }
+    }
+
+    /// Invoke delegate function asynchronously
+    std::optional<RetType> AsyncInvoke(Args... args)
+    {
+        auto retVal = operator()(args...);
+        if (IsSuccess())
+            return retVal;
+        else
+            return {};
     }
 
     /// Called by the target thread to invoke the delegate function 
@@ -181,6 +194,8 @@ public:
     typedef TClass* ObjectPtr;
     typedef RetType(TClass::*MemberFunc)(Args...);
     typedef RetType(TClass::*ConstMemberFunc)(Args...) const;
+    using ClassType = DelegateMemberAsyncWait<TClass, RetType(Args...)>;
+    using BaseType = DelegateMember<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and delegate thread
     DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_sync(false) {
@@ -195,32 +210,32 @@ public:
     DelegateMemberAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_sync(false) { }
     virtual ~DelegateMemberAsyncWait() { }
 
-    virtual DelegateMemberAsyncWait<TClass, RetType(Args...)>* Clone() const override {
-        return new DelegateMemberAsyncWait<TClass, RetType(Args...)>(*this);
+    virtual ClassType* Clone() const override {
+        return new ClassType(*this);
     }
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateMember<TClass, RetType(Args...)>::Bind(object, func);
+        BaseType::Bind(object, func);
     }
 
     /// Bind a const member function to a delegate. 
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateMember<TClass, RetType(Args...)>::Bind(object, func);
+        BaseType::Bind(object, func);
     }
 
     virtual bool operator==(const DelegateBase& rhs) const override {
-        const DelegateMemberAsyncWait<TClass, RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberAsyncWait<TClass, RetType(Args...)>*>(&rhs);
+        auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
-            DelegateMember<TClass, RetType(Args...)>::operator==(rhs);
+            BaseType::operator==(rhs);
     }
 
     DelegateMemberAsyncWait& operator=(const DelegateMemberAsyncWait& rhs) {
         if (&rhs != this) {
-            DelegateMember<TClass, RetType(Args...)>::operator=(rhs);
+            BaseType::operator=(rhs);
             Swap(rhs);
         }
         return *this;
@@ -229,10 +244,10 @@ public:
     /// Invoke delegate function asynchronously
     virtual RetType operator()(Args... args) override {
         if (this->m_thread == nullptr || m_sync)
-            return DelegateMember<TClass, RetType(Args...)>::operator()(args...);
+            return BaseType::operator()(args...);
         else {
             // Create a clone instance of this delegate 
-            auto delegate = std::shared_ptr<DelegateMemberAsyncWait<TClass, RetType(Args...)>>(Clone());
+            auto delegate = std::shared_ptr<ClassType>(Clone());
             delegate->m_sema.Create();
             delegate->m_sema.Reset();
 
@@ -249,6 +264,16 @@ public:
 
             return m_invoke.GetRetVal();
         }
+    }
+
+    /// Invoke delegate function asynchronously
+    std::optional<RetType> AsyncInvoke(Args... args)
+    {
+        auto retVal = operator()(args...);
+        if (IsSuccess())
+            return retVal;
+        else
+            return {};
     }
 
     /// Called by the target thread to invoke the delegate function 

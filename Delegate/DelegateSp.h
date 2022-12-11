@@ -22,6 +22,7 @@ public:
     typedef std::shared_ptr<TClass> ObjectPtr;
     typedef RetType(TClass::*MemberFunc)(Args...);
     typedef RetType(TClass::*ConstMemberFunc)(Args...) const;
+    using ClassType = DelegateMemberSp<TClass, RetType(Args...)>;
 
     DelegateMemberSp(ObjectPtr object, MemberFunc func) { Bind(object, func); }
     DelegateMemberSp(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
@@ -47,7 +48,7 @@ public:
     }
 
     virtual bool operator==(const DelegateBase& rhs) const override {
-        const DelegateMemberSp<TClass, RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberSp<TClass, RetType(Args...)>*>(&rhs);
+        auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_func == derivedRhs->m_func &&
             m_object == derivedRhs->m_object;

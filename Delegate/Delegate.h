@@ -43,6 +43,7 @@ template <class RetType, class... Args>
 class DelegateFree<RetType(Args...)> : public Delegate<RetType(Args...)> {
 public:
     typedef RetType(*FreeFunc)(Args...);
+    using ClassType = DelegateFree<RetType(Args...)>;
 
     DelegateFree(FreeFunc func) { Bind(func); }
     DelegateFree() : m_func(nullptr) { }
@@ -58,7 +59,7 @@ public:
     }
 
     virtual bool operator==(const DelegateBase& rhs) const override {
-        const DelegateFree<RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateFree<RetType(Args...)>*>(&rhs);
+        auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_func == derivedRhs->m_func;
     }
@@ -81,6 +82,7 @@ public:
     typedef TClass* ObjectPtr;
     typedef RetType(TClass::*MemberFunc)(Args...);
     typedef RetType(TClass::*ConstMemberFunc)(Args...) const;
+    using ClassType = DelegateMember<TClass, RetType(Args...)>;
 
     DelegateMember(ObjectPtr object, MemberFunc func) { Bind(object, func); }
     DelegateMember(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
@@ -106,7 +108,7 @@ public:
     }
 
     virtual bool operator==(const DelegateBase& rhs) const override {
-        const DelegateMember<TClass, RetType(Args...)>* derivedRhs = dynamic_cast<const DelegateMember<TClass, RetType(Args...)>*>(&rhs);
+        auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_func == derivedRhs->m_func &&
             m_object == derivedRhs->m_object;

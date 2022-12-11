@@ -19,6 +19,8 @@ template <class... Args>
 class DelegateFreeAsync<void(Args...)> : public DelegateFree<void(Args...)>, public IDelegateInvoker {
 public:
     typedef void(*FreeFunc)(Args...);
+    using ClassType = DelegateFreeAsync<void(Args...)>;
+    using BaseType = DelegateFree<void(Args...)>;
 
     DelegateFreeAsync(FreeFunc func, DelegateThread* thread) : m_sync(false) { Bind(func, thread); }
     DelegateFreeAsync() : m_thread(nullptr), m_sync(false) { }
@@ -26,28 +28,28 @@ public:
     /// Bind a free function to the delegate.
     void Bind(FreeFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateFree<void(Args...)>::Bind(func);
+        BaseType::Bind(func);
     }
 
-    virtual DelegateFreeAsync<void(Args...)>* Clone() const override {
-        return new DelegateFreeAsync<void(Args...)>(*this);
+    virtual ClassType* Clone() const override {
+        return new ClassType(*this);
     }
 
     virtual bool operator==(const DelegateBase& rhs) const override {
-        const DelegateFreeAsync<void(Args...)>* derivedRhs = dynamic_cast<const DelegateFreeAsync<void(Args...)>*>(&rhs);
+        auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
-            DelegateFree<void(Args...)>::operator == (rhs);
+            BaseType::operator == (rhs);
     }
 
     // Invoke delegate function asynchronously
     virtual void operator()(Args... args) override {
         if (m_thread == nullptr || m_sync)
-            DelegateFree<void(Args...)>::operator()(args...);
+            BaseType::operator()(args...);
         else
         {
             // Create a clone instance of this delegate 
-            auto delegate = std::shared_ptr<DelegateFreeAsync<void(Args...)>>(Clone());
+            auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create the delegate message
             auto msg = std::make_shared<DelegateMsgHeapArgs<Args...>>(delegate, args...);
@@ -65,7 +67,7 @@ public:
 
         // Invoke the delegate function
         m_sync = true;
-        std::apply(&DelegateFree<void(Args...)>::operator(), 
+        std::apply(&BaseType::operator(), 
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
@@ -83,6 +85,8 @@ public:
     typedef TClass* ObjectPtr;
     typedef void (TClass::*MemberFunc)(Args...);
     typedef void (TClass::*ConstMemberFunc)(Args...) const;
+    using ClassType = DelegateMemberAsync<TClass, void(Args...)>;
+    using BaseType = DelegateMember<TClass, void(Args...)>;
 
     // Contructors take a class instance, member function, and callback thread
     DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread* thread) : m_sync(false)
@@ -94,34 +98,34 @@ public:
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateMember<TClass, void(Args...)>::Bind(object, func);
+        BaseType::Bind(object, func);
     }
 
     /// Bind a const member function to a delegate. 
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) {
         m_thread = thread;
-        DelegateMember<TClass, void(Args...)>::Bind(object, func);
+        BaseType::Bind(object, func);
     }
 
-    virtual DelegateMemberAsync<TClass, void(Args...)>* Clone() const override {
-        return new DelegateMemberAsync<TClass, void(Args...)>(*this);
+    virtual ClassType* Clone() const override {
+        return new ClassType(*this);
     }
 
     virtual bool operator==(const DelegateBase& rhs) const override {
-        const DelegateMemberAsync<TClass, void(Args...)>* derivedRhs = dynamic_cast<const DelegateMemberAsync<TClass, void(Args...)>*>(&rhs);
+        auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
-            DelegateMember<TClass, void(Args...)>::operator == (rhs);
+            BaseType::operator == (rhs);
     }
 
     /// Invoke delegate function asynchronously
     virtual void operator()(Args... args) override {
         if (m_thread == nullptr || m_sync)
-            DelegateMember<TClass, void(Args...)>::operator()(args...);
+            BaseType::operator()(args...);
         else
         {
             // Create a clone instance of this delegate 
-            auto delegate = std::shared_ptr<DelegateMemberAsync<TClass, void(Args...)>>(Clone());
+            auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create the delegate message
             auto msg = std::make_shared<DelegateMsgHeapArgs<Args...>>(delegate, args...);
@@ -139,7 +143,7 @@ public:
 
         // Invoke the delegate function
         m_sync = true;
-        std::apply(&DelegateMember<TClass, void(Args...)>::operator(),
+        std::apply(&BaseType::operator(),
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
