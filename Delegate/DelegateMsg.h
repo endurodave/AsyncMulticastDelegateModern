@@ -42,7 +42,7 @@ public:
     /// @param[in] invoker - the invoker instance
     /// @param[in] args - a parameter pack of all function arguments
     DelegateMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsgBase(invoker),
-        m_args(std::move(args)...)
+        m_args(args...)
     {
     }
 
