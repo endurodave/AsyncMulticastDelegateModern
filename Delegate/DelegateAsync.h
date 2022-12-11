@@ -22,8 +22,8 @@ public:
     using ClassType = DelegateFreeAsync<void(Args...)>;
     using BaseType = DelegateFree<void(Args...)>;
 
-    DelegateFreeAsync(FreeFunc func, DelegateThread* thread) : m_sync(false) { Bind(func, thread); }
-    DelegateFreeAsync() : m_thread(nullptr), m_sync(false) { }
+    DelegateFreeAsync(FreeFunc func, DelegateThread* thread) : BaseType(func) { Bind(func, thread); }
+    DelegateFreeAsync() = delete;
 
     /// Bind a free function to the delegate.
     void Bind(FreeFunc func, DelegateThread* thread) {
@@ -72,8 +72,8 @@ public:
     }
 
 private:
-    DelegateThread* m_thread; 
-    bool m_sync;
+    DelegateThread* m_thread = nullptr; 
+    bool m_sync = false;
 };
 
 template <class C, class R>
@@ -89,11 +89,11 @@ public:
     using BaseType = DelegateMember<TClass, void(Args...)>;
 
     // Contructors take a class instance, member function, and callback thread
-    DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread* thread) : m_sync(false)
+    DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread* thread) : BaseType(object, func)
         { Bind(object, func, thread); }
-    DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) : m_sync(false)
+    DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) : BaseType(object, func)
         { Bind(object, func, thread); }
-    DelegateMemberAsync() : m_thread(nullptr), m_sync(false) { }
+    DelegateMemberAsync() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {
@@ -149,8 +149,8 @@ public:
 
 private:
     /// Target thread to invoke the delegate function
-    DelegateThread* m_thread;
-    bool m_sync;
+    DelegateThread* m_thread = nullptr;
+    bool m_sync = false;
 };
 
 template <class TClass, class... Args>

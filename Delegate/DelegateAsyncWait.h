@@ -84,14 +84,13 @@ public:
     using BaseType = DelegateFree<RetType(Args...)>;
 
     // Contructors take a free function, delegate thread and timeout
-    DelegateFreeAsyncWait(FreeFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_sync(false) {
+    DelegateFreeAsyncWait(FreeFunc func, DelegateThread* thread, int timeout) : BaseType(func), m_timeout(timeout) {
         Bind(func, thread);
     }
-    DelegateFreeAsyncWait(const DelegateFreeAsyncWait& rhs) : DelegateFree<RetType(Args...)>(rhs), m_sync(false) {
+    DelegateFreeAsyncWait(const DelegateFreeAsyncWait& rhs) : BaseType(rhs), m_sync(false) {
         Swap(rhs);
     }
-    DelegateFreeAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_sync(false) { }
-    virtual ~DelegateFreeAsyncWait() { }
+    DelegateFreeAsyncWait() = delete;
 
     virtual ClassType* Clone() const override {
         return new ClassType(*this);
@@ -177,11 +176,11 @@ private:
         m_success = s.m_success;
     }
 
-    DelegateThread * m_thread;		// Target thread to invoke the delegate function
-    bool m_success;					// Set to true if async function succeeds
-    int m_timeout;					// Time in mS to wait for async function to invoke
-    Semaphore m_sema;				// Semaphore to signal waiting thread
-    bool m_sync;                    // Set true when synchronous invocation is required
+    DelegateThread * m_thread = nullptr;    // Target thread to invoke the delegate function
+    bool m_success = false;			        // Set to true if async function succeeds
+    int m_timeout = 0;				        // Time in mS to wait for async function to invoke
+    Semaphore m_sema;				        // Semaphore to signal waiting thread
+    bool m_sync = false;                    // Set true when synchronous invocation is required
     DelegateFreeAsyncWaitInvoke<RetType(Args...)> m_invoke;
 };
 
@@ -198,17 +197,16 @@ public:
     using BaseType = DelegateMember<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and delegate thread
-    DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_sync(false) {
+    DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread* thread, int timeout) : BaseType(object, func), m_timeout(timeout) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread, int timeout) : m_success(false), m_timeout(timeout), m_sync(false) {
+    DelegateMemberAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread, int timeout) : BaseType(object, func), m_timeout(timeout) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncWait(const DelegateMemberAsyncWait& rhs) : DelegateMember<TClass, RetType(Args...)>(rhs), m_sync(false) {
+    DelegateMemberAsyncWait(const DelegateMemberAsyncWait& rhs) : BaseType(rhs), m_sync(false) {
         Swap(rhs);
     }
-    DelegateMemberAsyncWait() : m_thread(nullptr), m_success(false), m_timeout(0), m_sync(false) { }
-    virtual ~DelegateMemberAsyncWait() { }
+    DelegateMemberAsyncWait() = delete;
 
     virtual ClassType* Clone() const override {
         return new ClassType(*this);
@@ -300,11 +298,11 @@ private:
         m_success = s.m_success;
     }
 
-    DelegateThread * m_thread;		// Target thread to invoke the delegate function
-    bool m_success;					// Set to true if async function succeeds
-    int m_timeout;					// Time in mS to wait for async function to invoke
-    Semaphore m_sema;				// Semaphore to signal waiting thread
-    bool m_sync;                    // Set true when synchronous invocation is required
+    DelegateThread * m_thread = nullptr;	// Target thread to invoke the delegate function
+    bool m_success = false;					// Set to true if async function succeeds
+    int m_timeout = 0;					    // Time in mS to wait for async function to invoke
+    Semaphore m_sema;				        // Semaphore to signal waiting thread
+    bool m_sync = false;                    // Set true when synchronous invocation is required
     DelegateMemberAsyncWaitInvoke<TClass, RetType(Args...)> m_invoke;
 };
 

@@ -28,13 +28,13 @@ public:
     using BaseType = DelegateMemberSp<TClass, void(Args...)>;
 
     // Contructors take a class instance, member function, and callback thread
-    DelegateMemberAsyncSp(ObjectPtr object, MemberFunc func, DelegateThread* thread) : m_sync(false) {
+    DelegateMemberAsyncSp(ObjectPtr object, MemberFunc func, DelegateThread* thread) : BaseType(object, func) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncSp(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) : m_sync(false) {
+    DelegateMemberAsyncSp(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) : BaseType(object, func) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncSp() : m_thread(nullptr), m_sync(false) { }
+    DelegateMemberAsyncSp() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {
@@ -90,8 +90,8 @@ public:
 
 private:
     /// Target thread to invoke the delegate function
-    DelegateThread * m_thread;
-    bool m_sync;
+    DelegateThread * m_thread = nullptr;
+    bool m_sync = false;
 };
 
 template <class TClass, class... Args>

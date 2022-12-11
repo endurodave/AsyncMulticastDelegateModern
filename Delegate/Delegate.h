@@ -46,7 +46,7 @@ public:
     using ClassType = DelegateFree<RetType(Args...)>;
 
     DelegateFree(FreeFunc func) { Bind(func); }
-    DelegateFree() : m_func(nullptr) { }
+    DelegateFree() = delete;
 
     /// Bind a free function to the delegate.
     void Bind(FreeFunc func) { m_func = func; }
@@ -70,7 +70,7 @@ public:
     explicit operator bool() const { return !Empty(); }
 
 private:
-    FreeFunc m_func;		// Pointer to a free function
+    FreeFunc m_func = nullptr;		// Pointer to a free function
 };
 
 template <class C, class R>
@@ -86,7 +86,7 @@ public:
 
     DelegateMember(ObjectPtr object, MemberFunc func) { Bind(object, func); }
     DelegateMember(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
-    DelegateMember() : m_object(nullptr), m_func(nullptr) { }
+    DelegateMember() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func) {
@@ -120,8 +120,8 @@ public:
     explicit operator bool() const { return !Empty(); }
 
 private:
-    ObjectPtr m_object;		// Pointer to a class object
-    MemberFunc m_func;   	// Pointer to an instance member function
+    ObjectPtr m_object = nullptr;	// Pointer to a class object
+    MemberFunc m_func = nullptr;   	// Pointer to an instance member function
 };
 
 template <class TClass, class RetType, class... Args>
