@@ -10,6 +10,7 @@
 #include "DelegateInvoker.h"
 #include "Semaphore.h"
 #include <optional>
+#include <any>
 
 /// @brief Asynchronous member delegate that invokes the target function on the specified thread of control
 /// and waits for the function to be executed or a timeout occurs. Use IsSuccess() to determine if asynchronous 
@@ -18,60 +19,6 @@
 namespace DelegateLib {
 
 const int WAIT_INFINITE = -1;
-
-template <class R>
-struct DelegateFreeAsyncWaitInvoke; // Not defined
-
-template <class... Args>
-class DelegateFreeAsyncWaitInvoke<void(Args...)>
-{
-public:
-    void operator()(DelegateFree<void(Args...)>* instance, std::tuple<Args...>& args) {
-        std::apply(&DelegateFree<void(Args...)>::operator(),
-            std::tuple_cat(std::make_tuple(instance), args));
-    }
-    void GetRetVal() { }
-};
-
-template <class RetType, class... Args>
-class DelegateFreeAsyncWaitInvoke<RetType(Args...)>
-{
-public:
-    void operator()(DelegateFree<RetType(Args...)>* instance, std::tuple<Args...>& args) {
-        m_retVal = std::apply(&DelegateFree<RetType(Args...)>::operator(),
-            std::tuple_cat(std::make_tuple(instance), args));
-    }
-    RetType GetRetVal() { return m_retVal; }
-private:
-    RetType m_retVal;
-};
-
-template <class C, class R>
-struct DelegateMemberAsyncWaitInvoke; // Not defined
-
-template <class TClass, class... Args>
-class DelegateMemberAsyncWaitInvoke<TClass, void(Args...)>
-{
-public:
-    void operator()(DelegateMember<TClass, void(Args...)>* instance, std::tuple<Args...>& args) {
-        std::apply(&DelegateMember<TClass, void(Args...)>::operator(),
-            std::tuple_cat(std::make_tuple(instance), args));
-    }
-    void GetRetVal() { }
-};
-
-template <class TClass, class RetType, class... Args>
-class DelegateMemberAsyncWaitInvoke<TClass, RetType(Args...)>
-{
-public:
-    void operator()(DelegateMember<TClass, RetType(Args...)>* instance, std::tuple<Args...>& args) {
-        m_retVal = std::apply(&DelegateMember<TClass, RetType(Args...)>::operator(),
-            std::tuple_cat(std::make_tuple(instance), args));
-    }
-    RetType GetRetVal() { return m_retVal; }
-private:
-    RetType m_retVal;
-};
 
 template <class R>
 struct DelegateFreeAsyncWait; // Not defined
@@ -136,9 +83,12 @@ public:
 
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
-                m_invoke = delegate->m_invoke;
+                m_retVal = delegate->m_retVal;
 
-            return m_invoke.GetRetVal();
+            if constexpr (std::is_void<RetType>::value == true)
+                return;
+            else
+                return std::any_cast<RetType>(m_retVal);
         }
     }
 
@@ -159,7 +109,10 @@ public:
 
         // Invoke the delegate function then signal the waiting thread
         m_sync = true;
-        m_invoke(this, delegateMsg->GetArgs());
+        if constexpr(std::is_void<RetType>::value == true)
+            std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
+        else
+            m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
         this->m_sema.Signal();
     }
 
@@ -167,7 +120,7 @@ public:
     bool IsSuccess() { return m_success; }
 
     /// Returns the async function return value
-    RetType GetRetVal() { return m_invoke.GetRetVal(); }
+    RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
 
 private:
     void Swap(const DelegateFreeAsyncWait& s) {
@@ -181,7 +134,7 @@ private:
     int m_timeout = 0;				        // Time in mS to wait for async function to invoke
     Semaphore m_sema;				        // Semaphore to signal waiting thread
     bool m_sync = false;                    // Set true when synchronous invocation is required
-    DelegateFreeAsyncWaitInvoke<RetType(Args...)> m_invoke;
+    std::any m_retVal;                      // Return value of the invoked function
 };
 
 template <class C, class R>
@@ -258,9 +211,12 @@ public:
 
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
-                m_invoke = delegate->m_invoke;
+                m_retVal = delegate->m_retVal;
 
-            return m_invoke.GetRetVal();
+            if constexpr (std::is_void<RetType>::value == true)
+                return;
+            else
+                return std::any_cast<RetType>(m_retVal);
         }
     }
 
@@ -281,7 +237,10 @@ public:
 
         // Invoke the delegate function then signal the waiting thread
         m_sync = true;
-        m_invoke(this, delegateMsg->GetArgs());
+        if constexpr (std::is_void<RetType>::value == true)
+            std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
+        else
+            m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
         this->m_sema.Signal();
     }
 
@@ -289,7 +248,7 @@ public:
     bool IsSuccess() { return m_success; }
 
     /// Returns the async function return value
-    RetType GetRetVal() { return m_invoke.GetRetVal(); }
+    RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
 
 private:
     void Swap(const DelegateMemberAsyncWait& s) {
@@ -303,7 +262,7 @@ private:
     int m_timeout = 0;					    // Time in mS to wait for async function to invoke
     Semaphore m_sema;				        // Semaphore to signal waiting thread
     bool m_sync = false;                    // Set true when synchronous invocation is required
-    DelegateMemberAsyncWaitInvoke<TClass, RetType(Args...)> m_invoke;
+    std::any m_retVal;                      // Return value of the invoked function
 };
 
 template <class TClass, class RetType, class... Args>

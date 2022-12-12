@@ -166,6 +166,13 @@ public:
 	{
 		cout << "TestFuncNoRet " << endl;
 	}
+
+    TestStruct TestFuncUserTypeRet()
+    {
+        TestStruct t;
+        t.x = 777;
+        return t;
+    }
 };
 
 void TimerExpiredCb(void)
@@ -315,6 +322,7 @@ int main(void)
     int year = delegateI(msg);
     if (delegateI.IsSuccess())
     {
+        auto year2 = delegateI.GetRetVal();
         cout << msg.c_str() << " " << year << endl;
     }
 
@@ -326,6 +334,9 @@ int main(void)
         cout << msg.c_str() << " " << asyncInvokeRetVal.value() << endl;
     else
         cout << "Asynchronous call to MemberFuncStdStringRetInt failed to invoke within specified timeout!";
+
+    // Invoke function asynchronously with user defined return type
+    auto testStructRet = MakeDelegate(&testClass, &TestClass::TestFuncUserTypeRet, &workerThread1, WAIT_INFINITE).AsyncInvoke();
 
     // Create a shared_ptr, create a delegate, then synchronously invoke delegate function
     std::shared_ptr<TestClass> spObject(new TestClass());
