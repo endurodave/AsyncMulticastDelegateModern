@@ -15,7 +15,6 @@ SysData& SysData::GetInstance()
 SysData::SysData() :
 	m_systemMode(SystemMode::STARTING)
 {
-	LockGuard::Create(&m_lock);
 }
 
 //----------------------------------------------------------------------------
@@ -23,7 +22,6 @@ SysData::SysData() :
 //----------------------------------------------------------------------------
 SysData::~SysData()
 {
-	LockGuard::Destroy(&m_lock);
 }
 
 //----------------------------------------------------------------------------
@@ -31,7 +29,7 @@ SysData::~SysData()
 //----------------------------------------------------------------------------
 void SysData::SetSystemMode(SystemMode::Type systemMode)
 {
-	LockGuard lockGuard(&m_lock);
+	const std::lock_guard<std::mutex> lock(m_lock);
 
 	// Create the callback data
 	SystemModeChanged callbackData;

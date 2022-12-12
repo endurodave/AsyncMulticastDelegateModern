@@ -2,7 +2,7 @@
 #define _SYS_DATA_H
 
 #include "DelegateLib.h"
-#include "LockGuard.h"
+#include <mutex>
 #include "SysDataTypes.h"
 
 using namespace DelegateLib;
@@ -30,7 +30,7 @@ private:
 	SystemMode::Type m_systemMode;
 
 	/// Lock to make the class thread-safe
-	LOCK m_lock;
+	std::mutex m_lock;
 };
 
 #endif

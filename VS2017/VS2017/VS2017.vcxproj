@@ -154,7 +154,6 @@
     <ClInclude Include="..\..\Delegate\DelegateMsg.h" />
     <ClInclude Include="..\..\Delegate\DelegateSp.h" />
     <ClInclude Include="..\..\Delegate\DelegateThread.h" />
-    <ClInclude Include="..\..\Delegate\LockGuard.h" />
     <ClInclude Include="..\..\Delegate\make_tuple_heap.h" />
     <ClInclude Include="..\..\Delegate\MulticastDelegate.h" />
     <ClInclude Include="..\..\Delegate\MulticastDelegateSafe.h" />
@@ -173,7 +172,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Delegate\DelegateUnitTests.cpp" />
-    <ClCompile Include="..\..\Delegate\LockGuard.cpp" />
     <ClCompile Include="..\..\Delegate\Semaphore.cpp" />
     <ClCompile Include="..\..\Examples\SysData.cpp" />
     <ClCompile Include="..\..\Examples\SysDataNoLock.cpp" />

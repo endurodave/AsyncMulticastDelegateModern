@@ -4,8 +4,7 @@
 
 using namespace std;
 
-LOCK Timer::m_lock;
-bool Timer::m_lockInit = false;
+std::mutex Timer::m_lock;
 bool Timer::m_timerStopped = false;
 list<Timer*> Timer::m_timers;
 
@@ -22,14 +21,7 @@ static bool TimerDisabled (Timer* value)
 //------------------------------------------------------------------------------
 Timer::Timer() 
 {
-	// Create the thread mutex
-	if (m_lockInit == false)
-	{
-		LockGuard::Create(&m_lock);
-		m_lockInit = true;
-	}
-
-	LockGuard lockGuard(&m_lock);
+	const std::lock_guard<std::mutex> lock(m_lock);
 	m_enabled = false;
 }
 
@@ -38,7 +30,7 @@ Timer::Timer()
 //------------------------------------------------------------------------------
 Timer::~Timer()
 {
-	LockGuard lockGuard(&m_lock);
+	const std::lock_guard<std::mutex> lock(m_lock);
 	m_timers.remove(this);
 }
 
@@ -47,7 +39,7 @@ Timer::~Timer()
 //------------------------------------------------------------------------------
 void Timer::Start(std::chrono::milliseconds timeout)
 {
-	LockGuard lockGuard(&m_lock);
+	const std::lock_guard<std::mutex> lock(m_lock);
 
 	m_timeout = timeout;
     ASSERT_TRUE(m_timeout != std::chrono::milliseconds(0));
@@ -66,7 +58,7 @@ void Timer::Start(std::chrono::milliseconds timeout)
 //------------------------------------------------------------------------------
 void Timer::Stop()
 {
-	LockGuard lockGuard(&m_lock);
+	const std::lock_guard<std::mutex> lock(m_lock);
 
 	m_enabled = false;
 	m_timerStopped = true;
@@ -112,7 +104,7 @@ std::chrono::milliseconds Timer::Difference(std::chrono::milliseconds time1, std
 //------------------------------------------------------------------------------
 void Timer::ProcessTimers()
 {
-	LockGuard lockGuard(&m_lock);
+	const std::lock_guard<std::mutex> lock(m_lock);
 
 	// Remove disabled timer from the list if stopped
 	if (m_timerStopped)

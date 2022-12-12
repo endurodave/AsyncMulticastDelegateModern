@@ -59,9 +59,6 @@
     <ClInclude Include="..\..\Delegate\DelegateAsyncWait.h">
       <Filter>Delegate</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Delegate\LockGuard.h">
-      <Filter>Delegate</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Delegate\Semaphore.h">
       <Filter>Delegate</Filter>
     </ClInclude>
@@ -96,9 +93,6 @@
     </ClCompile>
     <ClCompile Include="..\..\main.cpp" />
     <ClCompile Include="..\..\stdafx.cpp" />
-    <ClCompile Include="..\..\Delegate\LockGuard.cpp">
-      <Filter>Delegate</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Delegate\Semaphore.cpp">
       <Filter>Delegate</Filter>
     </ClCompile>

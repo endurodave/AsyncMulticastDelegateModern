@@ -2,7 +2,7 @@
 #define _TIMER_H
 
 #include "DelegateLib.h"
-#include "LockGuard.h"
+#include <mutex>
 #include <list>
 
 using namespace DelegateLib;
@@ -59,10 +59,7 @@ private:
 	typedef std::list<Timer*>::iterator TimersIterator;
 
 	/// A lock to make this class thread safe.
-	static LOCK m_lock;
-
-	/// TRUE if lock initialized.
-	static bool m_lockInit;
+	static std::mutex m_lock;
 
 	std::chrono::milliseconds m_timeout = std::chrono::milliseconds(0);		
 	std::chrono::milliseconds m_expireTime = std::chrono::milliseconds(0);
