@@ -11,7 +11,7 @@ class DelegateThread
 {
 public:
 	/// Destructor
-	virtual ~DelegateThread() {}
+	virtual ~DelegateThread() = default;
 
 	/// Dispatch a DelegateMsg onto this thread. The implementer is responsible
 	/// for getting the DelegateMsg into an OS message queue. Once DelegateMsg

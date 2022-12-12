@@ -12,7 +12,7 @@ namespace DelegateLib
 class heap_arg_deleter_base
 {
 public:
-    virtual ~heap_arg_deleter_base() {}
+    virtual ~heap_arg_deleter_base() = default;
 };
 
 /// @brief Frees heap memory for reference heap argument

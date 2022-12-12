@@ -18,7 +18,7 @@ template<class RetType, class... Args>
 class MulticastDelegate<RetType(Args...)>
 {
 public:
-    MulticastDelegate() { }
+    MulticastDelegate() = default;
     ~MulticastDelegate() { Clear(); }
 
     RetType operator()(Args... args) {

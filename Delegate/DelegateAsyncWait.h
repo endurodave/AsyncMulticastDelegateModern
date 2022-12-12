@@ -73,8 +73,6 @@ public:
         else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
-            delegate->m_sema.Create();
-            delegate->m_sema.Reset();
 
             // Create a new message instance 
             auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...); 
@@ -214,8 +212,6 @@ public:
         else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
-            delegate->m_sema.Create();
-            delegate->m_sema.Reset();
 
             // Create a new message instance 
             auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...); 

@@ -14,15 +14,8 @@ namespace DelegateLib {
 class Semaphore
 {
 public:
-	Semaphore();
-	~Semaphore();
-
-	/// Called to create the semaphore. Calling multiple times on the same instance
-	// is safe and will not recreate the semaphore. 
-	void Create();
-
-	/// Rest the semaphore in readiness to be signalled again. 
-	void Reset();
+	Semaphore() = default;
+	~Semaphore() = default;
 
 	/// Called to wait on a semaphore to be signaled.
 	/// @param[in] timeout - timeout in milliseconds

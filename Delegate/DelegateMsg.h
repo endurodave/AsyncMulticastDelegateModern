@@ -74,7 +74,7 @@ public:
     { 
     }
 
-    virtual ~DelegateMsgHeapArgs() {}
+    virtual ~DelegateMsgHeapArgs() = default;
 
     /// Get all function arguments that were created on the heap
     /// @return A tuple of all function arguments

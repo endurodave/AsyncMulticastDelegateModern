@@ -14,7 +14,7 @@ template<class RetType, class... Args>
 class SinglecastDelegate<RetType(Args...)>
 {
 public:
-    SinglecastDelegate() : m_delegate(nullptr) { }
+    SinglecastDelegate() = default;
     ~SinglecastDelegate() { Clear(); }
 
     RetType operator()(Args... args) {
@@ -51,7 +51,7 @@ private:
     SinglecastDelegate& operator=(const SinglecastDelegate&) = delete;
 
     /// Registered delegate.
-    Delegate<RetType(Args...)>* m_delegate;
+    Delegate<RetType(Args...)>* m_delegate = nullptr;
 };
 
 }
