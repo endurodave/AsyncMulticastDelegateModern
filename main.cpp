@@ -202,7 +202,7 @@ int main(void)
     // TimerExpiredCb on workerThread1 upon expiration
     Timer timer;
     timer.Expired = MakeDelegate(&TimerExpiredCb, &workerThread1);
-    timer.Start(250);
+    timer.Start(std::chrono::milliseconds(250));
 
 	// Run all unit tests (uncomment to run unit tests)
 	DelegateUnitTests();
@@ -329,7 +329,7 @@ int main(void)
     // Alternate means to invoke a function asynchronousy using AsyncInvoke. This thread will block until the 
     // msg and year stack values are set by MemberFuncStdStringRetInt on workerThread1.
     std::string msg2;
-    auto asyncInvokeRetVal = MakeDelegate(&testClass, &TestClass::MemberFuncStdStringRetInt, &workerThread1, 100).AsyncInvoke(msg2);
+    auto asyncInvokeRetVal = MakeDelegate(&testClass, &TestClass::MemberFuncStdStringRetInt, &workerThread1, std::chrono::milliseconds(100)).AsyncInvoke(msg2);
     if (asyncInvokeRetVal.has_value())
         cout << msg.c_str() << " " << asyncInvokeRetVal.value() << endl;
     else

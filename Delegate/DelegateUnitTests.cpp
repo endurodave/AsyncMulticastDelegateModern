@@ -1933,11 +1933,11 @@ void DelegateMemberAsyncWaitTests()
 		MemberFuncIntWithReturn0Delegate.Clear();
 	}
 
-	FreeFuncIntWithReturn0Delegate = MakeDelegate(&FreeFuncIntWithReturn0, &testThread, 1);
+	FreeFuncIntWithReturn0Delegate = MakeDelegate(&FreeFuncIntWithReturn0, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = FreeFuncIntWithReturn0Delegate();
 
-	MemberFuncIntWithReturn0Delegate = MakeDelegate(&testClass0, &TestClass0::MemberFuncWithReturn0, &testThread, 1);
+	MemberFuncIntWithReturn0Delegate = MakeDelegate(&testClass0, &TestClass0::MemberFuncWithReturn0, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = MemberFuncIntWithReturn0Delegate();
 
@@ -2056,11 +2056,11 @@ void DelegateMemberAsyncWaitTests()
 		MemberFuncIntWithReturn1Delegate.Clear();
 	}
 
-	FreeFuncIntWithReturn1Delegate = MakeDelegate(&FreeFuncIntWithReturn1, &testThread, 1);
+	FreeFuncIntWithReturn1Delegate = MakeDelegate(&FreeFuncIntWithReturn1, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = FreeFuncIntWithReturn1Delegate(TEST_INT);
 
-	MemberFuncIntWithReturn1Delegate = MakeDelegate(&testClass1, &TestClass1::MemberFuncIntWithReturn1, &testThread, 1);
+	MemberFuncIntWithReturn1Delegate = MakeDelegate(&testClass1, &TestClass1::MemberFuncIntWithReturn1, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = MemberFuncIntWithReturn1Delegate(TEST_INT);
 
@@ -2175,11 +2175,11 @@ void DelegateMemberAsyncWaitTests()
 		MemberFuncIntWithReturn2Delegate.Clear();
 	}
 
-	FreeFuncIntWithReturn2Delegate = MakeDelegate(&FreeFuncIntWithReturn2, &testThread, 1);
+	FreeFuncIntWithReturn2Delegate = MakeDelegate(&FreeFuncIntWithReturn2, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = FreeFuncIntWithReturn2Delegate(TEST_INT, TEST_INT);
 
-	MemberFuncIntWithReturn2Delegate = MakeDelegate(&testClass2, &TestClass2::MemberFuncIntWithReturn2, &testThread, 1);
+	MemberFuncIntWithReturn2Delegate = MakeDelegate(&testClass2, &TestClass2::MemberFuncIntWithReturn2, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = MemberFuncIntWithReturn2Delegate(TEST_INT, TEST_INT);
 
@@ -2294,11 +2294,11 @@ void DelegateMemberAsyncWaitTests()
 		MemberFuncIntWithReturn3Delegate.Clear();
 	}
 
-	FreeFuncIntWithReturn3Delegate = MakeDelegate(&FreeFuncIntWithReturn3, &testThread, 1);
+	FreeFuncIntWithReturn3Delegate = MakeDelegate(&FreeFuncIntWithReturn3, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = FreeFuncIntWithReturn3Delegate(TEST_INT, TEST_INT, TEST_INT);
 
-	MemberFuncIntWithReturn3Delegate = MakeDelegate(&testClass3, &TestClass3::MemberFuncIntWithReturn3, &testThread, 1);
+	MemberFuncIntWithReturn3Delegate = MakeDelegate(&testClass3, &TestClass3::MemberFuncIntWithReturn3, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = MemberFuncIntWithReturn3Delegate(TEST_INT, TEST_INT, TEST_INT);
 
@@ -2413,11 +2413,11 @@ void DelegateMemberAsyncWaitTests()
 		MemberFuncIntWithReturn4Delegate.Clear();
 	}
 
-	FreeFuncIntWithReturn4Delegate = MakeDelegate(&FreeFuncIntWithReturn4, &testThread, 1);
+	FreeFuncIntWithReturn4Delegate = MakeDelegate(&FreeFuncIntWithReturn4, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = FreeFuncIntWithReturn4Delegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MemberFuncIntWithReturn4Delegate = MakeDelegate(&testClass4, &TestClass4::MemberFuncIntWithReturn4, &testThread, 1);
+	MemberFuncIntWithReturn4Delegate = MakeDelegate(&testClass4, &TestClass4::MemberFuncIntWithReturn4, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = MemberFuncIntWithReturn4Delegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
@@ -2532,11 +2532,11 @@ void DelegateMemberAsyncWaitTests()
 		MemberFuncIntWithReturn5Delegate.Clear();
 	}
 
-	FreeFuncIntWithReturn5Delegate = MakeDelegate(&FreeFuncIntWithReturn5, &testThread, 1);
+	FreeFuncIntWithReturn5Delegate = MakeDelegate(&FreeFuncIntWithReturn5, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = FreeFuncIntWithReturn5Delegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 
-	MemberFuncIntWithReturn5Delegate = MakeDelegate(&testClass5, &TestClass5::MemberFuncIntWithReturn5, &testThread, 1);
+	MemberFuncIntWithReturn5Delegate = MakeDelegate(&testClass5, &TestClass5::MemberFuncIntWithReturn5, &testThread, std::chrono::milliseconds(1));
 	for (int i = 0; i < LOOP_CNT; i++)
 		int ret = MemberFuncIntWithReturn5Delegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 }

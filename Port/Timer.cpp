@@ -45,12 +45,12 @@ Timer::~Timer()
 //------------------------------------------------------------------------------
 // Start
 //------------------------------------------------------------------------------
-void Timer::Start(unsigned long timeout)
+void Timer::Start(std::chrono::milliseconds timeout)
 {
 	LockGuard lockGuard(&m_lock);
 
 	m_timeout = timeout;
-    ASSERT_TRUE(m_timeout != 0);
+    ASSERT_TRUE(m_timeout != std::chrono::milliseconds(0));
 	m_expireTime = GetTime();
 	m_enabled = true;
 
@@ -102,7 +102,7 @@ void Timer::CheckExpired()
 //------------------------------------------------------------------------------
 // Difference
 //------------------------------------------------------------------------------
-unsigned long Timer::Difference(unsigned long time1, unsigned long time2)
+std::chrono::milliseconds Timer::Difference(std::chrono::milliseconds time1, std::chrono::milliseconds time2)
 {
 	return (time2 - time1);
 }
@@ -130,11 +130,10 @@ void Timer::ProcessTimers()
 	}
 }
 
-unsigned long Timer::GetTime()
+std::chrono::milliseconds Timer::GetTime()
 {
-    unsigned long milliseconds_since_epoch =
-        std::chrono::duration_cast<std::chrono::milliseconds>
-        (std::chrono::system_clock::now().time_since_epoch()).count();
-    return (unsigned long)milliseconds_since_epoch;
+	auto duration = std::chrono::system_clock::now().time_since_epoch();
+	auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
+	return millis;
 }
 

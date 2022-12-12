@@ -25,9 +25,9 @@ public:
 	void Reset();
 
 	/// Called to wait on a semaphore to be signaled.
-	/// @param[in] timeout - timeout in milliseconds. If less 0, wait time is infinite. 
+	/// @param[in] timeout - timeout in milliseconds
 	/// @return Return true if semaphore signaled, false if timeout occurred. 
-	bool Wait(int timeout);
+	bool Wait(std::chrono::milliseconds timeout);
 
 	/// Called to signal a semaphore.
 	void Signal();

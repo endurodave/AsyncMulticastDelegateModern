@@ -23,7 +23,7 @@ public:
 
 	/// Starts a timer for callbacks on the specified timeout interval.
 	/// @param[in]	timeout - the timeout in milliseconds.
-	void Start(unsigned long timeout);
+	void Start(std::chrono::milliseconds timeout);
 
 	/// Stops a timer.
 	void Stop();
@@ -34,14 +34,14 @@ public:
 
 	/// Get the current time in ticks. 
 	/// @return The current time in ticks. 
-    static unsigned long GetTime();
+    static std::chrono::milliseconds GetTime();
 
 	/// Computes the time difference in ticks between two tick values taking into
 	/// account rollover.
 	/// @param[in] 	time1 - time stamp 1 in ticks.
 	/// @param[in] 	time2 - time stamp 2 in ticks.
 	/// @return		The time difference in ticks.
-	static unsigned long Difference(unsigned long time1, unsigned long time2);
+	static std::chrono::milliseconds Difference(std::chrono::milliseconds time1, std::chrono::milliseconds time2);
 
 	/// Called on a periodic basic to service all timer instances. 
 	static void ProcessTimers();
@@ -64,9 +64,9 @@ private:
 	/// TRUE if lock initialized.
 	static bool m_lockInit;
 
-	unsigned long m_timeout;		// in ticks
-	unsigned long m_expireTime;		// in ticks
-	bool m_enabled;
+	std::chrono::milliseconds m_timeout = std::chrono::milliseconds(0);		
+	std::chrono::milliseconds m_expireTime = std::chrono::milliseconds(0);
+	bool m_enabled = false;
 	static bool m_timerStopped;
 };
 
