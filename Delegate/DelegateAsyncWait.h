@@ -95,13 +95,24 @@ public:
     }
 
     /// Invoke delegate function asynchronously
-    std::optional<RetType> AsyncInvoke(Args... args)
+    auto AsyncInvoke(Args... args)
     {
-        auto retVal = operator()(args...);
-        if (IsSuccess())
-            return retVal;
+        if constexpr (std::is_void<RetType>::value == true)
+        {
+            operator()(args...);
+            if (IsSuccess())
+                return std::optional<bool>(true);
+            else
+                return std::optional<bool>();
+        }
         else
-            return {};
+        {
+            auto retVal = operator()(args...);
+            if (IsSuccess())
+                return std::optional<RetType>(retVal);
+            else
+                return std::optional<RetType>();
+        }
     }
 
     /// Called by the target thread to invoke the delegate function 
@@ -225,13 +236,24 @@ public:
     }
 
     /// Invoke delegate function asynchronously
-    std::optional<RetType> AsyncInvoke(Args... args)
+    auto AsyncInvoke(Args... args)
     {
-        auto retVal = operator()(args...);
-        if (IsSuccess())
-            return retVal;
+        if constexpr (std::is_void<RetType>::value == true)
+        {
+            operator()(args...);
+            if (IsSuccess())
+                return std::optional<bool>(true);
+            else
+                return std::optional<bool>();
+        }
         else
-            return {};
+        {
+            auto retVal = operator()(args...);
+            if (IsSuccess())
+                return std::optional<RetType>(retVal);
+            else
+                return std::optional<RetType>();
+        }
     }
 
     /// Called by the target thread to invoke the delegate function 

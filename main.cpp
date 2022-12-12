@@ -338,6 +338,12 @@ int main(void)
     // Invoke function asynchronously with user defined return type
     auto testStructRet = MakeDelegate(&testClass, &TestClass::TestFuncUserTypeRet, &workerThread1, WAIT_INFINITE).AsyncInvoke();
 
+    // Invoke functions asynchronously with no return value
+    auto noRetValRet = MakeDelegate(&testClass, &TestClass::TestFuncNoRet, &workerThread1, std::chrono::milliseconds(10)).AsyncInvoke();
+    auto noRetValRet2 = MakeDelegate(&FreeFuncInt, &workerThread1, std::chrono::milliseconds(10)).AsyncInvoke(123);
+    if (noRetValRet.has_value() && noRetValRet2.has_value())
+        cout << "Asynchronous calls with no return value succeeded!" << endl;
+
     // Create a shared_ptr, create a delegate, then synchronously invoke delegate function
     std::shared_ptr<TestClass> spObject(new TestClass());
     auto delegateMemberSp = MakeDelegate(spObject, &TestClass::MemberFuncStdString);
