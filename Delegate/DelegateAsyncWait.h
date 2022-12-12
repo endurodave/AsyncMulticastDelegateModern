@@ -85,10 +85,13 @@ public:
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
                 m_retVal = delegate->m_retVal;
 
-            if constexpr (std::is_void<RetType>::value == true)
-                return;
-            else
-                return std::any_cast<RetType>(m_retVal);
+            if constexpr (std::is_void<RetType>::value == false)
+            {
+            	if (m_retVal.has_value())
+            		return std::any_cast<RetType>(m_retVal);
+            	else
+            		return RetType();
+            }
         }
     }
 
@@ -224,10 +227,13 @@ public:
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
                 m_retVal = delegate->m_retVal;
 
-            if constexpr (std::is_void<RetType>::value == true)
-                return;
-            else
-                return std::any_cast<RetType>(m_retVal);
+            if constexpr (std::is_void<RetType>::value == false)
+            {
+            	if (m_retVal.has_value())
+            		return std::any_cast<RetType>(m_retVal);
+            	else
+            		return RetType();
+            }
         }
     }
 

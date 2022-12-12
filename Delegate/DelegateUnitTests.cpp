@@ -2553,18 +2553,26 @@ void DelegateUnitTests()
 	QueryPerformanceCounter(&StartingTime);
 #endif
 
-	// Run unit tests repeatedly to expose problems (e.g. deadlocks, memory leaks) 
-	// with async delegates.
-	for (int i = 0; i < 100; i++)
+	try
 	{
-		SinglecastDelegateTests();
-		MulticastDelegateTests();
-		MulticastDelegateSafeTests();
-		MulticastDelegateSafeAsyncTests();
-		DelegateMemberAsyncWaitTests();
-		DelegateMemberSpTests();
-		DelegateMemberAsyncSpTests();
+		// Run unit tests repeatedly to expose problems (e.g. deadlocks, memory leaks)
+		// with async delegates.
+		for (int i = 0; i < 100; i++)
+		{
+			SinglecastDelegateTests();
+			MulticastDelegateTests();
+			MulticastDelegateSafeTests();
+			MulticastDelegateSafeAsyncTests();
+			DelegateMemberAsyncWaitTests();
+			DelegateMemberSpTests();
+			DelegateMemberAsyncSpTests();
+		}
 	}
+	catch(const std::exception& e)
+	{
+		std::cout << "Unit Tests Failed: " << e.what() << std::endl;
+	}
+
 
 #ifdef WIN32
 	QueryPerformanceCounter(&EndingTime);

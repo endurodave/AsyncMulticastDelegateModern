@@ -32,7 +32,7 @@ private:
 
 	SEMA m_sema;
 	std::mutex m_lock;
-	std::atomic<bool> m_flag;
+	std::atomic<bool> m_flag = false;;
 };
 
 }
