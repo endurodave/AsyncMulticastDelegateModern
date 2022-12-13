@@ -101,18 +101,12 @@ public:
         if constexpr (std::is_void<RetType>::value == true)
         {
             operator()(args...);
-            if (IsSuccess())
-                return std::optional<bool>(true);
-            else
-                return std::optional<bool>();
+            return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
         }
         else
         {
             auto retVal = operator()(args...);
-            if (IsSuccess())
-                return std::optional<RetType>(retVal);
-            else
-                return std::optional<RetType>();
+            return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
         }
     }
 
@@ -240,22 +234,16 @@ public:
     /// Invoke delegate function asynchronously
     auto AsyncInvoke(Args... args)
     {
-        if constexpr (std::is_void<RetType>::value == true)
-        {
-            operator()(args...);
-            if (IsSuccess())
-                return std::optional<bool>(true);
-            else
-                return std::optional<bool>();
-        }
-        else
-        {
-            auto retVal = operator()(args...);
-            if (IsSuccess())
-                return std::optional<RetType>(retVal);
-            else
-                return std::optional<RetType>();
-        }
+		if constexpr (std::is_void<RetType>::value == true)
+		{
+			operator()(args...);
+			return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
+		}
+		else
+		{
+			auto retVal = operator()(args...);
+			return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
+		}
     }
 
     /// Called by the target thread to invoke the delegate function 
