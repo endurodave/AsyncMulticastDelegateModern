@@ -372,6 +372,33 @@ int main(void)
     std::shared_ptr<TestStructNoCopy> testStructNoCopy = std::make_shared<TestStructNoCopy>(987);
     delegateJ(testStructNoCopy);
 
+    // Begin lambda examples. Lambda captures not allowed if delegates used to invoke.
+    int (*LambdaFunc1Ptr)(int) = [](int i) -> int
+    {
+        cout << "Called LambdaFunc1Ptr " << i << std::endl;
+        return ++i;
+    };
+
+    void (*LambdaFunc2Ptr)(const TestStruct&, bool) = [](const TestStruct& s, bool b)
+    {
+        cout << "Called LambdaFunc2Ptr " << s.x << " " << b << std::endl;
+    };
+
+    // Invoke lambda via function pointer without delegates
+    int lambdaRetVal1 = LambdaFunc1Ptr(876);
+
+    // Asynchronously invoke lambda on workerThread1 and wait for the return value
+    auto lambdaDelegate1 = MakeDelegate(LambdaFunc1Ptr, &workerThread1, WAIT_INFINITE);
+    int lambdaRetVal2 = lambdaDelegate1(123);
+
+    TestStruct lambdaArg;
+    lambdaArg.x = 4321;
+
+    // Asynchronously invoke lambda on workerThread1 without waiting
+    auto lambdaDelegate2 = MakeDelegate(LambdaFunc2Ptr, &workerThread1);
+    lambdaDelegate2(lambdaArg, true);
+    // End lambda examples
+
     // Create a SysDataClient instance on the stack
     SysDataClient sysDataClient;
 
