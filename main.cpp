@@ -397,6 +397,11 @@ int main(void)
     // Asynchronously invoke lambda on workerThread1 without waiting
     auto lambdaDelegate2 = MakeDelegate(LambdaFunc2Ptr, &workerThread1);
     lambdaDelegate2(lambdaArg, true);
+
+    // Asynchronously invoke lambda on workerThread1 without waiting using AsyncInvoke
+    auto lambdaRet = MakeDelegate(LambdaFunc1Ptr, &workerThread1, std::chrono::milliseconds(100)).AsyncInvoke(543);
+    if (lambdaRet.has_value())
+        cout << "LambdaFunc2Ptr success! " << lambdaRet.value() << endl;
     // End lambda examples
 
     // Create a SysDataClient instance on the stack
