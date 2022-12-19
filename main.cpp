@@ -373,35 +373,35 @@ int main(void)
     delegateJ(testStructNoCopy);
 
     // Begin lambda examples. Lambda captures not allowed if delegates used to invoke.
-    int (*LambdaFunc1Ptr)(int) = [](int i) -> int
+    auto LambdaFunc1 = +[](int i) -> int
     {
-        cout << "Called LambdaFunc1Ptr " << i << std::endl;
+        cout << "Called LambdaFunc1 " << i << std::endl;
         return ++i;
     };
 
-    void (*LambdaFunc2Ptr)(const TestStruct&, bool) = [](const TestStruct& s, bool b)
+    auto LambdaFunc2 = +[](const TestStruct& s, bool b)
     {
-        cout << "Called LambdaFunc2Ptr " << s.x << " " << b << std::endl;
+        cout << "Called LambdaFunc2 " << s.x << " " << b << std::endl;
     };
 
     // Invoke lambda via function pointer without delegates
-    int lambdaRetVal1 = LambdaFunc1Ptr(876);
+    int lambdaRetVal1 = LambdaFunc1(876);
 
     // Asynchronously invoke lambda on workerThread1 and wait for the return value
-    auto lambdaDelegate1 = MakeDelegate(LambdaFunc1Ptr, &workerThread1, WAIT_INFINITE);
+    auto lambdaDelegate1 = MakeDelegate(LambdaFunc1, &workerThread1, WAIT_INFINITE);
     int lambdaRetVal2 = lambdaDelegate1(123);
 
     TestStruct lambdaArg;
     lambdaArg.x = 4321;
 
     // Asynchronously invoke lambda on workerThread1 without waiting
-    auto lambdaDelegate2 = MakeDelegate(LambdaFunc2Ptr, &workerThread1);
+    auto lambdaDelegate2 = MakeDelegate(LambdaFunc2, &workerThread1);
     lambdaDelegate2(lambdaArg, true);
 
-    // Asynchronously invoke lambda on workerThread1 without waiting using AsyncInvoke
-    auto lambdaRet = MakeDelegate(LambdaFunc1Ptr, &workerThread1, std::chrono::milliseconds(100)).AsyncInvoke(543);
+    // Asynchronously invoke lambda on workerThread1 using AsyncInvoke
+    auto lambdaRet = MakeDelegate(LambdaFunc1, &workerThread1, std::chrono::milliseconds(100)).AsyncInvoke(543);
     if (lambdaRet.has_value())
-        cout << "LambdaFunc2Ptr success! " << lambdaRet.value() << endl;
+        cout << "LambdaFunc1 success! " << lambdaRet.value() << endl;
     // End lambda examples
 
     // Create a SysDataClient instance on the stack
