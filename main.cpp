@@ -406,9 +406,8 @@ int main(void)
     std::vector<int> v{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
     // Synchronous lambda example
-    const auto val = std::count_if(v.begin(), v.end(),
+    const auto valResult = std::count_if(v.begin(), v.end(),
         [](int v) { return v > 2 && v <= 6; });
-    auto valResult = val;
     cout << "Synchronous lambda result: " << valResult << endl;
 
     // Asychronous lambda example (pass delegate to algorithm)
@@ -424,9 +423,8 @@ int main(void)
     //	&workerThread1, 
     //	WAIT_INFINITE);
 
-    const auto valAsync = std::count_if(v.begin(), v.end(),
+    const auto valAsyncResult = std::count_if(v.begin(), v.end(),
         countLambdaDelegate);
-    auto valAsyncResult = valAsync;
     cout << "Asynchronous lambda result: " << valAsyncResult << endl;
     // End lambda examples
 
