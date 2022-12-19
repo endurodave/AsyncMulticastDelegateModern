@@ -420,10 +420,7 @@ int main(void)
 
     // Alternate syntax
     //auto countLambdaDelegate = MakeDelegate(
-    //	+[](int v) -> int 
-    //	{
-    //		return v > 2 && v <= 6;
-    //	},
+    //    +[](int v) { return v > 2 && v <= 6; },
     //	&workerThread1, 
     //	WAIT_INFINITE);
 
