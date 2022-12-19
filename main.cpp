@@ -402,6 +402,35 @@ int main(void)
     auto lambdaRet = MakeDelegate(LambdaFunc1, &workerThread1, std::chrono::milliseconds(100)).AsyncInvoke(543);
     if (lambdaRet.has_value())
         cout << "LambdaFunc1 success! " << lambdaRet.value() << endl;
+
+    std::vector<int> v{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+    // Synchronous lambda example
+    const auto val = std::count_if(v.begin(), v.end(),
+        [](int v) { return v > 2 && v <= 6; });
+    auto valResult = val;
+    cout << "Synchronous lambda result: " << valResult << endl;
+
+    // Asychronous lambda example (pass delegate to algorithm)
+    auto CountLambda = +[](int v) -> int
+    {
+        return v > 2 && v <= 6;
+    };
+    auto countLambdaDelegate = MakeDelegate(CountLambda, &workerThread1, WAIT_INFINITE);
+
+    // Alternate syntax
+    //auto countLambdaDelegate = MakeDelegate(
+    //	+[](int v) -> int 
+    //	{
+    //		return v > 2 && v <= 6;
+    //	},
+    //	&workerThread1, 
+    //	WAIT_INFINITE);
+
+    const auto valAsync = std::count_if(v.begin(), v.end(),
+        countLambdaDelegate);
+    auto valAsyncResult = valAsync;
+    cout << "Asynchronous lambda result: " << valAsyncResult << endl;
     // End lambda examples
 
     // Create a SysDataClient instance on the stack
