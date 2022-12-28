@@ -80,7 +80,7 @@ public:
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
-            this->m_thread.DispatchDelegate(msg);
+            m_thread.DispatchDelegate(msg);
 
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
@@ -122,7 +122,7 @@ public:
             std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
         else
             m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-        this->m_sema.Signal();
+        m_sema.Signal();
     }
 
     /// Returns true if asynchronous function successfully invoked on target thread
@@ -217,7 +217,7 @@ public:
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
-            this->m_thread.DispatchDelegate(msg);
+            m_thread.DispatchDelegate(msg);
 
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
@@ -259,7 +259,7 @@ public:
             std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
         else
             m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-        this->m_sema.Signal();
+        m_sema.Signal();
     }
 
     /// Returns true if asynchronous function successfully invoked on target thread
