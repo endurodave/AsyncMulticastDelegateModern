@@ -18,7 +18,7 @@ SysDataNoLock& SysDataNoLock::GetInstance()
 SysDataNoLock::SysDataNoLock() :
 	m_systemMode(SystemMode::STARTING)
 {
-	SetSystemModeDelegate += MakeDelegate(this, &SysDataNoLock::SetSystemModePrivate, &workerThread2);
+	SetSystemModeDelegate += MakeDelegate(this, &SysDataNoLock::SetSystemModePrivate, workerThread2);
 	workerThread2.CreateThread();
 }
 
@@ -27,7 +27,7 @@ SysDataNoLock::SysDataNoLock() :
 //----------------------------------------------------------------------------
 SysDataNoLock::~SysDataNoLock()
 {
-	SetSystemModeDelegate -= MakeDelegate(this, &SysDataNoLock::SetSystemModePrivate, &workerThread2);
+	SetSystemModeDelegate -= MakeDelegate(this, &SysDataNoLock::SetSystemModePrivate, workerThread2);
 }
 
 //----------------------------------------------------------------------------
@@ -48,7 +48,7 @@ void SysDataNoLock::SetSystemModeAsyncAPI(SystemMode::Type systemMode)
 	if (workerThread2.GetThreadId() != WorkerThread::GetCurrentThreadId())
 	{
 		// Create an asynchronous delegate and re-invoke the function call on workerThread2
-		auto delegate = MakeDelegate(this, &SysDataNoLock::SetSystemModeAsyncAPI, &workerThread2);
+		auto delegate = MakeDelegate(this, &SysDataNoLock::SetSystemModeAsyncAPI, workerThread2);
 		delegate(systemMode);
 		return;
 	}
@@ -76,7 +76,7 @@ SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type syste
 	{
 		// Create an asynchronous delegate and re-invoke the function call on workerThread2
 		auto delegate =
-			MakeDelegate(this, &SysDataNoLock::SetSystemModeAsyncWaitAPI, &workerThread2, WAIT_INFINITE);
+			MakeDelegate(this, &SysDataNoLock::SetSystemModeAsyncWaitAPI, workerThread2, WAIT_INFINITE);
 		return delegate(systemMode);
 	}
 

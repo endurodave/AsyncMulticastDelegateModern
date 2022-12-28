@@ -32,11 +32,11 @@ public:
     using BaseType = DelegateFree<RetType(Args...)>;
 
     // Contructors take a free function, delegate thread and timeout
-    DelegateFreeAsyncWait(FreeFunc func, DelegateThread* thread, std::chrono::milliseconds timeout) : 
-        BaseType(func), m_timeout(timeout) {
+    DelegateFreeAsyncWait(FreeFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) : 
+        BaseType(func), m_thread(thread), m_timeout(timeout) {
         Bind(func, thread);
     }
-    DelegateFreeAsyncWait(const DelegateFreeAsyncWait& rhs) : BaseType(rhs), m_sync(false) {
+    DelegateFreeAsyncWait(const DelegateFreeAsyncWait& rhs) : BaseType(rhs), m_thread(rhs.m_thread), m_sync(false) {
         Swap(rhs);
     }
     DelegateFreeAsyncWait() = delete;
@@ -46,7 +46,7 @@ public:
     }
 
     /// Bind a free function to a delegate. 
-    void Bind(FreeFunc func, DelegateThread* thread) {
+    void Bind(FreeFunc func, DelegateThread& thread) {
         m_thread = thread;
         BaseType::Bind(func);
     }
@@ -54,7 +54,7 @@ public:
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
-            m_thread == derivedRhs->m_thread &&
+            &m_thread == &derivedRhs->m_thread &&
             BaseType::operator==(rhs);
     }
 
@@ -68,18 +68,19 @@ public:
 
     /// Invoke delegate function asynchronously
     virtual RetType operator()(Args... args) override {
-        if (this->m_thread == nullptr || m_sync)
+        if (m_sync)
             return BaseType::operator()(args...);
-        else {
+        else
+        {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance 
-            auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...); 
+            auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
-            this->m_thread->DispatchDelegate(msg);
+            this->m_thread.DispatchDelegate(msg);
 
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
@@ -87,10 +88,10 @@ public:
 
             if constexpr (std::is_void<RetType>::value == false)
             {
-            	if (m_retVal.has_value())
-            		return std::any_cast<RetType>(m_retVal);
-            	else
-            		return RetType();
+                if (m_retVal.has_value())
+                    return std::any_cast<RetType>(m_retVal);
+                else
+                    return RetType();
             }
         }
     }
@@ -137,7 +138,7 @@ private:
         m_success = s.m_success;
     }
 
-    DelegateThread * m_thread = nullptr;    // Target thread to invoke the delegate function
+    DelegateThread& m_thread;               // Target thread to invoke the delegate function
     bool m_success = false;			        // Set to true if async function succeeds
     std::chrono::milliseconds m_timeout;    // Time in mS to wait for async function to invoke
     Semaphore m_sema;				        // Semaphore to signal waiting thread
@@ -158,15 +159,15 @@ public:
     using BaseType = DelegateMember<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and delegate thread
-    DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread* thread, std::chrono::milliseconds timeout) : 
-        BaseType(object, func), m_timeout(timeout) {
+    DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) : 
+        BaseType(object, func), m_thread(thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread, std::chrono::milliseconds timeout) : 
-        BaseType(object, func), m_timeout(timeout) {
+    DelegateMemberAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) : 
+        BaseType(object, func), m_thread(thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncWait(const DelegateMemberAsyncWait& rhs) : BaseType(rhs), m_sync(false) {
+    DelegateMemberAsyncWait(const DelegateMemberAsyncWait& rhs) : BaseType(rhs), m_thread(rhs.m_thread), m_sync(false) {
         Swap(rhs);
     }
     DelegateMemberAsyncWait() = delete;
@@ -176,13 +177,13 @@ public:
     }
 
     /// Bind a member function to a delegate. 
-    void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {
+    void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
         m_thread = thread;
         BaseType::Bind(object, func);
     }
 
     /// Bind a const member function to a delegate. 
-    void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) {
+    void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) {
         m_thread = thread;
         BaseType::Bind(object, func);
     }
@@ -190,7 +191,7 @@ public:
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
-            m_thread == derivedRhs->m_thread &&
+            &m_thread == &derivedRhs->m_thread &&
             BaseType::operator==(rhs);
     }
 
@@ -204,18 +205,19 @@ public:
 
     /// Invoke delegate function asynchronously
     virtual RetType operator()(Args... args) override {
-        if (this->m_thread == nullptr || m_sync)
+        if (m_sync)
             return BaseType::operator()(args...);
-        else {
+        else
+        {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance 
-            auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...); 
+            auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
-            this->m_thread->DispatchDelegate(msg);
+            this->m_thread.DispatchDelegate(msg);
 
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
@@ -223,10 +225,10 @@ public:
 
             if constexpr (std::is_void<RetType>::value == false)
             {
-            	if (m_retVal.has_value())
-            		return std::any_cast<RetType>(m_retVal);
-            	else
-            		return RetType();
+                if (m_retVal.has_value())
+                    return std::any_cast<RetType>(m_retVal);
+                else
+                    return RetType();
             }
         }
     }
@@ -273,7 +275,7 @@ private:
         m_success = s.m_success;
     }
 
-    DelegateThread * m_thread = nullptr;	// Target thread to invoke the delegate function
+    DelegateThread& m_thread;	            // Target thread to invoke the delegate function
     bool m_success = false;					// Set to true if async function succeeds
     std::chrono::milliseconds m_timeout ;   // Time in mS to wait for async function to invoke
     Semaphore m_sema;				        // Semaphore to signal waiting thread
@@ -282,17 +284,17 @@ private:
 };
 
 template <class TClass, class RetType, class... Args>
-DelegateMemberAsyncWait<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args), DelegateThread* thread, std::chrono::milliseconds timeout) {
+DelegateMemberAsyncWait<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateMemberAsyncWait<TClass, RetType(Args...)>(object, func, thread, timeout);
 }
 
 template <class TClass, class RetType, class... Args>
-DelegateMemberAsyncWait<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args) const, DelegateThread* thread, std::chrono::milliseconds timeout) {
+DelegateMemberAsyncWait<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args) const, DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateMemberAsyncWait<TClass, RetType(Args...)>(object, func, thread, timeout);
 }
 
 template <class RetType, class... Args>
-DelegateFreeAsyncWait<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args), DelegateThread* thread, std::chrono::milliseconds timeout) {
+DelegateFreeAsyncWait<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateFreeAsyncWait<RetType(Args...)>(func, thread, timeout);
 }
 

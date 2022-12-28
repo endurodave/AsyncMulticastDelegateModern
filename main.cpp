@@ -40,8 +40,8 @@ public:
 		m_numberOfCallbacks(0)
 	{
 		// Register for async delegate callbacks
-		SysData::GetInstance().SystemModeChangedDelegate += MakeDelegate(this, &SysDataClient::CallbackFunction, &workerThread1);
-		SysDataNoLock::GetInstance().SystemModeChangedDelegate += MakeDelegate(this, &SysDataClient::CallbackFunction, &workerThread1);
+		SysData::GetInstance().SystemModeChangedDelegate += MakeDelegate(this, &SysDataClient::CallbackFunction, workerThread1);
+		SysDataNoLock::GetInstance().SystemModeChangedDelegate += MakeDelegate(this, &SysDataClient::CallbackFunction, workerThread1);
 	}
 
 	~SysDataClient()
@@ -50,7 +50,7 @@ public:
 		SysData::GetInstance().SystemModeChangedDelegate.Clear(); 
 
 		// Alternatively unregister a single delegate
-		SysDataNoLock::GetInstance().SystemModeChangedDelegate -= MakeDelegate(this, &SysDataClient::CallbackFunction, &workerThread1);
+		SysDataNoLock::GetInstance().SystemModeChangedDelegate -= MakeDelegate(this, &SysDataClient::CallbackFunction, workerThread1);
 	}
 
 private:
@@ -201,7 +201,7 @@ int main(void)
     // Create a timer that expires every 250mS and calls 
     // TimerExpiredCb on workerThread1 upon expiration
     Timer timer;
-    timer.Expired = MakeDelegate(&TimerExpiredCb, &workerThread1);
+    timer.Expired = MakeDelegate(&TimerExpiredCb, workerThread1);
     timer.Start(std::chrono::milliseconds(250));
 
 	// Run all unit tests (uncomment to run unit tests)
@@ -253,21 +253,21 @@ int main(void)
     MulticastDelegateSafe<void(TestStruct*)> delegateC;
 
     // Add a DelegateMember1<TestStruct*> delegate to the container that will invoke on workerThread1
-    delegateC += MakeDelegate(&testClass, &TestClass::MemberFunc, &workerThread1);
+    delegateC += MakeDelegate(&testClass, &TestClass::MemberFunc, workerThread1);
 
     // Asynchronously invoke the delegate target member function TestClass::MemberFunc()
     if (delegateC)
         delegateC(&testStruct);
 
     // Remove the delegate from the container
-    delegateC -= MakeDelegate(&testClass, &TestClass::MemberFunc, &workerThread1);
+    delegateC -= MakeDelegate(&testClass, &TestClass::MemberFunc, workerThread1);
 
     // Create a thread-safe multicast delegate container that accepts Delegate<void (TestStruct&, float, int**)> delegates
     // Any function with the signature "void Func(const TestStruct&, float, int**)".
     MulticastDelegateSafe<void(const TestStruct&, float, int**)> delegateD;
 
     // Add a delegate to the container that will invoke on workerThread1
-    delegateD += MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, &workerThread1);
+    delegateD += MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, workerThread1);
 
     // Asynchronously invoke the delegate target member function TestClass::MemberFuncThreeArgs()
     if (delegateD)
@@ -278,7 +278,7 @@ int main(void)
     }
 
     // Remove the delegate from the container
-    delegateD -= MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, &workerThread1);
+    delegateD -= MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, workerThread1);
 
     // Create a singlecast delegate container that accepts Delegate<int (int)> delegates.
     // Any function with the signature "int Func(int)".
@@ -311,13 +311,13 @@ int main(void)
     // Create delegate with std::string and int arguments then asynchronously 
     // invoke on a member function
     MulticastDelegateSafe<void(const std::string&, int)> delegateH;
-    delegateH += MakeDelegate(&testClass, &TestClass::MemberFuncStdString, &workerThread1);
+    delegateH += MakeDelegate(&testClass, &TestClass::MemberFuncStdString, workerThread1);
     delegateH("Hello world", 2020);
     delegateH.Clear();
 
     // Create a asynchronous blocking delegate and invoke. This thread will block until the 
     // msg and year stack values are set by MemberFuncStdStringRetInt on workerThread1.
-    auto delegateI = MakeDelegate(&testClass, &TestClass::MemberFuncStdStringRetInt, &workerThread1, WAIT_INFINITE);
+    auto delegateI = MakeDelegate(&testClass, &TestClass::MemberFuncStdStringRetInt, workerThread1, WAIT_INFINITE);
     std::string msg;
     int year = delegateI(msg);
     if (delegateI.IsSuccess())
@@ -329,18 +329,18 @@ int main(void)
     // Alternate means to invoke a function asynchronousy using AsyncInvoke. This thread will block until the 
     // msg and year stack values are set by MemberFuncStdStringRetInt on workerThread1.
     std::string msg2;
-    auto asyncInvokeRetVal = MakeDelegate(&testClass, &TestClass::MemberFuncStdStringRetInt, &workerThread1, std::chrono::milliseconds(100)).AsyncInvoke(msg2);
+    auto asyncInvokeRetVal = MakeDelegate(&testClass, &TestClass::MemberFuncStdStringRetInt, workerThread1, std::chrono::milliseconds(100)).AsyncInvoke(msg2);
     if (asyncInvokeRetVal.has_value())
         cout << msg.c_str() << " " << asyncInvokeRetVal.value() << endl;
     else
         cout << "Asynchronous call to MemberFuncStdStringRetInt failed to invoke within specified timeout!";
 
     // Invoke function asynchronously with user defined return type
-    auto testStructRet = MakeDelegate(&testClass, &TestClass::TestFuncUserTypeRet, &workerThread1, WAIT_INFINITE).AsyncInvoke();
+    auto testStructRet = MakeDelegate(&testClass, &TestClass::TestFuncUserTypeRet, workerThread1, WAIT_INFINITE).AsyncInvoke();
 
     // Invoke functions asynchronously with no return value
-    auto noRetValRet = MakeDelegate(&testClass, &TestClass::TestFuncNoRet, &workerThread1, std::chrono::milliseconds(10)).AsyncInvoke();
-    auto noRetValRet2 = MakeDelegate(&FreeFuncInt, &workerThread1, std::chrono::milliseconds(10)).AsyncInvoke(123);
+    auto noRetValRet = MakeDelegate(&testClass, &TestClass::TestFuncNoRet, workerThread1, std::chrono::milliseconds(10)).AsyncInvoke();
+    auto noRetValRet2 = MakeDelegate(&FreeFuncInt, workerThread1, std::chrono::milliseconds(10)).AsyncInvoke(123);
     if (noRetValRet.has_value() && noRetValRet2.has_value())
         cout << "Asynchronous calls with no return value succeeded!" << endl;
 
@@ -353,7 +353,7 @@ int main(void)
     // is invoked on the workerThread1. In other words, by the time workerThread1 calls
     // the bound delegate function the testClassHeap instance is deleted and no longer valid.
     TestClass* testClassHeap = new TestClass();
-    auto delegateMemberAsync = MakeDelegate(testClassHeap, &TestClass::MemberFuncStdString, &workerThread1);
+    auto delegateMemberAsync = MakeDelegate(testClassHeap, &TestClass::MemberFuncStdString, workerThread1);
     delegateMemberAsync("Function async invoked on deleted object. Bug!", 2020);
     delegateMemberAsync.Clear();
     delete testClassHeap;
@@ -361,16 +361,18 @@ int main(void)
     // Example of the smart pointer function version of the delegate. The testClassSp instance 
     // is only deleted after workerThread1 invokes the callback function thus solving the bug.
     std::shared_ptr<TestClass> testClassSp(new TestClass());
-    auto delegateMemberSpAsync = MakeDelegate(testClassSp, &TestClass::MemberFuncStdString, &workerThread1);
+    auto delegateMemberSpAsync = MakeDelegate(testClassSp, &TestClass::MemberFuncStdString, workerThread1);
     delegateMemberSpAsync("Function async invoked using smart pointer. Bug solved!", 2020);
     delegateMemberSpAsync.Clear();
     testClassSp.reset();
 
-    // Example of a shared_ptr argument that does not copy the function
-    // argument data. 
-    auto delegateJ = MakeDelegate(&testClass, &TestClass::MemberFuncNoCopy, &workerThread1);
-    std::shared_ptr<TestStructNoCopy> testStructNoCopy = std::make_shared<TestStructNoCopy>(987);
-    delegateJ(testStructNoCopy);
+    {
+        // Example of a shared_ptr argument that does not copy the function
+        // argument data. 
+        auto delegateJ = MakeDelegate(&testClass, &TestClass::MemberFuncNoCopy, workerThread1);
+        std::shared_ptr<TestStructNoCopy> testStructNoCopy = std::make_shared<TestStructNoCopy>(987);
+        delegateJ(testStructNoCopy);
+    }
 
     // Begin lambda examples. Lambda captures not allowed if delegates used to invoke.
     auto LambdaFunc1 = +[](int i) -> int
@@ -378,6 +380,10 @@ int main(void)
         cout << "Called LambdaFunc1 " << i << std::endl;
         return ++i;
     };
+
+    // Asynchronously invoke lambda on workerThread1 and wait for the return value
+    auto lambdaDelegate1 = MakeDelegate(LambdaFunc1, workerThread1, WAIT_INFINITE);
+    int lambdaRetVal2 = lambdaDelegate1(123);
 
     auto LambdaFunc2 = +[](const TestStruct& s, bool b)
     {
@@ -387,19 +393,15 @@ int main(void)
     // Invoke lambda via function pointer without delegates
     int lambdaRetVal1 = LambdaFunc1(876);
 
-    // Asynchronously invoke lambda on workerThread1 and wait for the return value
-    auto lambdaDelegate1 = MakeDelegate(LambdaFunc1, &workerThread1, WAIT_INFINITE);
-    int lambdaRetVal2 = lambdaDelegate1(123);
-
     TestStruct lambdaArg;
     lambdaArg.x = 4321;
 
     // Asynchronously invoke lambda on workerThread1 without waiting
-    auto lambdaDelegate2 = MakeDelegate(LambdaFunc2, &workerThread1);
+    auto lambdaDelegate2 = MakeDelegate(LambdaFunc2, workerThread1);
     lambdaDelegate2(lambdaArg, true);
 
     // Asynchronously invoke lambda on workerThread1 using AsyncInvoke
-    auto lambdaRet = MakeDelegate(LambdaFunc1, &workerThread1, std::chrono::milliseconds(100)).AsyncInvoke(543);
+    auto lambdaRet = MakeDelegate(LambdaFunc1, workerThread1, std::chrono::milliseconds(100)).AsyncInvoke(543);
     if (lambdaRet.has_value())
         cout << "LambdaFunc1 success! " << lambdaRet.value() << endl;
 
@@ -415,12 +417,12 @@ int main(void)
     {
         return v > 2 && v <= 6;
     };
-    auto countLambdaDelegate = MakeDelegate(CountLambda, &workerThread1, WAIT_INFINITE);
+    auto countLambdaDelegate = MakeDelegate(CountLambda, workerThread1, WAIT_INFINITE);
 
     // Alternate syntax
     //auto countLambdaDelegate = MakeDelegate(
     //    +[](int v) { return v > 2 && v <= 6; },
-    //	&workerThread1, 
+    //	workerThread1, 
     //	WAIT_INFINITE);
 
     const auto valAsyncResult = std::count_if(v.begin(), v.end(),

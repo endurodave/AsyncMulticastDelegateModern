@@ -28,22 +28,22 @@ public:
     using BaseType = DelegateMemberSp<TClass, void(Args...)>;
 
     // Contructors take a class instance, member function, and callback thread
-    DelegateMemberAsyncSp(ObjectPtr object, MemberFunc func, DelegateThread* thread) : BaseType(object, func) {
+    DelegateMemberAsyncSp(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncSp(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) : BaseType(object, func) {
+    DelegateMemberAsyncSp(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
     DelegateMemberAsyncSp() = delete;
 
     /// Bind a member function to a delegate. 
-    void Bind(ObjectPtr object, MemberFunc func, DelegateThread* thread) {
+    void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
         m_thread = thread;
         BaseType::Bind(object, func);
     }
 
     /// Bind a const member function to a delegate. 
-    void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread* thread) {
+    void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) {
         m_thread = thread;
         BaseType::Bind(object, func);
     }
@@ -55,13 +55,13 @@ public:
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
-            m_thread == derivedRhs->m_thread &&
+            &m_thread == &derivedRhs->m_thread &&
             BaseType::operator == (rhs);
     }
 
     /// Invoke delegate function asynchronously
     virtual void operator()(Args... args) override {
-        if (m_thread == nullptr || m_sync)
+        if (m_sync)
             BaseType::operator()(args...);
         else
         {
@@ -73,7 +73,7 @@ public:
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
-            m_thread->DispatchDelegate(msg);
+            m_thread.DispatchDelegate(msg);
         }
     }
 
@@ -90,17 +90,17 @@ public:
 
 private:
     /// Target thread to invoke the delegate function
-    DelegateThread * m_thread = nullptr;
+    DelegateThread& m_thread;
     bool m_sync = false;
 };
 
 template <class TClass, class... Args>
-DelegateMemberAsyncSp<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args), DelegateThread* thread) {
+DelegateMemberAsyncSp<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args), DelegateThread& thread) {
     return DelegateMemberAsyncSp<TClass, void(Args...)>(object, func, thread);
 }
 
 template <class TClass, class... Args>
-DelegateMemberAsyncSp<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args) const, DelegateThread* thread) {
+DelegateMemberAsyncSp<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args) const, DelegateThread& thread) {
     return DelegateMemberAsyncSp<TClass, void(Args...)>(object, func, thread);
 }
 
