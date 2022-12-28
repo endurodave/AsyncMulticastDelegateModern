@@ -181,6 +181,41 @@ void TimerExpiredCb(void)
     cout << "TimerExpiredCb " << count++ << endl;
 }
 
+class Coordinates
+{
+public:
+    int x = 0;
+    int y = 0;
+};
+
+class CoordinatesHandler
+{
+public:
+    static MulticastDelegateSafe<void(const std::shared_ptr<const Coordinates>)> CoordinatesChanged;
+
+    void SetData(const Coordinates& data)
+    {
+        m_data = data;
+        CoordinatesChanged(std::make_shared<const Coordinates>(m_data));
+    }
+
+private:
+    Coordinates m_data;
+};
+
+MulticastDelegateSafe<void(const std::shared_ptr<const Coordinates>)> CoordinatesHandler::CoordinatesChanged;
+
+void CoordinatesChangedCallback(const std::shared_ptr<const Coordinates> c)
+{
+    cout << "New coordinates " << c->x << " " << c->y << endl;
+}
+
+// Do not allow shared_ptr references. Causes compile error if used with Async delegates.
+void CoordinatesChangedCallbackError(std::shared_ptr<const Coordinates>& c) {}
+void CoordinatesChangedCallbackError2(const std::shared_ptr<const Coordinates>& c) {}
+void CoordinatesChangedCallbackError3(std::shared_ptr<const Coordinates>* c) {}
+void CoordinatesChangedCallbackError4(const std::shared_ptr<const Coordinates>* c) {}
+
 extern void DelegateUnitTests();
 
 //------------------------------------------------------------------------------
@@ -373,6 +408,28 @@ int main(void)
         std::shared_ptr<TestStructNoCopy> testStructNoCopy = std::make_shared<TestStructNoCopy>(987);
         delegateJ(testStructNoCopy);
     }
+
+
+    // Example of using std::shared_ptr function arguments with asynchrononous delegate. Using a 
+    // shared_ptr<T> argument ensures that the argument T is not copied for each registered client.
+    // Could be helpful if T is very large and two or more clients register to receive asynchronous
+    // callbacks.
+    CoordinatesHandler coordinatesHandler;
+    CoordinatesHandler::CoordinatesChanged += MakeDelegate(&CoordinatesChangedCallback, workerThread1);
+
+    Coordinates coordinates;
+    coordinates.x = 11;
+    coordinates.y = 99;
+    coordinatesHandler.SetData(coordinates);
+
+#if 0
+    // Causes compiler error. shared_ptr references not allowed; undefined behavior 
+    // in multithreaded system.
+    auto errorDel = MakeDelegate(&CoordinatesChangedCallbackError, workerThread1);
+    auto errorDel2 = MakeDelegate(&CoordinatesChangedCallbackError2, workerThread1);
+    auto errorDel3 = MakeDelegate(&CoordinatesChangedCallbackError3, workerThread1);
+    auto errorDel4 = MakeDelegate(&CoordinatesChangedCallbackError4, workerThread1);
+#endif
 
     // Begin lambda examples. Lambda captures not allowed if delegates used to invoke.
     auto LambdaFunc1 = +[](int i) -> int

@@ -4,9 +4,32 @@
 #include <tuple>
 #include <list>
 #include <memory>
+#include <type_traits>
 
 namespace DelegateLib 
 {
+
+// std::shared_ptr reference arguments are not allowed with asynchronous delegates as the behavior is 
+// undefined. In other words:
+// void MyFunc(std::shared_ptr<T> data)		// Ok!
+// void MyFunc(std::shared_ptr<T>* data)	// Error if DelegateAsync or DelegateSpAsync target!
+template<class T>
+struct is_shared_ptr : std::false_type {};
+
+template<class T>
+struct is_shared_ptr<std::shared_ptr<T>> : std::true_type {};
+
+template<class T>
+struct is_shared_ptr<std::shared_ptr<T>&> : std::true_type {};
+
+template<class T>
+struct is_shared_ptr<const std::shared_ptr<T>&> : std::true_type {};
+
+template<class T>
+struct is_shared_ptr<std::shared_ptr<T>*> : std::true_type {};
+
+template<class T>
+struct is_shared_ptr<const std::shared_ptr<T>*> : std::true_type {};
    
 /// @brief Base class for all deleter's
 class heap_arg_deleter_base
@@ -141,6 +164,10 @@ auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs
 template<typename Arg1, typename... Args, typename... Ts>
 auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, std::tuple<Ts...> tup, Arg1 arg1, Args... args)
 {
+    static_assert(!(
+        (is_shared_ptr<Arg1>::value && (std::is_lvalue_reference_v<Arg1> || std::is_pointer_v<Arg1>))),
+        "std::shared_ptr reference argument not allowed");
+
     auto new_tup = tuple_append(heapArgs, tup, arg1);
     return make_tuple_heap(heapArgs, new_tup, args...);
 }
