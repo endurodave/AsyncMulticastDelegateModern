@@ -305,7 +305,7 @@ int lambdaRetVal2 = lambdaDelegate1(123);
 <p>Delegates are callable and therefore may be passed to the standard library. The example below shows&nbsp;<code>CountLambda&nbsp;</code>executed asynchronously on&nbsp;<code>workerThread1&nbsp;</code>by&nbsp;<code>std::count_if</code>.</p>
 
 <pre data-allowshrink="True" data-codeblock-processed="true" data-collapse="False" id="pre407028">
-&nbsp; &nbsp; std::vector&lt;int&gt; v{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+std::vector&lt;int&gt; v{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 auto CountLambda = +[](int v) -&gt; int
 {
