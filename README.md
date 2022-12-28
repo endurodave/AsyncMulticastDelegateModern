@@ -193,7 +193,7 @@ MulticastDelegateSafe&lt;void(TestStruct*)&gt; delegateC;</pre>
 <p>A thread pointer as the last argument to <code>MakeDelegate()</code> forces creation of an asynchronous delegate. In this case, adding a thread argument causes <code>MakeDelegate()</code> to return a <code>DelegateMemberAsync&lt;&gt;</code> as opposed to <code>DelegateMember&lt;&gt;</code>.</p>
 
 <pre lang="C++">
-delegateC += MakeDelegate(&amp;testClass, &amp;TestClass::MemberFunc, &amp;workerThread1);</pre>
+delegateC += MakeDelegate(&amp;testClass, &amp;TestClass::MemberFunc, workerThread1);</pre>
 
 <p>Invocation is the same as the synchronous version, yet this time the callback function <code>TestClass::MemberFunc()</code> is called from <code>workerThread1</code>.</p>
 
@@ -207,7 +207,7 @@ if (delegateC)
 // Create delegate with std::string and int arguments then asynchronously    
 // invoke on a member function
 MulticastDelegateSafe&lt;void(const std::string&amp;, int)&gt; delegateH;
-delegateH += MakeDelegate(&amp;testClass, &amp;TestClass::MemberFuncStdString, &amp;workerThread1);
+delegateH += MakeDelegate(&amp;testClass, &amp;TestClass::MemberFuncStdString, workerThread1);
 delegateH(&quot;Hello world&quot;, 2020);</pre>
 
 <p>Usage of the library is consistent between synchronous and asynchronous delegates. The only difference is the addition of a thread pointer argument to <code>MakeDelegate()</code>. Always remember to use the thread-safe <code>MulticastDelegateSafe&lt;&gt;</code> containers when using asynchronous delegates to callback across thread boundaries.</p>
@@ -236,7 +236,7 @@ delegateMemberSp(&quot;Hello world using shared_ptr&quot;, 2020);</pre>
     // the bound delegate function the testClassHeap instance is deleted and no longer valid.
     TestClass* testClassHeap = new TestClass();
     auto delegateMemberAsync = 
-           MakeDelegate(testClassHeap, &amp;TestClass::MemberFuncStdString, &amp;workerThread1);
+           MakeDelegate(testClassHeap, &amp;TestClass::MemberFuncStdString, workerThread1);
     delegateMemberAsync(&quot;Function async invoked on deleted object. Bug!&quot;, 2020);
     delegateMemberAsync.Clear();
     delete testClassHeap;</pre>
@@ -250,7 +250,7 @@ delegateMemberSp(&quot;Hello world using shared_ptr&quot;, 2020);</pre>
     // is only deleted after workerThread1 invokes the callback function thus solving the bug.
     std::shared_ptr&lt;TestClass&gt; testClassSp(new TestClass());
     auto delegateMemberSpAsync = MakeDelegate
-         (testClassSp, &amp;TestClass::MemberFuncStdString, &amp;workerThread1);
+         (testClassSp, &amp;TestClass::MemberFuncStdString, workerThread1);
     delegateMemberSpAsync(&quot;Function async invoked using smart pointer. Bug solved!&quot;, 2020);
     delegateMemberSpAsync.Clear();
     testClassSp.reset();</pre>
@@ -260,7 +260,7 @@ delegateMemberSp(&quot;Hello world using shared_ptr&quot;, 2020);</pre>
 <pre lang="C++">
 std::shared_ptr&lt;TestClass&gt; testClassSp(new TestClass());
 auto delegateMemberSpAsync =
-    MakeDelegate(testClassSp, &amp;TestClass::MemberFuncStdString, &amp;workerThread1);
+    MakeDelegate(testClassSp, &amp;TestClass::MemberFuncStdString, workerThread1);
 delegateMemberSpAsync(&quot;testClassSp deletes after delegate invokes&quot;, 2020);</pre>
 
 <h3>Asynchronous Blocking Delegates</h3>
@@ -278,7 +278,7 @@ delegateMemberSpAsync(&quot;testClassSp deletes after delegate invokes&quot;, 20
     // msg and year stack values are set by MemberFuncStdStringRetInt on workerThread1.
     auto delegateI = 
           MakeDelegate(&amp;testClass, &amp;TestClass::MemberFuncStdStringRetInt, 
-                       &amp;workerThread1, WAIT_INFINITE);
+                       workerThread1, WAIT_INFINITE);
     std::string msg;
     int year = delegateI(msg);
     if (delegateI.IsSuccess())
@@ -298,7 +298,7 @@ auto LambdaFunc1 = +[](int i) -&gt; int
 };
 
 // Asynchronously invoke lambda on workerThread1 and wait for the return value
-auto lambdaDelegate1 = MakeDelegate(LambdaFunc1, &amp;workerThread1, WAIT_INFINITE);
+auto lambdaDelegate1 = MakeDelegate(LambdaFunc1, workerThread1, WAIT_INFINITE);
 int lambdaRetVal2 = lambdaDelegate1(123);
 </pre>
 
@@ -311,7 +311,7 @@ auto CountLambda = +[](int v) -&gt; int
 {
     return v &gt; 2 &amp;&amp; v &lt;= 6;
 };
-auto countLambdaDelegate = MakeDelegate(CountLambda, &amp;workerThread1, WAIT_INFINITE);
+auto countLambdaDelegate = MakeDelegate(CountLambda, workerThread1, WAIT_INFINITE);
 
 const auto valAsyncResult = std::count_if(v.begin(), v.end(),
     countLambdaDelegate);
@@ -714,7 +714,7 @@ void ArrayFunc(char a[]) {}</pre>
 
 <pre lang="C++">
 MulticastDelegateSafe1&lt;char*&gt; delegateArrayFunc;
-delegateArrayFunc += MakeDelegate(&amp;ArrayFunc, &amp;workerThread1);</pre>
+delegateArrayFunc += MakeDelegate(&amp;ArrayFunc, workerThread1);</pre>
 
 <p>There is no way to asynchronously pass a C-style array by value. My recommendation is to avoid C-style arrays if possible when using asynchronous delegates to avoid confusion and mistakes.</p>
 
@@ -890,9 +890,9 @@ void SysData::SetSystemMode(SystemMode::Type systemMode)
     {
         // Register for async delegate callbacks
         SysData::GetInstance().SystemModeChangedDelegate += 
-                 MakeDelegate(this, &amp;SysDataClient::CallbackFunction, &amp;workerThread1);
+                 MakeDelegate(this, &amp;SysDataClient::CallbackFunction, workerThread1);
         SysDataNoLock::GetInstance().SystemModeChangedDelegate += 
-                       MakeDelegate(this, &amp;SysDataClient::CallbackFunction, &amp;workerThread1);
+                       MakeDelegate(this, &amp;SysDataClient::CallbackFunction, workerThread1);
     }</pre>
 
 <p><code>SysDataClient::CallbackFunction()</code> is now called on <code>workerThread1 </code>when the system mode changes.</p>
@@ -964,7 +964,7 @@ SysDataNoLock::SysDataNoLock() :
     m_systemMode(SystemMode::STARTING)
 {
     SetSystemModeDelegate += MakeDelegate
-                 (this, &amp;SysDataNoLock::SetSystemModePrivate, &amp;workerThread2);
+                 (this, &amp;SysDataNoLock::SetSystemModePrivate, workerThread2);
     workerThread2.CreateThread();
 }</pre>
 
@@ -1008,7 +1008,7 @@ void SysDataNoLock::SetSystemModeAsyncAPI(SystemMode::Type systemMode)
     {
         // Create an asynchronous delegate and re-invoke the function call on workerThread2
         auto delegate = 
-             MakeDelegate(this, &amp;SysDataNoLock::SetSystemModeAsyncAPI, &amp;workerThread2);
+             MakeDelegate(this, &amp;SysDataNoLock::SetSystemModeAsyncAPI, workerThread2);
         delegate(systemMode);
         return;
     }
@@ -1039,7 +1039,7 @@ SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type syste
         // Create an asynchronous delegate and re-invoke the function call on workerThread2
         auto delegate =
             MakeDelegate(this, &amp;SysDataNoLock::SetSystemModeAsyncWaitAPI, 
-                         &amp;workerThread2, WAIT_INFINITE);
+                         workerThread2, WAIT_INFINITE);
         return delegate(systemMode);
     }
 
