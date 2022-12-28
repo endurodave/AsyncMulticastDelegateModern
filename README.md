@@ -28,6 +28,7 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 	<li><strong>Asynchronous Invocation</strong> &ndash; call the bound function asynchronously on a client specified thread</li>
 	<li><strong>Blocking Asynchronous Invocation</strong> - invoke asynchronously using blocking or non-blocking delegates</li>
 	<li><strong>Smart Pointer Support</strong> - bind an instance function using a raw object pointer or <code>std::shared_ptr</code></li>
+    <li><strong>Lambda Support</strong> - bind and invoke lambda functions asynchronously using delegates.</li>
 	<li><strong>Automatic Heap Handling</strong> &ndash; automatically copy argument data to the heap for safe transport through a message queue</li>
 	<li><strong>Any OS</strong> &ndash; easy porting to any OS. C++11 <code>std::thread</code> port included</li>
 	<li><strong>Visual Studio and Eclipse</strong> - VC++ and GCC projects included</li>
