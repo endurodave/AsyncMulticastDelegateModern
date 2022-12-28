@@ -1226,8 +1226,6 @@ if (myDelegate)
 
 <h2>Limitations</h2>
 
-<p>Lambda functions are not currently supported as a target bound function.</p>
-
 <p><a href="https://www.codeproject.com/Articles/5262271/Remote-Procedure-Calls-using-Cplusplus-Delegates">Remote delegates</a> that invoke a function located in a separate process or CPU are not currently supported by the delegate library.</p>
 
 <p>A fixed block allocator is not currently supported. All dynamic memory is obtained from the heap using <code>operator new</code> and <code>delete</code>.</p>
