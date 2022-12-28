@@ -285,6 +285,37 @@ delegateMemberSpAsync(&quot;testClassSp deletes after delegate invokes&quot;, 20
         cout &lt;&lt; msg.c_str() &lt;&lt; &quot; &quot; &lt;&lt; year &lt;&lt; endl;
     }</pre>
 
+<h3>Asynchronous Lambda Invocation</h3>
+
+<p>Delegates can invoke non-capturing&nbsp;lambda functions asynchronously. The example below calls&nbsp;<code>LambdaFunc1&nbsp;</code>on&nbsp;<code>workerThread1</code>.&nbsp;</p>
+
+<pre data-allowshrink="True" data-codeblock-processed="true" data-collapse="False" id="pre516246">
+auto LambdaFunc1 = +[](int i) -&gt; int
+{
+    cout &lt;&lt; &quot;Called LambdaFunc1 &quot; &lt;&lt; i &lt;&lt; std::endl;
+    return ++i;
+};
+
+// Asynchronously invoke lambda on workerThread1 and wait for the return value
+auto lambdaDelegate1 = MakeDelegate(LambdaFunc1, &amp;workerThread1, WAIT_INFINITE);
+int lambdaRetVal2 = lambdaDelegate1(123);
+</pre>
+
+<p>Delegates are callable and therefore may be passed to the standard library. The example below shows&nbsp;<code>CountLambda&nbsp;</code>executed asynchronously on&nbsp;<code>workerThread1&nbsp;</code>by&nbsp;<code>std::count_if</code>.</p>
+
+<pre data-allowshrink="True" data-codeblock-processed="true" data-collapse="False" id="pre407028">
+&nbsp; &nbsp; std::vector&lt;int&gt; v{ 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+auto CountLambda = +[](int v) -&gt; int
+{
+    return v &gt; 2 &amp;&amp; v &lt;= 6;
+};
+auto countLambdaDelegate = MakeDelegate(CountLambda, &amp;workerThread1, WAIT_INFINITE);
+
+const auto valAsyncResult = std::count_if(v.begin(), v.end(),
+    countLambdaDelegate);
+cout &lt;&lt; &quot;Asynchronous lambda result: &quot; &lt;&lt; valAsyncResult &lt;&lt; endl;</pre>
+
 <h2>Delegate Library</h2>
 
 <p>The delegate library contains numerous classes. A single include <em>DelegateLib.h</em> provides access to all delegate library features. The library is wrapped within a <code>DelegateLib </code>namespace. Included unit tests help ensure a robust implementation. The table below shows the delegate class hierarchy.</p>
