@@ -1093,7 +1093,7 @@ public:
 <p>Users create an instance of the timer and register for the expiration. In this case, <code>MyClass::MyCallback() </code>is called in 1000ms.</p>
 
 <pre lang="C++">
-m_timer.Expired = MakeDelegate(&amp;myClass, &amp;MyClass::MyCallback, &amp;myThread);
+m_timer.Expired = MakeDelegate(&amp;myClass, &amp;MyClass::MyCallback, myThread);
 m_timer.Start(1000);</pre>
 
 <h2>Summary</h2>
@@ -1109,20 +1109,20 @@ auto memberDelegate = MakeDelegate(&amp;myClass, &amp;MyClass::MyMemberFunc);</p
 <p>Adding the thread argument creates a non-blocking asynchronous delegate.</p>
 
 <pre lang="C++">
-auto freeDelegate = MakeDelegate(&amp;MyFreeFunc, &amp;myThread);
-auto memberDelegate = MakeDelegate(&amp;myClass, &amp;MyClass::MyMemberFunc, &amp;myThread);</pre>
+auto freeDelegate = MakeDelegate(&amp;MyFreeFunc, myThread);
+auto memberDelegate = MakeDelegate(&amp;myClass, &amp;MyClass::MyMemberFunc, myThread);</pre>
 
 <p>A <code>std::shared_ptr</code> can replace a raw instance pointer on synchronous and non-blocking asynchronous member delegates.</p>
 
 <pre lang="C++">
 std::shared_ptr&lt;MyClass&gt; myClass(new MyClass());
-auto memberDelegate = MakeDelegate(myClass, &amp;MyClass::MyMemberFunc, &amp;myThread);</pre>
+auto memberDelegate = MakeDelegate(myClass, &amp;MyClass::MyMemberFunc, myThread);</pre>
 
 <p>Adding a <code>timeout</code> argument creates a blocking asynchronous delegate.</p>
 
 <pre lang="C++">
-auto freeDelegate = MakeDelegate(&amp;MyFreeFunc, &amp;myThread, WAIT_INFINITE);
-auto memberDelegate = MakeDelegate(&amp;myClass, &amp;MyClass::MyMemberFunc, &amp;myThread, 5000);</pre>
+auto freeDelegate = MakeDelegate(&amp;MyFreeFunc, myThread, WAIT_INFINITE);
+auto memberDelegate = MakeDelegate(&amp;myClass, &amp;MyClass::MyMemberFunc, myThread, 5000);</pre>
 
 <p>Delegates are added/removed from multicast containers using <code>operator+=</code> and <code>operator-=</code>. All containers accept all delegate types.</p>
 
@@ -1135,8 +1135,8 @@ multicastContainer -= MakeDelegate(&amp;MyFreeFunc);</pre>
 
 <pre lang="C++">
 MulticastDelegateSafe&lt;void(int)&gt; multicastContainer;
-multicastContainer += MakeDelegate(&amp;MyFreeFunc, &amp;myThread);
-multicastContainer -= MakeDelegate(&amp;MyFreeFunc, &amp;myThread);</pre>
+multicastContainer += MakeDelegate(&amp;MyFreeFunc, myThread);
+multicastContainer -= MakeDelegate(&amp;MyFreeFunc, myThread);</pre>
 
 <p>Single cast delegates are added and removed using <code>operator=</code>.</p>
 
