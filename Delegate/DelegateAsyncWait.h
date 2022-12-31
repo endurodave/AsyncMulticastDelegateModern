@@ -19,7 +19,7 @@
 
 namespace DelegateLib {
 
-const auto WAIT_INFINITE = std::chrono::milliseconds::max();
+constexpr auto WAIT_INFINITE = std::chrono::milliseconds::max();
 
 template <class R>
 struct DelegateFreeAsyncWait; // Not defined
@@ -114,7 +114,9 @@ public:
     /// Called by the target thread to invoke the delegate function 
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
         // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+        if (delegateMsg == nullptr)
+            throw std::invalid_argument("Invalid DelegateMsg cast");
 
         // Invoke the delegate function then signal the waiting thread
         m_sync = true;
@@ -251,7 +253,9 @@ public:
     /// Called by the target thread to invoke the delegate function 
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
         // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = static_cast<DelegateMsg<Args...>*>(msg.get());
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+        if (delegateMsg == nullptr)
+            throw std::invalid_argument("Invalid DelegateMsg cast");
 
         // Invoke the delegate function then signal the waiting thread
         m_sync = true;

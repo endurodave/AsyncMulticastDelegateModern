@@ -80,7 +80,9 @@ public:
     /// Called by the target thread to invoke the delegate function 
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
         // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = static_cast<DelegateMsgHeapArgs<Args...>*>(msg.get());
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsgHeapArgs<Args...>>(msg);
+        if (delegateMsg == nullptr)
+            throw std::invalid_argument("Invalid DelegateMsgHeapArgs cast");
 
         // Invoke the delegate function
         m_sync = true;
