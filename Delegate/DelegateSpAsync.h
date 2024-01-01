@@ -74,6 +74,15 @@ public:
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
             m_thread.DispatchDelegate(msg);
+
+            // Check if any argument is a shared_ptr with wrong usage
+            // std::shared_ptr reference arguments are not allowed with asynchronous delegates as the behavior is 
+            // undefined. In other words:
+            // void MyFunc(std::shared_ptr<T> data)		// Ok!
+            // void MyFunc(std::shared_ptr<T>& data)	// Error if DelegateAsync or DelegateSpAsync target!
+            static_assert(!(std::disjunction_v<is_shared_ptr<Args>...> &&
+                (std::disjunction_v<std::is_lvalue_reference<Args>, std::is_pointer<Args>> || ...)),
+                "std::shared_ptr reference argument not allowed");
         }
     }
 

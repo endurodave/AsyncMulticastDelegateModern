@@ -5,6 +5,8 @@
 // @see https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cplusplus
 // David Lafreniere, Aug 2020.
 
+#include <functional>
+
 namespace DelegateLib {
 
 class DelegateBase {
