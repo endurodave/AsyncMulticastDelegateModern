@@ -19,6 +19,7 @@
 
 namespace DelegateLib {
 
+#undef max  // Prevent compiler error on next line if max is defined
 constexpr auto WAIT_INFINITE = std::chrono::milliseconds::max();
 
 template <class R>
