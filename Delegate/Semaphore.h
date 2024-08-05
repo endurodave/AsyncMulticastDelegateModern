@@ -6,8 +6,6 @@
 #include <mutex>
 #include <atomic>
 
-#define SEMA std::condition_variable
-
 namespace DelegateLib {
 
 /// @brief A semaphore wrapper class. 
@@ -30,7 +28,7 @@ private:
 	Semaphore(const Semaphore&) = delete;
 	Semaphore& operator=(const Semaphore&) = delete;
 
-	SEMA m_sema;
+	std::condition_variable m_sema;
 	std::mutex m_lock;
 	bool m_signaled = false;
 };
