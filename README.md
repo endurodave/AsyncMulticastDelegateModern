@@ -357,21 +357,19 @@ cout << "Asynchronous lambda result: " << valAsyncResult << endl;
 
 <p>The delegate library contains numerous classes. A single include <em>DelegateLib.h</em> provides access to all delegate library features. The library is wrapped within a <code>DelegateLib </code>namespace. Included unit tests help ensure a robust implementation. The table below shows the delegate class hierarchy.</p>
 
-<ul class="class">
-	<li><code>DelegateBase</code></li>
-	<li><code>Delegate<></code></li>
-	<li><code>DelegateFree<></code></li>
-	<li><code>DelegateFreeAsync<></code></li>
-	<li><code>DelegateFreeAsyncWaitBase<></code></li>
-	<li><code>DelegateFreeAsyncWait<></code></li>
-	<li><code>DelegateMember<></code></li>
-	<li><code>DelegateMemberAsync<></code></li>
-	<li><code>DelegateMemberAsyncWaitBase<></code></li>
-	<li><code>DelegateMemberAsyncWait<></code></li>
-	<li><code>DelegateMemberSp<></code></li>
-	<li><code>DelegateMemberSpAsync<></code></li>
-</ul>
 
+```cpp
+DelegateBase
+    Delegate<>
+        DelegateFree<>
+            DelegateFreeAsync<>
+                DelegateFreeAsyncWait<>
+        DelegateMember<>
+            DelegateMemberAsync<>
+                DelegateMemberAsyncWait<>
+        DelegateMemberSp<>
+            DelegateMemberAsyncSp<>
+``` 
 <p><code>DelegateBase</code> is a non-template, abstract base class common to all delegate instances. Comparison operators and a <code>Clone()</code> method define the interface.</p>
 
 ```cpp
