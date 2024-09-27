@@ -846,12 +846,11 @@ void WorkerThread::Process()
 
 <p>Delegate containers store one or more delegates. The delegate container hierarchy is shown below:</p>
 
-<ul class="class">
-	<li><code>MulticastDelegateBase</code></li>
-	<li><code>MulticastDelegate<></code></li>
-	<li><code>MulticastDelegateSafe<></code></li>
-	<li><code>SinglecastDelegate<></code></li>
-</ul>
+```cpp
+MulticastDelegate<>
+    MulticastDelegateSafe<>
+SinglecastDelegate<>
+```
 
 <p><code>MulticastDelegate<></code> provides the function <code>operator()</code> to sequentially invoke each delegate within the list.</p>
 
