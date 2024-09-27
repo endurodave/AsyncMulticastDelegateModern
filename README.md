@@ -1235,7 +1235,7 @@ singlecastContainer = 0;
 ```cpp
 if (myDelegate)
       myDelegate(123)
-    ```
+```
 
 <p>Use <code>IsSuccess()</code> on blocking delegates before using the return value or outgoing arguments.</p>
 
