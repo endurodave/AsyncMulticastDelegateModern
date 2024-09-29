@@ -240,7 +240,9 @@ int main(void)
     timer.Start(std::chrono::milliseconds(250));
 
 	// Run all unit tests (uncomment to run unit tests)
+#ifdef DELEGATE_UNIT_TESTS
 	DelegateUnitTests();
+#endif
 
     // Create a delegate bound to a free function then invoke
     DelegateFree<void(int)> delegateFree = MakeDelegate(&FreeFuncInt);
