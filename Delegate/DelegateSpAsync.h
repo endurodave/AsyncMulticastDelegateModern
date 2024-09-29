@@ -13,28 +13,28 @@
 namespace DelegateLib {
 
 template <class C, class R>
-struct DelegateMemberAsyncSp; // Not defined
+struct DelegateMemberSpAsync; // Not defined
 
 /// @brief The DelegateMemberAsyncSp delegate implemenation asynchronously binds and 
 /// and invokes class instance member functions. The std::shared_ptr<TClass> is used in 
 /// lieu of a raw TClass* pointer. 
 template <class TClass, class... Args>
-class DelegateMemberAsyncSp<TClass, void(Args...)> : public DelegateMemberSp<TClass, void(Args...)>, public IDelegateInvoker {
+class DelegateMemberSpAsync<TClass, void(Args...)> : public DelegateMemberSp<TClass, void(Args...)>, public IDelegateInvoker {
 public:
     typedef std::shared_ptr<TClass> ObjectPtr;
     typedef void (TClass::*MemberFunc)(Args...);
     typedef void (TClass::*ConstMemberFunc)(Args...) const;
-    using ClassType = DelegateMemberAsyncSp<TClass, void(Args...)>;
+    using ClassType = DelegateMemberSpAsync<TClass, void(Args...)>;
     using BaseType = DelegateMemberSp<TClass, void(Args...)>;
 
     // Contructors take a class instance, member function, and callback thread
-    DelegateMemberAsyncSp(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
+    DelegateMemberSpAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncSp(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
+    DelegateMemberSpAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncSp() = delete;
+    DelegateMemberSpAsync() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
@@ -106,13 +106,13 @@ private:
 };
 
 template <class TClass, class... Args>
-DelegateMemberAsyncSp<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args), DelegateThread& thread) {
-    return DelegateMemberAsyncSp<TClass, void(Args...)>(object, func, thread);
+DelegateMemberSpAsync<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args), DelegateThread& thread) {
+    return DelegateMemberSpAsync<TClass, void(Args...)>(object, func, thread);
 }
 
 template <class TClass, class... Args>
-DelegateMemberAsyncSp<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args) const, DelegateThread& thread) {
-    return DelegateMemberAsyncSp<TClass, void(Args...)>(object, func, thread);
+DelegateMemberSpAsync<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args) const, DelegateThread& thread) {
+    return DelegateMemberSpAsync<TClass, void(Args...)>(object, func, thread);
 }
 
 }

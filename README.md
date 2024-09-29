@@ -368,7 +368,7 @@ DelegateBase
             DelegateMemberAsync<>
                 DelegateMemberAsyncWait<>
         DelegateMemberSp<>
-            DelegateMemberAsyncSp<>
+            DelegateMemberSpAsync<>
 ``` 
 <p><code>DelegateBase</code> is a non-template, abstract base class common to all delegate instances. Comparison operators and a <code>Clone()</code> method define the interface.</p>
 
