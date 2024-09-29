@@ -42,7 +42,8 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
     <li><strong>Lambda Support</strong> - bind and invoke lambda functions asynchronously using delegates.</li>
 	<li><strong>Automatic Heap Handling</strong> &ndash; automatically copy argument data to the heap for safe transport through a message queue</li>
 	<li><strong>Any OS</strong> &ndash; easy porting to any OS. C++11 <code>std::thread</code> port included</li>
-	<li><strong>Visual Studio and Eclipse</strong> - VC++ and GCC projects included</li>
+    <li><strong>32/64-bit</strong> - Support for 32 and 64-bit projects.</li>
+	<li><strong>CMake Build</strong> - CMake supports most toolchains</li>
 	<li><strong>Unit Tests</strong> - extensive unit testing of the delegate library included</li>
 	<li><strong>No External Libraries</strong> &ndash; delegate does not rely upon external libraries</li>
 	<li><strong>Ease of Use</strong> &ndash; function signature template arguments (e.g., <code>MulticastDelegate<void(TestStruct*)></code>)</li>
@@ -59,6 +60,24 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 <p>The problem with callbacks on a multithreaded system, whether it be a delegate-based or function pointer based, is that the callback occurs synchronously. Care must be taken that a callback from another thread of control is not invoked on code that isn't thread-safe. Multithreaded application development is hard. It 's hard for the original designer; it 's hard because engineers of various skill levels must maintain the code; it 's hard because bugs manifest themselves in difficult ways. Ideally, an architectural solution helps to minimize errors and eases application development.</p>
 
 <p>This C++ delegate implementation is full featured and allows calling any function, even instance member functions, with any arguments either synchronously or asynchronously. The delegate library makes binding to and invoking any function a snap.</p>
+
+<h2>Project Build</h2>
+
+CMake (cmake.com) is used to create the build files. Windows, Linux and many other toolchains are supported. Example console CMake commands: 
+
+<h3>Window Visual Studio</h3>
+
+cmake -G "Visual Studio 17 2022" -A Win32 -B ../AsyncMulticastDelegateModernBuild -S .
+
+cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S .
+
+cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON
+
+<h3>Linux Make</h3>
+
+cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S .
+
+cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON
 
 <h2>Using the Code</h2>
 
