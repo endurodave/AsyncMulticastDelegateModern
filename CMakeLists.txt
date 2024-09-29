@@ -1,13 +1,13 @@
 # Example CMake command line to create project build files:
 #
 # *** Windows ***
-# cmake -G "Visual Studio 17 2022" -A x64 .
-# cmake -G "Visual Studio 17 2022" -A Win32 .
-# cmake -G "Visual Studio 17 2022" -A x64 . -DENABLE_UNIT_TESTS=ON
+# cmake -G "Visual Studio 17 2022" -A Win32 -B ../AsyncMulticastDelegateModernBuild -S .
+# cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S .
+# cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON
 #
 # *** Linux ***
-# cmake -G "Unix Makefiles" .
-# cmake -G "Unix Makefiles" . -DENABLE_UNIT_TESTS=ON
+# cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S .
+# cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON
 
 # Specify the minimum CMake version required
 cmake_minimum_required(VERSION 3.10)
@@ -34,12 +34,7 @@ add_executable(DelegateApp ${SOURCES})
 
 # Define the DELEGATE_UNIT_TEST macro for the DelegateApp target
 if (ENABLE_UNIT_TESTS)
-    target_compile_definitions(DelegateApp PRIVATE DELEGATE_UNIT_TESTS)
-endif()
-
-# Add /bigobj flag for MSVC and ENABLE_UNIT_TESTS because unit tests are large
-if (MSVC AND ENABLE_UNIT_TESTS)
-    target_compile_options(DelegateApp PRIVATE /bigobj)
+    add_compile_definitions(DELEGATE_UNIT_TESTS)
 endif()
 
 # Add subdirectories to build
