@@ -70,7 +70,7 @@ A simple publish/subscribe asynchronous delegate example.
 Typically a delegate is inserted into a delegate container. <code>AlarmCd</code> is a delegate container. 
 
 <figure>
-    <img src="Figure1.jpg" alt="Figure 1" style="width:50%;">
+    <img src="Figure1.jpg" alt="Figure 1" style="width:75%;">
     <figcaption>Figure 1: AlarmCb Delegate Container</figcaption>
 </figure>
 
@@ -94,7 +94,7 @@ void NotifyAlarmSubscribers(int alarmId, const string& note)
 <p>Typically a subscriber registers with a delegate container instance to receive callbacks, either synchronously or asynchronously.</p>
 
 <figure>
-    <img src="Figure2.jpg" alt="Figure 2" style="width:65%;">
+    <img src="Figure2.jpg" alt="Figure 2" style="width:75%;">
     <figcaption>Figure 2: Insert into AlarmCb Delegate Container</figcaption>
 </figure>
 
