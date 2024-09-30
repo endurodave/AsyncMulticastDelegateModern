@@ -115,13 +115,13 @@ class AlarmSub
     void AlarmSub()
     {
         // Register to receive callbacks on workerThread1
-        AlarmCb += MakeDelegate(this, &Alarm::HandleAlarmCb, workerThread1);
+        AlarmCb += MakeDelegate(this, &AlarmSub::HandleAlarmCb, workerThread1);
     }
 
     void ~AlarmSub()
     {
         // Unregister from callbacks
-        AlarmCb -= MakeDelegate(this, &Alarm::HandleAlarmCb, workerThread1);
+        AlarmCb -= MakeDelegate(this, &AlarmSub::HandleAlarmCb, workerThread1);
     }
 
     void HandleAlarmCb(int alarmId, const string& note)
