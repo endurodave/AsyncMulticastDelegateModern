@@ -2,7 +2,7 @@
 #define _DELEGATE_SP_ASYNC_H
 
 // DelegateSpAsync.h
-// @see https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cplusplus
+// @see https://github.com/endurodave/AsyncMulticastDelegateModern
 // David Lafreniere, Aug 2020.
 
 

@@ -18,9 +18,7 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 
 <p>This article documents a modern C++ implementation of asynchronous delegates. The library implements anonymous synchronous and asynchronous function callbacks. The target function is invoked with all arguments on the registrar 's desired thread of control.</p>
 
-<p>The previous article I wrote entitled "<a href="https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus">Asynchronous Multicast Delegates in C++</a>" built under C++03. This "modern" version uses C++17 features. Variadic templates and template metaprogramming improve library usability and significantly reduces the source code line count. While the basic idea between the articles is similar, this new version is a complete re-write.</p>
-
-<p>I've created four versions of the "asynchronous callback" idea; three C++ versions and one C version. See the <strong>References</strong> section at the end of the article for links to the other implementations.</p>
+<p>The previous article I wrote entitled "<a href="https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus">Asynchronous Multicast Delegates in C++</a>" built under C++03. This "modern" version uses C++17 features. Variadic templates and template metaprogramming improve library usability and significantly reduces the source code line count. While the basic idea between the articles is similar, this new version is a complete rewrite.</p>
 
 <h2>Introduction</h2>
 
@@ -77,7 +75,7 @@ Typically a delegate is inserted into a delegate container. <code>AlarmCd</code>
 <p></p>
 
 1. <code>MulticastDelegateSafe</code> - the delegate container type.
-2. <code>void(int, const string&)</code> - the function signature accepted by the delegate container. Any function matching can be inserted, such as class a member, static or lambda function.
+2. <code>void(int, const string&)</code> - the function signature accepted by the delegate container. Any function matching can be inserted, such as a class member, static or lambda function.
 3. <code>AlarmCb</code> - the delegate container name. 
 
 <p>Invoke delegate container to notify subscribers.</p>
@@ -105,9 +103,9 @@ void NotifyAlarmSubscribers(int alarmId, const string& note)
 1. <code>AlarmCb</code> - the publisher delegate container instance.
 2. <code>+=</code> - add a function target to the container. 
 3. <code>MakeDelegate</code> - creates a delegate instance.
-4. <code>&alarmSub</code> - an object pointer.
-5. <code>AlarmSub::MemberAlarmCb</code> - a pointer to a callback member function.
-6. <code>workerThread1</code> - the thread the callback will be invoked on. Adding a thread argument changes the callback from synchronous to asynchronous.
+4. <code>&alarmSub</code> - the subscriber object pointer.
+5. <code>&AlarmSub::MemberAlarmCb</code> - the subscriber callback member function.
+6. <code>workerThread1</code> - the thread the callback will be invoked on. Adding a thread argument changes the callback type from synchronous to asynchronous.
 
 <p>Create a function conforming to the delegate signature. Insert a callable functions into the delegate container.</p>
 
@@ -128,30 +126,44 @@ class AlarmSub
 
     void HandleAlarmCb(int alarmId, const string& note)
     {
-        // Handle callback here called on workerThread1
+        // Handle callback here. Called on workerThread1 context.
     }
 }
 ```
 
-<p>This is a simple example. Many other usage patterns exist including creating asynchronous API's and more.</p>
+<p>This is a simple example. Many other usage patterns exist including asynchronous API's, blocking delegates with a timeout, and more.</p>
 
 <h2>Project Build</h2>
 
-CMake (cmake.com) is used to create the build files. Windows, Linux and many other toolchains are supported. Example console CMake commands: 
+<a href="https://www.cmake.com">CMake</a> is used to create the build files. CMake is free and open-source software. Windows, Linux and other toolchains are supported. Example CMake console commands executed inside the project root directory: 
 
 <h3>Windows Visual Studio</h3>
 
-cmake -G "Visual Studio 17 2022" -A Win32 -B ../AsyncMulticastDelegateModernBuild -S .
+<code>cmake -G "Visual Studio 17 2022" -A Win32 -B ../AsyncMulticastDelegateModernBuild -S .</code>
 
-cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S .
+<code>cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S .</code>
 
-cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON
+<code>cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON</code>
+
+After executed, open the Visual Studio project from within the <code>AsyncMulticastDelegateModernBuild</code> directory.
+
+<figure>
+    <img src="Figure3.jpg" alt="Figure 3" style="width:100%;">
+    <figcaption>Figure 3: Visual Studio Build</figcaption>
+</figure>
 
 <h3>Linux Make</h3>
 
-cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S .
+<code>cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S .</code>
 
-cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON
+<code>cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON</code>
+
+After executed, build the software from within the AsyncMulticastDelegateModernBuild directory using the command <code>make</code>. Run the console app using <code>./DelegateApp</code>.
+
+<figure>
+    <img src="Figure4.jpg" alt="Figure 4" style="width:70%;">
+    <figcaption>Figure 4: Linux Makefile Build</figcaption>
+</figure>
 
 <h2>Using the Code</h2>
 

@@ -2,7 +2,7 @@
 #define _DELEGATE_H
 
 // Delegate.h
-// @see https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cplusplus
+// @see https://github.com/endurodave/AsyncMulticastDelegateModern
 // David Lafreniere, Aug 2020.
 
 #include <functional>

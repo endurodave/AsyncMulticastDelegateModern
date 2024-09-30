@@ -9,7 +9,7 @@
 #include "Timer.h"
 
 // main.cpp
-// @see https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cplusplus
+// @see https://github.com/endurodave/AsyncMulticastDelegateModern
 // David Lafreniere, Aug 2020.
 
 #if 0 // Not reliable

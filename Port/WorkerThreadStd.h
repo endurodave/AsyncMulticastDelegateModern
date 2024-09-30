@@ -1,7 +1,7 @@
 #ifndef _THREAD_STD_H
 #define _THREAD_STD_H
 
-// @see https://www.codeproject.com/Articles/1169105/Cplusplus-std-thread-Event-Loop-with-Message-Queue
+// @see https://github.com/endurodave/StdWorkerThread
 // David Lafreniere, Feb 2017.
 
 #include "DelegateOpt.h"
