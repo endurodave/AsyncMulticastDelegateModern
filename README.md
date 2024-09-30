@@ -135,7 +135,7 @@ class AlarmSub
 
 <h2>Project Build</h2>
 
-<a href="https://www.cmake.com">CMake</a> is used to create the build files. CMake is free and open-source software. Windows, Linux and other toolchains are supported. Example CMake console commands executed inside the project root directory: 
+<a href="https://www.cmake.org">CMake</a> is used to create the build files. CMake is free and open-source software. Windows, Linux and other toolchains are supported. Example CMake console commands executed inside the project root directory: 
 
 <h3>Windows Visual Studio</h3>
 
