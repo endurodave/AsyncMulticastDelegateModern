@@ -41,7 +41,7 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 	<li><strong>Automatic Heap Handling</strong> &ndash; automatically copy argument data to the heap for safe transport through a message queue</li>
 	<li><strong>Any OS</strong> &ndash; easy porting to any OS. C++11 <code>std::thread</code> port included</li>
     <li><strong>32/64-bit</strong> - Support for 32 and 64-bit projects.</li>
-	<li><strong>CMake Build</strong> - CMake supports most toolchains</li>
+	<li><strong>CMake Build</strong> - CMake supports most toolchains including Windows and Linux.</li>
 	<li><strong>Unit Tests</strong> - extensive unit testing of the delegate library included</li>
 	<li><strong>No External Libraries</strong> &ndash; delegate does not rely upon external libraries</li>
 	<li><strong>Ease of Use</strong> &ndash; function signature template arguments (e.g., <code>MulticastDelegate<void(TestStruct*)></code>)</li>
@@ -200,11 +200,11 @@ After executed, build the software from within the AsyncMulticastDelegateModernB
 
 <p><code>SinglecastDelegate<></code> is a delegate container accepting a single delegate. The advantage of the single cast version is that it is slightly smaller and allows a return type other than <code>void</code> in the bound function.</p>
 
-<p><code>MulticastDelegate<></code> is a delegate container implemented as a singly-linked list accepting multiple delegates. Only a delegate bound to a function with a <code>void</code> return type may be added to a multicast delegate container.</p>
+<p><code>MulticastDelegate<></code> is a delegate container accepting multiple delegates. Only a delegate bound to a function with a <code>void</code> return type may be added to a multicast delegate container.</p>
 
-<p><code>MultcastDelegateSafe<></code> is a thread-safe container implemented as a singly-linked list accepting multiple delegates. Always use the thread-safe version if multiple threads access the container instance.</p>
+<p><code>MultcastDelegateSafe<></code> is a thread-safe container accepting multiple delegates. Always use the thread-safe version if multiple threads access the container instance.</p>
 
-<p>Each container stores the delegate by value. This means the delegate is copied internally into either heap or fixed block memory depending on the mode. The user is not required to manually create a delegate on the heap before insertion into the container. Typically, the overloaded template function <code>MakeDelegate() </code>is used to create a delegate instance based upon the function arguments.</p>
+<p>Each container stores the delegate by value. This means the delegate is copied internally into the heap. The user is not required to manually create a delegate on the heap before insertion into the container. Typically, the overloaded template function <code>MakeDelegate()</code>is used to create a delegate instance based upon the function arguments.</p>
 
 <h3>Synchronous Delegates</h3>
 
