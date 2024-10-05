@@ -19,8 +19,8 @@ project(Delegate VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Collect all .cpp source files in the current directory
-file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/*.cpp")
+# Collect all .cpp and *.h source files in the current directory
+file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/*.cpp" "${CMAKE_SOURCE_DIR}/*.h")
 
 # Add subdirectories to include path
 include_directories( 
