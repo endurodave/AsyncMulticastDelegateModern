@@ -44,7 +44,7 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 	<li><strong>CMake Build</strong> - CMake supports most toolchains including Windows and Linux.</li>
 	<li><strong>Unit Tests</strong> - extensive unit testing of the delegate library included</li>
 	<li><strong>No External Libraries</strong> &ndash; delegate does not rely upon external libraries</li>
-	<li><strong>Ease of Use</strong> &ndash; function signature template arguments (e.g., <code>MulticastDelegate<void(TestStruct*)></code>)</li>
+	<li><strong>Ease of Use</strong> &ndash; function signature template arguments (e.g., <code>MulticastDelegate&lt;void(TestStruct*)&gt;</code>)</li>
 </ol>
 
 <p>The delegate implementation significantly eases multithreaded application development by executing the delegate function with all of the function arguments on the thread of control that you specify. The framework handles all of the low-level machinery to safely invoke any function signature on a target thread. Windows 2017 and Eclipse projects are included for easy experimentation.</p>
