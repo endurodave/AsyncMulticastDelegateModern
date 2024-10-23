@@ -20,6 +20,10 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 
 <p>The previous article I wrote entitled "<a href="https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus">Asynchronous Multicast Delegates in C++</a>" built under C++03. This "modern" version uses C++17 features. Variadic templates and template metaprogramming improve library usability and significantly reduces the source code line count. While the basic idea between the articles is similar, this new version is a complete rewrite.</p>
 
+<p>Related repositories:</p>
+
+* <a href="https://github.com/endurodave/IntegrationTestFramework">Integration Test Framework using Google Test and Delegates</a>
+
 <h2>Introduction</h2>
 
 <p>Nothing seems to garner the interest of C++ programmers more than delegates. In other languages, the delegate is a first-class feature so developers can use these well-understood constructs. In C++, however, a delegate is not natively available. Yet that doesn't stop us programmers from trying to emulate the ease with which a delegate stores and invokes any callable function.</p>
@@ -1436,6 +1440,7 @@ if (myDelegate)
 <h2>References</h2>
 
 <ul>
+	<li><strong><a href="https://github.com/endurodave/IntegrationTestFramework">Integration Test Framework using Google Test and Delegates</a></strong> - by David Lafreniere</li>
 	<li><strong><a href="https://github.com/endurodave/StateMachineWithModernDelegates">C++ State Machine with Asynchronous Multicast Delegates</a></strong> - by David Lafreniere</li>
     <li><strong><a href="https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus">Asynchronous Multicast Delegates in C++</a></strong> - by David Lafreniere</li>
 	<li><a href="https://www.codeproject.com/Articles/5262271/Remote-Procedure-Calls-using-Cplusplus-Delegates"><strong>Remote Procedure Calls using C++ Delegates</strong></a> - by David Lafreniere</li>
