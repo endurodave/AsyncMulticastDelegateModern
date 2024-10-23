@@ -3,6 +3,10 @@ A C++ standards compliant delegate library capable of targeting any callable fun
 
 Originally published on CodeProject at: <a href="https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cpluspl"><strong>Asynchronous Multicast Delegates in Modern C++</strong></a>
 
+<p>Related repositories:</p>
+
+* <a href="https://github.com/endurodave/IntegrationTestFramework">Integration Test Framework using Google Test and Delegates</a> - a multi-threaded C++ software integration test framework using Google Test and Delegate libraries.
+
 <h2>Preface</h2>
 
 <p>Asynchronous function invocation allows for easy movement of data between threads. The table below summarizes the various asynchronous function invocation implementations available in C and C++.</p>
@@ -19,10 +23,6 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 <p>This article documents a modern C++ implementation of asynchronous delegates. The library implements anonymous synchronous and asynchronous function callbacks. The target function is invoked with all arguments on the registrar 's desired thread of control.</p>
 
 <p>The previous article I wrote entitled "<a href="https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus">Asynchronous Multicast Delegates in C++</a>" built under C++03. This "modern" version uses C++17 features. Variadic templates and template metaprogramming improve library usability and significantly reduces the source code line count. While the basic idea between the articles is similar, this new version is a complete rewrite.</p>
-
-<p>Related repositories:</p>
-
-* <a href="https://github.com/endurodave/IntegrationTestFramework">Integration Test Framework using Google Test and Delegates</a>
 
 <h2>Introduction</h2>
 
