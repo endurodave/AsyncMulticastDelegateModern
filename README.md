@@ -5,6 +5,7 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 
 <p>Related repositories:</p>
 
+* <a href="https://github.com/endurodave/AsyncStateMachine">Asynchronous State Machine Design in C++</a> - an asynchronous C++ state machine implemented using an asynchronous delegate library..
 * <a href="https://github.com/endurodave/IntegrationTestFramework">Integration Test Framework using Google Test and Delegates</a> - a multi-threaded C++ software integration test framework using Google Test and Delegate libraries.
 
 <h2>Preface</h2>
