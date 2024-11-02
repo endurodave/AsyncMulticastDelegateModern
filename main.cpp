@@ -61,6 +61,8 @@ private:
 	}
 
 	int m_numberOfCallbacks;
+
+    XALLOCATOR
 };
 
 struct TestStruct
@@ -69,6 +71,8 @@ struct TestStruct
     TestStruct() { x = 0; }
     TestStruct(const TestStruct& d) { x = d.x; }
     ~TestStruct() {}
+
+    XALLOCATOR
 };
 
 struct TestStructNoCopy
@@ -173,6 +177,8 @@ public:
         t.x = 777;
         return t;
     }
+
+    XALLOCATOR
 };
 
 void TimerExpiredCb(void)

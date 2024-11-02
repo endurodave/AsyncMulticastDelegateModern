@@ -6,6 +6,7 @@
 // David Lafreniere, Aug 2020.
 
 #include <functional>
+#include "DelegateOpt.h"
 
 namespace DelegateLib {
 
@@ -24,6 +25,8 @@ public:
     /// @return A dynamic copy of this instance created with operator new. 
     /// @post The caller is responsible for deleting the clone instance. 
     virtual DelegateBase* Clone() const = 0;
+
+    XALLOCATOR
 };
 
 template <class R>

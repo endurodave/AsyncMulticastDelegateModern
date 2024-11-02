@@ -1,6 +1,9 @@
 #include "Semaphore.h"
 #include "Fault.h"
 
+// Fix compiler error on Windows
+#undef max
+
 namespace DelegateLib {
 
 //------------------------------------------------------------------------------

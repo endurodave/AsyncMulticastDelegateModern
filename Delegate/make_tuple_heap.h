@@ -5,6 +5,7 @@
 #include <list>
 #include <memory>
 #include <type_traits>
+#include "DelegateOpt.h"
 
 namespace DelegateLib 
 {
@@ -36,6 +37,8 @@ class heap_arg_deleter_base
 {
 public:
     virtual ~heap_arg_deleter_base() = default;
+
+    XALLOCATOR
 };
 
 /// @brief Frees heap memory for reference heap argument
@@ -83,7 +86,7 @@ private:
 
 /// @brief Append a pointer to pointer argument to the tuple
 template <typename Arg, typename... TupleElem>
-auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg** arg)
+auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg** arg)
 {
     Arg** heap_arg = nullptr;
     try 
@@ -108,7 +111,7 @@ auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, c
 
 /// @brief Append a pointer argument to the tuple
 template <typename Arg, typename... TupleElem>
-auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg* arg)
+auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg* arg)
 {
     Arg* heap_arg = nullptr;
     try
@@ -130,7 +133,7 @@ auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, c
 
 /// @brief Append a reference argument to the tuple
 template <typename Arg, typename... TupleElem>
-auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg& arg)
+auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg& arg)
 {
     Arg& heap_arg = *(new Arg(arg));
     try
@@ -151,7 +154,7 @@ auto tuple_append(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, c
 
 /// @brief Terminate the template metaprogramming argument loop
 template<typename... Ts>
-auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, std::tuple<Ts...> tup)
+auto make_tuple_heap(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, std::tuple<Ts...> tup)
 {
     return tup;
 }
@@ -162,7 +165,7 @@ auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs
 /// argument heap memory block that will be automatically deleted after the bound
 /// function is invoked on the target thread. 
 template<typename Arg1, typename... Args, typename... Ts>
-auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, std::tuple<Ts...> tup, Arg1 arg1, Args... args)
+auto make_tuple_heap(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, std::tuple<Ts...> tup, Arg1 arg1, Args... args)
 {
     static_assert(!(
         (is_shared_ptr<Arg1>::value && (std::is_lvalue_reference_v<Arg1> || std::is_pointer_v<Arg1>))),

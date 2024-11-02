@@ -6,7 +6,7 @@ using namespace std;
 
 std::mutex Timer::m_lock;
 bool Timer::m_timerStopped = false;
-list<Timer*> Timer::m_timers;
+xlist<Timer*> Timer::m_timers;
 
 //------------------------------------------------------------------------------
 // TimerDisabled

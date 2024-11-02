@@ -4,10 +4,12 @@
 # cmake -G "Visual Studio 17 2022" -A Win32 -B ../AsyncMulticastDelegateModernBuild -S .
 # cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S .
 # cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON
+# cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_ALLOCATOR=ON
 #
 # *** Linux ***
 # cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S .
 # cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON
+# cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_ALLOCATOR=ON
 
 # Specify the minimum CMake version required
 cmake_minimum_required(VERSION 3.10)
@@ -29,6 +31,12 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/Port
 )
 
+if (ENABLE_ALLOCATOR)
+include_directories( 
+    ${CMAKE_SOURCE_DIR}/Allocator
+)
+endif()
+
 # Add an executable target
 add_executable(DelegateApp ${SOURCES})
 
@@ -37,14 +45,28 @@ if (ENABLE_UNIT_TESTS)
     add_compile_definitions(DELEGATE_UNIT_TESTS)
 endif()
 
+if (ENABLE_ALLOCATOR)
+    add_compile_definitions(USE_ALLOCATOR)
+endif()
+
 # Add subdirectories to build
 add_subdirectory(Delegate)
 add_subdirectory(Examples)
 add_subdirectory(Port)
+
+if (ENABLE_ALLOCATOR)
+    add_subdirectory(Allocator)
+endif()
 
 target_link_libraries(DelegateApp PRIVATE 
     DelegateLib
     ExamplesLib
     PortLib
 )
+
+if (ENABLE_ALLOCATOR)
+    target_link_libraries(DelegateApp PRIVATE 
+        AllocatorLib
+)
+endif()
 

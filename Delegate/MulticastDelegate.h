@@ -62,7 +62,7 @@ private:
     MulticastDelegate& operator=(const MulticastDelegate&) = delete;
 
     /// List of registered delegates
-    std::list<Delegate<RetType(Args...)>*> m_delegates;
+    xlist<Delegate<RetType(Args...)>*> m_delegates;
 };
 
 }

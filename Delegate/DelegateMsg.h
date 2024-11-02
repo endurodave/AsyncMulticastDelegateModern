@@ -3,6 +3,7 @@
 
 #include "Fault.h"
 #include "DelegateInvoker.h"
+#include "DelegateOpt.h"
 #include "make_tuple_heap.h"
 #include <tuple>
 #include <list>
@@ -82,7 +83,7 @@ public:
 
 private:
     /// A list of heap allocated argument memory blocks
-    std::list<std::shared_ptr<heap_arg_deleter_base>> m_heapMem;
+    xlist<std::shared_ptr<heap_arg_deleter_base>> m_heapMem;
 
     /// An empty starting tuple
     std::tuple<> m_start;
