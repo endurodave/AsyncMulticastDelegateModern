@@ -37,6 +37,11 @@ A C++ standards compliant delegate library capable of targeting any callable fun
   - [SysDataNoLock Reinvoke Example](#sysdatanolock-reinvoke-example)
   - [SysDataNoLock Blocking Reinvoke Example](#sysdatanolock-blocking-reinvoke-example)
   - [Timer Example](#timer-example)
+- [Testing](#testing)
+  - [Unit Tests](#unit-tests)
+  - [Valgrind Memory Tests](#valgrind-memory-tests)
+    - [Heap Memory Test Results](#heap-memory-test-results)
+    - [Fixed Block Memory Allocator Test Results](#fixed-block-memory-allocator-test-results)
 - [Summary](#summary)
 - [Which Callback Implementation?](#which-callback-implementation)
   - [Asynchronous Multicast Callbacks in C](#asynchronous-multicast-callbacks-in-c)
@@ -1336,6 +1341,46 @@ public:
 ```cpp
 m_timer.Expired = MakeDelegate(&myClass, &MyClass::MyCallback, myThread);
 m_timer.Start(1000);
+```
+
+# Testing
+
+## Unit Tests
+
+Build the project with `ENABLE_UNIT_TESTS` build option to enable unit tests. See `CMakeLists.txt` for more build option information. 
+
+## Valgrind Memory Tests
+
+[Valgrind](https://valgrind.org/) dynamic storage allocation tests were performed using the heap and fixed block allocator builds. Valgrind is a programming tool for detecting memory leaks, memory errors, and profiling performance in applications, primarily for Linux-based systems. All tests run on Linux.
+
+### Heap Memory Test Results
+
+The delegate library Valgrind test results using the heap.
+
+```
+==1779805== HEAP SUMMARY:
+==1779805==     in use at exit: 0 bytes in 0 blocks
+==1779805==   total heap usage: 923,465 allocs, 923,465 frees, 50,733,258 bytes allocated
+==1779805== 
+==1779805== All heap blocks were freed -- no leaks are possible
+==1779805== 
+==1779805== For lists of detected and suppressed errors, rerun with: -s
+==1779805== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+```
+
+### Fixed Block Memory Allocator Test Results
+
+Test results with the `ENABLE_ALLOCATOR` fixed block allocator build option enabled. Notice the fixed block runtime uses 22MB verses 50MB for the heap build. Heap storage *recycling* mode was used by the fixed block allocator. See [stl_allocator](https://github.com/endurodave/stl_allocator) and [xallocator](https://github.com/endurodave/xallocator) for information about the memory allocators.
+
+```
+==1780037== HEAP SUMMARY:
+==1780037==     in use at exit: 0 bytes in 0 blocks
+==1780037==   total heap usage: 644,606 allocs, 644,606 frees, 22,091,451 bytes allocated
+==1780037== 
+==1780037== All heap blocks were freed -- no leaks are possible
+==1780037== 
+==1780037== For lists of detected and suppressed errors, rerun with: -s
+==1780037== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ```
 
 # Summary
