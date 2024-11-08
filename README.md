@@ -1345,6 +1345,8 @@ m_timer.Start(1000);
 
 # Testing
 
+The current master branch build passes all unit tests and Valgrind memory tests.
+
 ## Unit Tests
 
 Build the project with `ENABLE_UNIT_TESTS` build option to enable unit tests. See `CMakeLists.txt` for more build option information. 
