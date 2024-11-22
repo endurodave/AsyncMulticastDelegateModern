@@ -75,6 +75,7 @@ public:
         {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
+            delegate->m_invokerWaiting = true;
 
             // Create a new message instance 
             auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
@@ -86,6 +87,9 @@ public:
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
                 m_retVal = delegate->m_retVal;
+
+            const std::lock_guard<std::mutex> lock(m_lock);
+            delegate->m_invokerWaiting = false;
 
             if constexpr (std::is_void<RetType>::value == false)
             {
@@ -114,18 +118,22 @@ public:
 
     /// Called by the target thread to invoke the delegate function 
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
-        // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
-        if (delegateMsg == nullptr)
-            throw std::invalid_argument("Invalid DelegateMsg cast");
+        const std::lock_guard<std::mutex> lock(m_lock);
+        if (this->m_invokerWaiting)
+        {
+            // Typecast the base pointer to back to the templatized instance
+            auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+            if (delegateMsg == nullptr)
+                throw std::invalid_argument("Invalid DelegateMsg cast");
 
-        // Invoke the delegate function then signal the waiting thread
-        m_sync = true;
-        if constexpr(std::is_void<RetType>::value == true)
-            std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-        else
-            m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-        m_sema.Signal();
+            // Invoke the delegate function then signal the waiting thread
+            m_sync = true;
+            if constexpr (std::is_void<RetType>::value == true)
+                std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
+            else
+                m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
+            m_sema.Signal();
+        }
     }
 
     /// Returns true if asynchronous function successfully invoked on target thread
@@ -147,6 +155,8 @@ private:
     Semaphore m_sema;				        // Semaphore to signal waiting thread
     bool m_sync = false;                    // Set true when synchronous invocation is required
     std::any m_retVal;                      // Return value of the invoked function
+    bool m_invokerWaiting = false;          // True if caller thread is waiting for invoke complete
+    std::mutex m_lock;
 };
 
 template <class C, class R>
@@ -214,6 +224,7 @@ public:
         {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
+            delegate->m_invokerWaiting = true;
 
             // Create a new message instance 
             auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
@@ -225,6 +236,9 @@ public:
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
                 m_retVal = delegate->m_retVal;
+
+            const std::lock_guard<std::mutex> lock(m_lock);
+            delegate->m_invokerWaiting = false;
 
             if constexpr (std::is_void<RetType>::value == false)
             {
@@ -253,18 +267,22 @@ public:
 
     /// Called by the target thread to invoke the delegate function 
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
-        // Typecast the base pointer to back to the templatized instance
-        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
-        if (delegateMsg == nullptr)
-            throw std::invalid_argument("Invalid DelegateMsg cast");
+        const std::lock_guard<std::mutex> lock(m_lock);
+        if (this->m_invokerWaiting)
+        {
+            // Typecast the base pointer to back to the templatized instance
+            auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+            if (delegateMsg == nullptr)
+                throw std::invalid_argument("Invalid DelegateMsg cast");
 
-        // Invoke the delegate function then signal the waiting thread
-        m_sync = true;
-        if constexpr (std::is_void<RetType>::value == true)
-            std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-        else
-            m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-        m_sema.Signal();
+            // Invoke the delegate function then signal the waiting thread
+            m_sync = true;
+            if constexpr (std::is_void<RetType>::value == true)
+                std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
+            else
+                m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
+            m_sema.Signal();
+        }
     }
 
     /// Returns true if asynchronous function successfully invoked on target thread
@@ -286,6 +304,8 @@ private:
     Semaphore m_sema;				        // Semaphore to signal waiting thread
     bool m_sync = false;                    // Set true when synchronous invocation is required
     std::any m_retVal;                      // Return value of the invoked function
+    bool m_invokerWaiting = false;          // True if caller thread is waiting for invoke complete
+    std::mutex m_lock;
 };
 
 template <class TClass, class RetType, class... Args>

@@ -15,12 +15,12 @@ namespace DelegateLib {
 template <class R>
 struct DelegateFreeAsync; // Not defined
 
-template <class... Args> 
-class DelegateFreeAsync<void(Args...)> : public DelegateFree<void(Args...)>, public IDelegateInvoker {
+template <class RetType, class... Args>
+class DelegateFreeAsync<RetType(Args...)> : public DelegateFree<RetType(Args...)>, public IDelegateInvoker {
 public:
-    typedef void(*FreeFunc)(Args...);
-    using ClassType = DelegateFreeAsync<void(Args...)>;
-    using BaseType = DelegateFree<void(Args...)>;
+    typedef RetType(*FreeFunc)(Args...);
+    using ClassType = DelegateFreeAsync<RetType(Args...)>;
+    using BaseType = DelegateFree<RetType(Args...)>;
 
     DelegateFreeAsync(FreeFunc func, DelegateThread& thread) : BaseType(func), m_thread(thread) { Bind(func, thread); }
     DelegateFreeAsync() = delete;
@@ -43,9 +43,9 @@ public:
     }
 
     // Invoke delegate function asynchronously
-    virtual void operator()(Args... args) override {
+    virtual RetType operator()(Args... args) override {
         if (m_sync)
-            BaseType::operator()(args...);
+            return BaseType::operator()(args...);
         else
         {
             // Create a clone instance of this delegate 
@@ -58,6 +58,9 @@ public:
             // will be called by the target thread. 
             m_thread.DispatchDelegate(msg);
 
+            // Do not wait for return value from async function call
+            return RetType();
+
             // Check if any argument is a shared_ptr with wrong usage
             // std::shared_ptr reference arguments are not allowed with asynchronous delegates as the behavior is 
             // undefined. In other words:
@@ -67,6 +70,12 @@ public:
                 (std::disjunction_v<std::is_lvalue_reference<Args>, std::is_pointer<Args>> || ...)),
                 "std::shared_ptr reference argument not allowed");
         }
+    }
+
+    /// Invoke delegate function asynchronously
+    void AsyncInvoke(Args... args)
+    {
+        operator()(args...);   
     }
 
     // Called to invoke the delegate function on the target thread of control
@@ -90,14 +99,14 @@ private:
 template <class C, class R>
 struct DelegateMemberAsync; // Not defined
 
-template <class TClass, class... Args>
-class DelegateMemberAsync<TClass, void(Args...)> : public DelegateMember<TClass, void(Args...)>, public IDelegateInvoker {
+template <class TClass, class RetType, class... Args>
+class DelegateMemberAsync<TClass, RetType(Args...)> : public DelegateMember<TClass, RetType(Args...)>, public IDelegateInvoker {
 public:
     typedef TClass* ObjectPtr;
-    typedef void (TClass::*MemberFunc)(Args...);
-    typedef void (TClass::*ConstMemberFunc)(Args...) const;
-    using ClassType = DelegateMemberAsync<TClass, void(Args...)>;
-    using BaseType = DelegateMember<TClass, void(Args...)>;
+    typedef RetType (TClass::*MemberFunc)(Args...);
+    typedef RetType (TClass::*ConstMemberFunc)(Args...) const;
+    using ClassType = DelegateMemberAsync<TClass, RetType(Args...)>;
+    using BaseType = DelegateMember<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and callback thread
     DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
@@ -130,9 +139,9 @@ public:
     }
 
     /// Invoke delegate function asynchronously
-    virtual void operator()(Args... args) override {
+    virtual RetType operator()(Args... args) override {
         if (m_sync)
-            BaseType::operator()(args...);
+            return BaseType::operator()(args...);
         else
         {
             // Create a clone instance of this delegate 
@@ -145,6 +154,9 @@ public:
             // will be called by the target thread. 
             m_thread.DispatchDelegate(msg);
 
+            // Do not wait for return value from async function call
+            return RetType();
+
             // Check if any argument is a shared_ptr with wrong usage
             // std::shared_ptr reference arguments are not allowed with asynchronous delegates as the behavior is 
             // undefined. In other words:
@@ -154,6 +166,12 @@ public:
                 (std::disjunction_v<std::is_lvalue_reference<Args>, std::is_pointer<Args>> || ...)),
                 "std::shared_ptr reference argument not allowed");
         }
+    }
+
+    /// Invoke delegate function asynchronously
+    void AsyncInvoke(Args... args)
+    {
+        operator()(args...);
     }
 
     /// Called by the target thread to invoke the delegate function 
@@ -175,19 +193,19 @@ private:
     bool m_sync = false;
 };
 
-template <class TClass, class... Args>
-DelegateMemberAsync<TClass, void(Args...)> MakeDelegate(TClass* object, void(TClass::*func)(Args... args), DelegateThread& thread) {
-    return DelegateMemberAsync<TClass, void(Args...)>(object, func, thread);
+template <class TClass, class RetType, class... Args>
+DelegateMemberAsync<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args), DelegateThread& thread) {
+    return DelegateMemberAsync<TClass, RetType(Args...)>(object, func, thread);
 }
 
-template <class TClass, class... Args>
-DelegateMemberAsync<TClass, void(Args...)> MakeDelegate(TClass* object, void(TClass::*func)(Args... args) const, DelegateThread& thread) {
-    return DelegateMemberAsync<TClass, void(Args...)>(object, func, thread);
+template <class TClass, class RetType, class... Args>
+DelegateMemberAsync<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args) const, DelegateThread& thread) {
+    return DelegateMemberAsync<TClass, RetType(Args...)>(object, func, thread);
 }
 
-template <class... Args>
-DelegateFreeAsync<void(Args...)> MakeDelegate(void(*func)(Args... args), DelegateThread& thread) {
-    return DelegateFreeAsync<void(Args...)>(func, thread);
+template <class RetType, class... Args>
+DelegateFreeAsync<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args), DelegateThread& thread) {
+    return DelegateFreeAsync<RetType(Args...)>(func, thread);
 }
 
 }

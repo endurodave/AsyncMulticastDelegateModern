@@ -254,6 +254,9 @@ int main(void)
     DelegateFree<void(int)> delegateFree = MakeDelegate(&FreeFuncInt);
     delegateFree(123);
 
+    auto delegateFreeTemp = MakeDelegate(&FreeFuncInt, workerThread1, std::chrono::milliseconds::max());
+    delegateFreeTemp(123);
+
     // Create a delegate bound to a member function then invoke
     DelegateMember<TestClass, void(TestStruct*)> delegateMember = MakeDelegate(&testClass, &TestClass::MemberFunc);
     delegateMember(&testStruct);
@@ -378,10 +381,13 @@ int main(void)
     else
         cout << "Asynchronous call to MemberFuncStdStringRetInt failed to invoke within specified timeout!";
 
-    // Invoke function asynchronously with user defined return type
-    auto testStructRet = MakeDelegate(&testClass, &TestClass::TestFuncUserTypeRet, workerThread1, WAIT_INFINITE).AsyncInvoke();
+    // Invoke function asynchronously non-blocking. Does NOT wait for return value; Return is default value. 
+    MakeDelegate(&testClass, &TestClass::TestFuncUserTypeRet, workerThread1).AsyncInvoke();
 
-    // Invoke functions asynchronously with no return value
+    // Invoke function asynchronously blocking with user defined return type
+    auto testStructRet2 = MakeDelegate(&testClass, &TestClass::TestFuncUserTypeRet, workerThread1, WAIT_INFINITE).AsyncInvoke();
+
+    // Invoke functions asynchronously blocking with no return value
     auto noRetValRet = MakeDelegate(&testClass, &TestClass::TestFuncNoRet, workerThread1, std::chrono::milliseconds(10)).AsyncInvoke();
     auto noRetValRet2 = MakeDelegate(&FreeFuncInt, workerThread1, std::chrono::milliseconds(10)).AsyncInvoke(123);
     if (noRetValRet.has_value() && noRetValRet2.has_value())
