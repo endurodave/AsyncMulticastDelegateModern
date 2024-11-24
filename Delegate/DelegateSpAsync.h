@@ -18,14 +18,14 @@ struct DelegateMemberSpAsync; // Not defined
 /// @brief The DelegateMemberAsyncSp delegate implemenation asynchronously binds and 
 /// and invokes class instance member functions. The std::shared_ptr<TClass> is used in 
 /// lieu of a raw TClass* pointer. 
-template <class TClass, class... Args>
-class DelegateMemberSpAsync<TClass, void(Args...)> : public DelegateMemberSp<TClass, void(Args...)>, public IDelegateInvoker {
+template <class RetType, class TClass, class... Args>
+class DelegateMemberSpAsync<TClass, RetType(Args...)> : public DelegateMemberSp<TClass, RetType(Args...)>, public IDelegateInvoker {
 public:
     typedef std::shared_ptr<TClass> ObjectPtr;
-    typedef void (TClass::*MemberFunc)(Args...);
-    typedef void (TClass::*ConstMemberFunc)(Args...) const;
-    using ClassType = DelegateMemberSpAsync<TClass, void(Args...)>;
-    using BaseType = DelegateMemberSp<TClass, void(Args...)>;
+    typedef RetType (TClass::*MemberFunc)(Args...);
+    typedef RetType (TClass::*ConstMemberFunc)(Args...) const;
+    using ClassType = DelegateMemberSpAsync<TClass, RetType(Args...)>;
+    using BaseType = DelegateMemberSp<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and callback thread
     DelegateMemberSpAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
@@ -60,9 +60,9 @@ public:
     }
 
     /// Invoke delegate function asynchronously
-    virtual void operator()(Args... args) override {
+    virtual RetType operator()(Args... args) override {
         if (m_sync)
-            BaseType::operator()(args...);
+            return BaseType::operator()(args...);
         else
         {
             // Create a clone instance of this delegate 
@@ -74,6 +74,9 @@ public:
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
             m_thread.DispatchDelegate(msg);
+
+            // Do not wait for return value from async function call
+            return RetType();
 
             // Check if any argument is a shared_ptr with wrong usage
             // std::shared_ptr reference arguments are not allowed with asynchronous delegates as the behavior is 
@@ -111,14 +114,14 @@ private:
     bool m_sync = false;
 };
 
-template <class TClass, class... Args>
-DelegateMemberSpAsync<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args), DelegateThread& thread) {
-    return DelegateMemberSpAsync<TClass, void(Args...)>(object, func, thread);
+template <class TClass, class RetVal, class... Args>
+DelegateMemberSpAsync<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::*func)(Args... args), DelegateThread& thread) {
+    return DelegateMemberSpAsync<TClass, RetVal(Args...)>(object, func, thread);
 }
 
-template <class TClass, class... Args>
-DelegateMemberSpAsync<TClass, void(Args...)> MakeDelegate(std::shared_ptr<TClass> object, void(TClass::*func)(Args... args) const, DelegateThread& thread) {
-    return DelegateMemberSpAsync<TClass, void(Args...)>(object, func, thread);
+template <class TClass, class RetVal, class... Args>
+DelegateMemberSpAsync<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::*func)(Args... args) const, DelegateThread& thread) {
+    return DelegateMemberSpAsync<TClass, RetVal(Args...)>(object, func, thread);
 }
 
 }
