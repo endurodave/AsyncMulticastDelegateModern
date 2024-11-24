@@ -254,7 +254,7 @@ After executed, build the software from within the AsyncMulticastDelegateModernB
 
 <p><code>DelegateFreeAsync<></code>, <code>DelegateMemberAsync<></code> and <code>DelegateMemberSpAsync<></code> operate in the same way as their synchronous counterparts; except these versions offer non-blocking asynchronous function execution on a specified thread of control.</p>
 
-<p><code>DelegateFreeAsyncWait<></code> and <code>DelegateMemberAsyncWait<></code> provides blocking asynchronous function execution on a target thread with a caller supplied maximum wait timeout.</p>
+<p><code>DelegateFreeAsyncWait<></code> and <code>DelegateMemberAsyncWait<></code> provides blocking asynchronous function execution on a target thread with a caller supplied maximum wait timeout. The destination thread will not invoke the target function if the timeout expires.</p>
 
 <p>The three main delegate container classes are:</p>
 
@@ -264,9 +264,9 @@ After executed, build the software from within the AsyncMulticastDelegateModernB
 	<li><code>MulticastDelegateSafe<></code></li>
 </ul>
 
-<p><code>SinglecastDelegate<></code> is a delegate container accepting a single delegate. The advantage of the single cast version is that it is slightly smaller and allows a return type other than <code>void</code> in the bound function.</p>
+<p><code>SinglecastDelegate<></code> is a delegate container accepting a single delegate. The advantage of the single cast version is that it is slightly smaller and allows a return value.</p>
 
-<p><code>MulticastDelegate<></code> is a delegate container accepting multiple delegates. Only a delegate bound to a function with a <code>void</code> return type may be added to a multicast delegate container.</p>
+<p><code>MulticastDelegate<></code> is a delegate container accepting multiple delegates.</p>
 
 <p><code>MultcastDelegateSafe<></code> is a thread-safe container accepting multiple delegates. Always use the thread-safe version if multiple threads access the container instance.</p>
 

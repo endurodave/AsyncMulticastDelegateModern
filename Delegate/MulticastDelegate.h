@@ -10,10 +10,9 @@ namespace DelegateLib {
 template <class R>
 struct MulticastDelegate; // Not defined
 
-/// @brief Not thread-safe multicast delegate container class. The class has a linked  
-/// list of Delegate<> instances. When invoked, each Delegate instance within the invocation 
-/// list is called. MulticastDelegate<> does not support return values. A void return  
-/// must always be used.
+/// @brief Not thread-safe multicast delegate container class. The class has a list of 
+/// Delegate<> instances. When invoked, each Delegate instance within the invocation 
+/// list is called. 
 template<class RetType, class... Args>
 class MulticastDelegate<RetType(Args...)>
 {
@@ -21,7 +20,7 @@ public:
     MulticastDelegate() = default;
     ~MulticastDelegate() { Clear(); }
 
-    RetType operator()(Args... args) {
+    void operator()(Args... args) {
         for (Delegate<RetType(Args...)>* delegate : m_delegates)
             (*delegate)(args...);	// Invoke delegate callback
     }
