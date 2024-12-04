@@ -1910,6 +1910,8 @@ void DelegateMemberAsyncWaitTests()
 	ASSERT_TRUE(MemberFunc0MulticastDelegate);
 	if (MemberFunc0MulticastDelegate)
 		MemberFunc0MulticastDelegate();
+	MemberFunc0MulticastDelegate -= MakeDelegate(&testClass0, &TestClass0::MemberFunc0, testThread, WAIT_INFINITE);
+	ASSERT_TRUE(MemberFunc0MulticastDelegate.Size() == 1);
 	MemberFunc0MulticastDelegate.Clear();
 	ASSERT_TRUE(!MemberFunc0MulticastDelegate);
 
@@ -1953,6 +1955,7 @@ void DelegateMemberAsyncWaitTests()
 	ASSERT_TRUE(FreeFuncInt1MulticastDelegate);
 	FreeFuncInt1MulticastDelegate(TEST_INT);
 	FreeFuncInt1MulticastDelegate -= MakeDelegate(&FreeFuncInt1, testThread, WAIT_INFINITE);
+	ASSERT_TRUE(FreeFuncInt1MulticastDelegate.Size() == 1);
 	ASSERT_TRUE(FreeFuncInt1MulticastDelegate);
 	FreeFuncInt1MulticastDelegate.Clear();
 	ASSERT_TRUE(!FreeFuncInt1MulticastDelegate);

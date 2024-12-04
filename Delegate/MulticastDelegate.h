@@ -31,7 +31,7 @@ public:
     void operator-=(const Delegate<RetType(Args...)>& delegate) { 
         for (auto it = m_delegates.begin(); it != m_delegates.end(); ++it) 
         {
-            if (*((DelegateBase*)&delegate) == *((DelegateBase*)(*it)))
+            if (delegate == **it)
             {
                 delete (*it);
                 m_delegates.erase(it);
@@ -52,6 +52,8 @@ public:
             it = m_delegates.erase(it);
         }
     }
+
+    std::size_t Size() const { return m_delegates.size(); }
 
     explicit operator bool() const { return !Empty(); }
 

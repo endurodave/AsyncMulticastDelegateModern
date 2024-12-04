@@ -8,6 +8,5 @@
 #include "SinglecastDelegate.h"
 #include "DelegateAsync.h"
 #include "DelegateAsyncWait.h"
-#include "DelegateSpAsync.h"
 
 #endif
