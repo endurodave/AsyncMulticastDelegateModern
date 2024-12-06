@@ -63,9 +63,7 @@ public:
 
     virtual ClassType* Clone() const override { return new ClassType(*this); }
 
-    void Assign(const ClassType& rhs) {
-        Bind(rhs.m_func);
-    }
+    void Assign(const ClassType& rhs) { m_func = rhs.m_func; }
 
     // Invoke the bound delegate function. 
     virtual RetType operator()(Args... args) override {
@@ -125,7 +123,8 @@ public:
     virtual ClassType* Clone() const override { return new ClassType(*this); }
 
     void Assign(const ClassType& rhs) {
-        Bind(rhs.m_object, rhs.m_func);
+        m_object = rhs.m_object;
+        m_func = rhs.m_func;
     }
 
     // Invoke the bound delegate function
@@ -190,7 +189,8 @@ public:
     virtual ClassType* Clone() const override { return new ClassType(*this); }
 
     void Assign(const ClassType& rhs) {
-        BaseType::Assign(rhs);
+        m_object = rhs.m_object;
+        m_func = rhs.m_func;
     }
 
     // Invoke the bound delegate function

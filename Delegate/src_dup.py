@@ -1,11 +1,28 @@
 # Script to keep common sections of the repetitive code and data 
 # synchronized within the same file. The code between the first 
 # pare of a tags within a source code file is automatically duplicated 
-# to all other tag locations.
+# to all other tag locations. For instance, change MyClass1::Func() and 
+# classes below will be updated to match.
 #
-# Tag types: 
+#
+# class MyClass1 {
+# public:
+# // <common>
+# void Func() {}
+# // </common>
+# }
+#
+# class MyClass2 {
+# public:
+# // <common>
+# void Func() {}
+# // </common>
+# }
+#
+# Tags: 
 # <common_code> </common_code>
 #
+# Run:
 # python src_dup.py <file_name>
 
 import re
