@@ -9,6 +9,12 @@
 // are not thread safe. Invoking a function asynchronously requires sending a clone of the object 
 // to the destination thread message queue. The destination thread calls DelegateInvoke() to 
 // invoke the target function.
+// 
+// Code within <common_code> and </common_code> is updated using sync_src.py. Manually update 
+// the code first common_code tags within DelegateFreeAsync, then run the script to propagate
+// to the remaining delegate classes to simplify code maintenance.
+// 
+// python src_dup.py DelegateAsync.h
 
 #include "Delegate.h"
 #include "DelegateThread.h"
@@ -39,6 +45,7 @@ public:
         BaseType::Bind(func);
     }
 
+    // <common_code>
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
@@ -121,6 +128,7 @@ protected:
 private:
     DelegateThread& m_thread;   // The target thread to invoke the delegate function.
     bool m_sync = false;        // Flag to control synchronous vs asynchronous behavior.
+    // </common_code>
 };
 
 template <class C, class R>
@@ -155,13 +163,14 @@ public:
         BaseType::Bind(object, func);
     }
 
-    virtual ClassType* Clone() const override {
-        return new ClassType(*this);
-    }
-
+    // <common_code>
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
+    }
+
+    virtual ClassType* Clone() const override {
+        return new ClassType(*this);
     }
 
     ClassType& operator=(const ClassType& rhs) {
@@ -176,10 +185,10 @@ public:
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             &m_thread == &derivedRhs->m_thread &&
-            BaseType::operator == (rhs);
+            BaseType::operator==(rhs);
     }
 
-    /// Invoke delegate function asynchronously
+    // Invoke delegate function asynchronously
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -212,10 +221,10 @@ public:
     /// Invoke delegate function asynchronously
     void AsyncInvoke(Args... args)
     {
-        operator()(args...);
+        operator()(args...);   
     }
 
-    /// Called by the target thread to invoke the delegate function 
+    // Called to invoke the delegate function on the target thread of control
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
         // Typecast the base pointer to back to the templatized instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateMsgHeapArgs<Args...>>(msg);
@@ -224,7 +233,7 @@ public:
 
         // Invoke the delegate function
         SetSync(true);
-        std::apply(&BaseType::operator(),
+        std::apply(&BaseType::operator(), 
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
@@ -237,6 +246,7 @@ protected:
 private:
     DelegateThread& m_thread;   // The target thread to invoke the delegate function.
     bool m_sync = false;        // Flag to control synchronous vs asynchronous behavior.
+    // </common_code>
 };
 
 template <class C, class R>
@@ -275,25 +285,34 @@ public:
         BaseType::Bind(object, func);
     }
 
+    // <common_code>
+    void Assign(const ClassType& rhs) {
+        m_thread = rhs.m_thread;
+        BaseType::Assign(rhs);
+    }
+
     virtual ClassType* Clone() const override {
         return new ClassType(*this);
     }
 
-    void Assign(const ClassType& rhs) {
-        m_thread = rhs.m_thread;
-        BaseType::Assign(rhs);
+    ClassType& operator=(const ClassType& rhs) {
+        if (&rhs != this) {
+            BaseType::operator=(rhs);
+            Assign(rhs);
+        }
+        return *this;
     }
 
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             &m_thread == &derivedRhs->m_thread &&
-            BaseType::operator == (rhs);
+            BaseType::operator==(rhs);
     }
 
-    /// Invoke delegate function asynchronously
+    // Invoke delegate function asynchronously
     virtual RetType operator()(Args... args) override {
-        if (GetSync())
+        if (this->GetSync())
             return BaseType::operator()(args...);
         else
         {
@@ -324,11 +343,11 @@ public:
     /// Invoke delegate function asynchronously
     void AsyncInvoke(Args... args)
     {
-        operator()(args...);
+        operator()(args...);   
     }
 
-    /// Called by the target thread to invoke the delegate function 
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
+    // Called to invoke the delegate function on the target thread of control
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
         // Typecast the base pointer to back to the templatized instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateMsgHeapArgs<Args...>>(msg);
         if (delegateMsg == nullptr)
@@ -336,7 +355,7 @@ public:
 
         // Invoke the delegate function
         SetSync(true);
-        std::apply(&BaseType::operator(),
+        std::apply(&BaseType::operator(), 
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
@@ -349,6 +368,7 @@ protected:
 private:
     DelegateThread& m_thread;   // The target thread to invoke the delegate function.
     bool m_sync = false;        // Flag to control synchronous vs asynchronous behavior.
+    // </common_code>
 };
 
 template <class RetType, class... Args>

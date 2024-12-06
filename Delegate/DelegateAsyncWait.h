@@ -33,6 +33,12 @@
 // void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) - called by the destination
 // thread to invoke the target function. The destination thread must not call any other
 // delegate instance functions.
+//
+// Code within <common_code> and </common_code> is updated using sync_src.py. Manually update 
+// the code first common_code tags within DelegateFreeAsyncWait, then run the script to propagate
+// to the remaining delegate classes to simplify code maintenance.
+// 
+// python src_dup.py DelegateAsyncWait.h
 
 namespace DelegateLib {
 
@@ -59,18 +65,19 @@ public:
     }
     DelegateFreeAsyncWait() = delete;
 
-    virtual ClassType* Clone() const override {
-        return new ClassType(*this);
+    /// Bind a free function to a delegate. 
+    void Bind(FreeFunc func, DelegateThread& thread) {
+        BaseType::Bind(func, thread);
     }
 
+    // <common_code>
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
         BaseType::Assign(rhs);
     }
 
-    /// Bind a free function to a delegate. 
-    void Bind(FreeFunc func, DelegateThread& thread) {
-        BaseType::Bind(func, thread);
+    virtual ClassType* Clone() const override {
+        return new ClassType(*this);
     }
 
     ClassType& operator=(const ClassType& rhs) {
@@ -170,6 +177,7 @@ private:
     std::any m_retVal;                      // Return value of the invoked function
     bool m_invokerWaiting = false;          // True if caller thread is waiting for invoke complete
     std::mutex m_lock;
+    // </common_code>
 };
 
 template <class C, class R>
@@ -199,15 +207,6 @@ public:
     }
     DelegateMemberAsyncWait() = delete;
 
-    virtual ClassType* Clone() const override {
-        return new ClassType(*this);
-    }
-
-    void Assign(const ClassType& rhs) {
-        m_timeout = rhs.m_timeout;
-        BaseType::Assign(rhs);
-    }
-
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
         BaseType::Bind(object, func, thread);
@@ -216,6 +215,16 @@ public:
     /// Bind a const member function to a delegate. 
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) {
         BaseType::Bind(object, func, thread);
+    }
+
+    // <common_code>
+    void Assign(const ClassType& rhs) {
+        m_timeout = rhs.m_timeout;
+        BaseType::Assign(rhs);
+    }
+
+    virtual ClassType* Clone() const override {
+        return new ClassType(*this);
     }
 
     ClassType& operator=(const ClassType& rhs) {
@@ -270,16 +279,16 @@ public:
     /// Invoke delegate function asynchronously
     auto AsyncInvoke(Args... args)
     {
-		if constexpr (std::is_void<RetType>::value == true)
-		{
-			operator()(args...);
-			return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
-		}
-		else
-		{
-			auto retVal = operator()(args...);
-			return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
-		}
+        if constexpr (std::is_void<RetType>::value == true)
+        {
+            operator()(args...);
+            return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
+        }
+        else
+        {
+            auto retVal = operator()(args...);
+            return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
+        }
     }
 
     /// Called by the target thread to invoke the delegate function 
@@ -293,7 +302,7 @@ public:
                 throw std::invalid_argument("Invalid DelegateMsg cast");
 
             // Invoke the delegate function then signal the waiting thread
-            this->SetSync(true);
+            SetSync(true);
             if constexpr (std::is_void<RetType>::value == true)
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
             else
@@ -309,12 +318,13 @@ public:
     RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
 
 private:
-    bool m_success = false;					// Set to true if async function succeeds
-    std::chrono::milliseconds m_timeout ;   // Time in mS to wait for async function to invoke
+    bool m_success = false;			        // Set to true if async function succeeds
+    std::chrono::milliseconds m_timeout;    // Time in mS to wait for async function to invoke
     Semaphore m_sema;				        // Semaphore to signal waiting thread
     std::any m_retVal;                      // Return value of the invoked function
     bool m_invokerWaiting = false;          // True if caller thread is waiting for invoke complete
     std::mutex m_lock;
+    // </common_code>
 };
 
 template <class TClass, class RetType, class... Args>
