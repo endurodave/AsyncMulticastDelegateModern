@@ -1848,7 +1848,7 @@ void DelegateMemberSpTests()
 	DelegateMemberSp5(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 }
 
-void DelegateMemberAsyncSpTests()
+void DelegateMemberSpAsyncTests()
 {
 	std::shared_ptr<TestClass0> testClass0(new TestClass0());
 	auto DelegateMemberAsyncSp0 = MakeDelegate(testClass0, &TestClass0::MemberFunc0, testThread);
@@ -1872,6 +1872,33 @@ void DelegateMemberAsyncSpTests()
 
 	std::shared_ptr<TestClass5> testClass5(new TestClass5());
 	auto DelegateMemberAsyncSp5 = MakeDelegate(testClass5, &TestClass5::MemberFuncInt5, testThread);
+	DelegateMemberAsyncSp5(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
+}
+
+void DelegateMemberSpAsyncWaitTests()
+{
+	std::shared_ptr<TestClass0> testClass0(new TestClass0());
+	auto DelegateMemberAsyncSp0 = MakeDelegate(testClass0, &TestClass0::MemberFunc0, testThread, WAIT_INFINITE);
+	DelegateMemberAsyncSp0();
+
+	std::shared_ptr<TestClass1> testClass1(new TestClass1());
+	auto DelegateMemberAsyncSp1 = MakeDelegate(testClass1, &TestClass1::MemberFuncInt1, testThread, WAIT_INFINITE);
+	DelegateMemberAsyncSp1(TEST_INT);
+
+	std::shared_ptr<TestClass2> testClass2(new TestClass2());
+	auto DelegateMemberAsyncSp2 = MakeDelegate(testClass2, &TestClass2::MemberFuncInt2, testThread, WAIT_INFINITE);
+	DelegateMemberAsyncSp2(TEST_INT, TEST_INT);
+
+	std::shared_ptr<TestClass3> testClass3(new TestClass3());
+	auto DelegateMemberAsyncSp3 = MakeDelegate(testClass3, &TestClass3::MemberFuncInt3, testThread, WAIT_INFINITE);
+	DelegateMemberAsyncSp3(TEST_INT, TEST_INT, TEST_INT);
+
+	std::shared_ptr<TestClass4> testClass4(new TestClass4());
+	auto DelegateMemberAsyncSp4 = MakeDelegate(testClass4, &TestClass4::MemberFuncInt4, testThread, WAIT_INFINITE);
+	DelegateMemberAsyncSp4(TEST_INT, TEST_INT, TEST_INT, TEST_INT);
+
+	std::shared_ptr<TestClass5> testClass5(new TestClass5());
+	auto DelegateMemberAsyncSp5 = MakeDelegate(testClass5, &TestClass5::MemberFuncInt5, testThread, WAIT_INFINITE);
 	DelegateMemberAsyncSp5(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 }
 
@@ -2570,7 +2597,8 @@ void DelegateUnitTests()
 			MulticastDelegateSafeAsyncTests();
 			DelegateMemberAsyncWaitTests();
 			DelegateMemberSpTests();
-			DelegateMemberAsyncSpTests();
+			DelegateMemberSpAsyncTests();
+			DelegateMemberSpAsyncWaitTests();
 		}
 	}
 	catch(const std::exception& e)

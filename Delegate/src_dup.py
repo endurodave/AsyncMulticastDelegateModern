@@ -24,6 +24,9 @@
 #
 # Run:
 # python src_dup.py <file_name>
+#
+# python src_dup.py DelegateAsync.h
+# python src_dup.py DelegateAsyncWait.h
 
 import re
 import sys
