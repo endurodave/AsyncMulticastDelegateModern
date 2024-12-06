@@ -369,6 +369,114 @@ private:
     // </common_code>
 };
 
+template <class R>
+struct DelegateFunctionAsync; // Not defined
+
+template <class RetType, class... Args>
+class DelegateFunctionAsync<RetType(Args...)> : public DelegateFunction<RetType(Args...)>, public IDelegateInvoker {
+public:
+    using FunctionType = std::function<RetType(Args...)>;
+    using ClassType = DelegateFunctionAsync<RetType(Args...)>;
+    using BaseType = DelegateFunction<RetType(Args...)>;
+
+    ClassType(FunctionType func, DelegateThread& thread) :
+        BaseType(func), m_thread(thread) {
+        Bind(func, thread);
+    }
+    ClassType() = delete;
+
+    // Bind a std::function to the delegate.
+    void Bind(FunctionType func, DelegateThread& thread) {
+        m_thread = thread;
+        BaseType::Bind(func);
+    }
+
+    // <common_code>
+    void Assign(const ClassType& rhs) {
+        m_thread = rhs.m_thread;
+        BaseType::Assign(rhs);
+    }
+
+    virtual ClassType* Clone() const override {
+        return new ClassType(*this);
+    }
+
+    ClassType& operator=(const ClassType& rhs) {
+        if (&rhs != this) {
+            BaseType::operator=(rhs);
+            Assign(rhs);
+        }
+        return *this;
+    }
+
+    virtual bool operator==(const DelegateBase& rhs) const override {
+        auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
+        return derivedRhs &&
+            &m_thread == &derivedRhs->m_thread &&
+            BaseType::operator==(rhs);
+    }
+
+    // Invoke delegate function asynchronously
+    virtual RetType operator()(Args... args) override {
+        if (this->GetSync())
+            return BaseType::operator()(args...);
+        else
+        {
+            // Create a clone instance of this delegate 
+            auto delegate = std::shared_ptr<ClassType>(Clone());
+
+            // Create the delegate message
+            auto msg = std::make_shared<DelegateMsgHeapArgs<Args...>>(delegate, args...);
+
+            // Dispatch message onto the callback destination thread. DelegateInvoke()
+            // will be called by the target thread. 
+            GetThread().DispatchDelegate(msg);
+
+            // Do not wait for return value from async function call
+            return RetType();
+
+            // Check if any argument is a shared_ptr with wrong usage
+            // std::shared_ptr reference arguments are not allowed with asynchronous delegates as the behavior is 
+            // undefined. In other words:
+            // void MyFunc(std::shared_ptr<T> data)		// Ok!
+            // void MyFunc(std::shared_ptr<T>& data)	// Error if DelegateAsync or DelegateSpAsync target!
+            static_assert(!(std::disjunction_v<is_shared_ptr<Args>...> &&
+                (std::disjunction_v<std::is_lvalue_reference<Args>, std::is_pointer<Args>> || ...)),
+                "std::shared_ptr reference argument not allowed");
+        }
+    }
+
+    /// Invoke delegate function asynchronously
+    void AsyncInvoke(Args... args)
+    {
+        operator()(args...);
+    }
+
+    // Called to invoke the delegate function on the target thread of control
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
+        // Typecast the base pointer to back to the templatized instance
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsgHeapArgs<Args...>>(msg);
+        if (delegateMsg == nullptr)
+            throw std::invalid_argument("Invalid DelegateMsgHeapArgs cast");
+
+        // Invoke the delegate function
+        SetSync(true);
+        std::apply(&BaseType::operator(),
+            std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
+    }
+
+    DelegateThread& GetThread() { return m_thread; }
+
+protected:
+    bool GetSync() { return m_sync; }
+    void SetSync(bool sync) { m_sync = sync; }
+
+private:
+    DelegateThread& m_thread;   // The target thread to invoke the delegate function.
+    bool m_sync = false;        // Flag to control synchronous vs asynchronous behavior.
+    // </common_code>
+};
+
 template <class RetType, class... Args>
 DelegateFreeAsync<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args), DelegateThread& thread) {
     return DelegateFreeAsync<RetType(Args...)>(func, thread);
@@ -392,6 +500,11 @@ DelegateMemberSpAsync<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TCla
 template <class TClass, class RetVal, class... Args>
 DelegateMemberSpAsync<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args) const, DelegateThread& thread) {
     return DelegateMemberSpAsync<TClass, RetVal(Args...)>(object, func, thread);
+}
+
+template <class RetType, class... Args>
+DelegateFunctionAsync<RetType(Args...)> MakeDelegate(std::function<RetType(Args...)> func, DelegateThread& thread) {
+    return DelegateFunctionAsync<RetType(Args...)>(func, thread);
 }
 
 }

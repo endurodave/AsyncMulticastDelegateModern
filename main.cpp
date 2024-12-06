@@ -27,6 +27,7 @@ static DumpLeaks dumpLeaks;
 
 using namespace std;
 using namespace DelegateLib;
+using namespace std::chrono;
 
 WorkerThread workerThread1("WorkerThread1");
 
@@ -86,9 +87,9 @@ private:
 	TestStructNoCopy& operator=(const TestStructNoCopy&) = delete;
 };
 
-void FreeFunc()
+void FreeFuncVoid()
 {
-	cout << "FreeFunc" << endl;
+	cout << "FreeFuncVoid " << endl;
 }
 
 void FreeFuncInt(int value)
@@ -129,6 +130,31 @@ public:
 	~TestClass()
 	{
 	}
+
+    void StaticFuncInt(int value)
+    {
+        cout << "StaticFuncInt " << value << endl;
+    }
+
+    void StaticFuncIntConst(int value) const
+    {
+        cout << "StaticFuncIntConst " << value << endl;
+    }
+
+    void MemberFuncInt(int value)
+    {
+        cout << "MemberFuncInt " << value << endl;
+    }
+
+    void MemberFuncIntConst(int value) const
+    {
+        cout << "MemberFuncIntConst " << value << endl;
+    }
+
+    void MemberFuncInt2(int value)
+    {
+        cout << "MemberFuncInt2 " << value << endl;
+    }
 
 	void MemberFunc(TestStruct* value)
 	{
@@ -224,6 +250,135 @@ void CoordinatesChangedCallbackError4(const std::shared_ptr<const Coordinates>* 
 
 extern void DelegateUnitTests();
 
+static int callCnt = 0;
+
+void FreeFunc(int value)
+{
+    cout << "FreeFunc " << value << " " << ++callCnt << endl;
+}
+
+// Simple test invoking all target types
+void TestAllTargetTypes()
+{
+    class Class
+    {
+    public:
+        void StaticFunc(int value)
+        {
+            cout << "StaticFunc " << value << " " << ++callCnt << endl;
+        }
+
+        void StaticFuncConst(int value) const
+        {
+            cout << "StaticFuncConst " << value << " " << ++callCnt << endl;
+        }
+
+        void MemberFunc(int value)
+        {
+            cout << "MemberFunc " << value << " " << ++callCnt << endl;
+        }
+
+        void MemberFuncConst(int value) const
+        {
+            cout << "MemberFuncConst " << value << " " << ++callCnt << endl;
+        }
+    };
+
+    int stackVal = 100;
+    std::function<void(int)> LambdaFunc = [&stackVal](int i)
+    {
+        std::cout << "LambdaFunc " << i + stackVal << " " << ++callCnt << endl;
+    };
+
+    std::function<void(int)> LambdaFunc2 = [](int i)
+    {
+        std::cout << "LambdaFunc2 " << i << " " << ++callCnt << endl;
+    };
+
+    std::function<void(int)> LambdaFunc3 = +[](int i)
+    {
+        std::cout << "LambdaFunc3 " << i << " " << ++callCnt << endl;
+    };
+
+    Class testClass;
+
+    // Create a multicast delegate container that accepts Delegate<void(int)> delegates.
+    // Any function with the signature "void Func(int)".
+    MulticastDelegateSafe<void(int)> delegateA;
+
+    // Register all callable targets with delegate container
+    // Synchronous delegates
+    delegateA += MakeDelegate(&FreeFunc);
+    delegateA += MakeDelegate(LambdaFunc);
+    delegateA += MakeDelegate(LambdaFunc2);
+    delegateA += MakeDelegate(LambdaFunc3);
+    delegateA += MakeDelegate(&testClass, &Class::StaticFunc);
+    delegateA += MakeDelegate(&testClass, &Class::StaticFuncConst);
+    delegateA += MakeDelegate(&testClass, &Class::MemberFunc);
+    delegateA += MakeDelegate(&testClass, &Class::MemberFuncConst);
+
+    // Asynchronous delegates
+    delegateA += MakeDelegate(&FreeFunc, workerThread1);
+    delegateA += MakeDelegate(LambdaFunc, workerThread1);
+    delegateA += MakeDelegate(LambdaFunc2, workerThread1);
+    delegateA += MakeDelegate(LambdaFunc3, workerThread1);
+    delegateA += MakeDelegate(&testClass, &Class::StaticFunc, workerThread1);
+    delegateA += MakeDelegate(&testClass, &Class::StaticFuncConst, workerThread1);
+    delegateA += MakeDelegate(&testClass, &Class::MemberFunc, workerThread1);
+    delegateA += MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1);
+
+    // Asynchronous blocking delegates
+    delegateA += MakeDelegate(&FreeFunc, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(LambdaFunc, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(LambdaFunc2, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(LambdaFunc3, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(&testClass, &Class::StaticFunc, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(&testClass, &Class::StaticFuncConst, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(&testClass, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
+
+    // Invoke all callable targets
+    if (delegateA)
+        delegateA(123);
+
+    // Wait for async callbacks to complete
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+    // Unregister all callable targets with delegate container
+    // Synchronous delegates
+    delegateA -= MakeDelegate(&FreeFunc);
+    delegateA -= MakeDelegate(LambdaFunc);
+    delegateA -= MakeDelegate(LambdaFunc2);
+    delegateA -= MakeDelegate(LambdaFunc3);
+    delegateA -= MakeDelegate(&testClass, &Class::StaticFunc);
+    delegateA -= MakeDelegate(&testClass, &Class::StaticFuncConst);
+    delegateA -= MakeDelegate(&testClass, &Class::MemberFunc);
+    delegateA -= MakeDelegate(&testClass, &Class::MemberFuncConst);
+
+    // Asynchronous delegates
+    delegateA -= MakeDelegate(&FreeFunc, workerThread1);
+    delegateA -= MakeDelegate(LambdaFunc, workerThread1);
+    delegateA -= MakeDelegate(LambdaFunc2, workerThread1);
+    delegateA -= MakeDelegate(LambdaFunc3, workerThread1);
+    delegateA -= MakeDelegate(&testClass, &Class::StaticFunc, workerThread1);
+    delegateA -= MakeDelegate(&testClass, &Class::StaticFuncConst, workerThread1);
+    delegateA -= MakeDelegate(&testClass, &Class::MemberFunc, workerThread1);
+    delegateA -= MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1);
+
+    // Asynchronous blocking delegates
+    delegateA -= MakeDelegate(&FreeFunc, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(LambdaFunc, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(LambdaFunc2, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(LambdaFunc3, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(&testClass, &Class::StaticFunc, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(&testClass, &Class::StaticFuncConst, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(&testClass, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
+
+    ASSERT_TRUE(delegateA.Size() == 0);
+    ASSERT_TRUE(callCnt == 24);
+}
+
 //------------------------------------------------------------------------------
 // main
 //------------------------------------------------------------------------------
@@ -239,6 +394,8 @@ int main(void)
 	workerThread1.CreateThread();
 	SysDataNoLock::GetInstance();
 
+    TestAllTargetTypes();
+ 
     // Create a timer that expires every 250mS and calls 
     // TimerExpiredCb on workerThread1 upon expiration
     Timer timer;
@@ -253,9 +410,6 @@ int main(void)
     // Create a delegate bound to a free function then invoke
     DelegateFree<void(int)> delegateFree = MakeDelegate(&FreeFuncInt);
     delegateFree(123);
-
-    auto delegateFreeTemp = MakeDelegate(&FreeFuncInt, workerThread1, std::chrono::milliseconds::max());
-    delegateFreeTemp(123);
 
     // Create a delegate bound to a member function then invoke
     DelegateMember<TestClass, void(TestStruct*)> delegateMember = MakeDelegate(&testClass, &TestClass::MemberFunc);
@@ -389,7 +543,7 @@ int main(void)
 
     // Invoke functions asynchronously blocking with no return value
     auto noRetValRet = MakeDelegate(&testClass, &TestClass::TestFuncNoRet, workerThread1, std::chrono::milliseconds(10)).AsyncInvoke();
-    auto noRetValRet2 = MakeDelegate(&FreeFuncInt, workerThread1, std::chrono::milliseconds(10)).AsyncInvoke(123);
+    auto noRetValRet2 = MakeDelegate(&FreeFuncInt, workerThread1, milliseconds(10)).AsyncInvoke(123);
     if (noRetValRet.has_value() && noRetValRet2.has_value())
         cout << "Asynchronous calls with no return value succeeded!" << endl;
 

@@ -61,9 +61,13 @@ public:
     // Bind a free function to the delegate.
     void Bind(FreeFunc func) { m_func = func; }
 
-    virtual ClassType* Clone() const override { return new ClassType(*this); }
+    virtual ClassType* Clone() const override { 
+        return new ClassType(*this); 
+    }
 
-    void Assign(const ClassType& rhs) { m_func = rhs.m_func; }
+    void Assign(const ClassType& rhs) { 
+        m_func = rhs.m_func; 
+    }
 
     // Invoke the bound delegate function. 
     virtual RetType operator()(Args... args) override {
@@ -120,7 +124,9 @@ public:
         m_func = reinterpret_cast<MemberFunc>(func);
     }
 
-    virtual ClassType* Clone() const override { return new ClassType(*this); }
+    virtual ClassType* Clone() const override {
+        return new ClassType(*this); 
+    }
 
     void Assign(const ClassType& rhs) {
         m_object = rhs.m_object;
@@ -186,7 +192,9 @@ public:
         m_func = reinterpret_cast<MemberFunc>(func);
     }
 
-    virtual ClassType* Clone() const override { return new ClassType(*this); }
+    virtual ClassType* Clone() const override { 
+        return new ClassType(*this); 
+    }
 
     void Assign(const ClassType& rhs) {
         m_object = rhs.m_object;
@@ -215,6 +223,66 @@ private:
     MemberFunc m_func = nullptr;   	// Pointer to an instance member function
 };
 
+template <class R>
+class DelegateFunction; // Not defined
+
+// Delegate used to invoke a function synchronously. The class is not thread safe. 
+template <class RetType, class... Args>
+class DelegateFunction<RetType(Args...)> : public Delegate<RetType(Args...)> {
+public:
+    using FunctionType = std::function<RetType(Args...)>;
+    using ClassType = DelegateFunction<RetType(Args...)>;
+
+    // Constructor to bind a function to the delegate
+    ClassType(FunctionType func) : m_func(func) { }
+
+    // Default constructor 
+    ClassType() = default;
+
+    void Bind(FunctionType func) {
+        m_func = func;
+    }
+
+    // Invoke the bound function
+    virtual RetType operator()(Args... args) override {
+        return m_func(std::forward<Args>(args)...);
+    }
+
+    // Clone the delegate
+    virtual ClassType* Clone() const override { 
+        return new ClassType(*this); 
+    }
+
+    // Assign state data
+    void Assign(const ClassType& rhs) {
+        m_func = rhs.m_func;
+    }
+
+    virtual bool operator==(const DelegateBase& rhs) const override {
+        auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
+        if (derivedRhs) {
+            // If both delegates are empty, they are equal
+            if (Empty() && derivedRhs->Empty())
+                return true;
+
+            if (m_func && derivedRhs->m_func)
+                return m_func.target_type() == derivedRhs->m_func.target_type();
+
+            return false;
+        }
+
+        return false;  // Return false if dynamic cast failed
+    }
+
+    bool Empty() const { return !m_func; }
+    void Clear() { m_func = nullptr; }
+
+    explicit operator bool() const { return !Empty(); }
+
+private:
+    FunctionType m_func;        // Stores any std::function target
+};
+
 template <class RetType, class... Args>
 DelegateFree<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args)) {
     return DelegateFree<RetType(Args...)>(func);
@@ -238,6 +306,11 @@ DelegateMemberSp<TClass, RetType(Args...)> MakeDelegate(std::shared_ptr<TClass> 
 template <class TClass, class RetType, class... Args>
 DelegateMemberSp<TClass, RetType(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetType(TClass::* func)(Args... args) const) {
     return DelegateMemberSp<TClass, RetType(Args...)>(object, func);
+}
+
+template <class RetType, class... Args>
+DelegateFunction<RetType(Args...)> MakeDelegate(std::function<RetType(Args...)> func) {
+    return DelegateFunction<RetType(Args...)>(func);
 }
 
 }
