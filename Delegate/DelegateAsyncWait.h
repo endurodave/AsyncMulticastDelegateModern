@@ -56,14 +56,14 @@ public:
     using BaseType = DelegateFreeAsync<RetType(Args...)>;
 
     // Contructors take a free function, delegate thread and timeout
-    DelegateFreeAsyncWait(FreeFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) : 
+    ClassType(FreeFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(func, thread), m_timeout(timeout) {
         Bind(func, thread);
     }
-    DelegateFreeAsyncWait(const DelegateFreeAsyncWait& rhs) : BaseType(rhs) {
+    ClassType(const DelegateFreeAsyncWait& rhs) : BaseType(rhs) {
         Assign(rhs);
     }
-    DelegateFreeAsyncWait() = delete;
+    ClassType() = delete;
 
     /// Bind a free function to a delegate. 
     void Bind(FreeFunc func, DelegateThread& thread) {
@@ -193,19 +193,19 @@ public:
     using BaseType = DelegateMemberAsync<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and delegate thread
-    DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) : 
+    ClassType(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) : 
+    ClassType(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
-    DelegateMemberAsyncWait(const DelegateMemberAsyncWait& rhs) : 
+    ClassType(const DelegateMemberAsyncWait& rhs) :
         BaseType(rhs) {
         Assign(rhs);
     }
-    DelegateMemberAsyncWait() = delete;
+    ClassType() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {

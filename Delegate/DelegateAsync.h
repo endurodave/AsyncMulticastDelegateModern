@@ -33,11 +33,11 @@ public:
     using ClassType = DelegateFreeAsync<RetType(Args...)>;
     using BaseType = DelegateFree<RetType(Args...)>;
 
-    DelegateFreeAsync(FreeFunc func, DelegateThread& thread) : 
+    ClassType(FreeFunc func, DelegateThread& thread) :
         BaseType(func), m_thread(thread) { 
         Bind(func, thread); 
     }
-    DelegateFreeAsync() = delete;
+    ClassType() = delete;
 
     // Bind a free function to the delegate.
     void Bind(FreeFunc func, DelegateThread& thread) {
@@ -143,11 +143,11 @@ public:
     using ClassType = DelegateMemberAsync<TClass, RetType(Args...)>;
     using BaseType = DelegateMember<TClass, RetType(Args...)>;
 
-    DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
+    ClassType(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
         { Bind(object, func, thread); }
-    DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
+    ClassType(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
         { Bind(object, func, thread); }
-    DelegateMemberAsync() = delete;
+    ClassType() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
@@ -263,13 +263,13 @@ public:
     using BaseType = DelegateMemberSp<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and callback thread
-    DelegateMemberSpAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
+    ClassType(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
-    DelegateMemberSpAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
+    ClassType(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
-    DelegateMemberSpAsync() = delete;
+    ClassType() = delete;
 
     // Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {

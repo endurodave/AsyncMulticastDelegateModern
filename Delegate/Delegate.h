@@ -55,8 +55,8 @@ public:
     typedef RetType(*FreeFunc)(Args...);
     using ClassType = DelegateFree<RetType(Args...)>;
 
-    DelegateFree(FreeFunc func) { Bind(func); }
-    DelegateFree() = default;
+    ClassType(FreeFunc func) { Bind(func); }
+    ClassType() = default;
 
     // Bind a free function to the delegate.
     void Bind(FreeFunc func) { m_func = func; }
@@ -104,9 +104,9 @@ public:
     typedef RetType(TClass::*ConstMemberFunc)(Args...) const;
     using ClassType = DelegateMember<TClass, RetType(Args...)>;
 
-    DelegateMember(ObjectPtr object, MemberFunc func) { Bind(object, func); }
-    DelegateMember(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
-    DelegateMember() = default;
+    ClassType(ObjectPtr object, MemberFunc func) { Bind(object, func); }
+    ClassType(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
+    ClassType() = default;
 
     // Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func) {
@@ -170,9 +170,9 @@ public:
     typedef RetType(TClass::* ConstMemberFunc)(Args...) const;
     using ClassType = DelegateMemberSp<TClass, RetType(Args...)>;
 
-    DelegateMemberSp(ObjectPtr object, MemberFunc func) { Bind(object, func); }
-    DelegateMemberSp(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
-    DelegateMemberSp() = default;
+    ClassType(ObjectPtr object, MemberFunc func) { Bind(object, func); }
+    ClassType(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
+    ClassType() = default;
 
     // Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func) {
