@@ -17,12 +17,12 @@
 // and waits for the function to be executed or a timeout occurs. Use IsSuccess() to determine if 
 // asynchronous call succeeded.
 // 
-// DelegateFreeAsyncWait and DelegateMemberAsyncWait used to invoke a function asynchronously 
-// and wait for completion by the destination target thread. Invoking a function asynchronously 
-// requires making a clone of the object to be sent to the destination thread message queue. 
-// The destination thread calls DelegateInvoke() to invoke the target function. The source 
-// thread blocks on a semaphore waiting for the destination thread to complete the function 
-// invoke. If the caller timeout expires, the target function is not invoked. 
+// Delegate "AsyncWait" series of classes used to invoke a function asynchronously and wait for 
+// completion by the destination target thread. Invoking a function asynchronously requires making 
+// a clone of the object to be sent to the destination thread message queue. The destination thread 
+// calls DelegateInvoke() to invoke the target function. The source thread blocks on a semaphore 
+// waiting for the destination thread to complete the function invoke. If the caller timeout expires, 
+// the target function is not invoked. 
 // 
 // The m_lock mutex is used to protect shared state data between the source and destination 
 // threads using the two thread safe functions below:
@@ -35,8 +35,8 @@
 // delegate instance functions.
 //
 // Code within <common_code> and </common_code> is updated using sync_src.py. Manually update 
-// the code first common_code tags within DelegateFreeAsyncWait, then run the script to propagate
-// to the remaining delegate classes to simplify code maintenance.
+// the code within the DelegateFreeAsyncWait common_code tags, then run the script to 
+// propagate to the remaining delegate classes to simplify code maintenance.
 // 
 // python src_dup.py DelegateAsyncWait.h
 
@@ -48,6 +48,7 @@ constexpr auto WAIT_INFINITE = std::chrono::milliseconds::max();
 template <class R>
 struct DelegateFreeAsyncWait; // Not defined
 
+// DelegateFreeAsyncWait class asynchronously block invokes a free target function.
 template <class RetType, class... Args>
 class DelegateFreeAsyncWait<RetType(Args...)> : public DelegateFreeAsync<RetType(Args...)> {
 public:
@@ -60,10 +61,6 @@ public:
         BaseType(func, thread), m_timeout(timeout) {
         Bind(func, thread);
     }
-    ClassType(const ClassType& rhs) : BaseType(rhs) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
 
     /// Bind a free function to a delegate. 
     void Bind(FreeFunc func, DelegateThread& thread) {
@@ -71,6 +68,12 @@ public:
     }
 
     // <common_code>
+    ClassType(const ClassType& rhs) :
+        BaseType(rhs) {
+        Assign(rhs);
+    }
+    ClassType() = delete;
+
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
         BaseType::Assign(rhs);
@@ -95,7 +98,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// Invoke delegate function asynchronously
+    // Invoke delegate function asynchronously and block for function return value
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -129,9 +132,8 @@ public:
         }
     }
 
-    /// Invoke delegate function asynchronously
-    auto AsyncInvoke(Args... args)
-    {
+    // Invoke delegate function asynchronously and block for function return value
+    auto AsyncInvoke(Args... args) {
         if constexpr (std::is_void<RetType>::value == true)
         {
             operator()(args...);
@@ -183,6 +185,7 @@ private:
 template <class C, class R>
 struct DelegateMemberAsyncWait; // Not defined
 
+// DelegateMemberAsyncWait class asynchronously block invokes a class member target function.
 template <class TClass, class RetType, class... Args>
 class DelegateMemberAsyncWait<TClass, RetType(Args...)> : public DelegateMemberAsync<TClass, RetType(Args...)> {
 public:
@@ -201,11 +204,6 @@ public:
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
-    ClassType(const ClassType& rhs) :
-        BaseType(rhs) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
@@ -218,6 +216,12 @@ public:
     }
 
     // <common_code>
+    ClassType(const ClassType& rhs) :
+        BaseType(rhs) {
+        Assign(rhs);
+    }
+    ClassType() = delete;
+
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
         BaseType::Assign(rhs);
@@ -242,7 +246,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// Invoke delegate function asynchronously
+    // Invoke delegate function asynchronously and block for function return value
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -276,9 +280,8 @@ public:
         }
     }
 
-    /// Invoke delegate function asynchronously
-    auto AsyncInvoke(Args... args)
-    {
+    // Invoke delegate function asynchronously and block for function return value
+    auto AsyncInvoke(Args... args) {
         if constexpr (std::is_void<RetType>::value == true)
         {
             operator()(args...);
@@ -330,6 +333,7 @@ private:
 template <class C, class R>
 struct DelegateMemberSpAsyncWait; // Not defined
 
+// DelegateMemberSpAsyncWait class asynchronously block invokes a std::shared_ptr target function.
 template <class TClass, class RetType, class... Args>
 class DelegateMemberSpAsyncWait<TClass, RetType(Args...)> : public DelegateMemberSpAsync<TClass, RetType(Args...)> {
 public:
@@ -348,11 +352,6 @@ public:
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
-    ClassType(const ClassType& rhs) :
-        BaseType(rhs) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
@@ -365,6 +364,12 @@ public:
     }
 
     // <common_code>
+    ClassType(const ClassType& rhs) :
+        BaseType(rhs) {
+        Assign(rhs);
+    }
+    ClassType() = delete;
+
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
         BaseType::Assign(rhs);
@@ -389,7 +394,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// Invoke delegate function asynchronously
+    // Invoke delegate function asynchronously and block for function return value
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -423,9 +428,8 @@ public:
         }
     }
 
-    /// Invoke delegate function asynchronously
-    auto AsyncInvoke(Args... args)
-    {
+    // Invoke delegate function asynchronously and block for function return value
+    auto AsyncInvoke(Args... args) {
         if constexpr (std::is_void<RetType>::value == true)
         {
             operator()(args...);
@@ -477,6 +481,7 @@ private:
 template <class R>
 struct DelegateFunctionAsyncWait; // Not defined
 
+// DelegateFunctionAsync class asynchronously block invokes a std::function target function.
 template <class RetType, class... Args>
 class DelegateFunctionAsyncWait<RetType(Args...)> : public DelegateFunctionAsync<RetType(Args...)> {
 public:
@@ -489,10 +494,6 @@ public:
         BaseType(func, thread), m_timeout(timeout) {
         Bind(func, thread);
     }
-    ClassType(const ClassType& rhs) : BaseType(rhs) { // TODO: all delegate need copy constructor? Add into <common_code> section.
-        Assign(rhs);
-    }
-    ClassType() = delete;
 
     /// Bind a std::function to a delegate. 
     void Bind(FunctionType func, DelegateThread& thread) {
@@ -500,6 +501,12 @@ public:
     }
 
     // <common_code>
+    ClassType(const ClassType& rhs) :
+        BaseType(rhs) {
+        Assign(rhs);
+    }
+    ClassType() = delete;
+
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
         BaseType::Assign(rhs);
@@ -524,7 +531,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// Invoke delegate function asynchronously
+    // Invoke delegate function asynchronously and block for function return value
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -558,9 +565,8 @@ public:
         }
     }
 
-    /// Invoke delegate function asynchronously
-    auto AsyncInvoke(Args... args)
-    {
+    // Invoke delegate function asynchronously and block for function return value
+    auto AsyncInvoke(Args... args) {
         if constexpr (std::is_void<RetType>::value == true)
         {
             operator()(args...);

@@ -5,14 +5,14 @@
 // @see https://github.com/endurodave/AsyncMulticastDelegateModern
 // David Lafreniere, Aug 2020.
 //
-// DelegateFreeAsync and DelegateMemberAsync used to invoke a function asynchronously. The classes 
+// Delegate "Async" series of classes used to invoke a function asynchronously. The classes 
 // are not thread safe. Invoking a function asynchronously requires sending a clone of the object 
 // to the destination thread message queue. The destination thread calls DelegateInvoke() to 
 // invoke the target function.
 // 
 // Code within <common_code> and </common_code> is updated using sync_src.py. Manually update 
-// the code first common_code tags within DelegateFreeAsync, then run the script to propagate
-// to the remaining delegate classes to simplify code maintenance.
+// the code within the DelegateFreeAsync common_code tags, then run the script to 
+// propagate to the remaining delegate classes to simplify code maintenance.
 // 
 // python src_dup.py DelegateAsync.h
 
@@ -26,6 +26,7 @@ namespace DelegateLib {
 template <class R>
 struct DelegateFreeAsync; // Not defined
 
+// DelegateFreeAsync class asynchronously invokes a free target function.
 template <class RetType, class... Args>
 class DelegateFreeAsync<RetType(Args...)> : public DelegateFree<RetType(Args...)>, public IDelegateInvoker {
 public:
@@ -37,7 +38,6 @@ public:
         BaseType(func), m_thread(thread) { 
         Bind(func, thread); 
     }
-    ClassType() = delete;
 
     // Bind a free function to the delegate.
     void Bind(FreeFunc func, DelegateThread& thread) {
@@ -46,6 +46,12 @@ public:
     }
 
     // <common_code>
+    ClassType(const ClassType& rhs) :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        Assign(rhs);
+    }
+    ClassType() = delete;
+
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
@@ -70,7 +76,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    // Invoke delegate function asynchronously
+    // Invoke delegate function asynchronously. Do not wait for return value, if any.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -100,9 +106,8 @@ public:
         }
     }
 
-    /// Invoke delegate function asynchronously
-    void AsyncInvoke(Args... args)
-    {
+    // Invoke delegate function asynchronously. Do not wait for return value, if any.
+    void AsyncInvoke(Args... args) {
         operator()(args...);   
     }
 
@@ -134,6 +139,7 @@ private:
 template <class C, class R>
 struct DelegateMemberAsync; // Not defined
 
+// DelegateMemberAsync class asynchronously invokes a class member target function.
 template <class TClass, class RetType, class... Args>
 class DelegateMemberAsync<TClass, RetType(Args...)> : public DelegateMember<TClass, RetType(Args...)>, public IDelegateInvoker {
 public:
@@ -147,7 +153,6 @@ public:
         { Bind(object, func, thread); }
     ClassType(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
         { Bind(object, func, thread); }
-    ClassType() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
@@ -162,6 +167,12 @@ public:
     }
 
     // <common_code>
+    ClassType(const ClassType& rhs) :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        Assign(rhs);
+    }
+    ClassType() = delete;
+
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
@@ -186,7 +197,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    // Invoke delegate function asynchronously
+    // Invoke delegate function asynchronously. Do not wait for return value, if any.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -216,9 +227,8 @@ public:
         }
     }
 
-    /// Invoke delegate function asynchronously
-    void AsyncInvoke(Args... args)
-    {
+    // Invoke delegate function asynchronously. Do not wait for return value, if any.
+    void AsyncInvoke(Args... args) {
         operator()(args...);   
     }
 
@@ -250,9 +260,7 @@ private:
 template <class C, class R>
 struct DelegateMemberSpAsync; // Not defined
 
-// DelegateMemberAsyncSp class implemenation asynchronously binds and and invokes class 
-// instance member functions. The std::shared_ptr<TClass> is used in lieu of a raw 
-// TClass* pointer. 
+// DelegateMemberSpAsync class asynchronously invokes a std::shared_ptr target function.
 template <class RetType, class TClass, class... Args>
 class DelegateMemberSpAsync<TClass, RetType(Args...)> : public DelegateMemberSp<TClass, RetType(Args...)>, public IDelegateInvoker {
 public:
@@ -269,7 +277,6 @@ public:
     ClassType(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
-    ClassType() = delete;
 
     // Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
@@ -284,6 +291,12 @@ public:
     }
 
     // <common_code>
+    ClassType(const ClassType& rhs) :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        Assign(rhs);
+    }
+    ClassType() = delete;
+
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
@@ -308,7 +321,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    // Invoke delegate function asynchronously
+    // Invoke delegate function asynchronously. Do not wait for return value, if any.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -338,9 +351,8 @@ public:
         }
     }
 
-    /// Invoke delegate function asynchronously
-    void AsyncInvoke(Args... args)
-    {
+    // Invoke delegate function asynchronously. Do not wait for return value, if any.
+    void AsyncInvoke(Args... args) {
         operator()(args...);   
     }
 
@@ -372,6 +384,7 @@ private:
 template <class R>
 struct DelegateFunctionAsync; // Not defined
 
+// DelegateFunctionAsync class asynchronously invokes a std::function target function.
 template <class RetType, class... Args>
 class DelegateFunctionAsync<RetType(Args...)> : public DelegateFunction<RetType(Args...)>, public IDelegateInvoker {
 public:
@@ -383,7 +396,6 @@ public:
         BaseType(func), m_thread(thread) {
         Bind(func, thread);
     }
-    ClassType() = delete;
 
     // Bind a std::function to the delegate.
     void Bind(FunctionType func, DelegateThread& thread) {
@@ -392,6 +404,12 @@ public:
     }
 
     // <common_code>
+    ClassType(const ClassType& rhs) :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        Assign(rhs);
+    }
+    ClassType() = delete;
+
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
@@ -416,7 +434,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    // Invoke delegate function asynchronously
+    // Invoke delegate function asynchronously. Do not wait for return value, if any.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -446,10 +464,9 @@ public:
         }
     }
 
-    /// Invoke delegate function asynchronously
-    void AsyncInvoke(Args... args)
-    {
-        operator()(args...);
+    // Invoke delegate function asynchronously. Do not wait for return value, if any.
+    void AsyncInvoke(Args... args) {
+        operator()(args...);   
     }
 
     // Called to invoke the delegate function on the target thread of control
@@ -461,7 +478,7 @@ public:
 
         // Invoke the delegate function
         SetSync(true);
-        std::apply(&BaseType::operator(),
+        std::apply(&BaseType::operator(), 
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 

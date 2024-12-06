@@ -5,7 +5,7 @@
 // @see https://github.com/endurodave/AsyncMulticastDelegateModern
 // David Lafreniere, Aug 2020.
 //
-// DelegateFree and DelegateMember used to invoke a function synchronously. The classes 
+// Delegate series of classes are used to invoke a function synchronously. The classes 
 // are not thread safe.
 
 #include <functional>
@@ -48,7 +48,7 @@ public:
 template <class R>
 struct DelegateFree; // Not defined
 
-// Delegate used to invoke a free function synchronously. The class is not thread safe. 
+// DelegateFree class synchronously invokes a free target function.
 template <class RetType, class... Args>
 class DelegateFree<RetType(Args...)> : public Delegate<RetType(Args...)> {
 public:
@@ -56,6 +56,7 @@ public:
     using ClassType = DelegateFree<RetType(Args...)>;
 
     ClassType(FreeFunc func) { Bind(func); }
+    ClassType(const ClassType& rhs) { Assign(rhs); }
     ClassType() = default;
 
     // Bind a free function to the delegate.
@@ -99,7 +100,7 @@ private:
 template <class C, class R>
 struct DelegateMember; // Not defined
 
-// Delegate used to invoke a member function synchronously. The class is not thread safe. 
+// DelegateMember class synchronously invokes a class member target function.
 template <class TClass, class RetType, class... Args>
 class DelegateMember<TClass, RetType(Args...)> : public Delegate<RetType(Args...)> {
 public:
@@ -110,6 +111,7 @@ public:
 
     ClassType(ObjectPtr object, MemberFunc func) { Bind(object, func); }
     ClassType(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
+    ClassType(const ClassType& rhs) { Assign(rhs); }
     ClassType() = default;
 
     // Bind a member function to a delegate. 
@@ -165,9 +167,7 @@ private:
 template <class C, class R>
 struct DelegateMemberSp; // Not defined
 
-// DelegateMemberSp class implemenation synchronously binds and invokes class 
-// instance member functions. The std::shared_ptr<TClass> is used in lieu of a 
-// raw TClass* pointer. 
+// DelegateMemberSp class synchronously invokes a std::shared_ptr target function.
 template <class TClass, class RetType, class... Args>
 class DelegateMemberSp<TClass, RetType(Args...)> : public Delegate<RetType(Args...)> {
 public:
@@ -178,6 +178,7 @@ public:
 
     ClassType(ObjectPtr object, MemberFunc func) { Bind(object, func); }
     ClassType(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
+    ClassType(const ClassType& rhs) { Assign(rhs); }
     ClassType() = default;
 
     // Bind a member function to a delegate. 
@@ -206,6 +207,13 @@ public:
         return std::invoke(m_func, m_object, args...);
     }
 
+    ClassType& operator=(const ClassType& rhs) {
+        if (&rhs != this) {
+            Assign(rhs);
+        }
+        return *this;
+    }
+
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
@@ -226,17 +234,15 @@ private:
 template <class R>
 class DelegateFunction; // Not defined
 
-// Delegate used to invoke a function synchronously. The class is not thread safe. 
+// DelegateFunction class synchronously invokes a std::function target function.
 template <class RetType, class... Args>
 class DelegateFunction<RetType(Args...)> : public Delegate<RetType(Args...)> {
 public:
     using FunctionType = std::function<RetType(Args...)>;
     using ClassType = DelegateFunction<RetType(Args...)>;
 
-    // Constructor to bind a function to the delegate
-    ClassType(FunctionType func) : m_func(func) { }
-
-    // Default constructor 
+    ClassType(FunctionType func) { Bind(func); }
+    ClassType(const ClassType& rhs) { Assign(rhs); }
     ClassType() = default;
 
     void Bind(FunctionType func) {
@@ -256,6 +262,13 @@ public:
     // Assign state data
     void Assign(const ClassType& rhs) {
         m_func = rhs.m_func;
+    }
+
+    ClassType& operator=(const ClassType& rhs) {
+        if (&rhs != this) {
+            Assign(rhs);
+        }
+        return *this;
     }
 
     virtual bool operator==(const DelegateBase& rhs) const override {
