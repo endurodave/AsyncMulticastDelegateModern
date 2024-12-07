@@ -34,10 +34,15 @@ public:
     using ClassType = DelegateFreeAsync<RetType(Args...)>;
     using BaseType = DelegateFree<RetType(Args...)>;
 
-    ClassType(FreeFunc func, DelegateThread& thread) :
+    DelegateFreeAsync(FreeFunc func, DelegateThread& thread) :
         BaseType(func), m_thread(thread) { 
         Bind(func, thread); 
     }
+    DelegateFreeAsync(const ClassType& rhs) :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        Assign(rhs);
+    }
+    DelegateFreeAsync() = delete;
 
     // Bind a free function to the delegate.
     void Bind(FreeFunc func, DelegateThread& thread) {
@@ -46,12 +51,6 @@ public:
     }
 
     // <common_code>
-    ClassType(const ClassType& rhs) :
-        BaseType(rhs), m_thread(rhs.m_thread) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
-
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
@@ -149,10 +148,15 @@ public:
     using ClassType = DelegateMemberAsync<TClass, RetType(Args...)>;
     using BaseType = DelegateMember<TClass, RetType(Args...)>;
 
-    ClassType(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
+    DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
         { Bind(object, func, thread); }
-    ClassType(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
+    DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
         { Bind(object, func, thread); }
+    DelegateMemberAsync(const ClassType& rhs) :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        Assign(rhs);
+    }
+    DelegateMemberAsync() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
@@ -167,12 +171,6 @@ public:
     }
 
     // <common_code>
-    ClassType(const ClassType& rhs) :
-        BaseType(rhs), m_thread(rhs.m_thread) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
-
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
@@ -261,7 +259,7 @@ template <class C, class R>
 struct DelegateMemberSpAsync; // Not defined
 
 // DelegateMemberSpAsync class asynchronously invokes a std::shared_ptr target function.
-template <class RetType, class TClass, class... Args>
+template <class TClass, class RetType, class... Args>
 class DelegateMemberSpAsync<TClass, RetType(Args...)> : public DelegateMemberSp<TClass, RetType(Args...)>, public IDelegateInvoker {
 public:
     typedef std::shared_ptr<TClass> ObjectPtr;
@@ -271,12 +269,17 @@ public:
     using BaseType = DelegateMemberSp<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and callback thread
-    ClassType(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
+    DelegateMemberSpAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
-    ClassType(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
+    DelegateMemberSpAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
+    DelegateMemberSpAsync(const ClassType& rhs) :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        Assign(rhs);
+    }
+    DelegateMemberSpAsync() = delete;
 
     // Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
@@ -291,12 +294,6 @@ public:
     }
 
     // <common_code>
-    ClassType(const ClassType& rhs) :
-        BaseType(rhs), m_thread(rhs.m_thread) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
-
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
@@ -392,10 +389,16 @@ public:
     using ClassType = DelegateFunctionAsync<RetType(Args...)>;
     using BaseType = DelegateFunction<RetType(Args...)>;
 
-    ClassType(FunctionType func, DelegateThread& thread) :
+    DelegateFunctionAsync(FunctionType func, DelegateThread& thread) :
         BaseType(func), m_thread(thread) {
         Bind(func, thread);
     }
+
+    DelegateFunctionAsync(const ClassType& rhs) :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        Assign(rhs);
+    }
+    DelegateFunctionAsync() = delete;
 
     // Bind a std::function to the delegate.
     void Bind(FunctionType func, DelegateThread& thread) {
@@ -404,12 +407,6 @@ public:
     }
 
     // <common_code>
-    ClassType(const ClassType& rhs) :
-        BaseType(rhs), m_thread(rhs.m_thread) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
-
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);

@@ -55,9 +55,9 @@ public:
     typedef RetType(*FreeFunc)(Args...);
     using ClassType = DelegateFree<RetType(Args...)>;
 
-    ClassType(FreeFunc func) { Bind(func); }
-    ClassType(const ClassType& rhs) { Assign(rhs); }
-    ClassType() = default;
+    DelegateFree(FreeFunc func) { Bind(func); }
+    DelegateFree(const ClassType& rhs) { Assign(rhs); }
+    DelegateFree() = default;
 
     // Bind a free function to the delegate.
     void Bind(FreeFunc func) { m_func = func; }
@@ -109,10 +109,10 @@ public:
     typedef RetType(TClass::*ConstMemberFunc)(Args...) const;
     using ClassType = DelegateMember<TClass, RetType(Args...)>;
 
-    ClassType(ObjectPtr object, MemberFunc func) { Bind(object, func); }
-    ClassType(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
-    ClassType(const ClassType& rhs) { Assign(rhs); }
-    ClassType() = default;
+    DelegateMember(ObjectPtr object, MemberFunc func) { Bind(object, func); }
+    DelegateMember(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
+    DelegateMember(const ClassType& rhs) { Assign(rhs); }
+    DelegateMember() = default;
 
     // Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func) {
@@ -176,10 +176,10 @@ public:
     typedef RetType(TClass::* ConstMemberFunc)(Args...) const;
     using ClassType = DelegateMemberSp<TClass, RetType(Args...)>;
 
-    ClassType(ObjectPtr object, MemberFunc func) { Bind(object, func); }
-    ClassType(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
-    ClassType(const ClassType& rhs) { Assign(rhs); }
-    ClassType() = default;
+    DelegateMemberSp(ObjectPtr object, MemberFunc func) { Bind(object, func); }
+    DelegateMemberSp(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
+    DelegateMemberSp(const ClassType& rhs) { Assign(rhs); }
+    DelegateMemberSp() = default;
 
     // Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func) {
@@ -241,9 +241,9 @@ public:
     using FunctionType = std::function<RetType(Args...)>;
     using ClassType = DelegateFunction<RetType(Args...)>;
 
-    ClassType(FunctionType func) { Bind(func); }
-    ClassType(const ClassType& rhs) { Assign(rhs); }
-    ClassType() = default;
+    DelegateFunction(FunctionType func) { Bind(func); }
+    DelegateFunction(const ClassType& rhs) { Assign(rhs); }
+    DelegateFunction() = default;
 
     void Bind(FunctionType func) {
         m_func = func;

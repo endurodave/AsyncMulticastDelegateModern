@@ -57,10 +57,15 @@ public:
     using BaseType = DelegateFreeAsync<RetType(Args...)>;
 
     // Contructors take a free function, delegate thread and timeout
-    ClassType(FreeFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
+    DelegateFreeAsyncWait(FreeFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(func, thread), m_timeout(timeout) {
         Bind(func, thread);
     }
+    DelegateFreeAsyncWait(const ClassType& rhs) :
+        BaseType(rhs) {
+        Assign(rhs);
+    }
+    DelegateFreeAsyncWait() = delete;
 
     /// Bind a free function to a delegate. 
     void Bind(FreeFunc func, DelegateThread& thread) {
@@ -68,12 +73,6 @@ public:
     }
 
     // <common_code>
-    ClassType(const ClassType& rhs) :
-        BaseType(rhs) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
-
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
         BaseType::Assign(rhs);
@@ -113,7 +112,7 @@ public:
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
-            GetThread().DispatchDelegate(msg);
+            this->GetThread().DispatchDelegate(msg);
 
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
@@ -157,7 +156,7 @@ public:
                 throw std::invalid_argument("Invalid DelegateMsg cast");
 
             // Invoke the delegate function then signal the waiting thread
-            SetSync(true);
+            this->SetSync(true);
             if constexpr (std::is_void<RetType>::value == true)
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
             else
@@ -196,14 +195,19 @@ public:
     using BaseType = DelegateMemberAsync<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and delegate thread
-    ClassType(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
+    DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
-    ClassType(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
+    DelegateMemberAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
+    DelegateMemberAsyncWait(const ClassType& rhs) :
+        BaseType(rhs) {
+        Assign(rhs);
+    }
+    DelegateMemberAsyncWait() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
@@ -216,12 +220,6 @@ public:
     }
 
     // <common_code>
-    ClassType(const ClassType& rhs) :
-        BaseType(rhs) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
-
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
         BaseType::Assign(rhs);
@@ -261,7 +259,7 @@ public:
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
-            GetThread().DispatchDelegate(msg);
+            this->GetThread().DispatchDelegate(msg);
 
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
@@ -305,7 +303,7 @@ public:
                 throw std::invalid_argument("Invalid DelegateMsg cast");
 
             // Invoke the delegate function then signal the waiting thread
-            SetSync(true);
+            this->SetSync(true);
             if constexpr (std::is_void<RetType>::value == true)
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
             else
@@ -344,14 +342,19 @@ public:
     using BaseType = DelegateMemberSpAsync<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and delegate thread
-    ClassType(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
+    DelegateMemberSpAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
-    ClassType(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
+    DelegateMemberSpAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
+    DelegateMemberSpAsyncWait(const ClassType& rhs) :
+        BaseType(rhs) {
+        Assign(rhs);
+    }
+    DelegateMemberSpAsyncWait() = delete;
 
     /// Bind a member function to a delegate. 
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
@@ -364,12 +367,6 @@ public:
     }
 
     // <common_code>
-    ClassType(const ClassType& rhs) :
-        BaseType(rhs) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
-
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
         BaseType::Assign(rhs);
@@ -409,7 +406,7 @@ public:
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
-            GetThread().DispatchDelegate(msg);
+            this->GetThread().DispatchDelegate(msg);
 
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
@@ -453,7 +450,7 @@ public:
                 throw std::invalid_argument("Invalid DelegateMsg cast");
 
             // Invoke the delegate function then signal the waiting thread
-            SetSync(true);
+            this->SetSync(true);
             if constexpr (std::is_void<RetType>::value == true)
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
             else
@@ -490,10 +487,15 @@ public:
     using BaseType = DelegateFunctionAsync<RetType(Args...)>;
 
     // Contructors take a std::function, delegate thread and timeout
-    ClassType(FunctionType func, DelegateThread& thread, std::chrono::milliseconds timeout) :
+    DelegateFunctionAsyncWait(FunctionType func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(func, thread), m_timeout(timeout) {
         Bind(func, thread);
     }
+    DelegateFunctionAsyncWait(const ClassType& rhs) :
+        BaseType(rhs) {
+        Assign(rhs);
+    }
+    DelegateFunctionAsyncWait() = delete;
 
     /// Bind a std::function to a delegate. 
     void Bind(FunctionType func, DelegateThread& thread) {
@@ -501,12 +503,6 @@ public:
     }
 
     // <common_code>
-    ClassType(const ClassType& rhs) :
-        BaseType(rhs) {
-        Assign(rhs);
-    }
-    ClassType() = delete;
-
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
         BaseType::Assign(rhs);
@@ -546,7 +542,7 @@ public:
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the target thread. 
-            GetThread().DispatchDelegate(msg);
+            this->GetThread().DispatchDelegate(msg);
 
             // Wait for target thread to execute the delegate function
             if ((m_success = delegate->m_sema.Wait(m_timeout)))
@@ -590,7 +586,7 @@ public:
                 throw std::invalid_argument("Invalid DelegateMsg cast");
 
             // Invoke the delegate function then signal the waiting thread
-            SetSync(true);
+            this->SetSync(true);
             if constexpr (std::is_void<RetType>::value == true)
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
             else

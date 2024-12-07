@@ -252,131 +252,124 @@ extern void DelegateUnitTests();
 
 static int callCnt = 0;
 
-void FreeFunc(int value)
-{
+void FreeFunc(int value) {
     cout << "FreeFunc " << value << " " << ++callCnt << endl;
 }
 
 // Simple test invoking all target types
-void TestAllTargetTypes()
-{
-    class Class
-    {
+void TestAllTargetTypes() {
+    class Class {
     public:
-        void StaticFunc(int value)
-        {
+        static void StaticFunc(int value) {
             cout << "StaticFunc " << value << " " << ++callCnt << endl;
         }
 
-        void StaticFuncConst(int value) const
-        {
-            cout << "StaticFuncConst " << value << " " << ++callCnt << endl;
-        }
-
-        void MemberFunc(int value)
-        {
+        void MemberFunc(int value) {
             cout << "MemberFunc " << value << " " << ++callCnt << endl;
         }
 
-        void MemberFuncConst(int value) const
-        {
+        void MemberFuncConst(int value) const {
             cout << "MemberFuncConst " << value << " " << ++callCnt << endl;
         }
     };
 
     int stackVal = 100;
-    std::function<void(int)> LambdaFunc = [&stackVal](int i)
-    {
+    std::function<void(int)> LambdaCapture = [&stackVal](int i) {
         std::cout << "LambdaFunc " << i + stackVal << " " << ++callCnt << endl;
     };
 
-    std::function<void(int)> LambdaFunc2 = [](int i)
-    {
+    std::function<void(int)> LambdaNoCapture = [](int i) {
         std::cout << "LambdaFunc2 " << i << " " << ++callCnt << endl;
     };
 
-    std::function<void(int)> LambdaFunc3 = +[](int i)
-    {
+    std::function<void(int)> LambdaForcedCapture = +[](int i) {
         std::cout << "LambdaFunc3 " << i << " " << ++callCnt << endl;
     };
 
     Class testClass;
+    std::shared_ptr<Class> testClassSp = std::make_shared<Class>();
 
     // Create a multicast delegate container that accepts Delegate<void(int)> delegates.
     // Any function with the signature "void Func(int)".
     MulticastDelegateSafe<void(int)> delegateA;
 
-    // Register all callable targets with delegate container
+    // Add all callable function targets with delegate container
     // Synchronous delegates
     delegateA += MakeDelegate(&FreeFunc);
-    delegateA += MakeDelegate(LambdaFunc);
-    delegateA += MakeDelegate(LambdaFunc2);
-    delegateA += MakeDelegate(LambdaFunc3);
-    delegateA += MakeDelegate(&testClass, &Class::StaticFunc);
-    delegateA += MakeDelegate(&testClass, &Class::StaticFuncConst);
+    delegateA += MakeDelegate(LambdaCapture);
+    delegateA += MakeDelegate(LambdaNoCapture);
+    delegateA += MakeDelegate(LambdaForcedCapture);
+    delegateA += MakeDelegate(&Class::StaticFunc);
     delegateA += MakeDelegate(&testClass, &Class::MemberFunc);
     delegateA += MakeDelegate(&testClass, &Class::MemberFuncConst);
+    delegateA += MakeDelegate(testClassSp, &Class::MemberFunc);
+    delegateA += MakeDelegate(testClassSp, &Class::MemberFuncConst);
 
     // Asynchronous delegates
     delegateA += MakeDelegate(&FreeFunc, workerThread1);
-    delegateA += MakeDelegate(LambdaFunc, workerThread1);
-    delegateA += MakeDelegate(LambdaFunc2, workerThread1);
-    delegateA += MakeDelegate(LambdaFunc3, workerThread1);
-    delegateA += MakeDelegate(&testClass, &Class::StaticFunc, workerThread1);
-    delegateA += MakeDelegate(&testClass, &Class::StaticFuncConst, workerThread1);
+    delegateA += MakeDelegate(LambdaCapture, workerThread1);
+    delegateA += MakeDelegate(LambdaNoCapture, workerThread1);
+    delegateA += MakeDelegate(LambdaForcedCapture, workerThread1);
+    delegateA += MakeDelegate(&Class::StaticFunc, workerThread1);
     delegateA += MakeDelegate(&testClass, &Class::MemberFunc, workerThread1);
     delegateA += MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1);
+    delegateA += MakeDelegate(testClassSp, &Class::MemberFunc, workerThread1);
+    delegateA += MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1);
 
     // Asynchronous blocking delegates
     delegateA += MakeDelegate(&FreeFunc, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(LambdaFunc, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(LambdaFunc2, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(LambdaFunc3, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(&testClass, &Class::StaticFunc, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(&testClass, &Class::StaticFuncConst, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(LambdaCapture, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(LambdaNoCapture, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(LambdaForcedCapture, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(&Class::StaticFunc, workerThread1, WAIT_INFINITE);
     delegateA += MakeDelegate(&testClass, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
     delegateA += MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(testClassSp, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
+    delegateA += MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
 
-    // Invoke all callable targets
+    // Invoke all callable function targets
     if (delegateA)
         delegateA(123);
 
     // Wait for async callbacks to complete
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    // Unregister all callable targets with delegate container
+    // Remove all callable function targets from delegate container
     // Synchronous delegates
     delegateA -= MakeDelegate(&FreeFunc);
-    delegateA -= MakeDelegate(LambdaFunc);
-    delegateA -= MakeDelegate(LambdaFunc2);
-    delegateA -= MakeDelegate(LambdaFunc3);
-    delegateA -= MakeDelegate(&testClass, &Class::StaticFunc);
-    delegateA -= MakeDelegate(&testClass, &Class::StaticFuncConst);
+    delegateA -= MakeDelegate(LambdaCapture);
+    delegateA -= MakeDelegate(LambdaNoCapture);
+    delegateA -= MakeDelegate(LambdaForcedCapture);
+    delegateA -= MakeDelegate(&Class::StaticFunc);
     delegateA -= MakeDelegate(&testClass, &Class::MemberFunc);
     delegateA -= MakeDelegate(&testClass, &Class::MemberFuncConst);
+    delegateA -= MakeDelegate(testClassSp, &Class::MemberFunc);
+    delegateA -= MakeDelegate(testClassSp, &Class::MemberFuncConst);
 
     // Asynchronous delegates
     delegateA -= MakeDelegate(&FreeFunc, workerThread1);
-    delegateA -= MakeDelegate(LambdaFunc, workerThread1);
-    delegateA -= MakeDelegate(LambdaFunc2, workerThread1);
-    delegateA -= MakeDelegate(LambdaFunc3, workerThread1);
-    delegateA -= MakeDelegate(&testClass, &Class::StaticFunc, workerThread1);
-    delegateA -= MakeDelegate(&testClass, &Class::StaticFuncConst, workerThread1);
+    delegateA -= MakeDelegate(LambdaCapture, workerThread1);
+    delegateA -= MakeDelegate(LambdaNoCapture, workerThread1);
+    delegateA -= MakeDelegate(LambdaForcedCapture, workerThread1);
+    delegateA -= MakeDelegate(&Class::StaticFunc, workerThread1);
     delegateA -= MakeDelegate(&testClass, &Class::MemberFunc, workerThread1);
     delegateA -= MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1);
+    delegateA -= MakeDelegate(testClassSp, &Class::MemberFunc, workerThread1);
+    delegateA -= MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1);
 
     // Asynchronous blocking delegates
     delegateA -= MakeDelegate(&FreeFunc, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(LambdaFunc, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(LambdaFunc2, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(LambdaFunc3, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(&testClass, &Class::StaticFunc, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(&testClass, &Class::StaticFuncConst, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(LambdaCapture, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(LambdaNoCapture, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(LambdaForcedCapture, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(&Class::StaticFunc, workerThread1, WAIT_INFINITE);
     delegateA -= MakeDelegate(&testClass, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
     delegateA -= MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(testClassSp, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
+    delegateA -= MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
 
     ASSERT_TRUE(delegateA.Size() == 0);
-    ASSERT_TRUE(callCnt == 24);
+    ASSERT_TRUE(callCnt == 27);
 }
 
 //------------------------------------------------------------------------------
