@@ -70,7 +70,7 @@ public:
         m_func = rhs.m_func; 
     }
 
-    // Invoke the bound delegate function. 
+    // Invoke the bound delegate function synchronously. 
     virtual RetType operator()(Args... args) override {
         return std::invoke(m_func, args...);
     }
@@ -135,7 +135,7 @@ public:
         m_func = rhs.m_func;
     }
 
-    // Invoke the bound delegate function
+    // Invoke the bound delegate function synchronously. 
     virtual RetType operator()(Args... args) override {
         return std::invoke(m_func, m_object, args...);
     }
@@ -202,7 +202,7 @@ public:
         m_func = rhs.m_func;
     }
 
-    // Invoke the bound delegate function
+    // Invoke the bound delegate function synchronously. 
     virtual RetType operator()(Args... args) override {
         return std::invoke(m_func, m_object, args...);
     }
@@ -249,7 +249,7 @@ public:
         m_func = func;
     }
 
-    // Invoke the bound function
+    // Invoke the bound delegate function synchronously. 
     virtual RetType operator()(Args... args) override {
         return m_func(std::forward<Args>(args)...);
     }

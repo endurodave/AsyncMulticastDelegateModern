@@ -59,7 +59,9 @@ bool WorkerThread::CreateThread()
 //----------------------------------------------------------------------------
 std::thread::id WorkerThread::GetThreadId()
 {
-	ASSERT_TRUE(m_thread != nullptr);
+	if (m_thread == nullptr)
+		throw std::invalid_argument("Thread pointer is null");
+
 	return m_thread->get_id();
 }
 
@@ -98,7 +100,8 @@ void WorkerThread::ExitThread()
 //----------------------------------------------------------------------------
 void WorkerThread::DispatchDelegate(std::shared_ptr<DelegateLib::DelegateMsgBase> msg)
 {
-	ASSERT_TRUE(m_thread);
+	if (m_thread == nullptr)
+		throw std::invalid_argument("Thread pointer is null");
 
 	// Create a new ThreadMsg
     std::shared_ptr<ThreadMsg> threadMsg(new ThreadMsg(MSG_DISPATCH_DELEGATE, msg));
@@ -155,7 +158,8 @@ void WorkerThread::Process()
 		{
 			case MSG_DISPATCH_DELEGATE:
 			{
-				ASSERT_TRUE(msg->GetData() != NULL);
+				if (msg->GetData() == nullptr)
+					throw std::invalid_argument("Message data pointer pointer is null");
 
 				// Convert the ThreadMsg void* data back to a DelegateMsg* 
                 auto delegateMsg = msg->GetData();
@@ -177,7 +181,7 @@ void WorkerThread::Process()
 			}
 
 			default:
-				ASSERT();
+				throw std::invalid_argument("Invalid message ID");
 		}
 	}
 }

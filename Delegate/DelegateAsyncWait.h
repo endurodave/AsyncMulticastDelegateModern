@@ -8,12 +8,11 @@
 #include "DelegateAsync.h"
 #include "DelegateThread.h"
 #include "DelegateInvoker.h"
-#include "Semaphore.h"
 #include <optional>
 #include <any>
 #include <chrono>
 
-// Asynchronous member delegate that invokes the target function on the specified thread of control
+// Asynchronous delegate that invokes the target function on the specified thread of control
 // and waits for the function to be executed or a timeout occurs. Use IsSuccess() to determine if 
 // asynchronous call succeeded.
 // 
@@ -97,7 +96,10 @@ public:
             BaseType::operator==(rhs);
     }
 
-    // Invoke delegate function asynchronously and block for function return value
+    // Invoke delegate function asynchronously and block for function return value. 
+    // Called by the source thread. Dispatches the delegate data into the destination 
+    // thread message queue. DelegateInvoke() must be called by the destination thread 
+    // to invoke the target function.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -105,22 +107,26 @@ public:
         {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
-            delegate->m_invokerWaiting = true;
 
             // Create a new message instance 
             auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
+            msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
-            // will be called by the target thread. 
+            // will be called by the destination thread. 
             this->GetThread().DispatchDelegate(msg);
 
-            // Wait for target thread to execute the delegate function
-            if ((m_success = delegate->m_sema.Wait(m_timeout)))
+            // Wait for destination thread to execute the delegate function and get return value
+            if ((m_success = msg->GetSema().Wait(m_timeout)))
                 m_retVal = delegate->m_retVal;
 
-            const std::lock_guard<std::mutex> lock(m_lock);
-            delegate->m_invokerWaiting = false;
+            // Protect data shared between source and destination threads
+            const std::lock_guard<std::mutex> lock(msg->GetLock());
 
+            // Set flag that source is not waiting anymore
+            msg->SetInvokerWaiting(false);
+
+            // Return the destintation thread return value, if any
             if constexpr (std::is_void<RetType>::value == false)
             {
                 if (m_retVal.has_value())
@@ -131,7 +137,8 @@ public:
         }
     }
 
-    // Invoke delegate function asynchronously and block for function return value
+    // Invoke delegate function asynchronously and block for function return value.
+    // Called by the source thread.
     auto AsyncInvoke(Args... args) {
         if constexpr (std::is_void<RetType>::value == true)
         {
@@ -145,23 +152,27 @@ public:
         }
     }
 
-    /// Called by the target thread to invoke the delegate function 
+    // Invoke the delegate function on the destination thread. Each source thread call
+    // to operator() generate a call to DelegateInvoke() on the destination thread. A 
+    // lock provides thread safety between source and destination delegateMsg thread access.
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
-        const std::lock_guard<std::mutex> lock(m_lock);
-        if (this->m_invokerWaiting)
-        {
-            // Typecast the base pointer to back to the templatized instance
-            auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
-            if (delegateMsg == nullptr)
-                throw std::invalid_argument("Invalid DelegateMsg cast");
+        // Typecast the base pointer to back correct derived to instance
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+        if (delegateMsg == nullptr)
+            throw std::invalid_argument("Invalid DelegateMsg cast");
 
-            // Invoke the delegate function then signal the waiting thread
+        const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
+        if (delegateMsg->GetInvokerWaiting())
+        {
+            // Invoke the delegate function synchronously
             this->SetSync(true);
             if constexpr (std::is_void<RetType>::value == true)
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
             else
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            m_sema.Signal();
+
+            // Signal the source thread that the destination thread function call is complete
+            delegateMsg->GetSema().Signal();
         }
     }
 
@@ -174,10 +185,7 @@ public:
 private:
     bool m_success = false;			        // Set to true if async function succeeds
     std::chrono::milliseconds m_timeout;    // Time in mS to wait for async function to invoke
-    Semaphore m_sema;				        // Semaphore to signal waiting thread
     std::any m_retVal;                      // Return value of the invoked function
-    bool m_invokerWaiting = false;          // True if caller thread is waiting for invoke complete
-    std::mutex m_lock;
     // </common_code>
 };
 
@@ -244,7 +252,10 @@ public:
             BaseType::operator==(rhs);
     }
 
-    // Invoke delegate function asynchronously and block for function return value
+    // Invoke delegate function asynchronously and block for function return value. 
+    // Called by the source thread. Dispatches the delegate data into the destination 
+    // thread message queue. DelegateInvoke() must be called by the destination thread 
+    // to invoke the target function.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -252,22 +263,26 @@ public:
         {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
-            delegate->m_invokerWaiting = true;
 
             // Create a new message instance 
             auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
+            msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
-            // will be called by the target thread. 
+            // will be called by the destination thread. 
             this->GetThread().DispatchDelegate(msg);
 
-            // Wait for target thread to execute the delegate function
-            if ((m_success = delegate->m_sema.Wait(m_timeout)))
+            // Wait for destination thread to execute the delegate function and get return value
+            if ((m_success = msg->GetSema().Wait(m_timeout)))
                 m_retVal = delegate->m_retVal;
 
-            const std::lock_guard<std::mutex> lock(m_lock);
-            delegate->m_invokerWaiting = false;
+            // Protect data shared between source and destination threads
+            const std::lock_guard<std::mutex> lock(msg->GetLock());
 
+            // Set flag that source is not waiting anymore
+            msg->SetInvokerWaiting(false);
+
+            // Return the destintation thread return value, if any
             if constexpr (std::is_void<RetType>::value == false)
             {
                 if (m_retVal.has_value())
@@ -278,7 +293,8 @@ public:
         }
     }
 
-    // Invoke delegate function asynchronously and block for function return value
+    // Invoke delegate function asynchronously and block for function return value.
+    // Called by the source thread.
     auto AsyncInvoke(Args... args) {
         if constexpr (std::is_void<RetType>::value == true)
         {
@@ -292,23 +308,27 @@ public:
         }
     }
 
-    /// Called by the target thread to invoke the delegate function 
+    // Invoke the delegate function on the destination thread. Each source thread call
+    // to operator() generate a call to DelegateInvoke() on the destination thread. A 
+    // lock provides thread safety between source and destination delegateMsg thread access.
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
-        const std::lock_guard<std::mutex> lock(m_lock);
-        if (this->m_invokerWaiting)
-        {
-            // Typecast the base pointer to back to the templatized instance
-            auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
-            if (delegateMsg == nullptr)
-                throw std::invalid_argument("Invalid DelegateMsg cast");
+        // Typecast the base pointer to back correct derived to instance
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+        if (delegateMsg == nullptr)
+            throw std::invalid_argument("Invalid DelegateMsg cast");
 
-            // Invoke the delegate function then signal the waiting thread
+        const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
+        if (delegateMsg->GetInvokerWaiting())
+        {
+            // Invoke the delegate function synchronously
             this->SetSync(true);
             if constexpr (std::is_void<RetType>::value == true)
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
             else
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            m_sema.Signal();
+
+            // Signal the source thread that the destination thread function call is complete
+            delegateMsg->GetSema().Signal();
         }
     }
 
@@ -321,10 +341,7 @@ public:
 private:
     bool m_success = false;			        // Set to true if async function succeeds
     std::chrono::milliseconds m_timeout;    // Time in mS to wait for async function to invoke
-    Semaphore m_sema;				        // Semaphore to signal waiting thread
     std::any m_retVal;                      // Return value of the invoked function
-    bool m_invokerWaiting = false;          // True if caller thread is waiting for invoke complete
-    std::mutex m_lock;
     // </common_code>
 };
 
@@ -391,7 +408,10 @@ public:
             BaseType::operator==(rhs);
     }
 
-    // Invoke delegate function asynchronously and block for function return value
+    // Invoke delegate function asynchronously and block for function return value. 
+    // Called by the source thread. Dispatches the delegate data into the destination 
+    // thread message queue. DelegateInvoke() must be called by the destination thread 
+    // to invoke the target function.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -399,22 +419,26 @@ public:
         {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
-            delegate->m_invokerWaiting = true;
 
             // Create a new message instance 
             auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
+            msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
-            // will be called by the target thread. 
+            // will be called by the destination thread. 
             this->GetThread().DispatchDelegate(msg);
 
-            // Wait for target thread to execute the delegate function
-            if ((m_success = delegate->m_sema.Wait(m_timeout)))
+            // Wait for destination thread to execute the delegate function and get return value
+            if ((m_success = msg->GetSema().Wait(m_timeout)))
                 m_retVal = delegate->m_retVal;
 
-            const std::lock_guard<std::mutex> lock(m_lock);
-            delegate->m_invokerWaiting = false;
+            // Protect data shared between source and destination threads
+            const std::lock_guard<std::mutex> lock(msg->GetLock());
 
+            // Set flag that source is not waiting anymore
+            msg->SetInvokerWaiting(false);
+
+            // Return the destintation thread return value, if any
             if constexpr (std::is_void<RetType>::value == false)
             {
                 if (m_retVal.has_value())
@@ -425,7 +449,8 @@ public:
         }
     }
 
-    // Invoke delegate function asynchronously and block for function return value
+    // Invoke delegate function asynchronously and block for function return value.
+    // Called by the source thread.
     auto AsyncInvoke(Args... args) {
         if constexpr (std::is_void<RetType>::value == true)
         {
@@ -439,23 +464,27 @@ public:
         }
     }
 
-    /// Called by the target thread to invoke the delegate function 
+    // Invoke the delegate function on the destination thread. Each source thread call
+    // to operator() generate a call to DelegateInvoke() on the destination thread. A 
+    // lock provides thread safety between source and destination delegateMsg thread access.
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
-        const std::lock_guard<std::mutex> lock(m_lock);
-        if (this->m_invokerWaiting)
-        {
-            // Typecast the base pointer to back to the templatized instance
-            auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
-            if (delegateMsg == nullptr)
-                throw std::invalid_argument("Invalid DelegateMsg cast");
+        // Typecast the base pointer to back correct derived to instance
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+        if (delegateMsg == nullptr)
+            throw std::invalid_argument("Invalid DelegateMsg cast");
 
-            // Invoke the delegate function then signal the waiting thread
+        const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
+        if (delegateMsg->GetInvokerWaiting())
+        {
+            // Invoke the delegate function synchronously
             this->SetSync(true);
             if constexpr (std::is_void<RetType>::value == true)
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
             else
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            m_sema.Signal();
+
+            // Signal the source thread that the destination thread function call is complete
+            delegateMsg->GetSema().Signal();
         }
     }
 
@@ -468,10 +497,7 @@ public:
 private:
     bool m_success = false;			        // Set to true if async function succeeds
     std::chrono::milliseconds m_timeout;    // Time in mS to wait for async function to invoke
-    Semaphore m_sema;				        // Semaphore to signal waiting thread
     std::any m_retVal;                      // Return value of the invoked function
-    bool m_invokerWaiting = false;          // True if caller thread is waiting for invoke complete
-    std::mutex m_lock;
     // </common_code>
 };
 
@@ -527,7 +553,10 @@ public:
             BaseType::operator==(rhs);
     }
 
-    // Invoke delegate function asynchronously and block for function return value
+    // Invoke delegate function asynchronously and block for function return value. 
+    // Called by the source thread. Dispatches the delegate data into the destination 
+    // thread message queue. DelegateInvoke() must be called by the destination thread 
+    // to invoke the target function.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -535,22 +564,26 @@ public:
         {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
-            delegate->m_invokerWaiting = true;
 
             // Create a new message instance 
             auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
+            msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
-            // will be called by the target thread. 
+            // will be called by the destination thread. 
             this->GetThread().DispatchDelegate(msg);
 
-            // Wait for target thread to execute the delegate function
-            if ((m_success = delegate->m_sema.Wait(m_timeout)))
+            // Wait for destination thread to execute the delegate function and get return value
+            if ((m_success = msg->GetSema().Wait(m_timeout)))
                 m_retVal = delegate->m_retVal;
 
-            const std::lock_guard<std::mutex> lock(m_lock);
-            delegate->m_invokerWaiting = false;
+            // Protect data shared between source and destination threads
+            const std::lock_guard<std::mutex> lock(msg->GetLock());
 
+            // Set flag that source is not waiting anymore
+            msg->SetInvokerWaiting(false);
+
+            // Return the destintation thread return value, if any
             if constexpr (std::is_void<RetType>::value == false)
             {
                 if (m_retVal.has_value())
@@ -561,7 +594,8 @@ public:
         }
     }
 
-    // Invoke delegate function asynchronously and block for function return value
+    // Invoke delegate function asynchronously and block for function return value.
+    // Called by the source thread.
     auto AsyncInvoke(Args... args) {
         if constexpr (std::is_void<RetType>::value == true)
         {
@@ -575,23 +609,27 @@ public:
         }
     }
 
-    /// Called by the target thread to invoke the delegate function 
+    // Invoke the delegate function on the destination thread. Each source thread call
+    // to operator() generate a call to DelegateInvoke() on the destination thread. A 
+    // lock provides thread safety between source and destination delegateMsg thread access.
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
-        const std::lock_guard<std::mutex> lock(m_lock);
-        if (this->m_invokerWaiting)
-        {
-            // Typecast the base pointer to back to the templatized instance
-            auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
-            if (delegateMsg == nullptr)
-                throw std::invalid_argument("Invalid DelegateMsg cast");
+        // Typecast the base pointer to back correct derived to instance
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+        if (delegateMsg == nullptr)
+            throw std::invalid_argument("Invalid DelegateMsg cast");
 
-            // Invoke the delegate function then signal the waiting thread
+        const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
+        if (delegateMsg->GetInvokerWaiting())
+        {
+            // Invoke the delegate function synchronously
             this->SetSync(true);
             if constexpr (std::is_void<RetType>::value == true)
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
             else
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            m_sema.Signal();
+
+            // Signal the source thread that the destination thread function call is complete
+            delegateMsg->GetSema().Signal();
         }
     }
 
@@ -604,10 +642,7 @@ public:
 private:
     bool m_success = false;			        // Set to true if async function succeeds
     std::chrono::milliseconds m_timeout;    // Time in mS to wait for async function to invoke
-    Semaphore m_sema;				        // Semaphore to signal waiting thread
     std::any m_retVal;                      // Return value of the invoked function
-    bool m_invokerWaiting = false;          // True if caller thread is waiting for invoke complete
-    std::mutex m_lock;
     // </common_code>
 };
 

@@ -39,10 +39,12 @@ Timer::~Timer()
 //------------------------------------------------------------------------------
 void Timer::Start(std::chrono::milliseconds timeout)
 {
+	if (timeout <= std::chrono::milliseconds(0))
+		throw std::invalid_argument("Timeout cannot be 0");
+
 	const std::lock_guard<std::mutex> lock(m_lock);
 
 	m_timeout = timeout;
-    ASSERT_TRUE(m_timeout != std::chrono::milliseconds(0));
 	m_expireTime = GetTime();
 	m_enabled = true;
 
