@@ -1,5 +1,5 @@
 # Asynchronous Multicast Delegates in Modern C++
-![Build Status](https://github.com/username/repository/actions/workflows/cpp_delegates.yml/badge.svg)
+[![Build Status](https://github.com/username/repository/actions/workflows/cpp_delegates.yml/badge.svg)](https://github.com/username/repository/actions/workflows/cpp_delegates.yml)
 
 A C++ standards compliant delegate library capable of targeting any callable function synchronously or asynchronously.
 
