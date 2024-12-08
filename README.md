@@ -11,6 +11,35 @@ Asynchronous function calls support both non-blocking and blocking modes with a 
 
 Originally published on CodeProject at: <a href="https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cpluspl">Asynchronous Multicast Delegates in Modern C++</a>
 
+# Delegate Classes
+
+Primary delegate library classes.
+
+```cpp
+// Delegates
+DelegateBase
+    Delegate<>
+        DelegateFree<>
+            DelegateFreeAsync<>
+                DelegateFreeAsyncWait<>
+        DelegateMember<>
+            DelegateMemberAsync<>
+                DelegateMemberAsyncWait<>
+        DelegateMemberSp<>
+            DelegateMemberSpAsync<>
+                DelegateMemberSpAsyncWait<>
+
+// Delegate Containers
+SinglecastDelegate<>
+MulticastDelegate<>
+    MulticastDelegateSafe<>
+
+// Helper Classes
+IDelegateInvoker
+DelegateMsg
+DeleateThread
+``` 
+
 # Quick Start
 
 A simple publish/subscribe asynchronous delegate example.
@@ -85,7 +114,7 @@ class AlarmSub
 
 <p>This is a simple example. Many other usage patterns exist including asynchronous API's, blocking delegates with a timeout, and more.</p>
 
-## All Delegate Types
+## All Delegate Types Example
 
 A example delegate container inserting and removing all delegate types.
 
@@ -256,6 +285,15 @@ After executed, build the software from within the <code>Build</code> directory 
  See [Design Details](Docs/DETAILS.md) for implementation design details and more examples.
 
 # Related Repositories
+
+## Source Code Used Within Delegates
+
+Supporting source code within the delegate library.
+
+* <a href="https://github.com/endurodave/StdWorkerThread">C++ std::thread Event Loop</a> - C++ std::thread Event Loop with Message Queue and Timer.
+* <a href="https://github.com/endurodave/stl_allocator">Fixed Block std::allocator</a> - STL std::allocator Fixed Block Memory Allocator.
+
+## Projects Using Delegates
 
 The repositories below utilize the delegate library in different multithreaded applications.
 
