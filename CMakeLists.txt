@@ -1,15 +1,15 @@
 # Example CMake command line to create project build files:
 #
 # *** Windows ***
-# cmake -G "Visual Studio 17 2022" -A Win32 -B ../AsyncMulticastDelegateModernBuild -S .
-# cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S .
-# cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON
-# cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_ALLOCATOR=ON
+# cmake -G "Visual Studio 17 2022" -A Win32 -B Build -S .
+# cmake -G "Visual Studio 17 2022" -A x64 -B Build -S .
+# cmake -G "Visual Studio 17 2022" -A x64 -B Build -S . -DENABLE_UNIT_TESTS=ON
+# cmake -G "Visual Studio 17 2022" -A x64 -B Build -S . -DENABLE_ALLOCATOR=ON
 #
 # *** Linux ***
-# cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S .
-# cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON
-# cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_ALLOCATOR=ON
+# cmake -G "Unix Makefiles" -B Build -S .
+# cmake -G "Unix Makefiles" -B Build -S . -DENABLE_UNIT_TESTS=ON
+# cmake -G "Unix Makefiles" -B Build -S . -DENABLE_ALLOCATOR=ON
 
 # Specify the minimum CMake version required
 cmake_minimum_required(VERSION 3.10)
