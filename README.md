@@ -1,6 +1,7 @@
 # Asynchronous Multicast Delegates in Modern C++
 ![License MIT](https://img.shields.io/github/license/BehaviorTree/BehaviorTree.CPP?color=blue)
-[![conan Ubuntu](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cpp_delegates.yml/badge.svg)](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cpp_delegates.yml)
+[![conan Ubuntu](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cmake_ubuntu.yml/badge.svg)](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cmake_ubuntu.yml)
+[![conan Windows](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cmake_windows.yml/badge.svg)](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cmake_windows.yml)
 
 A C++ standards compliant delegate library capable of targeting any callable function synchronously or asynchronously.
 
