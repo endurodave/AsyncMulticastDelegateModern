@@ -1,0 +1,26 @@
+name: Clang
+
+on:
+  push:
+    branches:
+      - wip/refactoring  # Trigger on push to 'wip/refactoring' branch
+  pull_request:
+    branches:
+      - wip/refactoring  # Trigger on pull request targeting 'wip/refactoring' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Use Ubuntu environment for the build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # Checkout the repository code
+
+    - name: Configure CMake with Clang
+      run: cmake -S . -B Build -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DENABLE_UNIT_TESTS=ON  # Configure CMake with Clang as the compiler
+
+    - name: Build
+      run: cmake --build Build  # Build the project using CMake
+
+    - name: Run DelegateApp
+      run: ./Build/DelegateApp  # Run the built executable
