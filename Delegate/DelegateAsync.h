@@ -23,6 +23,37 @@
 
 namespace DelegateLib {
 
+/// @brief Stores all function arguments suitable for non-blocking asynchronous calls.
+/// Argument data is stored in the heap.
+template <class...Args>
+class DelegateAsyncMsg : public DelegateMsg
+{
+public:
+    /// Constructor
+    /// @param[in] invoker - the invoker instance
+    /// @param[in] args - a parameter pack of all target function arguments
+    DelegateAsyncMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsg(invoker),
+        m_args(make_tuple_heap(m_heapMem, m_start, args...))
+    {
+    }
+
+    virtual ~DelegateAsyncMsg() = default;
+
+    /// Get all function arguments that were created on the heap
+    /// @return A tuple of all function arguments
+    std::tuple<Args...>& GetArgs() { return m_args; }
+
+private:
+    /// A list of heap allocated argument memory blocks
+    xlist<std::shared_ptr<heap_arg_deleter_base>> m_heapMem;
+
+    /// An empty starting tuple
+    std::tuple<> m_start;
+
+    /// A tuple with each element stored within the heap
+    std::tuple<Args...> m_args;
+};
+
 template <class R>
 struct DelegateFreeAsync; // Not defined
 
@@ -88,7 +119,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create the delegate message
-            auto msg = std::make_shared<DelegateMsgHeapArgs<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -119,9 +150,9 @@ public:
     // Unlike DelegateAsyncWait, a lock is not required between source and destination 
     // delegateMsg access because the source thread is not waiting for the function call 
     // to complete.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
         // Typecast the base pointer to back correct derived to instance
-        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsgHeapArgs<Args...>>(msg);
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
             throw std::invalid_argument("Invalid DelegateMsgHeapArgs cast");
 
@@ -217,7 +248,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create the delegate message
-            auto msg = std::make_shared<DelegateMsgHeapArgs<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -248,9 +279,9 @@ public:
     // Unlike DelegateAsyncWait, a lock is not required between source and destination 
     // delegateMsg access because the source thread is not waiting for the function call 
     // to complete.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
         // Typecast the base pointer to back correct derived to instance
-        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsgHeapArgs<Args...>>(msg);
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
             throw std::invalid_argument("Invalid DelegateMsgHeapArgs cast");
 
@@ -349,7 +380,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create the delegate message
-            auto msg = std::make_shared<DelegateMsgHeapArgs<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -380,9 +411,9 @@ public:
     // Unlike DelegateAsyncWait, a lock is not required between source and destination 
     // delegateMsg access because the source thread is not waiting for the function call 
     // to complete.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
         // Typecast the base pointer to back correct derived to instance
-        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsgHeapArgs<Args...>>(msg);
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
             throw std::invalid_argument("Invalid DelegateMsgHeapArgs cast");
 
@@ -471,7 +502,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create the delegate message
-            auto msg = std::make_shared<DelegateMsgHeapArgs<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -502,9 +533,9 @@ public:
     // Unlike DelegateAsyncWait, a lock is not required between source and destination 
     // delegateMsg access because the source thread is not waiting for the function call 
     // to complete.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
         // Typecast the base pointer to back correct derived to instance
-        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsgHeapArgs<Args...>>(msg);
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
             throw std::invalid_argument("Invalid DelegateMsgHeapArgs cast");
 

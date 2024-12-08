@@ -20,7 +20,7 @@ public:
 	/// @param[in] msg - a pointer to the callback message that must be created dynamically.
 	/// @pre Caller *must* create the DelegateMsg argument dynamically.
 	/// @post The destination thread calls DelegateInvoke().
-	virtual void DispatchDelegate(std::shared_ptr<DelegateMsgBase> msg) = 0;
+	virtual void DispatchDelegate(std::shared_ptr<DelegateMsg> msg) = 0;
 };
 
 }

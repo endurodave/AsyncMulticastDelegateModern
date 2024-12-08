@@ -98,7 +98,7 @@ void WorkerThread::ExitThread()
 //----------------------------------------------------------------------------
 // DispatchDelegate
 //----------------------------------------------------------------------------
-void WorkerThread::DispatchDelegate(std::shared_ptr<DelegateLib::DelegateMsgBase> msg)
+void WorkerThread::DispatchDelegate(std::shared_ptr<DelegateLib::DelegateMsg> msg)
 {
 	if (m_thread == nullptr)
 		throw std::invalid_argument("Thread pointer is null");
@@ -159,12 +159,12 @@ void WorkerThread::Process()
 			case MSG_DISPATCH_DELEGATE:
 			{
 				if (msg->GetData() == nullptr)
-					throw std::invalid_argument("Message data pointer pointer is null");
+					throw std::invalid_argument("Message data pointer is null");
 
-				// Convert the ThreadMsg void* data back to a DelegateMsg* 
+				// Get pointer to DelegateMsgBase data from queue msg data
                 auto delegateMsg = msg->GetData();
 
-				// Invoke the callback on the target thread
+				// Invoke the delegate destination target function
 				delegateMsg->GetDelegateInvoker()->DelegateInvoke(delegateMsg);
 				break;
 			}

@@ -44,6 +44,53 @@ namespace DelegateLib {
 #undef max  // Prevent compiler error on next line if max is defined
 constexpr auto WAIT_INFINITE = std::chrono::milliseconds::max();
 
+/// @brief Stores all function arguments suitable for blocking asynchronous calls.
+/// Argument data is not stored in the heap.
+template <class...Args>
+class DelegateAsyncWaitMsg : public DelegateMsg
+{
+public:
+    /// Constructor
+    /// @param[in] invoker - the invoker instance
+    /// @param[in] args - a parameter pack of all target function arguments
+    DelegateAsyncWaitMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsg(invoker),
+        m_args(args...)
+    {
+    }
+
+    virtual ~DelegateAsyncWaitMsg() {}
+
+    /// Get all function arguments 
+    /// @return A tuple of all function arguments
+    std::tuple<Args...>& GetArgs() { return m_args; }
+
+    // Get the semaphore used to signal the sending thread that the receiving 
+    // thread has invoked the target function. 
+    Semaphore& GetSema() { return m_sema; }
+
+    // Get a mutex shared between sender and receiver threads
+    std::mutex& GetLock() { return m_lock; }
+
+    // True if the sending thread is waiting for the receiver thread to call the function.
+    // False if the sending thread delegate timeout occurred and is not waiting.
+    bool GetInvokerWaiting() { return m_invokerWaiting; }
+
+    // Set to true when source thread is waiting for destination thread to complete the 
+    // function call.
+    void SetInvokerWaiting(bool invokerWaiting) { m_invokerWaiting = invokerWaiting; }
+
+private:
+    /// An empty starting tuple
+    std::tuple<> m_start;
+
+    /// A tuple with each function argument element 
+    std::tuple<Args...> m_args;
+
+    Semaphore m_sema;				        // Semaphore to signal waiting thread
+    std::mutex m_lock;                      // Lock to protect shared data  
+    bool m_invokerWaiting = false;          // True if caller thread is waiting for invoke complete
+};
+
 template <class R>
 struct DelegateFreeAsyncWait; // Not defined
 
@@ -109,7 +156,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance 
-            auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -155,9 +202,9 @@ public:
     // Invoke the delegate function on the destination thread. Each source thread call
     // to operator() generate a call to DelegateInvoke() on the destination thread. A 
     // lock provides thread safety between source and destination delegateMsg thread access.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
-        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncWaitMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
             throw std::invalid_argument("Invalid DelegateMsg cast");
 
@@ -265,7 +312,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance 
-            auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -311,9 +358,9 @@ public:
     // Invoke the delegate function on the destination thread. Each source thread call
     // to operator() generate a call to DelegateInvoke() on the destination thread. A 
     // lock provides thread safety between source and destination delegateMsg thread access.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
-        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncWaitMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
             throw std::invalid_argument("Invalid DelegateMsg cast");
 
@@ -421,7 +468,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance 
-            auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -467,9 +514,9 @@ public:
     // Invoke the delegate function on the destination thread. Each source thread call
     // to operator() generate a call to DelegateInvoke() on the destination thread. A 
     // lock provides thread safety between source and destination delegateMsg thread access.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
-        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncWaitMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
             throw std::invalid_argument("Invalid DelegateMsg cast");
 
@@ -566,7 +613,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance 
-            auto msg = std::make_shared<DelegateMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -612,9 +659,9 @@ public:
     // Invoke the delegate function on the destination thread. Each source thread call
     // to operator() generate a call to DelegateInvoke() on the destination thread. A 
     // lock provides thread safety between source and destination delegateMsg thread access.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) override {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
-        auto delegateMsg = std::dynamic_pointer_cast<DelegateMsg<Args...>>(msg);
+        auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncWaitMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
             throw std::invalid_argument("Invalid DelegateMsg cast");
 

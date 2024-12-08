@@ -274,16 +274,16 @@ void TestAllTargetTypes() {
     };
 
     int stackVal = 100;
-    std::function<void(int)> LambdaCapture = [&stackVal](int i) {
-        std::cout << "LambdaFunc " << i + stackVal << " " << ++callCnt << endl;
+    std::function<void(int)> LambdaCapture = [stackVal](int i) {
+        std::cout << "LambdaCapture " << i + stackVal << " " << ++callCnt << endl;
     };
 
     std::function<void(int)> LambdaNoCapture = [](int i) {
-        std::cout << "LambdaFunc2 " << i << " " << ++callCnt << endl;
+        std::cout << "LambdaNoCapture " << i << " " << ++callCnt << endl;
     };
 
     std::function<void(int)> LambdaForcedCapture = +[](int i) {
-        std::cout << "LambdaFunc3 " << i << " " << ++callCnt << endl;
+        std::cout << "LambdaForcedCapture " << i << " " << ++callCnt << endl;
     };
 
     Class testClass;
