@@ -293,7 +293,7 @@ void TestAllTargetTypes() {
     // Any function with the signature "void Func(int)".
     MulticastDelegateSafe<void(int)> delegateA;
 
-    // Add all callable function targets with delegate container
+    // Add all callable function targets to the delegate container
     // Synchronous delegates
     delegateA += MakeDelegate(&FreeFunc);
     delegateA += MakeDelegate(LambdaCapture);
@@ -327,14 +327,14 @@ void TestAllTargetTypes() {
     delegateA += MakeDelegate(testClassSp, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
     delegateA += MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
 
-    // Invoke all callable function targets
+    // Invoke all callable function targets stored within the delegate container
     if (delegateA)
         delegateA(123);
 
     // Wait for async callbacks to complete
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    // Remove all callable function targets from delegate container
+    // Remove all callable function targets from the delegate container
     // Synchronous delegates
     delegateA -= MakeDelegate(&FreeFunc);
     delegateA -= MakeDelegate(LambdaCapture);

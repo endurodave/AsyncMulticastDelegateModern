@@ -5,13 +5,62 @@
 
 # Asynchronous Multicast Delegates in Modern C++
 
-A C++ delegate library capable of invoking any callable function both synchronously and asynchronously on a specified thread of control. 
+A C++ standards compliant delegate library capable of targeting any callable function synchronously or asynchronously.
 
-Asynchronous function calls support both non-blocking and blocking modes with a timeout. The library supports all types of target functions, including free functions, class member functions, static class functions, and lambdas. It is capable of handling any function signature, regardless of the number of arguments or return value. All argument types are supported, including by value, pointers, pointers to pointers, and references. The delegate library takes care of the intricate details of function invocation across thread boundaries.
+# Table of Contents
+
+- [Asynchronous Multicast Delegates in Modern C++](#asynchronous-multicast-delegates-in-modern-c)
+- [Table of Contents](#table-of-contents)
+- [Preface](#preface)
+  - [Related repositories](#related-repositories)
+  - [Library Comparison](#library-comparison)
+- [Introduction](#introduction)
+- [Delegates Background](#delegates-background)
+- [Quick Start](#quick-start)
+  - [Publisher](#publisher)
+  - [Subscriber](#subscriber)
+- [Project Build](#project-build)
+  - [Windows Visual Studio](#windows-visual-studio)
+  - [Linux Make](#linux-make)
+- [Using the Code](#using-the-code)
+  - [Synchronous Delegates](#synchronous-delegates)
+  - [Asynchronous Non-Blocking Delegates](#asynchronous-non-blocking-delegates)
+  - [Bind to std::shared\_ptr](#bind-to-stdshared_ptr)
+  - [Caution Using Raw Object Pointers](#caution-using-raw-object-pointers)
+  - [Asynchronous Blocking Delegates](#asynchronous-blocking-delegates)
+  - [Asynchronous Lambda Invocation](#asynchronous-lambda-invocation)
+- [Delegate Library](#delegate-library)
+  - [Heap Template Parameter Pack](#heap-template-parameter-pack)
+    - [Argument Heap Copy](#argument-heap-copy)
+    - [Bypassing Argument Heap Copy](#bypassing-argument-heap-copy)
+    - [Array Argument Heap Copy](#array-argument-heap-copy)
+  - [Worker Thread (std::thread)](#worker-thread-stdthread)
+- [Delegate Containers](#delegate-containers)
+- [Examples](#examples)
+  - [SysData Example](#sysdata-example)
+  - [SysDataClient Example](#sysdataclient-example)
+  - [SysDataNoLock Example](#sysdatanolock-example)
+  - [SysDataNoLock Reinvoke Example](#sysdatanolock-reinvoke-example)
+  - [SysDataNoLock Blocking Reinvoke Example](#sysdatanolock-blocking-reinvoke-example)
+  - [Timer Example](#timer-example)
+- [Testing](#testing)
+  - [Unit Tests](#unit-tests)
+  - [Valgrind Memory Tests](#valgrind-memory-tests)
+    - [Heap Memory Test Results](#heap-memory-test-results)
+    - [Fixed Block Memory Allocator Test Results](#fixed-block-memory-allocator-test-results)
+- [Summary](#summary)
+- [Which Callback Implementation?](#which-callback-implementation)
+  - [Asynchronous Multicast Callbacks in C](#asynchronous-multicast-callbacks-in-c)
+  - [Asynchronous Multicast Callbacks with Inter-Thread Messaging](#asynchronous-multicast-callbacks-with-inter-thread-messaging)
+  - [Asynchronous Multicast Delegates in C++](#asynchronous-multicast-delegates-in-c)
+  - [Asynchronous Multicast Delegates in Modern C++](#asynchronous-multicast-delegates-in-modern-c-1)
+- [References](#references)
+- [Conclusion](#conclusion)
+
 
 # Preface
 
-Originally published on CodeProject at: <a href="https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cpluspl">Asynchronous Multicast Delegates in Modern C++</a>
+Originally published on CodeProject at: <a href="https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cpluspl"><strong>Asynchronous Multicast Delegates in Modern C++</strong></a>
 
 ## Related repositories
 
@@ -20,6 +69,63 @@ The repositories below utilize the delegate library in different multithreaded a
 * <a href="https://github.com/endurodave/AsyncStateMachine">Asynchronous State Machine Design in C++</a> - an asynchronous C++ state machine implemented using an asynchronous delegate library.
 * <a href="https://github.com/endurodave/IntegrationTestFramework">Integration Test Framework using Google Test and Delegates</a> - a multi-threaded C++ software integration test framework using Google Test and Delegate libraries.
 * <a href="https://github.com/endurodave/Async-SQLite">Asynchronous SQLite API using C++ Delegates</a> - an asynchronous SQLite wrapper implemented using an asynchronous delegate library.
+
+## Library Comparison
+
+<p>Asynchronous function invocation allows for easy movement of data between threads. The table below summarizes the various asynchronous function invocation implementations available in C and C++.</p>
+
+| Repository                                                                                            | Language | Key Delegate Features                                                                                                                                                                                                               | Notes                                                                                                                                                                                                      |
+|-------------------------------------------------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| <a href="https://github.com/endurodave/AsyncMulticastDelegateModern">AsyncMulticastDelegateModern</a> | C++17    | * Function-like template syntax<br> * Any delegate target function type (member, static, free, lambda)<br>  * N target function arguments<br> * N delegate subscribers<br> * Variadic templates<br> * Template metaprogramming      | * Most generic implementation<br> * Lowest lines of source code<br> * Slowest of all implementations<br> * Optional fixed block allocator support<br> * No remote delegate support<br> * Complex metaprogramming |
+| <a href="https://github.com/endurodave/AsyncMulticastDelegateCpp17">AsyncMulticastDelegateCpp17</a>   | C++17    | * Function-like template syntax<br> * Any delegate target function type (member, static, free, lambda)<br> * 5 target function arguments<br> * N delegate subscribers<br> * Optional fixed block allocator<br> * Variadic templates | * Selective compile using constexpr<br> * Avoids complex metaprogramming<br> * Faster than AsyncMulticastDelegateModern<br> * No remote delegate support                                                   |
+| <a href="https://github.com/endurodave/AsyncMulticastDelegateCpp11">AsyncMulticastDelegateCpp11</a>   | C++11    | * Function-like template syntax<br> * Any delegate target function type (member, static, free, lambda)<br> * 5 target function arguments<br> * N delegate subscribers<br> * Optional fixed block allocator                          | * High lines of source code<br> * Highly repetitive source code                                                                                                                                            |
+| <a href="https://github.com/endurodave/AsyncMulticastDelegate">AsyncMulticastDelegate</a>             | C++03    | * Traditional template syntax<br> * Any delegate target function type (member, static, free)<br> * 5 target function arguments<br> * N delegate subscribers<br> * Optional fixed block allocator                                    | * High lines of source code<br> * Highly repetitive source code                                                                                                                                            |
+| <a href="https://github.com/endurodave/AsyncCallback">AsyncCallback</a>                               | C++      | * Traditional template syntax<br> * Delegate target function type (static, free)<br> * 1 target function argument<br> * N delegate subscribers                                                                                      | * Low lines of source code<br> * Most compact C++ implementation<br> * Any C++ compiler                                                                                                                    |
+| <a href="https://github.com/endurodave/C_AsyncCallback">C_AsyncCallback</a>                           | C        | * Macros provide type-safety<br> * Delegate target function type (static, free)<br> * 1 target function argument<br> * Fixed delegate subscribers (set at compile time)<br> * Optional fixed block allocator                        | * Low lines of source code<br> * Very compact implementation<br> * Any C compiler                                                                                                                          |
+
+<p>This article documents a modern C++ implementation of asynchronous delegates. The library implements anonymous synchronous and asynchronous function callbacks. The target function is invoked with all arguments on the registrar 's desired thread of control.</p>
+
+<p>The previous article I wrote entitled "<a href="https://www.codeproject.com/Articles/1160934/Asynchronous-Multicast-Delegates-in-Cplusplus">Asynchronous Multicast Delegates in C++</a>" built under C++03. This "modern" version uses C++17 features. Variadic templates and template metaprogramming improve library usability and significantly reduces the source code line count. While the basic idea between the articles is similar, this new version is a complete rewrite.</p>
+
+# Introduction
+
+<p>Nothing seems to garner the interest of C++ programmers more than delegates. In other languages, the delegate is a first-class feature so developers can use these well-understood constructs. In C++, however, a delegate is not natively available. Yet that doesn't stop us programmers from trying to emulate the ease with which a delegate stores and invokes any callable function.</p>
+
+<p>Delegates normally support synchronous executions, that is, when invoked; the bound function is executed within the caller's thread of control. On multi-threaded applications, it would be ideal to specify the target function and the thread it should execute on without imposing function signature limitations. The library does the grunt work of getting the delegate and all argument data onto the destination thread. The idea behind this article is to provide a C++ delegate library with a consistent API that is capable of synchronous and asynchronous invocations on any callable function.</p>
+
+<p>The features of the modern C++ delegate library are:</p>
+
+<ol>
+	<li><strong>Any Compiler</strong> &ndash; standard C++17 code for any compiler without weird hacks</li>
+	<li><strong>Any Function</strong> &ndash; invoke any callable function: member, static, or free</li>
+	<li><strong>Any Argument Type</strong> &ndash; supports any argument type: value, reference, pointer, pointer to pointer</li>
+	<li><strong>Multiple Arguments</strong> &ndash; supports N number of function arguments for the bound function</li>
+	<li><strong>Synchronous Invocation</strong> &ndash; call the bound function synchronously</li>
+	<li><strong>Asynchronous Invocation</strong> &ndash; call the bound function asynchronously on a client specified thread</li>
+	<li><strong>Blocking Asynchronous Invocation</strong> - invoke asynchronously using blocking or non-blocking delegates</li>
+	<li><strong>Smart Pointer Support</strong> - bind an instance function using a raw object pointer or <code>std::shared_ptr</code></li>
+    <li><strong>Lambda Support</strong> - bind and invoke lambda functions asynchronously using delegates.</li>
+	<li><strong>Automatic Heap Handling</strong> &ndash; automatically copy argument data to the heap for safe transport through a message queue</li>
+	<li><strong>Any OS</strong> &ndash; easy porting to any OS. C++11 <code>std::thread</code> port included</li>
+    <li><strong>32/64-bit</strong> - Support for 32 and 64-bit projects.</li>
+    <li><strong>Dynamic Storage Allocation</strong> - Optional fixed block memory allocator.</li>
+	<li><strong>CMake Build</strong> - CMake supports most toolchains including Windows and Linux.</li>
+	<li><strong>Unit Tests</strong> - extensive unit testing of the delegate library included</li>
+	<li><strong>No External Libraries</strong> &ndash; delegate does not rely upon external libraries</li>
+	<li><strong>Ease of Use</strong> &ndash; function signature template arguments (e.g., <code>MulticastDelegate&lt;void(TestStruct*)&gt;</code>)</li>
+</ol>
+
+<p>The delegate implementation significantly eases multithreaded application development by executing the delegate function with all of the function arguments on the thread of control that you specify. The framework handles all of the low-level machinery to safely invoke any function signature on a target thread. CMake  build are included for easy experimentation on Windows, Linux and other platforms.</p>
+
+# Delegates Background
+
+<p>If you're not familiar with a delegate, the concept is quite simple. A delegate can be thought of as a super function pointer. In C++, there 's no pointer type capable of pointing to all the possible function variations: instance member, virtual, const, static, and free (global). A function pointer can't point to instance member functions, and pointers to member functions have all sorts of limitations. However, delegate classes can, in a type-safe way, point to any function provided the function signature matches. In short, a delegate points to any function with a matching signature to support anonymous function invocation.</p>
+
+<p>In practice, while a delegate is useful, a multicast version significantly expands its utility. The ability to bind more than one function pointer and sequentially invoke all registrars' makes for an effective publisher/subscriber mechanism. Publisher code exposes a delegate container and one or more anonymous subscribers register with the publisher for callback notifications.</p>
+
+<p>The problem with callbacks on a multithreaded system, whether it be a delegate-based or function pointer based, is that the callback occurs synchronously. Care must be taken that a callback from another thread of control is not invoked on code that isn't thread-safe. Multithreaded application development is hard. It 's hard for the original designer; it 's hard because engineers of various skill levels must maintain the code; it 's hard because bugs manifest themselves in difficult ways. Ideally, an architectural solution helps to minimize errors and eases application development.</p>
+
+<p>This C++ delegate implementation is full featured and allows calling any function, even instance member functions, with any arguments either synchronously or asynchronously. The delegate library makes binding to and invoking any function a snap.</p>
 
 # Quick Start
 
@@ -30,7 +136,7 @@ A simple publish/subscribe asynchronous delegate example.
 Typically a delegate is inserted into a delegate container. <code>AlarmCd</code> is a delegate container. 
 
 <figure>
-    <img src="Docs/Figure1.jpg" alt="Figure 1" style="width:65%;">
+    <img src="Figure1.jpg" alt="Figure 1" style="width:65%;">
     <figcaption>Figure 1: AlarmCb Delegate Container</figcaption>
 </figure>
 
@@ -56,7 +162,7 @@ void NotifyAlarmSubscribers(int alarmId, const string& note)
 <p>Typically a subscriber registers with a delegate container instance to receive callbacks, either synchronously or asynchronously.</p>
 
 <figure>
-    <img src="Docs/Figure2.jpg" alt="Figure 2" style="width:75%;">
+    <img src="Figure2.jpg" alt="Figure 2" style="width:75%;">
     <figcaption>Figure 2: Insert into AlarmCb Delegate Container</figcaption>
 </figure>
 
@@ -95,175 +201,41 @@ class AlarmSub
 
 <p>This is a simple example. Many other usage patterns exist including asynchronous API's, blocking delegates with a timeout, and more.</p>
 
-## All Delegate Types
-
-A example delegate container inserting and removing all delegate types.
-
-```cpp
-WorkerThread workerThread1("WorkerThread1");
-
-static int callCnt = 0;
-
-void FreeFunc(int value) {
-    cout << "FreeFunc " << value << " " << ++callCnt << endl;
-}
-
-// Simple test invoking all target types
-void TestAllTargetTypes() {
-    class Class {
-    public:
-        static void StaticFunc(int value) {
-            cout << "StaticFunc " << value << " " << ++callCnt << endl;
-        }
-
-        void MemberFunc(int value) {
-            cout << "MemberFunc " << value << " " << ++callCnt << endl;
-        }
-
-        void MemberFuncConst(int value) const {
-            cout << "MemberFuncConst " << value << " " << ++callCnt << endl;
-        }
-    };
-
-    int stackVal = 100;
-    std::function<void(int)> LambdaCapture = [stackVal](int i) {
-        std::cout << "LambdaCapture " << i + stackVal << " " << ++callCnt << endl;
-    };
-
-    std::function<void(int)> LambdaNoCapture = [](int i) {
-        std::cout << "LambdaNoCapture " << i << " " << ++callCnt << endl;
-    };
-
-    std::function<void(int)> LambdaForcedCapture = +[](int i) {
-        std::cout << "LambdaForcedCapture " << i << " " << ++callCnt << endl;
-    };
-
-    Class testClass;
-    std::shared_ptr<Class> testClassSp = std::make_shared<Class>();
-
-    // Create a multicast delegate container that accepts Delegate<void(int)> delegates.
-    // Any function with the signature "void Func(int)".
-    MulticastDelegateSafe<void(int)> delegateA;
-
-    // Add all callable function targets with delegate container
-    // Synchronous delegates
-    delegateA += MakeDelegate(&FreeFunc);
-    delegateA += MakeDelegate(LambdaCapture);
-    delegateA += MakeDelegate(LambdaNoCapture);
-    delegateA += MakeDelegate(LambdaForcedCapture);
-    delegateA += MakeDelegate(&Class::StaticFunc);
-    delegateA += MakeDelegate(&testClass, &Class::MemberFunc);
-    delegateA += MakeDelegate(&testClass, &Class::MemberFuncConst);
-    delegateA += MakeDelegate(testClassSp, &Class::MemberFunc);
-    delegateA += MakeDelegate(testClassSp, &Class::MemberFuncConst);
-
-    // Asynchronous delegates
-    delegateA += MakeDelegate(&FreeFunc, workerThread1);
-    delegateA += MakeDelegate(LambdaCapture, workerThread1);
-    delegateA += MakeDelegate(LambdaNoCapture, workerThread1);
-    delegateA += MakeDelegate(LambdaForcedCapture, workerThread1);
-    delegateA += MakeDelegate(&Class::StaticFunc, workerThread1);
-    delegateA += MakeDelegate(&testClass, &Class::MemberFunc, workerThread1);
-    delegateA += MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1);
-    delegateA += MakeDelegate(testClassSp, &Class::MemberFunc, workerThread1);
-    delegateA += MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1);
-
-    // Asynchronous blocking delegates
-    delegateA += MakeDelegate(&FreeFunc, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(LambdaCapture, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(LambdaNoCapture, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(LambdaForcedCapture, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(&Class::StaticFunc, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(&testClass, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(testClassSp, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
-    delegateA += MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
-
-    // Invoke all callable function targets
-    if (delegateA)
-        delegateA(123);
-
-    // Wait for async callbacks to complete
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-    // Remove all callable function targets from delegate container
-    // Synchronous delegates
-    delegateA -= MakeDelegate(&FreeFunc);
-    delegateA -= MakeDelegate(LambdaCapture);
-    delegateA -= MakeDelegate(LambdaNoCapture);
-    delegateA -= MakeDelegate(LambdaForcedCapture);
-    delegateA -= MakeDelegate(&Class::StaticFunc);
-    delegateA -= MakeDelegate(&testClass, &Class::MemberFunc);
-    delegateA -= MakeDelegate(&testClass, &Class::MemberFuncConst);
-    delegateA -= MakeDelegate(testClassSp, &Class::MemberFunc);
-    delegateA -= MakeDelegate(testClassSp, &Class::MemberFuncConst);
-
-    // Asynchronous delegates
-    delegateA -= MakeDelegate(&FreeFunc, workerThread1);
-    delegateA -= MakeDelegate(LambdaCapture, workerThread1);
-    delegateA -= MakeDelegate(LambdaNoCapture, workerThread1);
-    delegateA -= MakeDelegate(LambdaForcedCapture, workerThread1);
-    delegateA -= MakeDelegate(&Class::StaticFunc, workerThread1);
-    delegateA -= MakeDelegate(&testClass, &Class::MemberFunc, workerThread1);
-    delegateA -= MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1);
-    delegateA -= MakeDelegate(testClassSp, &Class::MemberFunc, workerThread1);
-    delegateA -= MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1);
-
-    // Asynchronous blocking delegates
-    delegateA -= MakeDelegate(&FreeFunc, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(LambdaCapture, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(LambdaNoCapture, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(LambdaForcedCapture, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(&Class::StaticFunc, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(&testClass, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(&testClass, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(testClassSp, &Class::MemberFunc, workerThread1, WAIT_INFINITE);
-    delegateA -= MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
-
-    ASSERT_TRUE(delegateA.Size() == 0);
-    ASSERT_TRUE(callCnt == 27);
-}
-```
-
 # Project Build
 
 <a href="https://www.cmake.org">CMake</a> is used to create the build files. CMake is free and open-source software. Windows, Linux and other toolchains are supported. Example CMake console commands executed inside the project root directory: 
 
 ## Windows Visual Studio
 
-<code>cmake -G "Visual Studio 17 2022" -A Win32 -B Build -S .</code>
+<code>cmake -G "Visual Studio 17 2022" -A Win32 -B ../AsyncMulticastDelegateModernBuild -S .</code>
 
-<code>cmake -G "Visual Studio 17 2022" -A x64 -B Build -S .</code>
+<code>cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S .</code>
 
-<code>cmake -G "Visual Studio 17 2022" -A x64 -B Build -S . -DENABLE_UNIT_TESTS=ON</code>
+<code>cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON</code>
 
-<code>cmake -G "Visual Studio 17 2022" -A x64 -B Build -S . -DENABLE_ALLOCATOR=ON</code>
+<code>cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_ALLOCATOR=ON</code>
 
-After executed, open the Visual Studio project from within the <code>Build</code> directory.
+After executed, open the Visual Studio project from within the <code>AsyncMulticastDelegateModernBuild</code> directory.
 
 <figure>
-    <img src="Docs/Figure3.jpg" alt="Figure 3" style="width:100%;">
+    <img src="Figure3.jpg" alt="Figure 3" style="width:100%;">
     <figcaption>Figure 3: Visual Studio Build</figcaption>
 </figure>
 
 ## Linux Make
 
-<code>cmake -G "Unix Makefiles" -B Build -S .</code>
+<code>cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S .</code>
 
-<code>cmake -G "Unix Makefiles" -B Build -S . -DENABLE_UNIT_TESTS=ON</code>
+<code>cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON</code>
 
-<code>cmake -G "Unix Makefiles" -B Build -S . -DENABLE_ALLOCATOR=ON</code>
+<code>cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_ALLOCATOR=ON</code>
 
-After executed, build the software from within the <code>Build</code> directory using the command <code>make</code>. Run the console app using <code>./DelegateApp</code>.
+After executed, build the software from within the AsyncMulticastDelegateModernBuild directory using the command <code>make</code>. Run the console app using <code>./DelegateApp</code>.
 
 <figure>
-    <img src="Docs/Figure4.jpg" alt="Figure 4" style="width:70%;">
+    <img src="Figure4.jpg" alt="Figure 4" style="width:70%;">
     <figcaption>Figure 4: Linux Makefile Build</figcaption>
 </figure>
-
-# Details Documentation
-
- See [Details Documentation](Docs/DETAILS.md) for design documentation and more examples. 
 
 # Using the Code
 
