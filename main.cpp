@@ -369,7 +369,7 @@ void TestAllTargetTypes() {
     delegateA -= MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
 
     ASSERT_TRUE(delegateA.Size() == 0);
-    ASSERT_TRUE(callCnt == 26);
+    ASSERT_TRUE(callCnt == 27);
 }
 
 //------------------------------------------------------------------------------
