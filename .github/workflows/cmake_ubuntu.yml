@@ -1,4 +1,4 @@
-name: C++ Delegates Build and Test
+name: Ubuntu
 
 on:
   push:
@@ -16,14 +16,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2  # Checkout the repository code
 
-    #- name: Set up CMake
-    #  uses: actions/setup-cmake@v3  # Set up CMake
-
-    #- name: Set up GCC
-    #  uses: actions/setup-gcc@v1  # Set up GCC compiler (or use setup-clang if needed)
-
     - name: Configure CMake
-      run: cmake -S . -B Build  # Configure CMake to generate build files in 'Build' directory
+      run: cmake -S . -B Build -DENABLE_UNIT_TESTS=ON # Configure CMake to generate build files in 'Build' directory
 
     - name: Build
       run: cmake --build Build  # Build the project using CMake

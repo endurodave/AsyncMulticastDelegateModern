@@ -1,0 +1,29 @@
+name: Windows
+
+on:
+  push:
+    branches:
+      - wip/refactoring  # Trigger on push to 'wip/refactoring' branch
+  pull_request:
+    branches:
+      - wip/refactoring  # Trigger on pull request targeting 'wip/refactoring' branch
+
+jobs:
+  build:
+    runs-on: windows-latest  # Use Windows environment for the build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # Checkout the repository code
+
+    - name: Set up Visual Studio
+      uses: microsoft/setup-msbuild@v1.1  # Set up Visual Studio environment (MSBuild)
+
+    - name: Configure CMake
+      run: cmake -S . -B Build -G "Visual Studio 16 2019" -DENABLE_UNIT_TESTS=ON # Configure CMake for Visual Studio 2019
+
+    - name: Build
+      run: cmake --build Build --config Release  # Build the project using CMake with Release configuration
+
+    - name: Run DelegateApp
+      run: .\Build\Release\DelegateApp.exe  # Run the built executable (adjust path for MSBuild)
