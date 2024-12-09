@@ -97,8 +97,8 @@ public:
     /// @brief Bind a free function to the delegate.
     /// @details This method associates a free function (`func`) with the delegate. 
     /// Once the function is bound, the delegate can be used to invoke the function.
-    /// @param[in] func The function to bind to the delegate. The free function to 
-    /// bind to the delegate. This function must match the signature of the delegate.
+    /// @param[in] func The free function to bind to the delegate. This function must 
+    /// match the signature of the delegate.
     void Bind(FreeFunc func) { m_func = func; }
 
     /// @brief Creates a copy of the current object.
@@ -166,6 +166,7 @@ struct DelegateMember; // Not defined
 
 /// @brief `DelegateMember<>` class synchronously invokes a class member target 
 /// function using a class object pointer.
+/// @tclass The class type that contains the member function.
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class TClass, class RetType, class... Args>
@@ -200,8 +201,8 @@ public:
     /// @details This method associates a member function (`func`) with the delegate. 
     /// Once the function is bound, the delegate can be used to invoke the function.
     /// @param[in] object The target object instance.
-    /// @param[in] func The function to bind to the delegate. The member function to 
-    /// bind to the delegate. This function must match the signature of the delegate.
+    /// @param[in] func The member function to bind to the delegate. This function must 
+    /// match the signature of the delegate.
     void Bind(ObjectPtr object, MemberFunc func) {
         m_object = object;
         m_func = func;
@@ -253,6 +254,9 @@ public:
         return *this;
     }
 
+    /// @brief Compares two delegate objects for equality.
+    /// @param[in] rhs The `DelegateBase` object to compare with the current object.
+    /// @return `true` if the two delegate objects are equal, `false` otherwise.
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
@@ -260,14 +264,24 @@ public:
             m_object == derivedRhs->m_object;
     }
 
+    /// @brief Check if the delegate is bound to a target function.
+    /// @return `true` if the delegate has a target function, `false` otherwise.
     bool Empty() const { return !(m_object && m_func); }
+
+    /// @brief Clear the target function.
+    /// @post The delegate is empty.
     void Clear() { m_object = nullptr; m_func = nullptr; }
 
+    /// @brief Implicit conversion operator to `bool`.
+    /// @return `true` if the object is not empty, `false` if the object is empty.
     explicit operator bool() const { return !Empty(); }
 
 private:
-    ObjectPtr m_object = nullptr;	// Pointer to a class object
-    MemberFunc m_func = nullptr;   	// Pointer to an instance member function
+    /// Pointer to a class object, representing the bound target instance.
+    ObjectPtr m_object = nullptr;
+
+    /// Pointer to a member function, representing the bound target function.
+    MemberFunc m_func = nullptr;
 };
 
 template <class C, class R>
@@ -275,6 +289,7 @@ struct DelegateMemberSp; // Not defined
 
 /// @brief `DelegateMemberSp<>` class synchronously invokes a class member target 
 /// function using a `std::shared_ptr` object.
+/// @tclass TClass The class type that contains the member function.
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class TClass, class RetType, class... Args>
@@ -285,37 +300,76 @@ public:
     typedef RetType(TClass::* ConstMemberFunc)(Args...) const;
     using ClassType = DelegateMemberSp<TClass, RetType(Args...)>;
 
+    /// @brief Constructor to create a class instance.
+    /// @param[in] object The target object shared pointer to store.
+    /// @param[in] func The target member function to store.
     DelegateMemberSp(ObjectPtr object, MemberFunc func) { Bind(object, func); }
+
+    /// @brief Constructor to create a class instance.
+    /// @param[in] object The target shared object pointer to store.
+    /// @param[in] func The target const member function to store.
     DelegateMemberSp(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
+
+    /// @brief Creates a copy of the current object.
+    /// @details Clones the current instance of the class by creating a new object
+    /// and copying the state of the current object to it. 
+    /// @return A pointer to a new `ClassType` instance.
+    /// @post The caller is responsible for deleting the clone object.
     DelegateMemberSp(const ClassType& rhs) { Assign(rhs); }
+
+    /// @brief Default constructor creates an empty delegate.
     DelegateMemberSp() = default;
 
-    // Bind a member function to a delegate. 
+    /// @brief Bind a member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] object The target shared object instance.
+    /// @param[in] func The function to bind to the delegate. The member function to 
+    /// bind to the delegate. This function must match the signature of the delegate.
     void Bind(ObjectPtr object, MemberFunc func) {
         m_object = object;
         m_func = func;
     }
 
-    // Bind a const member function to a delegate. 
+    /// @brief Bind a const member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] object The target shared object instance.
+    /// @param[in] func The function to bind to the delegate. The function must match 
+    /// the signature of the delegate.
     void Bind(ObjectPtr object, ConstMemberFunc func) {
         m_object = object;
         m_func = reinterpret_cast<MemberFunc>(func);
     }
 
+    /// @brief Creates a copy of the current object.
+    /// @details Clones the current instance of the class by creating a new object
+    /// and copying the state of the current object to it. 
+    /// @return A pointer to a new `ClassType` instance.
+    /// @post The caller is responsible for deleting the clone object.
     virtual ClassType* Clone() const override { 
         return new ClassType(*this); 
     }
 
+    /// @brief Assigns the state of one object to another.
+    /// @details Copy the state from the `rhs` (right-hand side) object to the
+    /// current object.
+    /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
         m_object = rhs.m_object;
         m_func = rhs.m_func;
     }
 
-    // Invoke the bound delegate function synchronously. 
+    /// @brief Invoke the bound delegate function synchronously. 
+    /// @param[in] args - the function arguments, if any.
+    /// @return The bound function return value, if any.
     virtual RetType operator()(Args... args) override {
         return std::invoke(m_func, m_object, args...);
     }
 
+    /// @brief Assignment operator that assigns the state of one object to another.
+    /// @param[in] rhs The object whose state is to be assigned to the current object.
+    /// @return A reference to the current object.
     ClassType& operator=(const ClassType& rhs) {
         if (&rhs != this) {
             Assign(rhs);
@@ -323,6 +377,9 @@ public:
         return *this;
     }
 
+    /// @brief Compares two delegate objects for equality.
+    /// @param[in] rhs The `DelegateBase` object to compare with the current object.
+    /// @return `true` if the two delegate objects are equal, `false` otherwise.
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
@@ -330,20 +387,31 @@ public:
             m_object == derivedRhs->m_object;
     }
 
+    /// @brief Check if the delegate is bound to a target function.
+    /// @return `true` if the delegate has a target function, `false` otherwise.
     bool Empty() const { return !(m_object && m_func); }
+
+    /// @brief Clear the target function.
+    /// @post The delegate is empty.
     void Clear() { m_object = nullptr; m_func = nullptr; }
 
+    /// @brief Implicit conversion operator to `bool`.
+    /// @return `true` if the object is not empty, `false` if the object is empty.
     explicit operator bool() const { return !Empty(); }
 
 private:
-    ObjectPtr m_object = nullptr;	// Pointer to a class object
-    MemberFunc m_func = nullptr;   	// Pointer to an instance member function
+    /// Shared pointer to a class object, representing the bound target instance.
+    ObjectPtr m_object = nullptr;
+
+    /// Pointer to a member function, representing the bound target function.
+    MemberFunc m_func = nullptr;
 };
 
 template <class R>
 class DelegateFunction; // Not defined
 
 /// @brief `DelegateFunction<>` class synchronously invokes a `std::function` target function.
+/// @tclass TClass The class type that contains the member function.
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class RetType, class... Args>
@@ -352,29 +420,56 @@ public:
     using FunctionType = std::function<RetType(Args...)>;
     using ClassType = DelegateFunction<RetType(Args...)>;
 
+    /// @brief Constructor to create a class instance.
+    /// @param[in] func The target `std::function` to store.
     DelegateFunction(FunctionType func) { Bind(func); }
+
+    /// @brief Creates a copy of the current object.
+    /// @details Clones the current instance of the class by creating a new object
+    /// and copying the state of the current object to it. 
+    /// @return A pointer to a new `ClassType` instance.
+    /// @post The caller is responsible for deleting the clone object.
     DelegateFunction(const ClassType& rhs) { Assign(rhs); }
+
+    /// @brief Default constructor creates an empty delegate.
     DelegateFunction() = default;
 
+    /// @brief Bind a member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] func The `std::function` to bind to the delegate. This function must 
+    /// match the signature of the delegate.
     void Bind(FunctionType func) {
         m_func = func;
     }
 
-    // Invoke the bound delegate function synchronously. 
-    virtual RetType operator()(Args... args) override {
-        return m_func(std::forward<Args>(args)...);
-    }
-
-    // Clone the delegate
+    /// @brief Creates a copy of the current object.
+    /// @details Clones the current instance of the class by creating a new object
+    /// and copying the state of the current object to it. 
+    /// @return A pointer to a new `ClassType` instance.
+    /// @post The caller is responsible for deleting the clone object.
     virtual ClassType* Clone() const override { 
         return new ClassType(*this); 
     }
 
-    // Assign state data
+    /// @brief Assigns the state of one object to another.
+    /// @details Copy the state from the `rhs` (right-hand side) object to the
+    /// current object.
+    /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
         m_func = rhs.m_func;
     }
 
+    /// @brief Invoke the bound delegate function synchronously. 
+    /// @param[in] args - the function arguments, if any.
+    /// @return The bound function return value, if any.
+    virtual RetType operator()(Args... args) override {
+        return m_func(std::forward<Args>(args)...);
+    }
+
+    /// @brief Assignment operator that assigns the state of one object to another.
+    /// @param[in] rhs The object whose state is to be assigned to the current object.
+    /// @return A reference to the current object.
     ClassType& operator=(const ClassType& rhs) {
         if (&rhs != this) {
             Assign(rhs);
@@ -382,6 +477,9 @@ public:
         return *this;
     }
 
+    /// @brief Compares two delegate objects for equality.
+    /// @param[in] rhs The `DelegateBase` object to compare with the current object.
+    /// @return `true` if the two delegate objects are equal, `false` otherwise.
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         if (derivedRhs) {
@@ -398,13 +496,21 @@ public:
         return false;  // Return false if dynamic cast failed
     }
 
+    /// @brief Check if the delegate is bound to a target function.
+    /// @return `true` if the delegate has a target function, `false` otherwise.
     bool Empty() const { return !m_func; }
+
+    /// @brief Clear the target function.
+    /// @post The delegate is empty.
     void Clear() { m_func = nullptr; }
 
+    /// @brief Implicit conversion operator to `bool`.
+    /// @return `true` if the object is not empty, `false` if the object is empty.
     explicit operator bool() const { return !Empty(); }
 
 private:
-    FunctionType m_func;        // Stores any std::function target
+    /// A std::function instance, representing the bound target function.
+    FunctionType m_func;
 };
 
 /// @brief Creates a delegate that binds to a free function.
