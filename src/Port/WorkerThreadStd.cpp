@@ -161,7 +161,7 @@ void WorkerThread::Process()
 				if (msg->GetData() == nullptr)
 					throw std::invalid_argument("Message data pointer is null");
 
-				// Get pointer to DelegateMsgBase data from queue msg data
+				// Get pointer to DelegateMsg data from queue msg data
                 auto delegateMsg = msg->GetData();
 
 				// Invoke the delegate destination target function

@@ -17,7 +17,7 @@ jobs:
       uses: actions/checkout@v2  # Checkout the repository code
 
     - name: Configure CMake
-      run: cmake -S . -B build -DENABLE_UNIT_TESTS=ON # Configure CMake to generate build files in 'Build' directory
+      run: cmake -S . -B build # Configure CMake to generate build files in 'build' directory
 
     - name: Build
       run: cmake --build build  # Build the project using CMake

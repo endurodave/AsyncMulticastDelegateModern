@@ -29,7 +29,7 @@
 // RetType operator()(Args... args) - called by the source thread to initiate the async
 // function call.
 //
-// void DelegateInvoke(std::shared_ptr<DelegateMsgBase> msg) - called by the destination
+// void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) - called by the destination
 // thread to invoke the target function. The destination thread must not call any other
 // delegate instance functions.
 //
@@ -693,31 +693,82 @@ private:
     // </common_code>
 };
 
+/// @brief Creates an asynchronous delegate that binds to a free function with a wait and timeout.
+/// @tparam RetType The return type of the free function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] func A pointer to the free function to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @param[in] timeout The duration to wait for the function to complete before returning.
+/// @return A `DelegateFreeAsyncWait` object bound to the specified free function, thread, and timeout.
 template <class RetType, class... Args>
 DelegateFreeAsyncWait<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateFreeAsyncWait<RetType(Args...)>(func, thread, timeout);
 }
 
+/// @brief Creates an asynchronous delegate that binds to a non-const member function with a wait and timeout.
+/// @tparam TClass The class type that contains the member function.
+/// @tparam RetType The return type of the member function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] object A pointer to the instance of `TClass` that will be used for the delegate.
+/// @param[in] func A pointer to the non-const member function of `TClass` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @param[in] timeout The duration to wait for the function to complete before returning.
+/// @return A `DelegateMemberAsyncWait` object bound to the specified non-const member function, thread, and timeout.
 template <class TClass, class RetType, class... Args>
 DelegateMemberAsyncWait<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateMemberAsyncWait<TClass, RetType(Args...)>(object, func, thread, timeout);
 }
 
+/// @brief Creates an asynchronous delegate that binds to a const member function with a wait and timeout.
+/// @tparam TClass The class type that contains the member function.
+/// @tparam RetType The return type of the member function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] object A pointer to the instance of `TClass` that will be used for the delegate.
+/// @param[in] func A pointer to the const member function of `TClass` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @param[in] timeout The duration to wait for the function to complete before returning.
+/// @return A `DelegateMemberAsyncWait` object bound to the specified const member function, thread, and timeout.
 template <class TClass, class RetType, class... Args>
 DelegateMemberAsyncWait<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args) const, DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateMemberAsyncWait<TClass, RetType(Args...)>(object, func, thread, timeout);
 }
 
+
+/// @brief Creates an asynchronous delegate that binds to a non-const member function using a shared pointer, with a wait and timeout.
+/// @tparam TClass The class type that contains the member function.
+/// @tparam RetVal The return type of the member function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] object A shared pointer to the instance of `TClass` that will be used for the delegate.
+/// @param[in] func A pointer to the non-const member function of `TClass` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @param[in] timeout The duration to wait for the function to complete before returning.
+/// @return A `DelegateMemberSpAsyncWait` object bound to the specified non-const member function, thread, and timeout.
 template <class TClass, class RetVal, class... Args>
 DelegateMemberSpAsyncWait<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateMemberSpAsyncWait<TClass, RetVal(Args...)>(object, func, thread, timeout);
 }
 
+/// @brief Creates an asynchronous delegate that binds to a const member function using a shared pointer, with a wait and timeout.
+/// @tparam TClass The class type that contains the member function.
+/// @tparam RetVal The return type of the member function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] object A shared pointer to the instance of `TClass` that will be used for the delegate.
+/// @param[in] func A pointer to the const member function of `TClass` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @param[in] timeout The duration to wait for the function to complete before returning.
+/// @return A `DelegateMemberSpAsyncWait` object bound to the specified const member function, thread, and timeout.
 template <class TClass, class RetVal, class... Args>
 DelegateMemberSpAsyncWait<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args) const, DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateMemberSpAsyncWait<TClass, RetVal(Args...)>(object, func, thread, timeout);
 }
 
+/// @brief Creates an asynchronous delegate that binds to a `std::function` with a wait and timeout.
+/// @tparam RetType The return type of the `std::function`.
+/// @tparam Args The types of the function arguments.
+/// @param[in] func The `std::function` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @param[in] timeout The duration to wait for the function to complete before returning.
+/// @return A `DelegateFunctionAsyncWait` object bound to the specified `std::function`, thread, and timeout.
 template <class RetType, class... Args>
 DelegateFunctionAsyncWait<RetType(Args...)> MakeDelegate(std::function<RetType(Args...)> func, DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateFunctionAsyncWait<RetType(Args...)>(func, thread, timeout);

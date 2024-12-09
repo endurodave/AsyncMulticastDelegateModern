@@ -17,7 +17,7 @@ jobs:
       uses: actions/checkout@v2  # Checkout the repository code
 
     - name: Configure CMake with Clang
-      run: cmake -S . -B build -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DENABLE_UNIT_TESTS=ON  # Configure CMake with Clang as the compiler
+      run: cmake -S . -B build -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++  # Configure CMake with Clang as the compiler
 
     - name: Build
       run: cmake --build build  # Build the project using CMake

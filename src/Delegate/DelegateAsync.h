@@ -558,31 +558,76 @@ private:
     // </common_code>
 };
 
+/// @brief Creates an asynchronous delegate that binds to a free function.
+/// @tparam RetType The return type of the free function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] func A pointer to the free function to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @return A `DelegateFreeAsync` object bound to the specified free function and thread.
 template <class RetType, class... Args>
 DelegateFreeAsync<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args), DelegateThread& thread) {
     return DelegateFreeAsync<RetType(Args...)>(func, thread);
 }
 
+/// @brief Creates an asynchronous delegate that binds to a non-const member function.
+/// @tparam TClass The class type that contains the member function.
+/// @tparam RetType The return type of the member function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] object A pointer to the instance of `TClass` that will be used for the delegate.
+/// @param[in] func A pointer to the non-const member function of `TClass` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @return A `DelegateMemberAsync` object bound to the specified non-const member function and thread.
 template <class TClass, class RetType, class... Args>
 DelegateMemberAsync<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args), DelegateThread& thread) {
     return DelegateMemberAsync<TClass, RetType(Args...)>(object, func, thread);
 }
 
+/// @brief Creates an asynchronous delegate that binds to a const member function.
+/// @tparam TClass The class type that contains the member function.
+/// @tparam RetType The return type of the member function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] object A pointer to the instance of `TClass` that will be used for the delegate.
+/// @param[in] func A pointer to the const member function of `TClass` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @return A `DelegateMemberAsync` object bound to the specified const member function and thread.
 template <class TClass, class RetType, class... Args>
 DelegateMemberAsync<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args) const, DelegateThread& thread) {
     return DelegateMemberAsync<TClass, RetType(Args...)>(object, func, thread);
 }
 
+/// @brief Creates an asynchronous delegate that binds to a non-const member function using a shared pointer.
+/// @tparam TClass The class type that contains the member function.
+/// @tparam RetType The return type of the member function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] object A shared pointer to the instance of `TClass` that will be used for the delegate.
+/// @param[in] func A pointer to the non-const member function of `TClass` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @return A `DelegateMemberSpAsync` object bound to the specified non-const member function and thread.
 template <class TClass, class RetVal, class... Args>
 DelegateMemberSpAsync<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args), DelegateThread& thread) {
     return DelegateMemberSpAsync<TClass, RetVal(Args...)>(object, func, thread);
 }
 
+
+/// @brief Creates an asynchronous delegate that binds to a const member function using a shared pointer.
+/// @tparam TClass The class type that contains the member function.
+/// @tparam RetVal The return type of the member function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] object A shared pointer to the instance of `TClass` that will be used for the delegate.
+/// @param[in] func A pointer to the const member function of `TClass` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @return A `DelegateMemberSpAsync` object bound to the specified const member function and thread.
 template <class TClass, class RetVal, class... Args>
 DelegateMemberSpAsync<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args) const, DelegateThread& thread) {
     return DelegateMemberSpAsync<TClass, RetVal(Args...)>(object, func, thread);
 }
 
+/// @brief Creates an asynchronous delegate that binds to a `std::function`.
+/// @tparam RetType The return type of the `std::function`.
+/// @tparam Args The types of the function arguments.
+/// @param[in] func The `std::function` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
+/// @return A `DelegateFunctionAsync` object bound to the specified `std::function` and thread.
 template <class RetType, class... Args>
 DelegateFunctionAsync<RetType(Args...)> MakeDelegate(std::function<RetType(Args...)> func, DelegateThread& thread) {
     return DelegateFunctionAsync<RetType(Args...)>(func, thread);
