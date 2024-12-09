@@ -387,18 +387,17 @@ int main(void)
 	workerThread1.CreateThread();
 	SysDataNoLock::GetInstance();
 
-    TestAllTargetTypes();
- 
     // Create a timer that expires every 250mS and calls 
     // TimerExpiredCb on workerThread1 upon expiration
     Timer timer;
     timer.Expired = MakeDelegate(&TimerExpiredCb, workerThread1);
     timer.Start(std::chrono::milliseconds(250));
 
-	// Run all unit tests (uncomment to run unit tests)
-#ifdef DELEGATE_UNIT_TESTS
+	// Run all unit tests
 	DelegateUnitTests();
-#endif
+
+    // Run all target types example
+    TestAllTargetTypes();
 
     // Create a delegate bound to a free function then invoke
     DelegateFree<void(int)> delegateFree = MakeDelegate(&FreeFuncInt);

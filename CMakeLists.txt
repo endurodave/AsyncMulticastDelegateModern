@@ -3,12 +3,10 @@
 # *** Windows ***
 # cmake -G "Visual Studio 17 2022" -A Win32 -B build -S .
 # cmake -G "Visual Studio 17 2022" -A x64 -B build -S .
-# cmake -G "Visual Studio 17 2022" -A x64 -B build -S . -DENABLE_UNIT_TESTS=ON
 # cmake -G "Visual Studio 17 2022" -A x64 -B build -S . -DENABLE_ALLOCATOR=ON
 #
 # *** Linux ***
 # cmake -G "Unix Makefiles" -B build -S .
-# cmake -G "Unix Makefiles" -B build -S . -DENABLE_UNIT_TESTS=ON
 # cmake -G "Unix Makefiles" -B build -S . -DENABLE_ALLOCATOR=ON
 
 # Specify the minimum CMake version required
@@ -29,6 +27,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/src/Delegate
     ${CMAKE_SOURCE_DIR}/src/Examples
     ${CMAKE_SOURCE_DIR}/src/Port
+    ${CMAKE_SOURCE_DIR}/tests/UnitTests
 )
 
 if (ENABLE_ALLOCATOR)
@@ -40,11 +39,6 @@ endif()
 # Add an executable target
 add_executable(DelegateApp ${SOURCES})
 
-# Define the DELEGATE_UNIT_TEST macro for the DelegateApp target
-if (ENABLE_UNIT_TESTS)
-    add_compile_definitions(DELEGATE_UNIT_TESTS)
-endif()
-
 if (ENABLE_ALLOCATOR)
     add_compile_definitions(USE_ALLOCATOR)
 endif()
@@ -53,6 +47,7 @@ endif()
 add_subdirectory(src/Delegate)
 add_subdirectory(src/Examples)
 add_subdirectory(src/Port)
+add_subdirectory(tests/UnitTests)
 
 if (ENABLE_ALLOCATOR)
     add_subdirectory(src/Allocator)
@@ -62,6 +57,7 @@ target_link_libraries(DelegateApp PRIVATE
     DelegateLib
     ExamplesLib
     PortLib
+    UnitTestsLib
 )
 
 if (ENABLE_ALLOCATOR)
