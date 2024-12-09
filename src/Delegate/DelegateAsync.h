@@ -243,38 +243,78 @@ public:
     using ClassType = DelegateMemberAsync<TClass, RetType(Args...)>;
     using BaseType = DelegateMember<TClass, RetType(Args...)>;
 
+    /// @brief Constructor to create a class instance.
+    /// @param[in] object The target object pointer to store.
+    /// @param[in] func The target member function to store.
+    /// @param[in] thread The execution thread to invoke `func`.
     DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
         { Bind(object, func, thread); }
+
+    /// @brief Constructor to create a class instance.
+    /// @param[in] object The target object pointer to store.
+    /// @param[in] func The target const member function to store.
+    /// @param[in] thread The execution thread to invoke `func`.
     DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
         { Bind(object, func, thread); }
+
+    /// @brief Creates a copy of the current object.
+    /// @details Clones the current instance of the class by creating a new object
+    /// and copying the state of the current object to it. 
+    /// @return A pointer to a new `ClassType` instance.
+    /// @post The caller is responsible for deleting the clone object.
     DelegateMemberAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
     }
+
     DelegateMemberAsync() = delete;
 
-    /// Bind a member function to a delegate. 
+    /// @brief Bind a const member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] object The target object instance.
+    /// @param[in] func The function to bind to the delegate. This function must match 
+    /// the signature of the delegate.
+    /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
         m_thread = thread;
         BaseType::Bind(object, func);
     }
 
-    /// Bind a const member function to a delegate. 
+    /// @brief Bind a member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] object The target object instance.
+    /// @param[in] func The member function to bind to the delegate. This function must 
+    /// match the signature of the delegate.
+    /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) {
         m_thread = thread;
         BaseType::Bind(object, func);
     }
 
     // <common_code>
+
+    /// @brief Assigns the state of one object to another.
+    /// @details Copy the state from the `rhs` (right-hand side) object to the
+    /// current object.
+    /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
     }
-
+    /// @brief Creates a copy of the current object.
+    /// @details Clones the current instance of the class by creating a new object
+    /// and copying the state of the current object to it. 
+    /// @return A pointer to a new `ClassType` instance.
+    /// @post The caller is responsible for deleting the clone object.
     virtual ClassType* Clone() const override {
         return new ClassType(*this);
     }
 
+    /// @brief Assignment operator that assigns the state of one object to another.
+    /// @param[in] rhs The object whose state is to be assigned to the current object.
+    /// @return A reference to the current object.
     ClassType& operator=(const ClassType& rhs) {
         if (&rhs != this) {
             BaseType::operator=(rhs);
@@ -283,6 +323,9 @@ public:
         return *this;
     }
 
+    /// @brief Compares two delegate objects for equality.
+    /// @param[in] rhs The `DelegateBase` object to compare with the current object.
+    /// @return `true` if the two delegate objects are equal, `false` otherwise.
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
@@ -294,6 +337,14 @@ public:
     // Called by the source thread. Dispatches the delegate data into the destination 
     // thread message queue. DelegateInvoke() must be called by the destination thread 
     // to invoke the target function.
+
+    /// @brief Invoke the bound delegate function synchronously. 
+    /// @details Invoke delegate function asynchronously and do not wait for return value.
+    /// Called by the source thread. Dispatches the delegate data into the destination 
+    /// thread message queue. DelegateInvoke() must be called by the destination thread 
+    /// to invoke the target function.
+    /// @param[in] args The function arguments, if any.
+    /// @return The bound function return value, if any.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -323,17 +374,20 @@ public:
         }
     }
 
-    // Invoke delegate function asynchronously. Do not wait for return value, if any.
-    // Called by the source thread.
+    /// @brief Invoke delegate function asynchronously. Do not wait for return value, if any.
+    /// Called by the source thread.
+    /// @param[in] args The function arguments, if any.
+    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
         operator()(args...);   
     }
 
-    // Invoke the delegate function on the destination thread. Each source thread call
-    // to operator() generate a call to DelegateInvoke() on the destination thread. 
-    // Unlike DelegateAsyncWait, a lock is not required between source and destination 
-    // delegateMsg access because the source thread is not waiting for the function call 
-    // to complete.
+    /// @brief Invoke the delegate function on the destination thread. 
+    /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
+    /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
+    /// source and destination `delegateMsg` access because the source thread is not waiting 
+    /// for the function call to complete.
+    /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
@@ -346,16 +400,27 @@ public:
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
-    // Get the destination thread that the target function is invoked on
+    ///@brief Get the destination thread that the target function is invoked on.
+    // @return The target thread.
     DelegateThread& GetThread() { return m_thread; }
 
 protected:
+    /// @brief Get the synchronous target invoke flag.
+    /// @return `true` if `operator()(Args... args)` is to invoke synchronously. 
+    /// `false` means asychronously by sending a message.
     bool GetSync() { return m_sync; }
+
+    /// @brief Set the synchronous target invoke flag.
+    /// @param[in] sync The new target invoke flag state.
     void SetSync(bool sync) { m_sync = sync; }
 
 private:
-    DelegateThread& m_thread;   // The target thread to invoke the delegate function.
-    bool m_sync = false;        // Flag to control synchronous vs asynchronous behavior.
+    /// The target thread to invoke the delegate function.
+    DelegateThread& m_thread;   
+
+    /// Flag to control synchronous vs asynchronous target invoke behavior.
+    bool m_sync = false;        
+
     // </common_code>
 };
 
@@ -372,41 +437,79 @@ public:
     using ClassType = DelegateMemberSpAsync<TClass, RetType(Args...)>;
     using BaseType = DelegateMemberSp<TClass, RetType(Args...)>;
 
-    // Contructors take a class instance, member function, and callback thread
+    /// @brief Constructor to create a class instance.
+    /// @param[in] object The target class shared pointer to store.
+    /// @param[in] func The target member function to store.
+    /// @param[in] thread The execution thread to invoke `func`.
     DelegateMemberSpAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
+
+    /// @brief Constructor to create a class instance.
+    /// @param[in] object The target object pointer to store.
+    /// @param[in] func The target const member function to store.
+    /// @param[in] thread The execution thread to invoke `func`.
     DelegateMemberSpAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
         Bind(object, func, thread);
     }
+
+    /// @brief Creates a copy of the current object.
+    /// @details Clones the current instance of the class by creating a new object
+    /// and copying the state of the current object to it. 
+    /// @return A pointer to a new `ClassType` instance.
+    /// @post The caller is responsible for deleting the clone object.
     DelegateMemberSpAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
     }
+
     DelegateMemberSpAsync() = delete;
 
-    // Bind a member function to a delegate. 
+    /// @brief Bind a const member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] object The target object instance.
+    /// @param[in] func The function to bind to the delegate. The member function to 
+    /// bind to the delegate. This function must match the signature of the delegate.
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
         m_thread = thread;
         BaseType::Bind(object, func);
     }
 
-    // Bind a const member function to a delegate. 
+    /// @brief Bind a const member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] object The target object instance.
+    /// @param[in] func The const function to bind to the delegate. This function must 
+    /// match the signature of the delegate.
+    /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) {
         m_thread = thread;
         BaseType::Bind(object, func);
     }
 
     // <common_code>
+
+    /// @brief Assigns the state of one object to another.
+    /// @details Copy the state from the `rhs` (right-hand side) object to the
+    /// current object.
+    /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
     }
-
+    /// @brief Creates a copy of the current object.
+    /// @details Clones the current instance of the class by creating a new object
+    /// and copying the state of the current object to it. 
+    /// @return A pointer to a new `ClassType` instance.
+    /// @post The caller is responsible for deleting the clone object.
     virtual ClassType* Clone() const override {
         return new ClassType(*this);
     }
 
+    /// @brief Assignment operator that assigns the state of one object to another.
+    /// @param[in] rhs The object whose state is to be assigned to the current object.
+    /// @return A reference to the current object.
     ClassType& operator=(const ClassType& rhs) {
         if (&rhs != this) {
             BaseType::operator=(rhs);
@@ -415,6 +518,9 @@ public:
         return *this;
     }
 
+    /// @brief Compares two delegate objects for equality.
+    /// @param[in] rhs The `DelegateBase` object to compare with the current object.
+    /// @return `true` if the two delegate objects are equal, `false` otherwise.
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
@@ -426,6 +532,14 @@ public:
     // Called by the source thread. Dispatches the delegate data into the destination 
     // thread message queue. DelegateInvoke() must be called by the destination thread 
     // to invoke the target function.
+
+    /// @brief Invoke the bound delegate function synchronously. 
+    /// @details Invoke delegate function asynchronously and do not wait for return value.
+    /// Called by the source thread. Dispatches the delegate data into the destination 
+    /// thread message queue. DelegateInvoke() must be called by the destination thread 
+    /// to invoke the target function.
+    /// @param[in] args The function arguments, if any.
+    /// @return The bound function return value, if any.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -455,17 +569,20 @@ public:
         }
     }
 
-    // Invoke delegate function asynchronously. Do not wait for return value, if any.
-    // Called by the source thread.
+    /// @brief Invoke delegate function asynchronously. Do not wait for return value, if any.
+    /// Called by the source thread.
+    /// @param[in] args The function arguments, if any.
+    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
         operator()(args...);   
     }
 
-    // Invoke the delegate function on the destination thread. Each source thread call
-    // to operator() generate a call to DelegateInvoke() on the destination thread. 
-    // Unlike DelegateAsyncWait, a lock is not required between source and destination 
-    // delegateMsg access because the source thread is not waiting for the function call 
-    // to complete.
+    /// @brief Invoke the delegate function on the destination thread. 
+    /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
+    /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
+    /// source and destination `delegateMsg` access because the source thread is not waiting 
+    /// for the function call to complete.
+    /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
@@ -478,16 +595,27 @@ public:
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
-    // Get the destination thread that the target function is invoked on
+    ///@brief Get the destination thread that the target function is invoked on.
+    // @return The target thread.
     DelegateThread& GetThread() { return m_thread; }
 
 protected:
+    /// @brief Get the synchronous target invoke flag.
+    /// @return `true` if `operator()(Args... args)` is to invoke synchronously. 
+    /// `false` means asychronously by sending a message.
     bool GetSync() { return m_sync; }
+
+    /// @brief Set the synchronous target invoke flag.
+    /// @param[in] sync The new target invoke flag state.
     void SetSync(bool sync) { m_sync = sync; }
 
 private:
-    DelegateThread& m_thread;   // The target thread to invoke the delegate function.
-    bool m_sync = false;        // Flag to control synchronous vs asynchronous behavior.
+    /// The target thread to invoke the delegate function.
+    DelegateThread& m_thread;   
+
+    /// Flag to control synchronous vs asynchronous target invoke behavior.
+    bool m_sync = false;        
+
     // </common_code>
 };
 
@@ -502,33 +630,59 @@ public:
     using ClassType = DelegateFunctionAsync<RetType(Args...)>;
     using BaseType = DelegateFunction<RetType(Args...)>;
 
+    /// @brief Constructor to create a class instance.
+    /// @param[in] func The target `std::function` to store.
+    /// @param[in] thread The execution thread to invoke `func`.
     DelegateFunctionAsync(FunctionType func, DelegateThread& thread) :
         BaseType(func), m_thread(thread) {
         Bind(func, thread);
     }
 
+    /// @brief Creates a copy of the current object.
+    /// @details Clones the current instance of the class by creating a new object
+    /// and copying the state of the current object to it. 
+    /// @return A pointer to a new `ClassType` instance.
+    /// @post The caller is responsible for deleting the clone object.
     DelegateFunctionAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
     }
+
     DelegateFunctionAsync() = delete;
 
-    // Bind a std::function to the delegate.
+    /// @brief Bind a `std::function` to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] func The `std::function` to bind to the delegate. This function must match 
+    /// the signature of the delegate.
+    /// @param[in] thread The execution thread to invoke `func`.
     void Bind(FunctionType func, DelegateThread& thread) {
         m_thread = thread;
         BaseType::Bind(func);
     }
 
     // <common_code>
+
+    /// @brief Assigns the state of one object to another.
+    /// @details Copy the state from the `rhs` (right-hand side) object to the
+    /// current object.
+    /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
         m_thread = rhs.m_thread;
         BaseType::Assign(rhs);
     }
-
+    /// @brief Creates a copy of the current object.
+    /// @details Clones the current instance of the class by creating a new object
+    /// and copying the state of the current object to it. 
+    /// @return A pointer to a new `ClassType` instance.
+    /// @post The caller is responsible for deleting the clone object.
     virtual ClassType* Clone() const override {
         return new ClassType(*this);
     }
 
+    /// @brief Assignment operator that assigns the state of one object to another.
+    /// @param[in] rhs The object whose state is to be assigned to the current object.
+    /// @return A reference to the current object.
     ClassType& operator=(const ClassType& rhs) {
         if (&rhs != this) {
             BaseType::operator=(rhs);
@@ -537,6 +691,9 @@ public:
         return *this;
     }
 
+    /// @brief Compares two delegate objects for equality.
+    /// @param[in] rhs The `DelegateBase` object to compare with the current object.
+    /// @return `true` if the two delegate objects are equal, `false` otherwise.
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
@@ -548,6 +705,14 @@ public:
     // Called by the source thread. Dispatches the delegate data into the destination 
     // thread message queue. DelegateInvoke() must be called by the destination thread 
     // to invoke the target function.
+
+    /// @brief Invoke the bound delegate function synchronously. 
+    /// @details Invoke delegate function asynchronously and do not wait for return value.
+    /// Called by the source thread. Dispatches the delegate data into the destination 
+    /// thread message queue. DelegateInvoke() must be called by the destination thread 
+    /// to invoke the target function.
+    /// @param[in] args The function arguments, if any.
+    /// @return The bound function return value, if any.
     virtual RetType operator()(Args... args) override {
         if (this->GetSync())
             return BaseType::operator()(args...);
@@ -577,17 +742,20 @@ public:
         }
     }
 
-    // Invoke delegate function asynchronously. Do not wait for return value, if any.
-    // Called by the source thread.
+    /// @brief Invoke delegate function asynchronously. Do not wait for return value, if any.
+    /// Called by the source thread.
+    /// @param[in] args The function arguments, if any.
+    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
         operator()(args...);   
     }
 
-    // Invoke the delegate function on the destination thread. Each source thread call
-    // to operator() generate a call to DelegateInvoke() on the destination thread. 
-    // Unlike DelegateAsyncWait, a lock is not required between source and destination 
-    // delegateMsg access because the source thread is not waiting for the function call 
-    // to complete.
+    /// @brief Invoke the delegate function on the destination thread. 
+    /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
+    /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
+    /// source and destination `delegateMsg` access because the source thread is not waiting 
+    /// for the function call to complete.
+    /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
@@ -600,16 +768,27 @@ public:
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
-    // Get the destination thread that the target function is invoked on
+    ///@brief Get the destination thread that the target function is invoked on.
+    // @return The target thread.
     DelegateThread& GetThread() { return m_thread; }
 
 protected:
+    /// @brief Get the synchronous target invoke flag.
+    /// @return `true` if `operator()(Args... args)` is to invoke synchronously. 
+    /// `false` means asychronously by sending a message.
     bool GetSync() { return m_sync; }
+
+    /// @brief Set the synchronous target invoke flag.
+    /// @param[in] sync The new target invoke flag state.
     void SetSync(bool sync) { m_sync = sync; }
 
 private:
-    DelegateThread& m_thread;   // The target thread to invoke the delegate function.
-    bool m_sync = false;        // Flag to control synchronous vs asynchronous behavior.
+    /// The target thread to invoke the delegate function.
+    DelegateThread& m_thread;   
+
+    /// Flag to control synchronous vs asynchronous target invoke behavior.
+    bool m_sync = false;        
+
     // </common_code>
 };
 
