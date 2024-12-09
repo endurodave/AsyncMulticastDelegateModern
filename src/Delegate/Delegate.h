@@ -166,7 +166,7 @@ struct DelegateMember; // Not defined
 
 /// @brief `DelegateMember<>` class synchronously invokes a class member target 
 /// function using a class object pointer.
-/// @tclass The class type that contains the member function.
+/// @tclass TClass The class type that contains the member function.
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class TClass, class RetType, class... Args>

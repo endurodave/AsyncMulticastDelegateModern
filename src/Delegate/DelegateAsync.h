@@ -233,7 +233,10 @@ private:
 template <class C, class R>
 struct DelegateMemberAsync; // Not defined
 
-// DelegateMemberAsync class asynchronously invokes a class member target function.
+/// @brief `DelegateMemberAsync<>` class asynchronously invokes a class member target function.
+/// @tclass TClass The class type that contains the member function.
+/// @tparam RetType The return type of the bound delegate function.
+/// @tparam Args The argument types of the bound delegate function.
 template <class TClass, class RetType, class... Args>
 class DelegateMemberAsync<TClass, RetType(Args...)> : public DelegateMember<TClass, RetType(Args...)>, public IDelegateInvoker {
 public:
@@ -427,7 +430,10 @@ private:
 template <class C, class R>
 struct DelegateMemberSpAsync; // Not defined
 
-// DelegateMemberSpAsync class asynchronously invokes a std::shared_ptr target function.
+/// @brief `DelegateMemberSpAsync<>` class asynchronously invokes a std::shared_ptr target function.
+/// @tclass TClass The class type that contains the member function.
+/// @tparam RetType The return type of the bound delegate function.
+/// @tparam Args The argument types of the bound delegate function.
 template <class TClass, class RetType, class... Args>
 class DelegateMemberSpAsync<TClass, RetType(Args...)> : public DelegateMemberSp<TClass, RetType(Args...)>, public IDelegateInvoker {
 public:
@@ -622,7 +628,10 @@ private:
 template <class R>
 struct DelegateFunctionAsync; // Not defined
 
-// DelegateFunctionAsync class asynchronously invokes a std::function target function.
+/// @brief `DelegateFunctionAsync<>` class asynchronously invokes a `std::function` target function.
+/// @tclass TClass The class type that contains the member function.
+/// @tparam RetType The return type of the bound delegate function.
+/// @tparam Args The argument types of the bound delegate function.
 template <class RetType, class... Args>
 class DelegateFunctionAsync<RetType(Args...)> : public DelegateFunction<RetType(Args...)>, public IDelegateInvoker {
 public:
