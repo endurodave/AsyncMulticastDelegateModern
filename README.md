@@ -20,7 +20,7 @@ A simple publish/subscribe asynchronous delegate example.
 Typically a delegate is inserted into a delegate container. <code>AlarmCd</code> is a delegate container. 
 
 <figure>
-    <img src="Docs/Figure1.jpg" alt="Figure 1" style="width:65%;">
+    <img src="docs/Figure1.jpg" alt="Figure 1" style="width:65%;">
     <figcaption>Figure 1: AlarmCb Delegate Container</figcaption>
 </figure>
 
@@ -46,7 +46,7 @@ void NotifyAlarmSubscribers(int alarmId, const string& note)
 <p>Typically a subscriber registers with a delegate container instance to receive callbacks, either synchronously or asynchronously.</p>
 
 <figure>
-    <img src="Docs/Figure2.jpg" alt="Figure 2" style="width:75%;">
+    <img src="docs/Figure2.jpg" alt="Figure 2" style="width:75%;">
     <figcaption>Figure 2: Insert into AlarmCb Delegate Container</figcaption>
 </figure>
 
@@ -279,39 +279,39 @@ DelegateThread
 
 ## Windows Visual Studio
 
-<code>cmake -G "Visual Studio 17 2022" -A Win32 -B Build -S .</code>
+<code>cmake -G "Visual Studio 17 2022" -A Win32 -B build -S .</code>
 
-<code>cmake -G "Visual Studio 17 2022" -A x64 -B Build -S .</code>
+<code>cmake -G "Visual Studio 17 2022" -A x64 -B build -S .</code>
 
-<code>cmake -G "Visual Studio 17 2022" -A x64 -B Build -S . -DENABLE_UNIT_TESTS=ON</code>
+<code>cmake -G "Visual Studio 17 2022" -A x64 -B build -S . -DENABLE_UNIT_TESTS=ON</code>
 
-<code>cmake -G "Visual Studio 17 2022" -A x64 -B Build -S . -DENABLE_ALLOCATOR=ON</code>
+<code>cmake -G "Visual Studio 17 2022" -A x64 -B build -S . -DENABLE_ALLOCATOR=ON</code>
 
-After executed, open the Visual Studio project from within the <code>Build</code> directory.
+After executed, open the Visual Studio project from within the <code>build</code> directory.
 
 <figure>
-    <img src="Docs/Figure3.jpg" alt="Figure 3" style="width:100%;">
+    <img src="docs/Figure3.jpg" alt="Figure 3" style="width:100%;">
     <figcaption>Figure 3: Visual Studio Build</figcaption>
 </figure>
 
 ## Linux Make
 
-<code>cmake -G "Unix Makefiles" -B Build -S .</code>
+<code>cmake -G "Unix Makefiles" -B build -S .</code>
 
-<code>cmake -G "Unix Makefiles" -B Build -S . -DENABLE_UNIT_TESTS=ON</code>
+<code>cmake -G "Unix Makefiles" -B build -S . -DENABLE_UNIT_TESTS=ON</code>
 
-<code>cmake -G "Unix Makefiles" -B Build -S . -DENABLE_ALLOCATOR=ON</code>
+<code>cmake -G "Unix Makefiles" -B build -S . -DENABLE_ALLOCATOR=ON</code>
 
-After executed, build the software from within the <code>Build</code> directory using the command <code>make</code>. Run the console app using <code>./DelegateApp</code>.
+After executed, build the software from within the <code>build</code> directory using the command <code>make</code>. Run the console app using <code>./DelegateApp</code>.
 
 <figure>
-    <img src="Docs/Figure4.jpg" alt="Figure 4" style="width:70%;">
+    <img src="docs/Figure4.jpg" alt="Figure 4" style="width:70%;">
     <figcaption>Figure 4: Linux Makefile Build</figcaption>
 </figure>
 
 # Design Details
 
- See [Design Details](Docs/DETAILS.md) for implementation design details and more examples.
+ See [Design Details](docs/DETAILS.md) for implementation design details and more examples.
 
 # Related Repositories
 
