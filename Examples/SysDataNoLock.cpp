@@ -48,8 +48,7 @@ void SysDataNoLock::SetSystemModeAsyncAPI(SystemMode::Type systemMode)
 	if (workerThread2.GetThreadId() != WorkerThread::GetCurrentThreadId())
 	{
 		// Create an asynchronous delegate and re-invoke the function call on workerThread2
-		auto delegate = MakeDelegate(this, &SysDataNoLock::SetSystemModeAsyncAPI, workerThread2);
-		delegate(systemMode);
+		MakeDelegate(this, &SysDataNoLock::SetSystemModeAsyncAPI, workerThread2).AsyncInvoke(systemMode);
 		return;
 	}
 

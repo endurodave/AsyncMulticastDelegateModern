@@ -5,46 +5,17 @@
 
 # Asynchronous Multicast Delegates in Modern C++
 
-A C++ delegate library capable of invoking any callable function both synchronously and asynchronously on a user specified thread of control. 
+A C++ delegate library capable of invoking any callable function either synchronously or asynchronously on a user specified thread of control. 
 
 Asynchronous function calls support both non-blocking and blocking modes with a timeout. The library supports all types of target functions, including free functions, class member functions, static class functions, and lambdas. It is capable of handling any function signature, regardless of the number of arguments or return value. All argument types are supported, including by value, pointers, pointers to pointers, and references. The delegate library takes care of the intricate details of function invocation across thread boundaries. Thread-safe delegate containers stores delegate instances with a matching function signature.
 
 Originally published on CodeProject at: <a href="https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cpluspl">Asynchronous Multicast Delegates in Modern C++</a>
 
-# Delegate Classes
-
-Primary delegate library classes.
-
-```cpp
-// Delegates
-DelegateBase
-    Delegate<>
-        DelegateFree<>
-            DelegateFreeAsync<>
-                DelegateFreeAsyncWait<>
-        DelegateMember<>
-            DelegateMemberAsync<>
-                DelegateMemberAsyncWait<>
-        DelegateMemberSp<>
-            DelegateMemberSpAsync<>
-                DelegateMemberSpAsyncWait<>
-
-// Delegate Containers
-SinglecastDelegate<>
-MulticastDelegate<>
-    MulticastDelegateSafe<>
-
-// Helper Classes
-IDelegateInvoker
-DelegateMsg
-DeleateThread
-``` 
-
 # Quick Start
 
 A simple publish/subscribe asynchronous delegate example.
 
-## Publisher
+## Publisher Example
 
 Typically a delegate is inserted into a delegate container. <code>AlarmCd</code> is a delegate container. 
 
@@ -70,7 +41,7 @@ void NotifyAlarmSubscribers(int alarmId, const string& note)
     AlarmCb(alarmId, note);
 }
 ```
-## Subscriber
+## Subscriber Example
 
 <p>Typically a subscriber registers with a delegate container instance to receive callbacks, either synchronously or asynchronously.</p>
 
@@ -243,6 +214,64 @@ void TestAllTargetTypes() {
     ASSERT_TRUE(callCnt == 27);
 }
 ```
+
+## Asynchronous API Example
+
+`SetSystemModeAsyncAPI()` is an asynchronous function call that re-invokes on `workerThread2` if necessary. 
+
+```cpp
+void SysDataNoLock::SetSystemModeAsyncAPI(SystemMode::Type systemMode)
+{
+	// Is the caller executing on workerThread2?
+	if (workerThread2.GetThreadId() != WorkerThread::GetCurrentThreadId())
+	{
+		// Create an asynchronous delegate and re-invoke the function call on workerThread2
+		MakeDelegate(this, &SysDataNoLock::SetSystemModeAsyncAPI, workerThread2).AsyncInvoke(systemMode);
+		return;
+	}
+
+	// Create the callback data
+	SystemModeChanged callbackData;
+	callbackData.PreviousSystemMode = m_systemMode;
+	callbackData.CurrentSystemMode = systemMode;
+
+	// Update the system mode
+	m_systemMode = systemMode;
+
+	// Callback all registered subscribers
+	if (SystemModeChangedDelegate)
+		SystemModeChangedDelegate(callbackData);
+}
+```
+
+# Delegate Classes
+
+Primary delegate library classes.
+
+```cpp
+// Delegates
+DelegateBase
+    Delegate<>
+        DelegateFree<>
+            DelegateFreeAsync<>
+                DelegateFreeAsyncWait<>
+        DelegateMember<>
+            DelegateMemberAsync<>
+                DelegateMemberAsyncWait<>
+        DelegateMemberSp<>
+            DelegateMemberSpAsync<>
+                DelegateMemberSpAsyncWait<>
+
+// Delegate Containers
+SinglecastDelegate<>
+MulticastDelegate<>
+    MulticastDelegateSafe<>
+
+// Helper Classes
+IDelegateInvoker
+DelegateMsg
+DelegateThread
+``` 
 
 # Project Build
 
