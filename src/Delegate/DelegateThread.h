@@ -5,8 +5,13 @@
 
 namespace DelegateLib {
 
-/// @brief Each platform specific implementation must inherit from DelegateThread
-/// and provide an implementation for DispatchDelegate().
+/// @file
+/// @brief A base class for a delegate enabled execution thread. 
+/// 
+/// @details Each platform specific implementation must inherit from DelegateThread
+/// and provide an implementation for `DispatchDelegate()`. The `DispatchDelegate()`
+/// function is called by the source thread to initiate an asynchronous function call
+/// onto the destination thread of control.
 class DelegateThread
 {
 public:

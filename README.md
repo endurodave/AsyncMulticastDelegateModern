@@ -7,7 +7,7 @@
 
 A C++ delegate library capable of invoking any callable function either synchronously or asynchronously on a user specified thread of control. 
 
-Asynchronous function calls support both non-blocking and blocking modes with a timeout. The library supports all types of target functions, including free functions, class member functions, static class functions, and lambdas. It is capable of handling any function signature, regardless of the number of arguments or return value. All argument types are supported, including by value, pointers, pointers to pointers, and references. The delegate library takes care of the intricate details of function invocation across thread boundaries. Thread-safe delegate containers stores delegate instances with a matching function signature.
+Asynchronous function calls support both non-blocking and blocking modes with a timeout. The library supports all types of target functions, including free functions, class member functions, static class functions, lambdas, and `std::function`. It is capable of handling any function signature, regardless of the number of arguments or return value. All argument types are supported, including by value, pointers, pointers to pointers, and references. The delegate library takes care of the intricate details of function invocation across thread boundaries. Thread-safe delegate containers stores delegate instances with a matching function signature.
 
 Originally published on CodeProject at: <a href="https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cpluspl">Asynchronous Multicast Delegates in Modern C++</a>
 
@@ -261,6 +261,9 @@ DelegateBase
         DelegateMemberSp<>
             DelegateMemberSpAsync<>
                 DelegateMemberSpAsyncWait<>
+        DelegateFunction<>
+            DelegateFunctionAsync<>
+                DelegateFunctionAsyncWait<>
 
 // Delegate Containers
 SinglecastDelegate<>
@@ -283,8 +286,6 @@ DelegateThread
 
 <code>cmake -G "Visual Studio 17 2022" -A x64 -B build -S .</code>
 
-<code>cmake -G "Visual Studio 17 2022" -A x64 -B build -S . -DENABLE_UNIT_TESTS=ON</code>
-
 <code>cmake -G "Visual Studio 17 2022" -A x64 -B build -S . -DENABLE_ALLOCATOR=ON</code>
 
 After executed, open the Visual Studio project from within the <code>build</code> directory.
@@ -297,8 +298,6 @@ After executed, open the Visual Studio project from within the <code>build</code
 ## Linux Make
 
 <code>cmake -G "Unix Makefiles" -B build -S .</code>
-
-<code>cmake -G "Unix Makefiles" -B build -S . -DENABLE_UNIT_TESTS=ON</code>
 
 <code>cmake -G "Unix Makefiles" -B build -S . -DENABLE_ALLOCATOR=ON</code>
 

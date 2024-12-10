@@ -166,7 +166,7 @@ struct DelegateMember; // Not defined
 
 /// @brief `DelegateMember<>` class synchronously invokes a class member target 
 /// function using a class object pointer.
-/// @tclass TClass The class type that contains the member function.
+/// @tparam TClass The class type that contains the member function.
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class TClass, class RetType, class... Args>
@@ -289,7 +289,7 @@ struct DelegateMemberSp; // Not defined
 
 /// @brief `DelegateMemberSp<>` class synchronously invokes a class member target 
 /// function using a `std::shared_ptr` object.
-/// @tclass TClass The class type that contains the member function.
+/// @tparam TClass The class type that contains the member function.
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class TClass, class RetType, class... Args>
@@ -411,7 +411,6 @@ template <class R>
 class DelegateFunction; // Not defined
 
 /// @brief `DelegateFunction<>` class synchronously invokes a `std::function` target function.
-/// @tclass TClass The class type that contains the member function.
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class RetType, class... Args>

@@ -1,6 +1,10 @@
 #ifndef _SINGLECAST_DELEGATE_H
 #define _SINGLECAST_DELEGATE_H
 
+/// @file
+/// @brief Delegate container for storing an invoking single delegate instance. 
+/// Class is not thread safe.
+
 #include "Delegate.h"
 
 namespace DelegateLib {

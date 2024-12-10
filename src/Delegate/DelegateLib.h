@@ -1,7 +1,12 @@
 #ifndef _DELEGATE_LIB_H
 #define _DELEGATE_LIB_H
 
-// DelegateLib.h is a single include for users to obtain all delegate functionality
+// Delegate.h
+// @see https://github.com/endurodave/AsyncMulticastDelegateModern
+// David Lafreniere, Aug 2020.
+
+/// @file
+/// @brief DelegateLib.h is a single include to obtain all delegate functionality. 
 
 #include "DelegateOpt.h"
 #include "MulticastDelegateSafe.h"

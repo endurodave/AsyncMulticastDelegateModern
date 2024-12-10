@@ -101,8 +101,6 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 
 <code>cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S .</code>
 
-<code>cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON</code>
-
 <code>cmake -G "Visual Studio 17 2022" -A x64 -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_ALLOCATOR=ON</code>
 
 After executed, open the Visual Studio project from within the <code>AsyncMulticastDelegateModernBuild</code> directory.
@@ -115,8 +113,6 @@ After executed, open the Visual Studio project from within the <code>AsyncMultic
 ## Linux Make
 
 <code>cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S .</code>
-
-<code>cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_UNIT_TESTS=ON</code>
 
 <code>cmake -G "Unix Makefiles" -B ../AsyncMulticastDelegateModernBuild -S . -DENABLE_ALLOCATOR=ON</code>
 
@@ -146,6 +142,9 @@ DelegateBase
         DelegateMemberSp<>
             DelegateMemberSpAsync<>
                 DelegateMemberSpAsyncWait<>
+        DelegateFunction<>
+            DelegateFunctionAsync<>
+                DelegateFunctionAsyncWait<>
 ``` 
 
 <p><code>DelegateFree<></code> binds to a free or static member function. <code>DelegateMember<> </code>binds to a class instance member function. <code>DelegateMemberSp<></code> binds to a class instance member function using a <code>std::shared_ptr</code> instead of a raw object pointer. All versions offer synchronous function invocation.</p>
