@@ -312,9 +312,16 @@ After executed, build the software from within the <code>build</code> directory 
 
  See [Design Details](docs/DETAILS.md) for implementation design details and more examples.
 
- See Doxygen main page located at `doxygen/html/index.html` for source code documentation. Clone the repository to view the pages.
+ See Doxygen main page located at `doxygen/html/index.html` for source code documentation. Clone the repository to view the pages in a browser.
 
 # Related Repositories
+
+## Alternative Implementations
+
+Alternative asynchronous implementations similar in concept to C++ delegate.
+
+* <a href="https://github.com/endurodave/AsyncCallback">Asynchronous Callbacks in C++</a> - A C++ asynchronous callback framework simplifies passing data between threads.
+* <a href="https://github.com/endurodave/C_AsyncCallback">Asynchronous Callbacks in C</a> - A C language asynchronous callback framework simplifies passing data between threads.
 
 ## Additional Source Code
 
