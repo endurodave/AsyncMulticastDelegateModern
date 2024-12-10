@@ -312,7 +312,8 @@ After executed, build the software from within the <code>build</code> directory 
 
  See [Design Details](docs/DETAILS.md) for implementation design details and more examples.
 
- See [Doxygen Pages](doxygen/html/index.html) for source code documentation.
+ See [Doxygen Pages](https://html-preview.github.io/?url=https://github.com/endurodave/AsyncMulticastDelegateModern/blob/wip/refactoring/doxygen/html/index.html) for source code documentation located within the `doxygen` directory.
+
 
 # Related Repositories
 
