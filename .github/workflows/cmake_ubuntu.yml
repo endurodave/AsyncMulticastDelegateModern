@@ -3,10 +3,10 @@ name: Ubuntu
 on:
   push:
     branches:
-      - wip/refactoring  # Trigger on push to main branch
+      - master  # Trigger on push to 'master' branch
   pull_request:
     branches:
-      - wip/refactoring  # Trigger on pull request targeting main branch
+      - master  # Trigger on pull request targeting 'master' branch
 
 jobs:
   build:
