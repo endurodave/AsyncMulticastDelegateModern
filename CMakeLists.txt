@@ -22,6 +22,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Collect all .cpp and *.h source files in the src directory
 file(GLOB SOURCES "${CMAKE_SOURCE_DIR}/src/*.cpp" "${CMAKE_SOURCE_DIR}/src/*.h")
 
+# Collect all header files in the src/Delegate directory
+file(GLOB Delegate_HEADERS "${CMAKE_SOURCE_DIR}/src/Delegate/*.h")
+
+# Organize Delegate headers into a "Delegate Files" folder in Visual Studio
+source_group("Delegate Files" FILES ${Delegate_HEADERS})
+
 # Add subdirectories to include path
 include_directories( 
     ${CMAKE_SOURCE_DIR}/src/Delegate
@@ -37,14 +43,13 @@ include_directories(
 endif()
 
 # Add an executable target
-add_executable(DelegateApp ${SOURCES})
+add_executable(DelegateApp ${SOURCES} ${Delegate_HEADERS})
 
 if (ENABLE_ALLOCATOR)
     add_compile_definitions(USE_ALLOCATOR)
 endif()
 
 # Add subdirectories to build
-add_subdirectory(src/Delegate)
 add_subdirectory(src/Examples)
 add_subdirectory(src/Port)
 add_subdirectory(tests/UnitTests)
@@ -54,7 +59,6 @@ if (ENABLE_ALLOCATOR)
 endif()
 
 target_link_libraries(DelegateApp PRIVATE 
-    DelegateLib
     ExamplesLib
     PortLib
     UnitTestsLib
