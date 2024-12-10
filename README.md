@@ -312,21 +312,20 @@ After executed, build the software from within the <code>build</code> directory 
 
  See [Design Details](docs/DETAILS.md) for implementation design details and more examples.
 
- See [Doxygen Pages](https://html-preview.github.io/?url=https://github.com/endurodave/AsyncMulticastDelegateModern/blob/wip/refactoring/doxygen/html/index.html) for source code documentation located within the `doxygen` directory.
-
+ See Doxygen main page located at `doxygen/html/index.html` for source code documentation. Clone the repository to view the pages.
 
 # Related Repositories
 
-## Source Code Used Within Delegates
+## Additional Source Code
 
-Supporting source code within the delegate library.
+Supporting source code used within the delegate library.
 
 * <a href="https://github.com/endurodave/StdWorkerThread">C++ std::thread Event Loop</a> - C++ std::thread Event Loop with Message Queue and Timer.
 * <a href="https://github.com/endurodave/stl_allocator">Fixed Block std::allocator</a> - STL std::allocator Fixed Block Memory Allocator.
 
 ## Projects Using Delegates
 
-The repositories below utilize the delegate library in different multithreaded applications.
+Repositories utilizing the delegate library within different multithreaded applications.
 
 * <a href="https://github.com/endurodave/AsyncStateMachine">Asynchronous State Machine Design in C++</a> - an asynchronous C++ state machine implemented using an asynchronous delegate library.
 * <a href="https://github.com/endurodave/IntegrationTestFramework">Integration Test Framework using Google Test and Delegates</a> - a multi-threaded C++ software integration test framework using Google Test and Delegate libraries.

@@ -179,6 +179,17 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class RetType, class... Args&gt;<br />
 class DelegateLib::DelegateFunction&lt; RetType(Args...)&gt;</div><p><code><a class="el" href="class_delegate_lib_1_1_delegate_function.html">DelegateFunction</a>&lt;&gt;</code> class synchronously invokes a <code>std::function</code> target function. </p>
+<p>Caution when binding to a <code>std::function</code> using this class. <code>std::function</code> cannot be compared for equality directly in a meaningful way using <code>operator==</code>. Therefore, the delegate library uses <code>target_type()</code> for comparison. <code>target_type()</code> only compares the types of the stored callable objects, but the not actual instances. The code below shows the issue.</p>
+<p><code>Test t1, t2;</code> <br  />
+ <code>std::function&lt;void(int)&gt; f1 = std::bind(&amp;Test::Func, &amp;t1, std::placeholders::_1);</code> <br  />
+ <code>std::function&lt;void(int)&gt; f2 = std::bind(&amp;Test::Func, &amp;t2, std::placeholders::_1);</code> <br  />
+ <code><a class="el" href="struct_delegate_lib_1_1_multicast_delegate_safe.html">MulticastDelegateSafe</a>&lt;void(int)&gt; safe;</code> <br  />
+ <code>safe += MakeDelegate(f1);</code> <br  />
+ <code>safe += MakeDelegate(f2);</code> <br  />
+ <code>safe -= MakeDelegate(f2); // Should remove f2, not f1!</code> <br  />
+</p>
+<p>Depending on how usage, this may never be a issue but its worth noting.</p>
+<p>The <code><a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateMember</a>&lt;&gt;</code> class has no such limitations and works under all conditions, including comparing two instance functions of the same class.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">RetType</td><td>The return type of the bound delegate function. </td></tr>

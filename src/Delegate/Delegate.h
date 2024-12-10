@@ -411,6 +411,24 @@ template <class R>
 class DelegateFunction; // Not defined
 
 /// @brief `DelegateFunction<>` class synchronously invokes a `std::function` target function.
+/// @details Caution when binding to a `std::function` using this class. `std::function` cannot be 
+/// compared for equality directly in a meaningful way using `operator==`. Therefore, the delegate
+/// library uses `target_type()` for comparison. `target_type()` only compares the types of the 
+/// stored callable objects, but the not actual instances. The code below shows the issue.
+/// 
+/// `Test t1, t2;`  
+/// `std::function<void(int)> f1 = std::bind(&Test::Func, &t1, std::placeholders::_1);`  
+/// `std::function<void(int)> f2 = std::bind(&Test::Func, &t2, std::placeholders::_1);`  
+/// `MulticastDelegateSafe<void(int)> safe;`  
+/// `safe += MakeDelegate(f1);`  
+/// `safe += MakeDelegate(f2);`  
+/// `safe -= MakeDelegate(f2);   // Should remove f2, not f1!`  
+/// 
+/// Depending on how usage, this may never be a issue but its worth noting. 
+/// 
+/// The `DelegateMember<>` class has no such limitations and works under all conditions,
+/// including comparing two instance functions of the same class. 
+/// 
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class RetType, class... Args>

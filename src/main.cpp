@@ -372,6 +372,13 @@ void TestAllTargetTypes() {
     ASSERT_TRUE(callCnt == 27);
 }
 
+class Test
+{
+public:
+    void Func(int i) { }
+};
+
+
 //------------------------------------------------------------------------------
 // main
 //------------------------------------------------------------------------------
@@ -398,6 +405,15 @@ int main(void)
 
     // Run all target types example
     TestAllTargetTypes();
+
+    Test t1, t2;
+    std::function<void(int)> f1 = std::bind(&Test::Func, &t1, std::placeholders::_1);
+    std::function<void(int)> f2 = std::bind(&Test::Func, &t2, std::placeholders::_1);
+    MulticastDelegateSafe<void(int)> safe;
+    safe += MakeDelegate(f1);
+    safe += MakeDelegate(f2);
+    safe -= MakeDelegate(f2);   // Should remove f2, not f1!
+
 
     // Create a delegate bound to a free function then invoke
     DelegateFree<void(int)> delegateFree = MakeDelegate(&FreeFuncInt);

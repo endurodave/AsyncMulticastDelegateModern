@@ -656,6 +656,12 @@ template <class R>
 struct DelegateFunctionAsync; // Not defined
 
 /// @brief `DelegateFunctionAsync<>` class asynchronously invokes a `std::function` target function.
+/// @details Caution when binding to a `std::function` using this class. `std::function` cannot be 
+/// compared for equality directly in a meaningful way using `operator==`. Therefore, the delegate
+/// library used 
+/// 
+/// See `DelegateFunction<>` base class for important usage limitations.
+/// 
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class RetType, class... Args>

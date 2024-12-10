@@ -815,6 +815,9 @@ template <class R>
 struct DelegateFunctionAsyncWait; // Not defined
 
 /// @brief `DelegateFunctionAsyncWait<>` class asynchronously block invokes a std::function target function.
+/// 
+/// See `DelegateFunction<>` base class for important usage limitations.
+/// 
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class RetType, class... Args>
