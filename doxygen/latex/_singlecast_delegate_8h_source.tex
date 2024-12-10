@@ -1,0 +1,60 @@
+\doxysection{Singlecast\+Delegate.\+h}
+\hypertarget{_singlecast_delegate_8h_source}{}\label{_singlecast_delegate_8h_source}\index{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/SinglecastDelegate.h@{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/SinglecastDelegate.h}}
+\mbox{\hyperlink{_singlecast_delegate_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_SINGLECAST\_DELEGATE\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_SINGLECAST\_DELEGATE\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_delegate_8h}{Delegate.h}}"{}}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_delegate_lib}{DelegateLib}}\ \{}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ R>}
+\DoxyCodeLine{00009\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{SinglecastDelegate}};\ \textcolor{comment}{//\ Not\ defined}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{template}<\textcolor{keyword}{class\ }RetType,\ \textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{SinglecastDelegate}}<RetType(Args...)>}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00017\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aa56a7da61e752491b338442d83156e1a}{SinglecastDelegate}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a208278e04273a67747e38c1b40187700}{\string~SinglecastDelegate}}()\ \{\ Clear();\ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ RetType\ \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a29fd174ba1060d37e164e45ed3e9b383}{operator()}}(Args...\ args)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (*m\_delegate)(args...);\ \ \textcolor{comment}{//\ Invoke\ delegate\ callback}}
+\DoxyCodeLine{00022\ \ \ \ \ \}}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aa9da380779be0a93c208f17ec0bb5e83}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_delegate_lib_1_1_delegate}{Delegate}}<RetType(Args...)>\&\ delegate)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ Clear();}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ m\_delegate\ =\ delegate.Clone();\ \ \textcolor{comment}{//\ Create\ a\ duplicate\ delegate}}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a0bfbe2a3d03ee9e494fe58ba35c953fd}{operator=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_delegate_lib_1_1_delegate}{Delegate}}<RetType(Args...)>*\ delegate)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ Clear();}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (delegate)}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ m\_delegate\ =\ delegate-\/>Clone();\ \ \textcolor{comment}{//\ Create\ a\ duplicate\ delegate}}
+\DoxyCodeLine{00033\ \ \ \ \ \}}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a2cee3825995b4400eb0924c3bc54b382}{Empty}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !m\_delegate;\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_af44894cbde71e2cae0687381f5e07eff}{Clear}}()\ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (m\_delegate)\ \{}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ m\_delegate;}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ m\_delegate\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{explicit}\ \textcolor{keyword}{operator}\ bool()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ !Empty();\ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{//\ Prevent\ copying\ objects}}
+\DoxyCodeLine{00050\ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{SinglecastDelegate}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{SinglecastDelegate}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{SinglecastDelegate}}\&\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{SinglecastDelegate}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00054\ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_delegate}{Delegate}}<RetType(Args...)>*\ m\_delegate\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00055\ \};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

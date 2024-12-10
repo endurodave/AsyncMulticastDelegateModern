@@ -1,0 +1,39 @@
+\doxysection{Semaphore.\+h}
+\hypertarget{_semaphore_8h_source}{}\label{_semaphore_8h_source}\index{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/Semaphore.h@{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/Semaphore.h}}
+\mbox{\hyperlink{_semaphore_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_SEMAPHORE\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_SEMAPHORE\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_delegate_opt_8h}{DelegateOpt.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <condition\_variable>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <atomic>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_delegate_lib}{DelegateLib}}\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_delegate_lib_1_1_semaphore}{Semaphore}}}
+\DoxyCodeLine{00013\ \{}
+\DoxyCodeLine{00014\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1_semaphore_ab598fb67f4b8ccabd6e86f449ee95f95}{Semaphore}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1_semaphore_a3dc5373d7acc1b2b23b4c8db04287747}{\string~Semaphore}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_delegate_lib_1_1_semaphore_a031954138f0b60dd1f23b8c47ab16442}{Wait}}(std::chrono::milliseconds\ timeout);}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_delegate_lib_1_1_semaphore_a649aa0bb36a4f94d15ead412d02f0a24}{Signal}}();}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{comment}{//\ Prevent\ copying\ objects}}
+\DoxyCodeLine{00028\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1_semaphore_ab598fb67f4b8ccabd6e86f449ee95f95}{Semaphore}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_delegate_lib_1_1_semaphore}{Semaphore}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00029\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1_semaphore}{Semaphore}}\&\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_delegate_lib_1_1_semaphore}{Semaphore}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ std::condition\_variable\ m\_sema;}
+\DoxyCodeLine{00032\ \ \ \ \ std::mutex\ m\_lock;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_signaled\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00034\ \};}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{preprocessor}{\#endif\ }}
+
+\end{DoxyCode}

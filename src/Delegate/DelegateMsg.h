@@ -1,6 +1,9 @@
 #ifndef _DELEGATE_MSG_H
 #define _DELEGATE_MSG_H
 
+/// @file
+/// @brief Delegate inter-thread message base class. 
+
 #include "Fault.h"
 #include "DelegateInvoker.h"
 #include "DelegateOpt.h"

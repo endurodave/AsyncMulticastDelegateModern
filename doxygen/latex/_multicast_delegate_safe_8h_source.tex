@@ -1,0 +1,61 @@
+\doxysection{Multicast\+Delegate\+Safe.\+h}
+\hypertarget{_multicast_delegate_safe_8h_source}{}\label{_multicast_delegate_safe_8h_source}\index{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/MulticastDelegateSafe.h@{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/MulticastDelegateSafe.h}}
+\mbox{\hyperlink{_multicast_delegate_safe_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_MULTICAST\_DELEGATE\_SAFE\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_MULTICAST\_DELEGATE\_SAFE\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_multicast_delegate_8h}{MulticastDelegate.h}}"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_delegate_lib}{DelegateLib}}\ \{}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ R>}
+\DoxyCodeLine{00010\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate_safe}{MulticastDelegateSafe}};\ \textcolor{comment}{//\ Not\ defined}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{template}<\textcolor{keyword}{class\ }RetType,\ \textcolor{keyword}{class}...\ Args>}
+\DoxyCodeLine{00014\ \textcolor{keyword}{class\ }\mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate_safe}{MulticastDelegateSafe}}<RetType(Args...)>\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate}{MulticastDelegate}}<RetType(Args...)>}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00017\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1_multicast_delegate_safe_3_01_ret_type_07_args_8_8_8_08_4_a4ff20ed5d4dd2387e250ec44ada98c36}{MulticastDelegateSafe}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00018\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1_multicast_delegate_safe_3_01_ret_type_07_args_8_8_8_08_4_a78372ba84274c90fa065ad0e1131388d}{\string~MulticastDelegateSafe}}()\ =\ \textcolor{keywordflow}{default};\ }
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_delegate_lib_1_1_multicast_delegate_safe_3_01_ret_type_07_args_8_8_8_08_4_a74ddb360c1f0a668b416551d16c5d7cc}{operator+=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_delegate_lib_1_1_delegate}{Delegate}}<RetType(Args...)>\&\ delegate)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::lock\_guard<std::mutex>\ lock(m\_lock);}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate}{MulticastDelegate}}<RetType(Args...)>::operator\ +=(delegate);}
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_delegate_lib_1_1_multicast_delegate_safe_3_01_ret_type_07_args_8_8_8_08_4_a83fd07966d22b666e67c9b4e2f2a3913}{operator-\/=}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_delegate_lib_1_1_delegate}{Delegate}}<RetType(Args...)>\&\ delegate)\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::lock\_guard<std::mutex>\ lock(m\_lock);}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate}{MulticastDelegate}}<RetType(Args...)>::operator\ -\/=(delegate);}
+\DoxyCodeLine{00027\ \ \ \ \ \}}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_delegate_lib_1_1_multicast_delegate_safe_3_01_ret_type_07_args_8_8_8_08_4_a084351c99acfba753f96b3b366522adb}{operator()}}(Args...\ args)\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::lock\_guard<std::mutex>\ lock(m\_lock);}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate}{MulticastDelegate}}<RetType(Args...)>::operator\ ()(args...);}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_delegate_lib_1_1_multicast_delegate_safe_3_01_ret_type_07_args_8_8_8_08_4_aafcf6d25ef4c29c27fcffc7d1c56075c}{Empty}}()\ \{}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::lock\_guard<std::mutex>\ lock(m\_lock);}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate}{MulticastDelegate}}<RetType(Args...)>::Empty();}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_delegate_lib_1_1_multicast_delegate_safe_3_01_ret_type_07_args_8_8_8_08_4_a9732c67d0b37b2418fc776a4a6d5c26d}{Clear}}()\ \{}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::lock\_guard<std::mutex>\ lock(m\_lock);}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate}{MulticastDelegate}}<RetType(Args...)>::Clear();}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{explicit}\ \textcolor{keyword}{operator}\ bool()\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ std::lock\_guard<std::mutex>\ lock(m\_lock);}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate}{MulticastDelegate}}<RetType(Args...)>::operator\ bool();}
+\DoxyCodeLine{00044\ \ \ \ \ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//\ Prevent\ copying\ objects}}
+\DoxyCodeLine{00048\ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate_safe}{MulticastDelegateSafe}}(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate_safe}{MulticastDelegateSafe}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate_safe}{MulticastDelegateSafe}}\&\ operator=(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate_safe}{MulticastDelegateSafe}}\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00052\ \ \ \ \ std::mutex\ m\_lock;}
+\DoxyCodeLine{00053\ \};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,52 @@
+\doxysection{Sys\+Data Class Reference}
+\hypertarget{class_sys_data}{}\label{class_sys_data}\index{SysData@{SysData}}
+
+
+\doxylink{class_sys_data}{Sys\+Data} stores common data accessible by any system thread. This class is thread-\/safe.  
+
+
+
+
+{\ttfamily \#include $<$Sys\+Data.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_sys_data_ad48f9ded7285b65155a96aac76d305c5}{Set\+System\+Mode}} (System\+Mode\+::\+Type system\+Mode)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_sys_data_a2f077bfc2b17454f0b92e25662b6c0d5}\label{class_sys_data_a2f077bfc2b17454f0b92e25662b6c0d5} 
+static \mbox{\hyperlink{class_sys_data}{Sys\+Data}} \& {\bfseries Get\+Instance} ()
+\begin{DoxyCompactList}\small\item\em Get singleton instance of this class. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_sys_data_a9f8d18bbd0ba6381db48df081cd4f567}\label{class_sys_data_a9f8d18bbd0ba6381db48df081cd4f567} 
+\mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate_safe}{Multicast\+Delegate\+Safe}}$<$ void(const \mbox{\hyperlink{class_system_mode_changed}{System\+Mode\+Changed}} \&)$>$ {\bfseries System\+Mode\+Changed\+Delegate}
+\begin{DoxyCompactList}\small\item\em Clients register with Multicast\+Delegate\+Safe to get callbacks when system mode changes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{class_sys_data}{Sys\+Data} stores common data accessible by any system thread. This class is thread-\/safe. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_sys_data_ad48f9ded7285b65155a96aac76d305c5}\index{SysData@{SysData}!SetSystemMode@{SetSystemMode}}
+\index{SetSystemMode@{SetSystemMode}!SysData@{SysData}}
+\doxysubsubsection{\texorpdfstring{SetSystemMode()}{SetSystemMode()}}
+{\footnotesize\ttfamily \label{class_sys_data_ad48f9ded7285b65155a96aac76d305c5} 
+void Sys\+Data\+::\+Set\+System\+Mode (\begin{DoxyParamCaption}\item[{System\+Mode\+::\+Type}]{system\+Mode}{}\end{DoxyParamCaption})}
+
+Sets the system mode and notify registered clients via System\+Mode\+Changed\+Delegate. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em system\+Mode} & -\/ the new system mode. ~\newline
+ \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Examples/Sys\+Data.\+h\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Examples/Sys\+Data.\+cpp\end{DoxyCompactItemize}

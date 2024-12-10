@@ -1,0 +1,114 @@
+\doxysection{Delegate\+Lib\+::Singlecast\+Delegate\texorpdfstring{$<$}{<} Ret\+Type(Args...)\texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4}{}\label{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4}\index{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}}
+
+
+A non-\/thread safe delegate container storing one delegate. Void and ~\newline
+ non-\/void return values supported. ~\newline
+  
+
+
+
+
+{\ttfamily \#include $<$Singlecast\+Delegate.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aa56a7da61e752491b338442d83156e1a}{Singlecast\+Delegate}} ()=default
+\item 
+\mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a208278e04273a67747e38c1b40187700}{\texorpdfstring{$\sim$}{\string~}\+Singlecast\+Delegate}} ()
+\item 
+Ret\+Type \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a29fd174ba1060d37e164e45ed3e9b383}{operator()}} (Args... args)
+\item 
+void \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aa9da380779be0a93c208f17ec0bb5e83}{operator=}} (const \mbox{\hyperlink{struct_delegate_lib_1_1_delegate}{Delegate}}$<$ Ret\+Type(Args...)$>$ \&delegate)
+\item 
+void \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a0bfbe2a3d03ee9e494fe58ba35c953fd}{operator=}} (const \mbox{\hyperlink{struct_delegate_lib_1_1_delegate}{Delegate}}$<$ Ret\+Type(Args...)$>$ \texorpdfstring{$\ast$}{*}delegate)
+\item 
+bool \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a2cee3825995b4400eb0924c3bc54b382}{Empty}} () const
+\begin{DoxyCompactList}\small\item\em Any registered delegates? \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_af44894cbde71e2cae0687381f5e07eff}{Clear}} ()
+\begin{DoxyCompactList}\small\item\em Remove registered delegate. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aee196f10c4064cd51da5625678248388}{operator bool}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$class Ret\+Type, class... Args$>$\newline
+class Delegate\+Lib\+::\+Singlecast\+Delegate$<$ Ret\+Type(\+Args...)$>$}
+A non-\/thread safe delegate container storing one delegate. Void and ~\newline
+ non-\/void return values supported. ~\newline
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aa56a7da61e752491b338442d83156e1a}\index{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}!SinglecastDelegate@{SinglecastDelegate}}
+\index{SinglecastDelegate@{SinglecastDelegate}!DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}}
+\doxysubsubsection{\texorpdfstring{SinglecastDelegate()}{SinglecastDelegate()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aa56a7da61e752491b338442d83156e1a} 
+template$<$class Ret\+Type , class... Args$>$ \\
+\mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{Delegate\+Lib\+::\+Singlecast\+Delegate}}$<$ Ret\+Type(Args...)$>$\+::\+Singlecast\+Delegate (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a208278e04273a67747e38c1b40187700}\index{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}!````~SinglecastDelegate@{\texorpdfstring{$\sim$}{\string~}SinglecastDelegate}}
+\index{````~SinglecastDelegate@{\texorpdfstring{$\sim$}{\string~}SinglecastDelegate}!DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}SinglecastDelegate()}{\string~SinglecastDelegate()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a208278e04273a67747e38c1b40187700} 
+template$<$class Ret\+Type , class... Args$>$ \\
+\mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{Delegate\+Lib\+::\+Singlecast\+Delegate}}$<$ Ret\+Type(Args...)$>$\+::\texorpdfstring{$\sim$}{\string~}\mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{Singlecast\+Delegate}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_af44894cbde71e2cae0687381f5e07eff}\index{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}!Clear@{Clear}}
+\index{Clear@{Clear}!DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}}
+\doxysubsubsection{\texorpdfstring{Clear()}{Clear()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_af44894cbde71e2cae0687381f5e07eff} 
+template$<$class Ret\+Type , class... Args$>$ \\
+void \mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{Delegate\+Lib\+::\+Singlecast\+Delegate}}$<$ Ret\+Type(Args...)$>$\+::\+Clear (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Remove registered delegate. 
+
+\Hypertarget{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a2cee3825995b4400eb0924c3bc54b382}\index{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}!Empty@{Empty}}
+\index{Empty@{Empty}!DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}}
+\doxysubsubsection{\texorpdfstring{Empty()}{Empty()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a2cee3825995b4400eb0924c3bc54b382} 
+template$<$class Ret\+Type , class... Args$>$ \\
+bool \mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{Delegate\+Lib\+::\+Singlecast\+Delegate}}$<$ Ret\+Type(Args...)$>$\+::\+Empty (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Any registered delegates? 
+
+\Hypertarget{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aee196f10c4064cd51da5625678248388}\index{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}!operator bool@{operator bool}}
+\index{operator bool@{operator bool}!DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}}
+\doxysubsubsection{\texorpdfstring{operator bool()}{operator bool()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aee196f10c4064cd51da5625678248388} 
+template$<$class Ret\+Type , class... Args$>$ \\
+\mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{Delegate\+Lib\+::\+Singlecast\+Delegate}}$<$ Ret\+Type(Args...)$>$\+::operator bool (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [explicit]}}
+
+\Hypertarget{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a29fd174ba1060d37e164e45ed3e9b383}\index{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}!operator()@{operator()}}
+\index{operator()@{operator()}!DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}}
+\doxysubsubsection{\texorpdfstring{operator()()}{operator()()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a29fd174ba1060d37e164e45ed3e9b383} 
+template$<$class Ret\+Type , class... Args$>$ \\
+Ret\+Type \mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{Delegate\+Lib\+::\+Singlecast\+Delegate}}$<$ Ret\+Type(Args...)$>$\+::operator() (\begin{DoxyParamCaption}\item[{Args...}]{args}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aa9da380779be0a93c208f17ec0bb5e83}\index{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}!operator=@{operator=}}
+\index{operator=@{operator=}!DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_aa9da380779be0a93c208f17ec0bb5e83} 
+template$<$class Ret\+Type , class... Args$>$ \\
+void \mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{Delegate\+Lib\+::\+Singlecast\+Delegate}}$<$ Ret\+Type(Args...)$>$\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_delegate_lib_1_1_delegate}{Delegate}}$<$ Ret\+Type(Args...)$>$ \&}]{delegate}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+\Hypertarget{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a0bfbe2a3d03ee9e494fe58ba35c953fd}\index{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}!operator=@{operator=}}
+\index{operator=@{operator=}!DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$@{DelegateLib::SinglecastDelegate$<$ RetType(Args...)$>$}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4_a0bfbe2a3d03ee9e494fe58ba35c953fd} 
+template$<$class Ret\+Type , class... Args$>$ \\
+void \mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{Delegate\+Lib\+::\+Singlecast\+Delegate}}$<$ Ret\+Type(Args...)$>$\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_delegate_lib_1_1_delegate}{Delegate}}$<$ Ret\+Type(Args...)$>$ \texorpdfstring{$\ast$}{*}}]{delegate}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Delegate/\mbox{\hyperlink{_singlecast_delegate_8h}{Singlecast\+Delegate.\+h}}\end{DoxyCompactItemize}

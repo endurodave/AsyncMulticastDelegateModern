@@ -1,0 +1,49 @@
+\doxysection{C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Delegate/make\+\_\+tuple\+\_\+heap.h File Reference}
+\hypertarget{make__tuple__heap_8h}{}\label{make__tuple__heap_8h}\index{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/make\_tuple\_heap.h@{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/make\_tuple\_heap.h}}
+{\ttfamily \#include $<$tuple$>$}\newline
+{\ttfamily \#include $<$list$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include $<$type\+\_\+traits$>$}\newline
+{\ttfamily \#include "{}Delegate\+Opt.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr}{Delegate\+Lib\+::is\+\_\+shared\+\_\+ptr$<$ T $>$}}
+\item 
+struct \mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_4}{Delegate\+Lib\+::is\+\_\+shared\+\_\+ptr$<$ std\+::shared\+\_\+ptr$<$ T $>$ $>$}}
+\item 
+struct \mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_6_01_4}{Delegate\+Lib\+::is\+\_\+shared\+\_\+ptr$<$ std\+::shared\+\_\+ptr$<$ T $>$ \& $>$}}
+\item 
+struct \mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr_3_01const_01std_1_1shared__ptr_3_01_t_01_4_01_6_01_4}{Delegate\+Lib\+::is\+\_\+shared\+\_\+ptr$<$ const std\+::shared\+\_\+ptr$<$ T $>$ \& $>$}}
+\item 
+struct \mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_5_01_4}{Delegate\+Lib\+::is\+\_\+shared\+\_\+ptr$<$ std\+::shared\+\_\+ptr$<$ T $>$ \texorpdfstring{$\ast$}{*} $>$}}
+\item 
+struct \mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr_3_01const_01std_1_1shared__ptr_3_01_t_01_4_01_5_01_4}{Delegate\+Lib\+::is\+\_\+shared\+\_\+ptr$<$ const std\+::shared\+\_\+ptr$<$ T $>$ \texorpdfstring{$\ast$}{*} $>$}}
+\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base}{Delegate\+Lib\+::heap\+\_\+arg\+\_\+deleter\+\_\+base}}
+\begin{DoxyCompactList}\small\item\em Base class for all deleter\textquotesingle{}s. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter}{Delegate\+Lib\+::heap\+\_\+arg\+\_\+deleter$<$ T $>$}}
+\begin{DoxyCompactList}\small\item\em Frees heap memory for reference heap argument. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter_3_01_t_01_5_01_4}{Delegate\+Lib\+::heap\+\_\+arg\+\_\+deleter$<$ T \texorpdfstring{$\ast$}{*} $>$}}
+\begin{DoxyCompactList}\small\item\em Frees heap memory for pointer heap argument. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter_3_01_t_01_5_5_01_4}{Delegate\+Lib\+::heap\+\_\+arg\+\_\+deleter$<$ T \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*} $>$}}
+\begin{DoxyCompactList}\small\item\em Frees heap memory for pointer to pointer heap argument. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_delegate_lib}{Delegate\+Lib}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$typename Arg , typename... Tuple\+Elem$>$ }\\auto \mbox{\hyperlink{namespace_delegate_lib_acd191a94679356fb915612440acf7a52}{Delegate\+Lib\+::tuple\+\_\+append}} (\mbox{\hyperlink{_delegate_opt_8h_a9e6c72a4d9879e662d02c096cf16ff3c}{xlist}}$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base}{heap\+\_\+arg\+\_\+deleter\+\_\+base}} $>$ $>$ \&heap\+Args, const std\+::tuple$<$ Tuple\+Elem... $>$ \&tup, Arg \texorpdfstring{$\ast$}{*}\texorpdfstring{$\ast$}{*}arg)
+\begin{DoxyCompactList}\small\item\em Append a pointer to pointer argument to the tuple. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Arg , typename... Tuple\+Elem$>$ }\\auto \mbox{\hyperlink{namespace_delegate_lib_a659fef98325fece927482806f9d58c98}{Delegate\+Lib\+::tuple\+\_\+append}} (\mbox{\hyperlink{_delegate_opt_8h_a9e6c72a4d9879e662d02c096cf16ff3c}{xlist}}$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base}{heap\+\_\+arg\+\_\+deleter\+\_\+base}} $>$ $>$ \&heap\+Args, const std\+::tuple$<$ Tuple\+Elem... $>$ \&tup, Arg \texorpdfstring{$\ast$}{*}arg)
+\begin{DoxyCompactList}\small\item\em Append a pointer argument to the tuple. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Arg , typename... Tuple\+Elem$>$ }\\auto \mbox{\hyperlink{namespace_delegate_lib_a15fcbaa212ec2fe7f7b523323b760d07}{Delegate\+Lib\+::tuple\+\_\+append}} (\mbox{\hyperlink{_delegate_opt_8h_a9e6c72a4d9879e662d02c096cf16ff3c}{xlist}}$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base}{heap\+\_\+arg\+\_\+deleter\+\_\+base}} $>$ $>$ \&heap\+Args, const std\+::tuple$<$ Tuple\+Elem... $>$ \&tup, Arg \&arg)
+\begin{DoxyCompactList}\small\item\em Append a reference argument to the tuple. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename... Ts$>$ }\\auto \mbox{\hyperlink{namespace_delegate_lib_aaec1863ccd49b0020b485d9755ab4705}{Delegate\+Lib\+::make\+\_\+tuple\+\_\+heap}} (\mbox{\hyperlink{_delegate_opt_8h_a9e6c72a4d9879e662d02c096cf16ff3c}{xlist}}$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base}{heap\+\_\+arg\+\_\+deleter\+\_\+base}} $>$ $>$ \&heap\+Args, std\+::tuple$<$ Ts... $>$ tup)
+\begin{DoxyCompactList}\small\item\em Terminate the template metaprogramming argument loop. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename Arg1 , typename... Args, typename... Ts$>$ }\\auto \mbox{\hyperlink{namespace_delegate_lib_a501fbd3f7de67128ab8cc37154f34cb5}{Delegate\+Lib\+::make\+\_\+tuple\+\_\+heap}} (\mbox{\hyperlink{_delegate_opt_8h_a9e6c72a4d9879e662d02c096cf16ff3c}{xlist}}$<$ std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base}{heap\+\_\+arg\+\_\+deleter\+\_\+base}} $>$ $>$ \&heap\+Args, std\+::tuple$<$ Ts... $>$ tup, Arg1 arg1, Args... args)
+\begin{DoxyCompactList}\small\item\em Creates a tuple with all tuple elements created on the heap using operator new. Call with an empty list and empty tuple. The empty tuple is concatenated with each heap element. The list contains \doxylink{class_delegate_lib_1_1heap__arg__deleter__base}{heap\+\_\+arg\+\_\+deleter\+\_\+base} objects for each argument heap memory block that will be automatically deleted after the bound function is invoked on the target thread. ~\newline
+ \end{DoxyCompactList}\end{DoxyCompactItemize}

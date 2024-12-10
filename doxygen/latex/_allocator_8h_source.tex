@@ -1,0 +1,93 @@
+\doxysection{Allocator.\+h}
+\hypertarget{_allocator_8h_source}{}\label{_allocator_8h_source}\index{C:/Projects/AsyncMulticastDelegateModern/src/Allocator/Allocator.h@{C:/Projects/AsyncMulticastDelegateModern/src/Allocator/Allocator.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_ALLOCATOR\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_ALLOCATOR\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}DataTypes.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_allocator}{Allocator}}}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \mbox{\hyperlink{class_allocator_a24c91dbcd5996ad3b8c6921c470985a1}{Allocator}}(\textcolor{keywordtype}{size\_t}\ size,\ UINT\ objects=0,\ CHAR*\ memory\ =\ NULL,\ \textcolor{keyword}{const}\ CHAR*\ name=NULL);}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{class_allocator_ae6af139c96381e0c00dc82d291669577}{\string~Allocator}}();}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keywordtype}{void}*\ \mbox{\hyperlink{class_allocator_ab539239b108dce3bef3f302f688e322d}{Allocate}}(\textcolor{keywordtype}{size\_t}\ size);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_allocator_a9e6bf929bbce11407c2b40090fb19a1a}{Deallocate}}(\textcolor{keywordtype}{void}*\ pBlock);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keyword}{const}\ CHAR*\ \mbox{\hyperlink{class_allocator_acac0f11cfe5cf1dfcd3b9db54ec00b7d}{GetName}}()\ \{\ \textcolor{keywordflow}{return}\ m\_name;\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{class_allocator_ab04ee3162d48f12e5aa4cdc07cc2102c}{GetBlockSize}}()\ \{\ \textcolor{keywordflow}{return}\ m\_blockSize;\ \}}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00044\ \ \ \ \ UINT\ \mbox{\hyperlink{class_allocator_a053a03c6607fd3bff94d5b24fcb2867c}{GetBlockCount}}()\ \{\ \textcolor{keywordflow}{return}\ m\_blockCnt;\ \}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00048\ \ \ \ \ UINT\ \mbox{\hyperlink{class_allocator_a32a97e614e98ed11ba94c695777faacd}{GetBlocksInUse}}()\ \{\ \textcolor{keywordflow}{return}\ m\_blocksInUse;\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00052\ \ \ \ \ UINT\ \mbox{\hyperlink{class_allocator_af894facb6cf20e87a163cb3477a25bb4}{GetAllocations}}()\ \{\ \textcolor{keywordflow}{return}\ m\_allocations;\ \}}
+\DoxyCodeLine{00053\ }
+\DoxyCodeLine{00056\ \ \ \ \ UINT\ \mbox{\hyperlink{class_allocator_ad23779120d03da72d0bb70da0f05c068}{GetDeallocations}}()\ \{\ \textcolor{keywordflow}{return}\ m\_deallocations;\ \}}
+\DoxyCodeLine{00057\ \ \ \ \ }
+\DoxyCodeLine{00058\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{void}\ Push(\textcolor{keywordtype}{void}*\ pMemory);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{keywordtype}{void}*\ Pop();}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keyword}{struct\ }Block}
+\DoxyCodeLine{00068\ \ \ \ \ \{}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ Block*\ pNext;}
+\DoxyCodeLine{00070\ \ \ \ \ \};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{keyword}{enum}\ AllocatorMode\ \{\ HEAP\_BLOCKS,\ HEAP\_POOL,\ STATIC\_POOL\ \};}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ m\_blockSize;}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{size\_t}\ m\_objectSize;}
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keyword}{const}\ UINT\ m\_maxObjects;}
+\DoxyCodeLine{00077\ \ \ \ \ AllocatorMode\ m\_allocatorMode;}
+\DoxyCodeLine{00078\ \ \ \ \ Block*\ m\_pHead;}
+\DoxyCodeLine{00079\ \ \ \ \ CHAR*\ m\_pPool;}
+\DoxyCodeLine{00080\ \ \ \ \ UINT\ m\_poolIndex;}
+\DoxyCodeLine{00081\ \ \ \ \ UINT\ m\_blockCnt;}
+\DoxyCodeLine{00082\ \ \ \ \ UINT\ m\_blocksInUse;}
+\DoxyCodeLine{00083\ \ \ \ \ UINT\ m\_allocations;}
+\DoxyCodeLine{00084\ \ \ \ \ UINT\ m\_deallocations;}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{keyword}{const}\ CHAR*\ m\_name;}
+\DoxyCodeLine{00086\ \};}
+\DoxyCodeLine{00087\ }
+\DoxyCodeLine{00088\ \textcolor{comment}{//\ Template\ class\ to\ create\ external\ memory\ pool}}
+\DoxyCodeLine{00089\ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ T,\ UINT\ Objects>}
+\DoxyCodeLine{00090\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_allocator_pool}{AllocatorPool}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_allocator}{Allocator}}}
+\DoxyCodeLine{00091\ \{}
+\DoxyCodeLine{00092\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00093\ \ \ \ \ \mbox{\hyperlink{class_allocator_pool}{AllocatorPool}}()\ :\ \mbox{\hyperlink{class_allocator_a24c91dbcd5996ad3b8c6921c470985a1}{Allocator}}(\textcolor{keyword}{sizeof}(T),\ Objects,\ m\_memory)}
+\DoxyCodeLine{00094\ \ \ \ \ \{}
+\DoxyCodeLine{00095\ \ \ \ \ \}}
+\DoxyCodeLine{00096\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00097\ \ \ \ \ CHAR\ m\_memory[\textcolor{keyword}{sizeof}(T)\ *\ Objects];}
+\DoxyCodeLine{00098\ \};}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \textcolor{comment}{//\ macro\ to\ provide\ header\ file\ interface}}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#define\ DECLARE\_ALLOCATOR\ \(\backslash\)}}
+\DoxyCodeLine{00102\ \textcolor{preprocessor}{\ \ \ \ public:\ \(\backslash\)}}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ void*\ operator\ new(size\_t\ size)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ return\ \_allocator.Allocate(size);\ \(\backslash\)}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ void\ operator\ delete(void*\ pObject)\ \{\ \(\backslash\)}}
+\DoxyCodeLine{00107\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \_allocator.Deallocate(pObject);\ \(\backslash\)}}
+\DoxyCodeLine{00108\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \}\ \(\backslash\)}}
+\DoxyCodeLine{00109\ \textcolor{preprocessor}{\ \ \ \ private:\ \(\backslash\)}}
+\DoxyCodeLine{00110\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ static\ Allocator\ \_allocator;\ }}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00112\ \textcolor{comment}{//\ macro\ to\ provide\ source\ file\ interface}}
+\DoxyCodeLine{00113\ \textcolor{preprocessor}{\#define\ IMPLEMENT\_ALLOCATOR(class,\ objects,\ memory)\ \(\backslash\)}}
+\DoxyCodeLine{00114\ \textcolor{preprocessor}{\ \ \ \ Allocator\ class::\_allocator(sizeof(class),\ objects,\ memory,\ \#class);}}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ }
+
+\end{DoxyCode}

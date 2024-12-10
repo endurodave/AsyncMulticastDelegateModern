@@ -1,0 +1,74 @@
+\doxysection{Delegate\+Lib\+::Semaphore Class Reference}
+\hypertarget{class_delegate_lib_1_1_semaphore}{}\label{class_delegate_lib_1_1_semaphore}\index{DelegateLib::Semaphore@{DelegateLib::Semaphore}}
+
+
+A semaphore wrapper class.  
+
+
+
+
+{\ttfamily \#include $<$Semaphore.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_delegate_lib_1_1_semaphore_ab598fb67f4b8ccabd6e86f449ee95f95}{Semaphore}} ()=default
+\item 
+\mbox{\hyperlink{class_delegate_lib_1_1_semaphore_a3dc5373d7acc1b2b23b4c8db04287747}{\texorpdfstring{$\sim$}{\string~}\+Semaphore}} ()=default
+\item 
+bool \mbox{\hyperlink{class_delegate_lib_1_1_semaphore_a031954138f0b60dd1f23b8c47ab16442}{Wait}} (std\+::chrono\+::milliseconds timeout)
+\item 
+void \mbox{\hyperlink{class_delegate_lib_1_1_semaphore_a649aa0bb36a4f94d15ead412d02f0a24}{Signal}} ()
+\begin{DoxyCompactList}\small\item\em Called to signal a semaphore. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A semaphore wrapper class. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_delegate_lib_1_1_semaphore_ab598fb67f4b8ccabd6e86f449ee95f95}\index{DelegateLib::Semaphore@{DelegateLib::Semaphore}!Semaphore@{Semaphore}}
+\index{Semaphore@{Semaphore}!DelegateLib::Semaphore@{DelegateLib::Semaphore}}
+\doxysubsubsection{\texorpdfstring{Semaphore()}{Semaphore()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_semaphore_ab598fb67f4b8ccabd6e86f449ee95f95} 
+Delegate\+Lib\+::\+Semaphore\+::\+Semaphore (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+\Hypertarget{class_delegate_lib_1_1_semaphore_a3dc5373d7acc1b2b23b4c8db04287747}\index{DelegateLib::Semaphore@{DelegateLib::Semaphore}!````~Semaphore@{\texorpdfstring{$\sim$}{\string~}Semaphore}}
+\index{````~Semaphore@{\texorpdfstring{$\sim$}{\string~}Semaphore}!DelegateLib::Semaphore@{DelegateLib::Semaphore}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}Semaphore()}{\string~Semaphore()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_semaphore_a3dc5373d7acc1b2b23b4c8db04287747} 
+Delegate\+Lib\+::\+Semaphore\+::\texorpdfstring{$\sim$}{\string~}\+Semaphore (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [default]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_delegate_lib_1_1_semaphore_a649aa0bb36a4f94d15ead412d02f0a24}\index{DelegateLib::Semaphore@{DelegateLib::Semaphore}!Signal@{Signal}}
+\index{Signal@{Signal}!DelegateLib::Semaphore@{DelegateLib::Semaphore}}
+\doxysubsubsection{\texorpdfstring{Signal()}{Signal()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_semaphore_a649aa0bb36a4f94d15ead412d02f0a24} 
+void Delegate\+Lib\+::\+Semaphore\+::\+Signal (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Called to signal a semaphore. 
+
+\Hypertarget{class_delegate_lib_1_1_semaphore_a031954138f0b60dd1f23b8c47ab16442}\index{DelegateLib::Semaphore@{DelegateLib::Semaphore}!Wait@{Wait}}
+\index{Wait@{Wait}!DelegateLib::Semaphore@{DelegateLib::Semaphore}}
+\doxysubsubsection{\texorpdfstring{Wait()}{Wait()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_semaphore_a031954138f0b60dd1f23b8c47ab16442} 
+bool Delegate\+Lib\+::\+Semaphore\+::\+Wait (\begin{DoxyParamCaption}\item[{std\+::chrono\+::milliseconds}]{timeout}{}\end{DoxyParamCaption})}
+
+Called to wait on a semaphore to be signaled. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em timeout} & -\/ timeout in milliseconds \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Return true if semaphore signaled, false if timeout occurred. ~\newline
+ 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Delegate/\mbox{\hyperlink{_semaphore_8h}{Semaphore.\+h}}\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Delegate/\mbox{\hyperlink{_semaphore_8cpp}{Semaphore.\+cpp}}\end{DoxyCompactItemize}

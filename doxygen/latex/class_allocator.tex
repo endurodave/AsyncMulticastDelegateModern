@@ -1,0 +1,150 @@
+\doxysection{Allocator Class Reference}
+\hypertarget{class_allocator}{}\label{class_allocator}\index{Allocator@{Allocator}}
+
+
+{\ttfamily \#include $<$Allocator.\+h$>$}
+
+Inheritance diagram for Allocator\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_allocator}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_allocator_a24c91dbcd5996ad3b8c6921c470985a1}{Allocator}} (size\+\_\+t size, UINT objects=0, CHAR \texorpdfstring{$\ast$}{*}memory=NULL, const CHAR \texorpdfstring{$\ast$}{*}name=NULL)
+\item 
+\Hypertarget{class_allocator_ae6af139c96381e0c00dc82d291669577}\label{class_allocator_ae6af139c96381e0c00dc82d291669577} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+Allocator} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_allocator_ab539239b108dce3bef3f302f688e322d}{Allocate}} (size\+\_\+t size)
+\item 
+void \mbox{\hyperlink{class_allocator_a9e6bf929bbce11407c2b40090fb19a1a}{Deallocate}} (void \texorpdfstring{$\ast$}{*}p\+Block)
+\item 
+const CHAR \texorpdfstring{$\ast$}{*} \mbox{\hyperlink{class_allocator_acac0f11cfe5cf1dfcd3b9db54ec00b7d}{Get\+Name}} ()
+\item 
+size\+\_\+t \mbox{\hyperlink{class_allocator_ab04ee3162d48f12e5aa4cdc07cc2102c}{Get\+Block\+Size}} ()
+\item 
+UINT \mbox{\hyperlink{class_allocator_a053a03c6607fd3bff94d5b24fcb2867c}{Get\+Block\+Count}} ()
+\item 
+UINT \mbox{\hyperlink{class_allocator_a32a97e614e98ed11ba94c695777faacd}{Get\+Blocks\+In\+Use}} ()
+\item 
+UINT \mbox{\hyperlink{class_allocator_af894facb6cf20e87a163cb3477a25bb4}{Get\+Allocations}} ()
+\item 
+UINT \mbox{\hyperlink{class_allocator_ad23779120d03da72d0bb70da0f05c068}{Get\+Deallocations}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxySeeAlso}{See also}
+\href{https://github.com/endurodave/Allocator}{\texttt{ https\+://github.\+com/endurodave/\+Allocator}} David Lafreniere 
+\end{DoxySeeAlso}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_allocator_a24c91dbcd5996ad3b8c6921c470985a1}\index{Allocator@{Allocator}!Allocator@{Allocator}}
+\index{Allocator@{Allocator}!Allocator@{Allocator}}
+\doxysubsubsection{\texorpdfstring{Allocator()}{Allocator()}}
+{\footnotesize\ttfamily \label{class_allocator_a24c91dbcd5996ad3b8c6921c470985a1} 
+Allocator\+::\+Allocator (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{, }\item[{UINT}]{objects}{ = {\ttfamily 0}, }\item[{CHAR \texorpdfstring{$\ast$}{*}}]{memory}{ = {\ttfamily NULL}, }\item[{const CHAR \texorpdfstring{$\ast$}{*}}]{name}{ = {\ttfamily NULL}}\end{DoxyParamCaption})}
+
+Constructor 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em size} & -\/ size of the fixed blocks \\
+\hline
+\mbox{\texttt{ in}}  & {\em objects} & -\/ maximum number of object. If 0, new blocks are created off the heap as necessary. \\
+\hline
+\mbox{\texttt{ in}}  & {\em memory} & -\/ pointer to a block of static memory for allocator or NULL to obtain memory from global heap. If not NULL, the objects argument defines the size of the memory block (size x objects = memory size in bytes). \\
+\hline
+\mbox{\texttt{ in}}  & {\em name} & -\/ optional allocator name string. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_allocator_ab539239b108dce3bef3f302f688e322d}\index{Allocator@{Allocator}!Allocate@{Allocate}}
+\index{Allocate@{Allocate}!Allocator@{Allocator}}
+\doxysubsubsection{\texorpdfstring{Allocate()}{Allocate()}}
+{\footnotesize\ttfamily \label{class_allocator_ab539239b108dce3bef3f302f688e322d} 
+void \texorpdfstring{$\ast$}{*} Allocator\+::\+Allocate (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size}{}\end{DoxyParamCaption})}
+
+Get a pointer to a memory block. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em size} & -\/ size of the block to allocate \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returns pointer to the block. Otherwise NULL if unsuccessful. 
+\end{DoxyReturn}
+\Hypertarget{class_allocator_a9e6bf929bbce11407c2b40090fb19a1a}\index{Allocator@{Allocator}!Deallocate@{Deallocate}}
+\index{Deallocate@{Deallocate}!Allocator@{Allocator}}
+\doxysubsubsection{\texorpdfstring{Deallocate()}{Deallocate()}}
+{\footnotesize\ttfamily \label{class_allocator_a9e6bf929bbce11407c2b40090fb19a1a} 
+void Allocator\+::\+Deallocate (\begin{DoxyParamCaption}\item[{void \texorpdfstring{$\ast$}{*}}]{p\+Block}{}\end{DoxyParamCaption})}
+
+Return a pointer to the memory pool. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em p\+Block} & -\/ block of memory deallocate (i.\+e push onto free-\/list) \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_allocator_af894facb6cf20e87a163cb3477a25bb4}\index{Allocator@{Allocator}!GetAllocations@{GetAllocations}}
+\index{GetAllocations@{GetAllocations}!Allocator@{Allocator}}
+\doxysubsubsection{\texorpdfstring{GetAllocations()}{GetAllocations()}}
+{\footnotesize\ttfamily \label{class_allocator_af894facb6cf20e87a163cb3477a25bb4} 
+UINT Allocator\+::\+Get\+Allocations (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Gets the total number of allocations for this allocator instance. \begin{DoxyReturn}{Returns}
+The total number of allocations. 
+\end{DoxyReturn}
+\Hypertarget{class_allocator_a053a03c6607fd3bff94d5b24fcb2867c}\index{Allocator@{Allocator}!GetBlockCount@{GetBlockCount}}
+\index{GetBlockCount@{GetBlockCount}!Allocator@{Allocator}}
+\doxysubsubsection{\texorpdfstring{GetBlockCount()}{GetBlockCount()}}
+{\footnotesize\ttfamily \label{class_allocator_a053a03c6607fd3bff94d5b24fcb2867c} 
+UINT Allocator\+::\+Get\+Block\+Count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Gets the maximum number of blocks created by the allocator. \begin{DoxyReturn}{Returns}
+The number of fixed memory blocks created. 
+\end{DoxyReturn}
+\Hypertarget{class_allocator_a32a97e614e98ed11ba94c695777faacd}\index{Allocator@{Allocator}!GetBlocksInUse@{GetBlocksInUse}}
+\index{GetBlocksInUse@{GetBlocksInUse}!Allocator@{Allocator}}
+\doxysubsubsection{\texorpdfstring{GetBlocksInUse()}{GetBlocksInUse()}}
+{\footnotesize\ttfamily \label{class_allocator_a32a97e614e98ed11ba94c695777faacd} 
+UINT Allocator\+::\+Get\+Blocks\+In\+Use (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Gets the number of blocks in use. \begin{DoxyReturn}{Returns}
+The number of blocks in use by the application. 
+\end{DoxyReturn}
+\Hypertarget{class_allocator_ab04ee3162d48f12e5aa4cdc07cc2102c}\index{Allocator@{Allocator}!GetBlockSize@{GetBlockSize}}
+\index{GetBlockSize@{GetBlockSize}!Allocator@{Allocator}}
+\doxysubsubsection{\texorpdfstring{GetBlockSize()}{GetBlockSize()}}
+{\footnotesize\ttfamily \label{class_allocator_ab04ee3162d48f12e5aa4cdc07cc2102c} 
+size\+\_\+t Allocator\+::\+Get\+Block\+Size (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Gets the fixed block memory size, in bytes, handled by the allocator. \begin{DoxyReturn}{Returns}
+The fixed block size in bytes. 
+\end{DoxyReturn}
+\Hypertarget{class_allocator_ad23779120d03da72d0bb70da0f05c068}\index{Allocator@{Allocator}!GetDeallocations@{GetDeallocations}}
+\index{GetDeallocations@{GetDeallocations}!Allocator@{Allocator}}
+\doxysubsubsection{\texorpdfstring{GetDeallocations()}{GetDeallocations()}}
+{\footnotesize\ttfamily \label{class_allocator_ad23779120d03da72d0bb70da0f05c068} 
+UINT Allocator\+::\+Get\+Deallocations (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Gets the total number of deallocations for this allocator instance. \begin{DoxyReturn}{Returns}
+The total number of deallocations. 
+\end{DoxyReturn}
+\Hypertarget{class_allocator_acac0f11cfe5cf1dfcd3b9db54ec00b7d}\index{Allocator@{Allocator}!GetName@{GetName}}
+\index{GetName@{GetName}!Allocator@{Allocator}}
+\doxysubsubsection{\texorpdfstring{GetName()}{GetName()}}
+{\footnotesize\ttfamily \label{class_allocator_acac0f11cfe5cf1dfcd3b9db54ec00b7d} 
+const CHAR \texorpdfstring{$\ast$}{*} Allocator\+::\+Get\+Name (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Get the allocator name string. \begin{DoxyReturn}{Returns}
+A pointer to the allocator name or NULL if none was assigned. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Allocator/Allocator.\+h\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Allocator/Allocator.\+cpp\end{DoxyCompactItemize}

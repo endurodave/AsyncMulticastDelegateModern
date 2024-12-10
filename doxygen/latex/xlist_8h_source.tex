@@ -1,0 +1,27 @@
+\doxysection{xlist.\+h}
+\hypertarget{xlist_8h_source}{}\label{xlist_8h_source}\index{C:/Projects/AsyncMulticastDelegateModern/src/Allocator/xlist.h@{C:/Projects/AsyncMulticastDelegateModern/src/Allocator/xlist.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_XLIST\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_XLIST\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}stl\_allocator.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <list>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ xlist\ uses\ a\ fix-\/block\ memory\ allocator}}
+\DoxyCodeLine{00008\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T,\ \textcolor{keyword}{typename}\ Alloc\ =\ stl\_allocator<T>>}
+\DoxyCodeLine{00009\ \textcolor{keyword}{using\ }xlist\ =\ std::list<T,\ Alloc>;}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#if\ 0\ \ }\textcolor{comment}{//\ Deprecated}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{template}<\textcolor{keyword}{class\ }\_Ty,}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{class\ }\_Ax\ =\ \mbox{\hyperlink{classstl__allocator}{stl\_allocator<\_Ty>}}\ >}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{class\ }xlist}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ :\ \textcolor{keyword}{public}\ std::list<\_Ty,\ \_Ax>}
+\DoxyCodeLine{00016\ \ \ \ \ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \};}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00021\ \ \ \ \ }
+
+\end{DoxyCode}

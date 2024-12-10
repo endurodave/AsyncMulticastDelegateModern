@@ -1,0 +1,43 @@
+\doxysection{Delegate\+Msg.\+h}
+\hypertarget{_delegate_msg_8h_source}{}\label{_delegate_msg_8h_source}\index{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/DelegateMsg.h@{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/DelegateMsg.h}}
+\mbox{\hyperlink{_delegate_msg_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_DELEGATE\_MSG\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_DELEGATE\_MSG\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}Fault.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_delegate_invoker_8h}{DelegateInvoker.h}}"{}}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_delegate_opt_8h}{DelegateOpt.h}}"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_semaphore_8h}{Semaphore.h}}"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{make__tuple__heap_8h}{make\_tuple\_heap.h}}"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <tuple>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <list>}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <mutex>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <stdexcept>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_delegate_lib}{DelegateLib}}\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00018\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg}{DelegateMsg}}}
+\DoxyCodeLine{00019\ \{}
+\DoxyCodeLine{00020\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00023\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg_ad0ce3c1203f3f485d18b2be60f8bf703}{DelegateMsg}}(std::shared\_ptr<IDelegateInvoker>\ invoker)\ :}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ m\_invoker(invoker)}
+\DoxyCodeLine{00025\ \ \ \ \ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!invoker)}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ std::invalid\_argument(\textcolor{stringliteral}{"{}Invoker\ must\ not\ be\ null"{}});}
+\DoxyCodeLine{00028\ \ \ \ \ \}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg_a67c68e6b2805c427afee8e8b4e846aac}{\string~DelegateMsg}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00034\ \ \ \ \ std::shared\_ptr<IDelegateInvoker>\ \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg_a61f5dfba67aa879a51239f6c1edbd446}{GetDelegateInvoker}}()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_invoker;\ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00039\ \ \ \ \ std::shared\_ptr<IDelegateInvoker>\ m\_invoker;}
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

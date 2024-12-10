@@ -1,0 +1,41 @@
+\doxysection{xmap.\+h}
+\hypertarget{xmap_8h_source}{}\label{xmap_8h_source}\index{C:/Projects/AsyncMulticastDelegateModern/src/Allocator/xmap.h@{C:/Projects/AsyncMulticastDelegateModern/src/Allocator/xmap.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_XMAP\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_XMAP\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}stl\_allocator.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <map>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//\ xmap\ uses\ a\ fix-\/block\ memory\ allocator}}
+\DoxyCodeLine{00008\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Key,\ \textcolor{keyword}{typename}\ Value,\ \textcolor{keyword}{typename}\ Alloc\ =\ stl\_allocator<std::pair<const\ Key,\ Value>>>}
+\DoxyCodeLine{00009\ \textcolor{keyword}{using\ }xmap\ =\ std::map<Key,\ Value,\ std::less<Key>,\ Alloc>;}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Key,\ \textcolor{keyword}{typename}\ Value,\ \textcolor{keyword}{typename}\ Alloc\ =\ stl\_allocator<std::pair<const\ Key,\ Value>>>}
+\DoxyCodeLine{00012\ \textcolor{keyword}{using\ }xmultimap\ =\ std::multimap<Key,\ Value,\ std::less<Key>,\ Alloc>;}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#if\ 0\ \ }\textcolor{comment}{//\ Deprecated}}
+\DoxyCodeLine{00015\ \textcolor{keyword}{template}<\textcolor{keyword}{class\ }\_Kty,}
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{class\ }\_Ty,}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{class\ }\_Pr\ =\ std::less<\_Kty>,}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{class\ }\_Alloc\ =\ \mbox{\hyperlink{classstl__allocator}{stl\_allocator<std::pair<const\ \_Kty,\ \_Ty>}}\ >\ >}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{class\ }xmap}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ :\ \textcolor{keyword}{public}\ std::map<\_Kty,\ \_Ty,\ \_Pr,\ \_Alloc>}
+\DoxyCodeLine{00021\ \ \ \ \ \{}
+\DoxyCodeLine{00022\ \ \ \ \ \};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{template}<\textcolor{keyword}{class\ }\_Kty,}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keyword}{class\ }\_Ty,}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{class\ }\_Pr\ =\ std::less<\_Kty>,}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{class\ }\_Alloc\ =\ \mbox{\hyperlink{classstl__allocator}{stl\_allocator<std::pair<const\ \_Kty,\ \_Ty>}}\ >\ >}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{keyword}{class\ }xmultimap}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ :\ \textcolor{keyword}{public}\ std::multimap<\_Kty,\ \_Ty,\ \_Pr,\ \_Alloc>}
+\DoxyCodeLine{00030\ \ \ \ \ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \};}
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00035\ }
+
+\end{DoxyCode}

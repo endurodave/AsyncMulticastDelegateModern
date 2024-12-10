@@ -312,6 +312,8 @@ After executed, build the software from within the <code>build</code> directory 
 
  See [Design Details](docs/DETAILS.md) for implementation design details and more examples.
 
+ See [Doxygen Pages](doxygen/html/index.html) for source code documentation.
+
 # Related Repositories
 
 ## Source Code Used Within Delegates
@@ -329,7 +331,11 @@ The repositories below utilize the delegate library in different multithreaded a
 * <a href="https://github.com/endurodave/IntegrationTestFramework">Integration Test Framework using Google Test and Delegates</a> - a multi-threaded C++ software integration test framework using Google Test and Delegate libraries.
 * <a href="https://github.com/endurodave/Async-SQLite">Asynchronous SQLite API using C++ Delegates</a> - an asynchronous SQLite wrapper implemented using an asynchronous delegate library.
 
+# Star History
 
+Find this repository useful? Consider giving it a star!
+
+[![Star History Chart](https://api.star-history.com/svg?repos=endurodave/AsyncMulticastDelegateModern&type=Date)](https://star-history.com/#endurodave/AsyncMulticastDelegateModern&Date)
 
 
 

@@ -1,0 +1,101 @@
+\doxysection{Timer Class Reference}
+\hypertarget{class_timer}{}\label{class_timer}\index{Timer@{Timer}}
+
+
+A timer class provides periodic timer callbacks on the client\textquotesingle{}s thread of control. \doxylink{class_timer}{Timer} is thread safe.  
+
+
+
+
+{\ttfamily \#include $<$Timer.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_timer_af866f8d58d5ed1da7a0c61df4975be3e}\label{class_timer_af866f8d58d5ed1da7a0c61df4975be3e} 
+{\bfseries Timer} (void)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\Hypertarget{class_timer_af87243f09ef5b58b889fb4a7284b526d}\label{class_timer_af87243f09ef5b58b889fb4a7284b526d} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+Timer} (void)
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_timer_a96bbd3b89729b8bfd09751dd594477e6}{Start}} (std\+::chrono\+::milliseconds timeout)
+\item 
+\Hypertarget{class_timer_a6379e797f968aaee6ac3bb12dc6b81c5}\label{class_timer_a6379e797f968aaee6ac3bb12dc6b81c5} 
+void {\bfseries Stop} ()
+\begin{DoxyCompactList}\small\item\em Stops a timer. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_timer_ae8745c16000c1a3248837d9d96d2c566}{Enabled}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static std\+::chrono\+::milliseconds \mbox{\hyperlink{class_timer_a2ac5c694cf3ce5a40caf79d49d208d56}{Get\+Time}} ()
+\item 
+static std\+::chrono\+::milliseconds \mbox{\hyperlink{class_timer_abca3deb1a05cc5fa6873f177d134e83c}{Difference}} (std\+::chrono\+::milliseconds time1, std\+::chrono\+::milliseconds time2)
+\item 
+\Hypertarget{class_timer_a3b641630467cbe44c959370c43be1002}\label{class_timer_a3b641630467cbe44c959370c43be1002} 
+static void {\bfseries Process\+Timers} ()
+\begin{DoxyCompactList}\small\item\em Called on a periodic basic to service all timer instances. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_timer_ade46dd97642240872a4cb1c0624b0b70}\label{class_timer_ade46dd97642240872a4cb1c0624b0b70} 
+\mbox{\hyperlink{struct_delegate_lib_1_1_singlecast_delegate}{Singlecast\+Delegate}}$<$ void(void)$>$ {\bfseries Expired}
+\begin{DoxyCompactList}\small\item\em Client\textquotesingle{}s register with Expired to get timer callbacks. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A timer class provides periodic timer callbacks on the client\textquotesingle{}s thread of control. \doxylink{class_timer}{Timer} is thread safe. 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_timer_abca3deb1a05cc5fa6873f177d134e83c}\index{Timer@{Timer}!Difference@{Difference}}
+\index{Difference@{Difference}!Timer@{Timer}}
+\doxysubsubsection{\texorpdfstring{Difference()}{Difference()}}
+{\footnotesize\ttfamily \label{class_timer_abca3deb1a05cc5fa6873f177d134e83c} 
+std\+::chrono\+::milliseconds Timer\+::\+Difference (\begin{DoxyParamCaption}\item[{std\+::chrono\+::milliseconds}]{time1}{, }\item[{std\+::chrono\+::milliseconds}]{time2}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Computes the time difference in ticks between two tick values taking into account rollover. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em time1} & -\/ time stamp 1 in ticks. \\
+\hline
+\mbox{\texttt{ in}}  & {\em time2} & -\/ time stamp 2 in ticks. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The time difference in ticks. 
+\end{DoxyReturn}
+\Hypertarget{class_timer_ae8745c16000c1a3248837d9d96d2c566}\index{Timer@{Timer}!Enabled@{Enabled}}
+\index{Enabled@{Enabled}!Timer@{Timer}}
+\doxysubsubsection{\texorpdfstring{Enabled()}{Enabled()}}
+{\footnotesize\ttfamily \label{class_timer_ae8745c16000c1a3248837d9d96d2c566} 
+bool Timer\+::\+Enabled (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Gets the enabled state of a timer. \begin{DoxyReturn}{Returns}
+TRUE if the timer is enabled, FALSE otherwise. 
+\end{DoxyReturn}
+\Hypertarget{class_timer_a2ac5c694cf3ce5a40caf79d49d208d56}\index{Timer@{Timer}!GetTime@{GetTime}}
+\index{GetTime@{GetTime}!Timer@{Timer}}
+\doxysubsubsection{\texorpdfstring{GetTime()}{GetTime()}}
+{\footnotesize\ttfamily \label{class_timer_a2ac5c694cf3ce5a40caf79d49d208d56} 
+std\+::chrono\+::milliseconds Timer\+::\+Get\+Time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+Get the current time in ticks. \begin{DoxyReturn}{Returns}
+The current time in ticks. ~\newline
+ 
+\end{DoxyReturn}
+\Hypertarget{class_timer_a96bbd3b89729b8bfd09751dd594477e6}\index{Timer@{Timer}!Start@{Start}}
+\index{Start@{Start}!Timer@{Timer}}
+\doxysubsubsection{\texorpdfstring{Start()}{Start()}}
+{\footnotesize\ttfamily \label{class_timer_a96bbd3b89729b8bfd09751dd594477e6} 
+void Timer\+::\+Start (\begin{DoxyParamCaption}\item[{std\+::chrono\+::milliseconds}]{timeout}{}\end{DoxyParamCaption})}
+
+Starts a timer for callbacks on the specified timeout interval. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em timeout} & -\/ the timeout in milliseconds. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Port/Timer.\+h\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Port/Timer.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,82 @@
+\doxysection{Delegate\+Lib\+::Delegate\+Async\+Msg\texorpdfstring{$<$}{<} Args \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{class_delegate_lib_1_1_delegate_async_msg}{}\label{class_delegate_lib_1_1_delegate_async_msg}\index{DelegateLib::DelegateAsyncMsg$<$ Args $>$@{DelegateLib::DelegateAsyncMsg$<$ Args $>$}}
+
+
+Stores all function arguments suitable for non-\/blocking asynchronous calls. Argument data is stored in the heap.  
+
+
+
+
+{\ttfamily \#include $<$Delegate\+Async.\+h$>$}
+
+Inheritance diagram for Delegate\+Lib\+::Delegate\+Async\+Msg\texorpdfstring{$<$}{<} Args \texorpdfstring{$>$}{>}\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_delegate_lib_1_1_delegate_async_msg}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_delegate_lib_1_1_delegate_async_msg_a708106c763651c6a4e2daee4f227a06b}{Delegate\+Async\+Msg}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_i_delegate_invoker}{IDelegate\+Invoker}} $>$ invoker, Args... args)
+\item 
+virtual \mbox{\hyperlink{class_delegate_lib_1_1_delegate_async_msg_aa5d364db00da8cc35316667d3d9aec21}{\texorpdfstring{$\sim$}{\string~}\+Delegate\+Async\+Msg}} ()=default
+\item 
+std\+::tuple$<$ Args... $>$ \& \mbox{\hyperlink{class_delegate_lib_1_1_delegate_async_msg_a1aee414f10fd730ec393aab7ead86cbd}{Get\+Args}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg}{Delegate\+Lib\+::\+Delegate\+Msg}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg_ad0ce3c1203f3f485d18b2be60f8bf703}{Delegate\+Msg}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_i_delegate_invoker}{IDelegate\+Invoker}} $>$ invoker)
+\item 
+virtual \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg_a67c68e6b2805c427afee8e8b4e846aac}{\texorpdfstring{$\sim$}{\string~}\+Delegate\+Msg}} ()=default
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_i_delegate_invoker}{IDelegate\+Invoker}} $>$ \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg_a61f5dfba67aa879a51239f6c1edbd446}{Get\+Delegate\+Invoker}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\subsubsection*{template$<$class... Args$>$\newline
+class Delegate\+Lib\+::\+Delegate\+Async\+Msg$<$ Args $>$}
+Stores all function arguments suitable for non-\/blocking asynchronous calls. Argument data is stored in the heap. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_delegate_lib_1_1_delegate_async_msg_a708106c763651c6a4e2daee4f227a06b}\index{DelegateLib::DelegateAsyncMsg$<$ Args $>$@{DelegateLib::DelegateAsyncMsg$<$ Args $>$}!DelegateAsyncMsg@{DelegateAsyncMsg}}
+\index{DelegateAsyncMsg@{DelegateAsyncMsg}!DelegateLib::DelegateAsyncMsg$<$ Args $>$@{DelegateLib::DelegateAsyncMsg$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{DelegateAsyncMsg()}{DelegateAsyncMsg()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_delegate_async_msg_a708106c763651c6a4e2daee4f227a06b} 
+template$<$class... Args$>$ \\
+\mbox{\hyperlink{class_delegate_lib_1_1_delegate_async_msg}{Delegate\+Lib\+::\+Delegate\+Async\+Msg}}$<$ Args $>$\+::\+Delegate\+Async\+Msg (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_i_delegate_invoker}{IDelegate\+Invoker}} $>$}]{invoker}{, }\item[{Args...}]{args}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em invoker} & -\/ the invoker instance \\
+\hline
+\mbox{\texttt{ in}}  & {\em args} & -\/ a parameter pack of all target function arguments \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_delegate_lib_1_1_delegate_async_msg_aa5d364db00da8cc35316667d3d9aec21}\index{DelegateLib::DelegateAsyncMsg$<$ Args $>$@{DelegateLib::DelegateAsyncMsg$<$ Args $>$}!````~DelegateAsyncMsg@{\texorpdfstring{$\sim$}{\string~}DelegateAsyncMsg}}
+\index{````~DelegateAsyncMsg@{\texorpdfstring{$\sim$}{\string~}DelegateAsyncMsg}!DelegateLib::DelegateAsyncMsg$<$ Args $>$@{DelegateLib::DelegateAsyncMsg$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}DelegateAsyncMsg()}{\string~DelegateAsyncMsg()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_delegate_async_msg_aa5d364db00da8cc35316667d3d9aec21} 
+template$<$class... Args$>$ \\
+virtual \mbox{\hyperlink{class_delegate_lib_1_1_delegate_async_msg}{Delegate\+Lib\+::\+Delegate\+Async\+Msg}}$<$ Args $>$\+::\texorpdfstring{$\sim$}{\string~}\mbox{\hyperlink{class_delegate_lib_1_1_delegate_async_msg}{Delegate\+Async\+Msg}} (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}, {\ttfamily [default]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_delegate_lib_1_1_delegate_async_msg_a1aee414f10fd730ec393aab7ead86cbd}\index{DelegateLib::DelegateAsyncMsg$<$ Args $>$@{DelegateLib::DelegateAsyncMsg$<$ Args $>$}!GetArgs@{GetArgs}}
+\index{GetArgs@{GetArgs}!DelegateLib::DelegateAsyncMsg$<$ Args $>$@{DelegateLib::DelegateAsyncMsg$<$ Args $>$}}
+\doxysubsubsection{\texorpdfstring{GetArgs()}{GetArgs()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_delegate_async_msg_a1aee414f10fd730ec393aab7ead86cbd} 
+template$<$class... Args$>$ \\
+std\+::tuple$<$ Args... $>$ \& \mbox{\hyperlink{class_delegate_lib_1_1_delegate_async_msg}{Delegate\+Lib\+::\+Delegate\+Async\+Msg}}$<$ Args $>$\+::\+Get\+Args (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Get all function arguments that were created on the heap \begin{DoxyReturn}{Returns}
+A tuple of all function arguments 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Delegate/\mbox{\hyperlink{_delegate_async_8h}{Delegate\+Async.\+h}}\end{DoxyCompactItemize}

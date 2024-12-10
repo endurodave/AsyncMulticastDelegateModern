@@ -1,0 +1,57 @@
+\doxysection{Delegate\+Lib\+::IDelegate\+Invoker Class Reference}
+\hypertarget{class_delegate_lib_1_1_i_delegate_invoker}{}\label{class_delegate_lib_1_1_i_delegate_invoker}\index{DelegateLib::IDelegateInvoker@{DelegateLib::IDelegateInvoker}}
+
+
+Abstract base class to support asynchronous delegate function invoke on destination thread of control.  
+
+
+
+
+{\ttfamily \#include $<$Delegate\+Invoker.\+h$>$}
+
+Inheritance diagram for Delegate\+Lib\+::IDelegate\+Invoker\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=0.992908cm]{class_delegate_lib_1_1_i_delegate_invoker}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{class_delegate_lib_1_1_i_delegate_invoker_a1386e5a1c2650fb1e5511a16cbb5b1f6}{Delegate\+Invoke}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg}{Delegate\+Msg}} $>$ msg)=0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Abstract base class to support asynchronous delegate function invoke on destination thread of control. 
+
+Inherit form this class and implement \doxylink{class_delegate_lib_1_1_i_delegate_invoker_a1386e5a1c2650fb1e5511a16cbb5b1f6}{Delegate\+Invoke()}. The implementation typically posts a message into the destination thread message queue. The destination thread receives the message and invokes the target bound function. Destintation thread invoke example\+:
+
+// Get pointer to \doxylink{class_delegate_lib_1_1_delegate_msg}{Delegate\+Msg} data from queue msg data ~\newline
+ auto delegate\+Msg = msg-\/\texorpdfstring{$>$}{>}Get\+Data();
+
+// Invoke the delegate destination target function ~\newline
+ delegate\+Msg-\/\texorpdfstring{$>$}{>}Get\+Delegate\+Invoker()-\/\texorpdfstring{$>$}{>}Delegate\+Invoke(delegate\+Msg); 
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_delegate_lib_1_1_i_delegate_invoker_a1386e5a1c2650fb1e5511a16cbb5b1f6}\index{DelegateLib::IDelegateInvoker@{DelegateLib::IDelegateInvoker}!DelegateInvoke@{DelegateInvoke}}
+\index{DelegateInvoke@{DelegateInvoke}!DelegateLib::IDelegateInvoker@{DelegateLib::IDelegateInvoker}}
+\doxysubsubsection{\texorpdfstring{DelegateInvoke()}{DelegateInvoke()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_i_delegate_invoker_a1386e5a1c2650fb1e5511a16cbb5b1f6} 
+virtual void Delegate\+Lib\+::\+IDelegate\+Invoker\+::\+Delegate\+Invoke (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg}{Delegate\+Msg}} $>$}]{msg}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [pure virtual]}}
+
+Called to invoke the callback by the destination thread of control. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em msg} & -\/ the incoming delegate message. ~\newline
+ \\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4_a18d39e4e8e3e6906fd9c07ada1ac5bc6}{Delegate\+Lib\+::\+Delegate\+Free\+Async$<$ Ret\+Type(\+Args...)$>$}}, \mbox{\hyperlink{class_delegate_lib_1_1_delegate_free_async_wait_3_01_ret_type_07_args_8_8_8_08_4_aeca8d0211d34404e9fd2ecb4d0d356b9}{Delegate\+Lib\+::\+Delegate\+Free\+Async\+Wait$<$ Ret\+Type(\+Args...)$>$}}, \mbox{\hyperlink{class_delegate_lib_1_1_delegate_function_async_3_01_ret_type_07_args_8_8_8_08_4_a56930924ffa7d6662874675263e89bc5}{Delegate\+Lib\+::\+Delegate\+Function\+Async$<$ Ret\+Type(\+Args...)$>$}}, \mbox{\hyperlink{class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4_a8a0cfe8f1e6f7bc06c161a1f210c6aa7}{Delegate\+Lib\+::\+Delegate\+Function\+Async\+Wait$<$ Ret\+Type(\+Args...)$>$}}, \mbox{\hyperlink{class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4_a97ee00052f6de71e7910784dce3b0fa4}{Delegate\+Lib\+::\+Delegate\+Member\+Async$<$ TClass, Ret\+Type(\+Args...)$>$}}, \mbox{\hyperlink{class_delegate_lib_1_1_delegate_member_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4_a20e9f7755ba4b19fb12988da5f8fe6f7}{Delegate\+Lib\+::\+Delegate\+Member\+Async\+Wait$<$ TClass, Ret\+Type(\+Args...)$>$}}, \mbox{\hyperlink{class_delegate_lib_1_1_delegate_member_sp_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4_a2402ad65efec989ec7d9bc671ec066ae}{Delegate\+Lib\+::\+Delegate\+Member\+Sp\+Async$<$ TClass, Ret\+Type(\+Args...)$>$}}, and \mbox{\hyperlink{class_delegate_lib_1_1_delegate_member_sp_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4_a89a54b3aa7333005761c42b4335d728a}{Delegate\+Lib\+::\+Delegate\+Member\+Sp\+Async\+Wait$<$ TClass, Ret\+Type(\+Args...)$>$}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Delegate/\mbox{\hyperlink{_delegate_invoker_8h}{Delegate\+Invoker.\+h}}\end{DoxyCompactItemize}

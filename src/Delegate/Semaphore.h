@@ -1,6 +1,9 @@
 #ifndef _SEMAPHORE_H
 #define _SEMAPHORE_H
 
+/// @file
+/// @brief Delegate library semaphore wrapper class. 
+
 #include "DelegateOpt.h"
 #include <condition_variable>
 #include <mutex>

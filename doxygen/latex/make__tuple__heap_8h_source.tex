@@ -1,0 +1,173 @@
+\doxysection{make\+\_\+tuple\+\_\+heap.\+h}
+\hypertarget{make__tuple__heap_8h_source}{}\label{make__tuple__heap_8h_source}\index{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/make\_tuple\_heap.h@{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/make\_tuple\_heap.h}}
+\mbox{\hyperlink{make__tuple__heap_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_MAKE\_TUPLE\_HEAP\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_MAKE\_TUPLE\_HEAP\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <tuple>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <list>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <memory>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <type\_traits>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}\mbox{\hyperlink{_delegate_opt_8h}{DelegateOpt.h}}"{}}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_delegate_lib}{DelegateLib}}\ }
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{comment}{//\ std::shared\_ptr\ reference\ arguments\ are\ not\ allowed\ with\ asynchronous\ delegates\ as\ the\ behavior\ is\ }}
+\DoxyCodeLine{00014\ \textcolor{comment}{//\ undefined.\ In\ other\ words:}}
+\DoxyCodeLine{00015\ \textcolor{comment}{//\ void\ MyFunc(std::shared\_ptr<T>\ data)\ \ \ \ \ //\ Ok!}}
+\DoxyCodeLine{00016\ \textcolor{comment}{//\ void\ MyFunc(std::shared\_ptr<T>*\ data)\ \ \ \ //\ Error\ if\ DelegateAsync\ or\ DelegateSpAsync\ target!}}
+\DoxyCodeLine{00017\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00018\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr}{is\_shared\_ptr}}\ :\ std::false\_type\ \{\};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00021\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr}{is\_shared\_ptr}}<std::shared\_ptr<T>>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00024\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr}{is\_shared\_ptr}}<std::shared\_ptr<T>\&>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00027\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr}{is\_shared\_ptr}}<const\ std::shared\_ptr<T>\&>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00030\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr}{is\_shared\_ptr}}<std::shared\_ptr<T>*>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{keyword}{template}<\textcolor{keyword}{class}\ T>}
+\DoxyCodeLine{00033\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr}{is\_shared\_ptr}}<const\ std::shared\_ptr<T>*>\ :\ std::true\_type\ \{\};}
+\DoxyCodeLine{00034\ \ \ \ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base}{heap\_arg\_deleter\_base}}}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base_a169eb4e354c3d2085813a357fb8923eb}{\string~heap\_arg\_deleter\_base}}()\ =\ \textcolor{keywordflow}{default};}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{_delegate_opt_8h_a5e800c556290ed548055177c33a66f5c}{XALLOCATOR}}}
+\DoxyCodeLine{00042\ \};}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00045\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00046\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter}{heap\_arg\_deleter}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base}{heap\_arg\_deleter\_base}}}
+\DoxyCodeLine{00047\ \{}
+\DoxyCodeLine{00048\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00049\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter_a3013b01fb9e034d4e97c947a40cb6b29}{heap\_arg\_deleter}}(T\&\ arg)\ :\ m\_arg(arg)\ \{\ \}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter_ac10f9aac0fb5f6da4eaaca2061d87507}{\string~heap\_arg\_deleter}}()}
+\DoxyCodeLine{00051\ \ \ \ \ \{}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ \&m\_arg;}
+\DoxyCodeLine{00053\ \ \ \ \ \}}
+\DoxyCodeLine{00054\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00055\ \ \ \ \ T\&\ m\_arg;}
+\DoxyCodeLine{00056\ \};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00059\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00060\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter}{heap\_arg\_deleter}}<T*>\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base}{heap\_arg\_deleter\_base}}}
+\DoxyCodeLine{00061\ \{}
+\DoxyCodeLine{00062\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00063\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter_3_01_t_01_5_01_4_a31ac1274500603c1eaf159e77027cbc0}{heap\_arg\_deleter}}(T*\ arg)\ :\ m\_arg(arg)\ \{\ \}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter_3_01_t_01_5_01_4_a9dc4e9eacbbb291544c88d6c3fef40a0}{\string~heap\_arg\_deleter}}()}
+\DoxyCodeLine{00065\ \ \ \ \ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ m\_arg;}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00069\ \ \ \ \ T*\ m\_arg;}
+\DoxyCodeLine{00070\ \};}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00074\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter}{heap\_arg\_deleter}}<T**>\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter__base}{heap\_arg\_deleter\_base}}}
+\DoxyCodeLine{00075\ \{}
+\DoxyCodeLine{00076\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00077\ \ \ \ \ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter_3_01_t_01_5_5_01_4_a9ad3898d1d415f962b3423f8df7e5ac6}{heap\_arg\_deleter}}(T**\ arg)\ :\ m\_arg(arg)\ \{\}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{virtual}\ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter_3_01_t_01_5_5_01_4_a3f3aee9e49ddb8f51cfce56d570862d1}{\string~heap\_arg\_deleter}}()}
+\DoxyCodeLine{00079\ \ \ \ \ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ *m\_arg;}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ m\_arg;}
+\DoxyCodeLine{00082\ \ \ \ \ \}}
+\DoxyCodeLine{00083\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00084\ \ \ \ \ T**\ m\_arg;}
+\DoxyCodeLine{00085\ \};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00088\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Arg,\ \textcolor{keyword}{typename}...\ TupleElem>}
+\DoxyCodeLine{00089\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{namespace_delegate_lib_acd191a94679356fb915612440acf7a52}{tuple\_append}}(\mbox{\hyperlink{_delegate_opt_8h_a9e6c72a4d9879e662d02c096cf16ff3c}{xlist}}<std::shared\_ptr<heap\_arg\_deleter\_base>>\&\ heapArgs,\ \textcolor{keyword}{const}\ std::tuple<TupleElem...>\ \&tup,\ Arg**\ arg)}
+\DoxyCodeLine{00090\ \{}
+\DoxyCodeLine{00091\ \ \ \ \ Arg**\ heap\_arg\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keywordflow}{try}\ }
+\DoxyCodeLine{00093\ \ \ \ \ \{}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ heap\_arg\ =\ \textcolor{keyword}{new}\ Arg*();}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ *heap\_arg\ =\ \textcolor{keyword}{new}\ Arg(**arg);}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ std::shared\_ptr<heap\_arg\_deleter\_base>\ deleter(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter}{heap\_arg\_deleter<Arg**>}}(heap\_arg));}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ heapArgs.push\_back(deleter);}
+\DoxyCodeLine{00099\ }
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::tuple\_cat(tup,\ std::make\_tuple(heap\_arg));}
+\DoxyCodeLine{00101\ \ \ \ \ \}}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordflow}{catch}\ (std::bad\_alloc\&)}
+\DoxyCodeLine{00103\ \ \ \ \ \{}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (*heap\_arg)}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ *heap\_arg;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (heap\_arg)}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ heap\_arg;}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw};}
+\DoxyCodeLine{00109\ \ \ \ \ \}}
+\DoxyCodeLine{00110\ \}}
+\DoxyCodeLine{00111\ }
+\DoxyCodeLine{00113\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Arg,\ \textcolor{keyword}{typename}...\ TupleElem>}
+\DoxyCodeLine{00114\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{namespace_delegate_lib_acd191a94679356fb915612440acf7a52}{tuple\_append}}(\mbox{\hyperlink{_delegate_opt_8h_a9e6c72a4d9879e662d02c096cf16ff3c}{xlist}}<std::shared\_ptr<heap\_arg\_deleter\_base>>\&\ heapArgs,\ \textcolor{keyword}{const}\ std::tuple<TupleElem...>\ \&tup,\ Arg*\ arg)}
+\DoxyCodeLine{00115\ \{}
+\DoxyCodeLine{00116\ \ \ \ \ Arg*\ heap\_arg\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00118\ \ \ \ \ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ heap\_arg\ =\ \textcolor{keyword}{new}\ Arg(*arg);}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ std::shared\_ptr<heap\_arg\_deleter\_base>\ deleter(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter}{heap\_arg\_deleter<Arg*>}}(heap\_arg));}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ heapArgs.push\_back(deleter);}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::tuple\_cat(tup,\ std::make\_tuple(heap\_arg));}
+\DoxyCodeLine{00125\ \ \ \ \ \}}
+\DoxyCodeLine{00126\ \ \ \ \ \textcolor{keywordflow}{catch}\ (std::bad\_alloc\&)}
+\DoxyCodeLine{00127\ \ \ \ \ \{}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (heap\_arg)}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ heap\_arg;}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw};}
+\DoxyCodeLine{00131\ \ \ \ \ \}}
+\DoxyCodeLine{00132\ \}}
+\DoxyCodeLine{00133\ }
+\DoxyCodeLine{00135\ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ Arg,\ \textcolor{keyword}{typename}...\ TupleElem>}
+\DoxyCodeLine{00136\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{namespace_delegate_lib_acd191a94679356fb915612440acf7a52}{tuple\_append}}(\mbox{\hyperlink{_delegate_opt_8h_a9e6c72a4d9879e662d02c096cf16ff3c}{xlist}}<std::shared\_ptr<heap\_arg\_deleter\_base>>\&\ heapArgs,\ \textcolor{keyword}{const}\ std::tuple<TupleElem...>\ \&tup,\ Arg\&\ arg)}
+\DoxyCodeLine{00137\ \{}
+\DoxyCodeLine{00138\ \ \ \ \ Arg\&\ heap\_arg\ =\ *(\textcolor{keyword}{new}\ Arg(arg));}
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{keywordflow}{try}}
+\DoxyCodeLine{00140\ \ \ \ \ \{}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ std::shared\_ptr<heap\_arg\_deleter\_base>\ deleter(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_delegate_lib_1_1heap__arg__deleter}{heap\_arg\_deleter<Arg\&>}}(heap\_arg));}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ heapArgs.push\_back(deleter);}
+\DoxyCodeLine{00143\ }
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ temp\ =\ std::make\_tuple(std::forward\_as\_tuple(heap\_arg));}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{keyword}{auto}\ new\_type\ =\ std::get<0>(temp);}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ std::tuple\_cat(tup,\ new\_type);}
+\DoxyCodeLine{00147\ \ \ \ \ \}}
+\DoxyCodeLine{00148\ \ \ \ \ \textcolor{keywordflow}{catch}\ (std::bad\_alloc\&)}
+\DoxyCodeLine{00149\ \ \ \ \ \{}
+\DoxyCodeLine{00150\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ \&heap\_arg;}
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw};}
+\DoxyCodeLine{00152\ \ \ \ \ \}}
+\DoxyCodeLine{00153\ \}}
+\DoxyCodeLine{00154\ }
+\DoxyCodeLine{00156\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}...\ Ts>}
+\DoxyCodeLine{00157\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{namespace_delegate_lib_aaec1863ccd49b0020b485d9755ab4705}{make\_tuple\_heap}}(\mbox{\hyperlink{_delegate_opt_8h_a9e6c72a4d9879e662d02c096cf16ff3c}{xlist}}<std::shared\_ptr<heap\_arg\_deleter\_base>>\&\ heapArgs,\ std::tuple<Ts...>\ tup)}
+\DoxyCodeLine{00158\ \{}
+\DoxyCodeLine{00159\ \ \ \ \ \textcolor{keywordflow}{return}\ tup;}
+\DoxyCodeLine{00160\ \}}
+\DoxyCodeLine{00161\ }
+\DoxyCodeLine{00167\ \textcolor{keyword}{template}<\textcolor{keyword}{typename}\ Arg1,\ \textcolor{keyword}{typename}...\ Args,\ \textcolor{keyword}{typename}...\ Ts>}
+\DoxyCodeLine{00168\ \textcolor{keyword}{auto}\ \mbox{\hyperlink{namespace_delegate_lib_aaec1863ccd49b0020b485d9755ab4705}{make\_tuple\_heap}}(\mbox{\hyperlink{_delegate_opt_8h_a9e6c72a4d9879e662d02c096cf16ff3c}{xlist}}<std::shared\_ptr<heap\_arg\_deleter\_base>>\&\ heapArgs,\ std::tuple<Ts...>\ tup,\ Arg1\ arg1,\ Args...\ args)}
+\DoxyCodeLine{00169\ \{}
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{keyword}{static\_assert}(!(}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ (\mbox{\hyperlink{struct_delegate_lib_1_1is__shared__ptr}{is\_shared\_ptr<Arg1>::value}}\ \&\&\ (std::is\_lvalue\_reference\_v<Arg1>\ ||\ std::is\_pointer\_v<Arg1>))),}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{stringliteral}{"{}std::shared\_ptr\ reference\ argument\ not\ allowed"{}});}
+\DoxyCodeLine{00173\ }
+\DoxyCodeLine{00174\ \ \ \ \ \textcolor{keyword}{auto}\ new\_tup\ =\ \mbox{\hyperlink{namespace_delegate_lib_acd191a94679356fb915612440acf7a52}{tuple\_append}}(heapArgs,\ tup,\ arg1);}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{namespace_delegate_lib_aaec1863ccd49b0020b485d9755ab4705}{make\_tuple\_heap}}(heapArgs,\ new\_tup,\ args...);}
+\DoxyCodeLine{00176\ \}}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

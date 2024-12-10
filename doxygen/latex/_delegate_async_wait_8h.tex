@@ -1,0 +1,42 @@
+\doxysection{C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Delegate/\+Delegate\+Async\+Wait.h File Reference}
+\hypertarget{_delegate_async_wait_8h}{}\label{_delegate_async_wait_8h}\index{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/DelegateAsyncWait.h@{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/DelegateAsyncWait.h}}
+{\ttfamily \#include "{}Delegate\+Async.\+h"{}}\newline
+{\ttfamily \#include "{}Delegate\+Thread.\+h"{}}\newline
+{\ttfamily \#include "{}Delegate\+Invoker.\+h"{}}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+{\ttfamily \#include $<$any$>$}\newline
+{\ttfamily \#include $<$chrono$>$}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_async_wait_msg}{Delegate\+Lib\+::\+Delegate\+Async\+Wait\+Msg$<$ Args $>$}}
+\begin{DoxyCompactList}\small\item\em Stores all function arguments suitable for blocking asynchronous calls. Argument data is not stored in the heap. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_free_async_wait_3_01_ret_type_07_args_8_8_8_08_4}{Delegate\+Lib\+::\+Delegate\+Free\+Async\+Wait$<$ Ret\+Type(\+Args...)$>$}}
+\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_member_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4}{Delegate\+Lib\+::\+Delegate\+Member\+Async\+Wait$<$ TClass, Ret\+Type(\+Args...)$>$}}
+\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_member_sp_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4}{Delegate\+Lib\+::\+Delegate\+Member\+Sp\+Async\+Wait$<$ TClass, Ret\+Type(\+Args...)$>$}}
+\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4}{Delegate\+Lib\+::\+Delegate\+Function\+Async\+Wait$<$ Ret\+Type(\+Args...)$>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_delegate_lib}{Delegate\+Lib}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class Ret\+Type , class... Args$>$ }\\\mbox{\hyperlink{struct_delegate_lib_1_1_delegate_free_async_wait}{Delegate\+Free\+Async\+Wait}}$<$ Ret\+Type(Args...)$>$ \mbox{\hyperlink{namespace_delegate_lib_a2fe15d9d206f30899ed86ed0a117217b}{Delegate\+Lib\+::\+Make\+Delegate}} (Ret\+Type(\texorpdfstring{$\ast$}{*}func)(Args... args), \mbox{\hyperlink{class_delegate_lib_1_1_delegate_thread}{Delegate\+Thread}} \&thread, std\+::chrono\+::milliseconds timeout)
+\item 
+{\footnotesize template$<$class TClass , class Ret\+Type , class... Args$>$ }\\\mbox{\hyperlink{struct_delegate_lib_1_1_delegate_member_async_wait}{Delegate\+Member\+Async\+Wait}}$<$ TClass, Ret\+Type(Args...)$>$ \mbox{\hyperlink{namespace_delegate_lib_a5db76998112ee428868ac9edfc89b4aa}{Delegate\+Lib\+::\+Make\+Delegate}} (TClass \texorpdfstring{$\ast$}{*}object, Ret\+Type(TClass\+::\texorpdfstring{$\ast$}{*}func)(Args... args), \mbox{\hyperlink{class_delegate_lib_1_1_delegate_thread}{Delegate\+Thread}} \&thread, std\+::chrono\+::milliseconds timeout)
+\item 
+{\footnotesize template$<$class TClass , class Ret\+Val , class... Args$>$ }\\\mbox{\hyperlink{struct_delegate_lib_1_1_delegate_member_sp_async_wait}{Delegate\+Member\+Sp\+Async\+Wait}}$<$ TClass, Ret\+Val(Args...)$>$ \mbox{\hyperlink{namespace_delegate_lib_a18a52212b54b5a8994f32fae6d19ec4f}{Delegate\+Lib\+::\+Make\+Delegate}} (std\+::shared\+\_\+ptr$<$ TClass $>$ object, Ret\+Val(TClass\+::\texorpdfstring{$\ast$}{*}func)(Args... args), \mbox{\hyperlink{class_delegate_lib_1_1_delegate_thread}{Delegate\+Thread}} \&thread, std\+::chrono\+::milliseconds timeout)
+\item 
+{\footnotesize template$<$class Ret\+Type , class... Args$>$ }\\\mbox{\hyperlink{struct_delegate_lib_1_1_delegate_function_async_wait}{Delegate\+Function\+Async\+Wait}}$<$ Ret\+Type(Args...)$>$ \mbox{\hyperlink{namespace_delegate_lib_a684f519f3b774007ab1d8b81e32fc647}{Delegate\+Lib\+::\+Make\+Delegate}} (std\+::function$<$ Ret\+Type(Args...)$>$ func, \mbox{\hyperlink{class_delegate_lib_1_1_delegate_thread}{Delegate\+Thread}} \&thread, std\+::chrono\+::milliseconds timeout)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+constexpr auto \mbox{\hyperlink{namespace_delegate_lib_aa0e7491d38d4053d6218bf874d56e868}{Delegate\+Lib\+::\+WAIT\+\_\+\+INFINITE}} = std\+::chrono\+::milliseconds\+::max()
+\end{DoxyCompactItemize}

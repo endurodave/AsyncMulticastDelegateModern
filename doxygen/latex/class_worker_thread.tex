@@ -1,0 +1,78 @@
+\doxysection{Worker\+Thread Class Reference}
+\hypertarget{class_worker_thread}{}\label{class_worker_thread}\index{WorkerThread@{WorkerThread}}
+Inheritance diagram for Worker\+Thread\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_worker_thread}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_worker_thread_ae2373689c133d1443b1f31ae2fab3561}\label{class_worker_thread_ae2373689c133d1443b1f31ae2fab3561} 
+{\bfseries Worker\+Thread} (const char \texorpdfstring{$\ast$}{*}thread\+Name)
+\begin{DoxyCompactList}\small\item\em Constructor. \end{DoxyCompactList}\item 
+\Hypertarget{class_worker_thread_a5aa554e7d73f0f185a850ca0ef145d6d}\label{class_worker_thread_a5aa554e7d73f0f185a850ca0ef145d6d} 
+{\bfseries \texorpdfstring{$\sim$}{\string~}\+Worker\+Thread} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_worker_thread_a4bfa37c01da0bae894fd03ef8ff0d9b8}{Create\+Thread}} ()
+\item 
+\Hypertarget{class_worker_thread_ad2c16297b2c663fd39b7026d5dda7d38}\label{class_worker_thread_ad2c16297b2c663fd39b7026d5dda7d38} 
+void {\bfseries Exit\+Thread} ()
+\begin{DoxyCompactList}\small\item\em Called once a program exit to exit the worker thread. \end{DoxyCompactList}\item 
+\Hypertarget{class_worker_thread_a072c9f946424b91f0fdef5260d7b59aa}\label{class_worker_thread_a072c9f946424b91f0fdef5260d7b59aa} 
+std\+::thread\+::id {\bfseries Get\+Thread\+Id} ()
+\begin{DoxyCompactList}\small\item\em Get the ID of this thread instance. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_worker_thread_a189e522e51075f68e14e4e94d32d7a4e}{Dispatch\+Delegate}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg}{Delegate\+Lib\+::\+Delegate\+Msg}} $>$ msg)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_delegate_lib_1_1_delegate_thread}{Delegate\+Lib\+::\+Delegate\+Thread}}}
+\begin{DoxyCompactItemize}
+\item 
+virtual {\bfseries \texorpdfstring{$\sim$}{\string~}\+Delegate\+Thread} ()=default
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_worker_thread_ac9627a136d18c9214284496f104f9429}\label{class_worker_thread_ac9627a136d18c9214284496f104f9429} 
+static std\+::thread\+::id {\bfseries Get\+Current\+Thread\+Id} ()
+\begin{DoxyCompactList}\small\item\em Get the ID of the currently executing thread. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_worker_thread_a4bfa37c01da0bae894fd03ef8ff0d9b8}\index{WorkerThread@{WorkerThread}!CreateThread@{CreateThread}}
+\index{CreateThread@{CreateThread}!WorkerThread@{WorkerThread}}
+\doxysubsubsection{\texorpdfstring{CreateThread()}{CreateThread()}}
+{\footnotesize\ttfamily \label{class_worker_thread_a4bfa37c01da0bae894fd03ef8ff0d9b8} 
+bool Worker\+Thread\+::\+Create\+Thread (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+Called once to create the worker thread \begin{DoxyReturn}{Returns}
+TRUE if thread is created. FALSE otherise. ~\newline
+ 
+\end{DoxyReturn}
+\Hypertarget{class_worker_thread_a189e522e51075f68e14e4e94d32d7a4e}\index{WorkerThread@{WorkerThread}!DispatchDelegate@{DispatchDelegate}}
+\index{DispatchDelegate@{DispatchDelegate}!WorkerThread@{WorkerThread}}
+\doxysubsubsection{\texorpdfstring{DispatchDelegate()}{DispatchDelegate()}}
+{\footnotesize\ttfamily \label{class_worker_thread_a189e522e51075f68e14e4e94d32d7a4e} 
+void Worker\+Thread\+::\+Dispatch\+Delegate (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg}{Delegate\+Lib\+::\+Delegate\+Msg}} $>$}]{msg}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Dispatch a Delegate\+Msg onto this thread. The implementer is responsible for getting the Delegate\+Msg into an OS message queue. Once Delegate\+Msg is on the correct thread of control, the Delegate\+Invoker\+::\+Delegate\+Invoke() function must be called to execute the callback. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em msg} & -\/ a pointer to the callback message that must be created dynamically. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyPrecond}{Precondition}
+Caller {\itshape must} create the Delegate\+Msg argument dynamically. 
+\end{DoxyPrecond}
+\begin{DoxyPostcond}{Postcondition}
+The destination thread calls Delegate\+Invoke(). 
+\end{DoxyPostcond}
+
+
+Implements \mbox{\hyperlink{class_delegate_lib_1_1_delegate_thread_a9a69145597e92bd096062489b14560ad}{Delegate\+Lib\+::\+Delegate\+Thread}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Port/Worker\+Thread\+Std.\+h\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Port/Worker\+Thread\+Std.\+cpp\end{DoxyCompactItemize}

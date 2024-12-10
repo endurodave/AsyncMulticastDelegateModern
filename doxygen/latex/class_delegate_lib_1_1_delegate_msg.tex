@@ -1,0 +1,67 @@
+\doxysection{Delegate\+Lib\+::Delegate\+Msg Class Reference}
+\hypertarget{class_delegate_lib_1_1_delegate_msg}{}\label{class_delegate_lib_1_1_delegate_msg}\index{DelegateLib::DelegateMsg@{DelegateLib::DelegateMsg}}
+
+
+Base class for all delegate inter-\/thread messages.  
+
+
+
+
+{\ttfamily \#include $<$Delegate\+Msg.\+h$>$}
+
+Inheritance diagram for Delegate\+Lib\+::Delegate\+Msg\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_delegate_lib_1_1_delegate_msg}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg_ad0ce3c1203f3f485d18b2be60f8bf703}{Delegate\+Msg}} (std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_i_delegate_invoker}{IDelegate\+Invoker}} $>$ invoker)
+\item 
+virtual \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg_a67c68e6b2805c427afee8e8b4e846aac}{\texorpdfstring{$\sim$}{\string~}\+Delegate\+Msg}} ()=default
+\item 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_i_delegate_invoker}{IDelegate\+Invoker}} $>$ \mbox{\hyperlink{class_delegate_lib_1_1_delegate_msg_a61f5dfba67aa879a51239f6c1edbd446}{Get\+Delegate\+Invoker}} () const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Base class for all delegate inter-\/thread messages. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_delegate_lib_1_1_delegate_msg_ad0ce3c1203f3f485d18b2be60f8bf703}\index{DelegateLib::DelegateMsg@{DelegateLib::DelegateMsg}!DelegateMsg@{DelegateMsg}}
+\index{DelegateMsg@{DelegateMsg}!DelegateLib::DelegateMsg@{DelegateLib::DelegateMsg}}
+\doxysubsubsection{\texorpdfstring{DelegateMsg()}{DelegateMsg()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_delegate_msg_ad0ce3c1203f3f485d18b2be60f8bf703} 
+Delegate\+Lib\+::\+Delegate\+Msg\+::\+Delegate\+Msg (\begin{DoxyParamCaption}\item[{std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_i_delegate_invoker}{IDelegate\+Invoker}} $>$}]{invoker}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Constructor 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em invoker} & -\/ the invoker instance the delegate is registered with. \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_delegate_lib_1_1_delegate_msg_a67c68e6b2805c427afee8e8b4e846aac}\index{DelegateLib::DelegateMsg@{DelegateLib::DelegateMsg}!````~DelegateMsg@{\texorpdfstring{$\sim$}{\string~}DelegateMsg}}
+\index{````~DelegateMsg@{\texorpdfstring{$\sim$}{\string~}DelegateMsg}!DelegateLib::DelegateMsg@{DelegateLib::DelegateMsg}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}DelegateMsg()}{\string~DelegateMsg()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_delegate_msg_a67c68e6b2805c427afee8e8b4e846aac} 
+virtual Delegate\+Lib\+::\+Delegate\+Msg\+::\texorpdfstring{$\sim$}{\string~}\+Delegate\+Msg (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}, {\ttfamily [default]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_delegate_lib_1_1_delegate_msg_a61f5dfba67aa879a51239f6c1edbd446}\index{DelegateLib::DelegateMsg@{DelegateLib::DelegateMsg}!GetDelegateInvoker@{GetDelegateInvoker}}
+\index{GetDelegateInvoker@{GetDelegateInvoker}!DelegateLib::DelegateMsg@{DelegateLib::DelegateMsg}}
+\doxysubsubsection{\texorpdfstring{GetDelegateInvoker()}{GetDelegateInvoker()}}
+{\footnotesize\ttfamily \label{class_delegate_lib_1_1_delegate_msg_a61f5dfba67aa879a51239f6c1edbd446} 
+std\+::shared\+\_\+ptr$<$ \mbox{\hyperlink{class_delegate_lib_1_1_i_delegate_invoker}{IDelegate\+Invoker}} $>$ Delegate\+Lib\+::\+Delegate\+Msg\+::\+Get\+Delegate\+Invoker (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+Get the delegate invoker instance the delegate is registered with. \begin{DoxyReturn}{Returns}
+The invoker instance. ~\newline
+ 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Delegate/\mbox{\hyperlink{_delegate_msg_8h}{Delegate\+Msg.\+h}}\end{DoxyCompactItemize}

@@ -1,6 +1,9 @@
 #ifndef _DELEGATE_INVOKER_H
 #define _DELEGATE_INVOKER_H
 
+/// @file
+/// @brief Delegate inter-thread invoker base class. 
+
 #include <memory>
 
 namespace DelegateLib {

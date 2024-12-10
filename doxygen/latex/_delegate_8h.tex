@@ -1,0 +1,47 @@
+\doxysection{C\+:/\+Projects/\+Async\+Multicast\+Delegate\+Modern/src/\+Delegate/\+Delegate.h File Reference}
+\hypertarget{_delegate_8h}{}\label{_delegate_8h}\index{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/Delegate.h@{C:/Projects/AsyncMulticastDelegateModern/src/Delegate/Delegate.h}}
+
+
+Delegate series of classes are used to invoke a function synchronously.  
+
+
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include $<$memory$>$}\newline
+{\ttfamily \#include "{}Delegate\+Opt.\+h"{}}\newline
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_base}{Delegate\+Lib\+::\+Delegate\+Base}}
+\begin{DoxyCompactList}\small\item\em Non-\/template base class for all delegates. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_3_01_ret_type_07_args_8_8_8_08_4}{Delegate\+Lib\+::\+Delegate$<$ Ret\+Type(\+Args...)$>$}}
+\begin{DoxyCompactList}\small\item\em Template base class for all delegates. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_free_3_01_ret_type_07_args_8_8_8_08_4}{Delegate\+Lib\+::\+Delegate\+Free$<$ Ret\+Type(\+Args...)$>$}}
+\begin{DoxyCompactList}\small\item\em \doxylink{struct_delegate_lib_1_1_delegate_free}{Delegate\+Free} class synchronously invokes a free target function. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4}{Delegate\+Lib\+::\+Delegate\+Member$<$ TClass, Ret\+Type(\+Args...)$>$}}
+\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4}{Delegate\+Lib\+::\+Delegate\+Member\+Sp$<$ TClass, Ret\+Type(\+Args...)$>$}}
+\item 
+class \mbox{\hyperlink{class_delegate_lib_1_1_delegate_function_3_01_ret_type_07_args_8_8_8_08_4}{Delegate\+Lib\+::\+Delegate\+Function$<$ Ret\+Type(\+Args...)$>$}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_delegate_lib}{Delegate\+Lib}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\footnotesize template$<$class Ret\+Type , class... Args$>$ }\\\mbox{\hyperlink{struct_delegate_lib_1_1_delegate_free}{Delegate\+Free}}$<$ Ret\+Type(Args...)$>$ \mbox{\hyperlink{namespace_delegate_lib_a75ff1e13f1cb691402002bfccaf9d1b2}{Delegate\+Lib\+::\+Make\+Delegate}} (Ret\+Type(\texorpdfstring{$\ast$}{*}func)(Args... args))
+\item 
+{\footnotesize template$<$class TClass , class Ret\+Type , class... Args$>$ }\\\mbox{\hyperlink{struct_delegate_lib_1_1_delegate_member}{Delegate\+Member}}$<$ TClass, Ret\+Type(Args...)$>$ \mbox{\hyperlink{namespace_delegate_lib_a388d9eb1fda04113138b8be61dc94650}{Delegate\+Lib\+::\+Make\+Delegate}} (TClass \texorpdfstring{$\ast$}{*}object, Ret\+Type(TClass\+::\texorpdfstring{$\ast$}{*}func)(Args... args))
+\item 
+{\footnotesize template$<$class TClass , class Ret\+Type , class... Args$>$ }\\\mbox{\hyperlink{struct_delegate_lib_1_1_delegate_member_sp}{Delegate\+Member\+Sp}}$<$ TClass, Ret\+Type(Args...)$>$ \mbox{\hyperlink{namespace_delegate_lib_a23f0516caa72547787911fd0f0fc9c1b}{Delegate\+Lib\+::\+Make\+Delegate}} (std\+::shared\+\_\+ptr$<$ TClass $>$ object, Ret\+Type(TClass\+::\texorpdfstring{$\ast$}{*}func)(Args... args))
+\item 
+{\footnotesize template$<$class Ret\+Type , class... Args$>$ }\\\mbox{\hyperlink{class_delegate_lib_1_1_delegate_function}{Delegate\+Function}}$<$ Ret\+Type(Args...)$>$ \mbox{\hyperlink{namespace_delegate_lib_a7616e4b38fca0742748de407497d12c6}{Delegate\+Lib\+::\+Make\+Delegate}} (std\+::function$<$ Ret\+Type(Args...)$>$ func)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Delegate series of classes are used to invoke a function synchronously. 
+
+Delgates support binding to free functions, class instance functions, class static function, and std\+::function targets. Lambda functions can be bound to a delegate when assigned to a {\ttfamily std\+::function}. The classes are not thread safe. 

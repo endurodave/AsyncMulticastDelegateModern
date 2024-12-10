@@ -1,0 +1,39 @@
+\doxysection{Sys\+Data\+No\+Lock.\+h}
+\hypertarget{_sys_data_no_lock_8h_source}{}\label{_sys_data_no_lock_8h_source}\index{C:/Projects/AsyncMulticastDelegateModern/src/Examples/SysDataNoLock.h@{C:/Projects/AsyncMulticastDelegateModern/src/Examples/SysDataNoLock.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_SYS\_DATA\_NO\_LOCK\_H}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_SYS\_DATA\_NO\_LOCK\_H}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ "{}DelegateLib.h"{}}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ "{}SysDataTypes.h"{}}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{using\ namespace\ }DelegateLib;}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_sys_data_no_lock}{SysDataNoLock}}}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00015\ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate_safe}{MulticastDelegateSafe}}<void(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_system_mode_changed}{SystemModeChanged}}\&)>\ \mbox{\hyperlink{class_sys_data_no_lock_aeed880430601ed1e4baf62e63fb8967e}{SystemModeChangedDelegate}};}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{class_sys_data_no_lock}{SysDataNoLock}}\&\ \mbox{\hyperlink{class_sys_data_no_lock_aa9b34a96cecc991c8092aab1313d1f7c}{GetInstance}}();}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00022\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_sys_data_no_lock_a7ea9c3760fc395e710375b07def14d6d}{SetSystemMode}}(SystemMode::Type\ systemMode);\ \ \ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_sys_data_no_lock_a1583080bcf23c33ff74d4ef6e943d16f}{SetSystemModeAsyncAPI}}(SystemMode::Type\ systemMode);\ \ \ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00034\ \ \ \ \ SystemMode::Type\ \mbox{\hyperlink{class_sys_data_no_lock_ae7b1b9a8ae1c13e7ae0e6f6a0c708555}{SetSystemModeAsyncWaitAPI}}(SystemMode::Type\ systemMode);}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00037\ \ \ \ \ \mbox{\hyperlink{class_sys_data_no_lock}{SysDataNoLock}}();}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{class_sys_data_no_lock}{\string~SysDataNoLock}}();}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00041\ \ \ \ \ \mbox{\hyperlink{struct_delegate_lib_1_1_multicast_delegate_safe}{MulticastDelegateSafe}}<void(SystemMode::Type)>\ SetSystemModeDelegate;\ }
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ SetSystemModePrivate(SystemMode::Type);\ \ \ \ }
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00048\ \ \ \ \ SystemMode::Type\ m\_systemMode;}
+\DoxyCodeLine{00049\ \};}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -60,6 +60,7 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 <p>The features of the modern C++ delegate library are:</p>
 
 <ol>
+    <li><strong>Header-Only Library</strong> &ndash; implemented using a small number of header files</li>
 	<li><strong>Any Compiler</strong> &ndash; standard C++17 code for any compiler</li>
 	<li><strong>Any Function</strong> &ndash; invoke any callable function: member, static, free, or lambda</li>
 	<li><strong>Any Argument Type</strong> &ndash; supports any argument type: value, reference, pointer, pointer to pointer</li>
