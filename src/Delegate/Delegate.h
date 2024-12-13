@@ -93,9 +93,7 @@ public:
 
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
-    DelegateFree(ClassType&& rhs) noexcept : m_func(rhs.m_func) {
-        rhs.m_func = nullptr;  // Nullify the source object to avoid double deletion
-    }
+    DelegateFree(ClassType&& rhs) noexcept : m_func(rhs.m_func) { }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateFree() = default;
@@ -146,8 +144,7 @@ public:
     /// @return A reference to the current object.
         ClassType& operator=(ClassType&& rhs) noexcept {
             if (&rhs != this) {
-                m_func = rhs.m_func;    // Steal the resource
-                rhs.m_func = nullptr;   // Nullify the source to avoid double deletion
+                m_func = rhs.m_func;
             }
             return *this;
         }
@@ -213,10 +210,7 @@ public:
 
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
-    DelegateMember(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) {
-        rhs.m_object = nullptr;  // Nullify the source object to avoid double deletion
-        rhs.m_func = nullptr;
-    }
+    DelegateMember(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) { }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateMember() = default;
@@ -283,10 +277,8 @@ public:
     /// @return A reference to the current object.
     ClassType& operator=(ClassType&& rhs) noexcept {
         if (&rhs != this) {
-            m_object = rhs.m_object;    // Steal the resource
-            m_func = rhs.m_func;
-            rhs.m_object = nullptr;     // Nullify the source to avoid double deletion
-            rhs.m_func = nullptr;       
+            m_object = rhs.m_object;
+            m_func = rhs.m_func;  
         }
         return *this;
     }
@@ -356,10 +348,7 @@ public:
 
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
-    DelegateMemberSp(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) {
-        rhs.m_object = nullptr;  // Nullify the source object to avoid double deletion
-        rhs.m_func = nullptr;
-    }
+    DelegateMemberSp(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) { }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateMemberSp() = default;
@@ -426,10 +415,8 @@ public:
     /// @return A reference to the current object.
     ClassType& operator=(ClassType&& rhs) noexcept {
         if (&rhs != this) {
-            m_object = rhs.m_object;    // Steal the resource
+            m_object = rhs.m_object;
             m_func = rhs.m_func;
-            rhs.m_object = nullptr;     // Nullify the source to avoid double deletion
-            rhs.m_func = nullptr;
         }
         return *this;
     }
@@ -483,7 +470,7 @@ class DelegateFunction; // Not defined
 /// 
 /// Depending on how usage, this may never be a issue but its worth noting. 
 /// 
-/// The `DelegateMember<>` class has no such limitations and works under all conditions,
+/// The other delegate class has no such limitations and works under all conditions,
 /// including comparing two instance functions of the same class. 
 /// 
 /// @tparam RetType The return type of the bound delegate function.
@@ -507,9 +494,7 @@ public:
 
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
-    DelegateFunction(ClassType&& rhs) noexcept : m_func(rhs.m_func) {
-        rhs.m_func = nullptr;       // Nullify the source object to avoid double deletion
-    }
+    DelegateFunction(ClassType&& rhs) noexcept : m_func(rhs.m_func) { }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateFunction() = default;
@@ -562,8 +547,7 @@ public:
     /// @return A reference to the current object.
     ClassType& operator=(ClassType&& rhs) noexcept {
         if (&rhs != this) {
-            m_func = rhs.m_func;        // Steal the resource
-            rhs.m_func = nullptr;       // Nullify the source to avoid double deletion
+            m_func = rhs.m_func;
         }
         return *this;
     }
