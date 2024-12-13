@@ -36,7 +36,7 @@ public:
     /// @param[in] invoker - the invoker instance
     /// @param[in] args - a parameter pack of all target function arguments
     DelegateAsyncMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsg(invoker),
-        m_args(make_tuple_heap(m_heapMem, m_start, args...))
+        m_args(make_tuple_heap(m_heapMem, m_start, std::forward<Args>(args)...))
     {
     }
 
@@ -185,7 +185,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread
-            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -210,7 +210,7 @@ public:
     /// @param[in] args The function arguments, if any.
     /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
-        operator()(args...);   
+        operator()(std::forward<Args>(args)...);
     }
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 
@@ -402,7 +402,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread
-            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -427,7 +427,7 @@ public:
     /// @param[in] args The function arguments, if any.
     /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
-        operator()(args...);   
+        operator()(std::forward<Args>(args)...);
     }
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 
@@ -620,7 +620,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread
-            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -645,7 +645,7 @@ public:
     /// @param[in] args The function arguments, if any.
     /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
-        operator()(args...);   
+        operator()(std::forward<Args>(args)...);
     }
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 
@@ -821,7 +821,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread
-            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -846,7 +846,7 @@ public:
     /// @param[in] args The function arguments, if any.
     /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
-        operator()(args...);   
+        operator()(std::forward<Args>(args)...);
     }
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 

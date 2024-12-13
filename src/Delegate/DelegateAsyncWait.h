@@ -59,7 +59,7 @@ public:
     /// @param[in] invoker - the invoker instance
     /// @param[in] args - a parameter pack of all target function arguments
     DelegateAsyncWaitMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsg(invoker),
-        m_args(args...)
+        m_args(std::forward<Args>(args)...)
     {
     }
 
@@ -243,7 +243,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread.
-            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -489,7 +489,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread.
-            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -735,7 +735,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread.
-            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -972,7 +972,7 @@ public:
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread.
-            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
