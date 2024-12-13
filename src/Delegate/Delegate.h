@@ -91,6 +91,12 @@ public:
     /// @param[in] rhs The object to copy from.
     DelegateFree(const ClassType& rhs) { Assign(rhs); }
 
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateFree(ClassType&& rhs) noexcept : m_func(rhs.m_func) {
+        rhs.m_func = nullptr;  // Nullify the source object to avoid double deletion
+    }
+
     /// @brief Default constructor creates an empty delegate.
     DelegateFree() = default;
 
@@ -122,7 +128,7 @@ public:
     /// @param[in] args - the function arguments, if any.
     /// @return The bound function return value, if any.
     virtual RetType operator()(Args... args) override {
-        return std::invoke(m_func, args...);
+        return std::invoke(m_func, std::forward<Args>(args)...);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -134,6 +140,17 @@ public:
         }
         return *this;
     }
+
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+        ClassType& operator=(ClassType&& rhs) noexcept {
+            if (&rhs != this) {
+                m_func = rhs.m_func;    // Steal the resource
+                rhs.m_func = nullptr;   // Nullify the source to avoid double deletion
+            }
+            return *this;
+        }
 
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
@@ -194,6 +211,13 @@ public:
     /// @post The caller is responsible for deleting the clone object.
     DelegateMember(const ClassType& rhs) { Assign(rhs); }
 
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateMember(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) {
+        rhs.m_object = nullptr;  // Nullify the source object to avoid double deletion
+        rhs.m_func = nullptr;
+    }
+
     /// @brief Default constructor creates an empty delegate.
     DelegateMember() = default;
 
@@ -241,7 +265,7 @@ public:
     /// @param[in] args - the function arguments, if any.
     /// @return The bound function return value, if any.
     virtual RetType operator()(Args... args) override {
-        return std::invoke(m_func, m_object, args...);
+        return std::invoke(m_func, m_object, std::forward<Args>(args)...);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -250,6 +274,19 @@ public:
     ClassType& operator=(const ClassType& rhs) {
         if (&rhs != this) {
             Assign(rhs);
+        }
+        return *this;
+    }
+
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            m_object = rhs.m_object;    // Steal the resource
+            m_func = rhs.m_func;
+            rhs.m_object = nullptr;     // Nullify the source to avoid double deletion
+            rhs.m_func = nullptr;       
         }
         return *this;
     }
@@ -317,6 +354,13 @@ public:
     /// @post The caller is responsible for deleting the clone object.
     DelegateMemberSp(const ClassType& rhs) { Assign(rhs); }
 
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateMemberSp(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) {
+        rhs.m_object = nullptr;  // Nullify the source object to avoid double deletion
+        rhs.m_func = nullptr;
+    }
+
     /// @brief Default constructor creates an empty delegate.
     DelegateMemberSp() = default;
 
@@ -364,7 +408,7 @@ public:
     /// @param[in] args - the function arguments, if any.
     /// @return The bound function return value, if any.
     virtual RetType operator()(Args... args) override {
-        return std::invoke(m_func, m_object, args...);
+        return std::invoke(m_func, m_object, std::forward<Args>(args)...);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -373,6 +417,19 @@ public:
     ClassType& operator=(const ClassType& rhs) {
         if (&rhs != this) {
             Assign(rhs);
+        }
+        return *this;
+    }
+
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            m_object = rhs.m_object;    // Steal the resource
+            m_func = rhs.m_func;
+            rhs.m_object = nullptr;     // Nullify the source to avoid double deletion
+            rhs.m_func = nullptr;
         }
         return *this;
     }
@@ -448,6 +505,12 @@ public:
     /// @post The caller is responsible for deleting the clone object.
     DelegateFunction(const ClassType& rhs) { Assign(rhs); }
 
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateFunction(ClassType&& rhs) noexcept : m_func(rhs.m_func) {
+        rhs.m_func = nullptr;       // Nullify the source object to avoid double deletion
+    }
+
     /// @brief Default constructor creates an empty delegate.
     DelegateFunction() = default;
 
@@ -490,6 +553,17 @@ public:
     ClassType& operator=(const ClassType& rhs) {
         if (&rhs != this) {
             Assign(rhs);
+        }
+        return *this;
+    }
+
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            m_func = rhs.m_func;        // Steal the resource
+            rhs.m_func = nullptr;       // Nullify the source to avoid double deletion
         }
         return *this;
     }

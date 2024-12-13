@@ -88,6 +88,12 @@ public:
         Assign(rhs);
     }
 
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateFreeAsync(ClassType&& rhs) noexcept : 
+        BaseType(rhs), m_thread(rhs.m_thread) {
+    }
+
     DelegateFreeAsync() = delete;
 
     /// @brief Bind a free function to the delegate.
@@ -131,6 +137,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_thread = rhs.m_thread;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -160,7 +177,7 @@ public:
         if (this->GetSync())
         {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
+            return BaseType::operator()(std::forward<Args>(args)...);
         }
         else
         {
@@ -337,6 +354,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_thread = rhs.m_thread;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -347,7 +375,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// @brief Invoke the bound delegate function asynchronously. 
+    /// @brief Invoke the bound delegate function asynchronously. Called by the source thread.
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
@@ -366,7 +394,7 @@ public:
         if (this->GetSync())
         {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
+            return BaseType::operator()(std::forward<Args>(args)...);
         }
         else
         {
@@ -402,7 +430,8 @@ public:
         operator()(args...);   
     }
 
-    /// @brief Invoke the delegate function on the destination thread. 
+    /// @brief Invoke the delegate function on the destination thread. Called by the 
+    /// destintation thread.
     /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
     /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
     /// source and destination `delegateMsg` access because the source thread is not waiting 
@@ -543,6 +572,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_thread = rhs.m_thread;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -553,7 +593,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// @brief Invoke the bound delegate function asynchronously. 
+    /// @brief Invoke the bound delegate function asynchronously. Called by the source thread.
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
@@ -572,7 +612,7 @@ public:
         if (this->GetSync())
         {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
+            return BaseType::operator()(std::forward<Args>(args)...);
         }
         else
         {
@@ -608,7 +648,8 @@ public:
         operator()(args...);   
     }
 
-    /// @brief Invoke the delegate function on the destination thread. 
+    /// @brief Invoke the delegate function on the destination thread. Called by the 
+    /// destintation thread.
     /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
     /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
     /// source and destination `delegateMsg` access because the source thread is not waiting 
@@ -732,6 +773,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_thread = rhs.m_thread;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -742,7 +794,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// @brief Invoke the bound delegate function asynchronously. 
+    /// @brief Invoke the bound delegate function asynchronously. Called by the source thread.
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
@@ -761,7 +813,7 @@ public:
         if (this->GetSync())
         {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
+            return BaseType::operator()(std::forward<Args>(args)...);
         }
         else
         {
@@ -797,7 +849,8 @@ public:
         operator()(args...);   
     }
 
-    /// @brief Invoke the delegate function on the destination thread. 
+    /// @brief Invoke the delegate function on the destination thread. Called by the 
+    /// destintation thread.
     /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
     /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
     /// source and destination `delegateMsg` access because the source thread is not waiting 
