@@ -22,7 +22,7 @@ public:
     ~SinglecastDelegate() { Clear(); }
 
     RetType operator()(Args... args) {
-        return (*m_delegate)(args...);	// Invoke delegate callback
+        return (*m_delegate)(std::forward<Args>(args)...);	// Invoke delegate callback
     }
 
     void operator=(const Delegate<RetType(Args...)>& delegate) {
