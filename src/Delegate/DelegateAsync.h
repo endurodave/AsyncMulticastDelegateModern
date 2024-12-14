@@ -36,9 +36,7 @@ public:
     /// @param[in] invoker - the invoker instance
     /// @param[in] args - a parameter pack of all target function arguments
     DelegateAsyncMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsg(invoker),
-        m_args(make_tuple_heap(m_heapMem, m_start, std::forward<Args>(args)...))
-    {
-    }
+        m_args(make_tuple_heap(m_heapMem, m_start, std::forward<Args>(args)...)) { }
 
     virtual ~DelegateAsyncMsg() = default;
 
@@ -174,13 +172,10 @@ public:
     /// @post Do not use the return value as its not valid.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
-        }
-        else
-        {
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
@@ -391,13 +386,10 @@ public:
     /// @post Do not use the return value as its not valid.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
-        }
-        else
-        {
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
@@ -609,13 +601,10 @@ public:
     /// @post Do not use the return value as its not valid.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
-        }
-        else
-        {
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
@@ -810,13 +799,10 @@ public:
     /// @post Do not use the return value as its not valid.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
-        }
-        else
-        {
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 

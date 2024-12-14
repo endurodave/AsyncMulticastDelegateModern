@@ -232,13 +232,10 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
-        }
-        else
-        {
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
@@ -261,18 +258,14 @@ public:
             msg->SetInvokerWaiting(false);
 
             // Does the target function have a return value?
-            if constexpr (std::is_void<RetType>::value == false)
-            {
+            if constexpr (std::is_void<RetType>::value == false) {
                 // Is the return value valid? 
-                if (m_retVal.has_value())
-                {
+                if (m_retVal.has_value()) {
                     // Return the destination thread target function return value
-                    return std::any_cast<RetType>(m_retVal);
-                }
-                else
-                {
+                    return GetRetVal();
+                } else {
                     // Return a default return value
-                    return RetType();
+                    return RetType{};
                 }
             }
         }
@@ -285,13 +278,10 @@ public:
     /// `has_value()` to check if the the return value is valid. `value()` contains 
     /// the target function return value.
     auto AsyncInvoke(Args... args) {
-        if constexpr (std::is_void<RetType>::value == true)
-        {
+        if constexpr (std::is_void<RetType>::value == true) {
             operator()(args...);
             return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
-        }
-        else
-        {
+        } else {
             auto retVal = operator()(args...);
             return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
         }
@@ -317,19 +307,15 @@ public:
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
 
         // Is the source thread waiting for the target function invoke to complete?
-        if (delegateMsg->GetInvokerWaiting())
-        {
+        if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
             this->SetSync(true);
 
             // Does target function have a void return value?
-            if constexpr (std::is_void<RetType>::value == true)
-            {
+            if constexpr (std::is_void<RetType>::value == true) {
                 // Invoke the target function using the source thread supplied function arguments
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            }
-            else
-            {
+            } else {
                 // Invoke the target function using the source thread supplied function arguments 
                 // and get the return value
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
@@ -485,13 +471,10 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
-        }
-        else
-        {
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
@@ -514,18 +497,14 @@ public:
             msg->SetInvokerWaiting(false);
 
             // Does the target function have a return value?
-            if constexpr (std::is_void<RetType>::value == false)
-            {
+            if constexpr (std::is_void<RetType>::value == false) {
                 // Is the return value valid? 
-                if (m_retVal.has_value())
-                {
+                if (m_retVal.has_value()) {
                     // Return the destination thread target function return value
-                    return std::any_cast<RetType>(m_retVal);
-                }
-                else
-                {
+                    return GetRetVal();
+                } else {
                     // Return a default return value
-                    return RetType();
+                    return RetType{};
                 }
             }
         }
@@ -538,13 +517,10 @@ public:
     /// `has_value()` to check if the the return value is valid. `value()` contains 
     /// the target function return value.
     auto AsyncInvoke(Args... args) {
-        if constexpr (std::is_void<RetType>::value == true)
-        {
+        if constexpr (std::is_void<RetType>::value == true) {
             operator()(args...);
             return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
-        }
-        else
-        {
+        } else {
             auto retVal = operator()(args...);
             return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
         }
@@ -570,19 +546,15 @@ public:
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
 
         // Is the source thread waiting for the target function invoke to complete?
-        if (delegateMsg->GetInvokerWaiting())
-        {
+        if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
             this->SetSync(true);
 
             // Does target function have a void return value?
-            if constexpr (std::is_void<RetType>::value == true)
-            {
+            if constexpr (std::is_void<RetType>::value == true) {
                 // Invoke the target function using the source thread supplied function arguments
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            }
-            else
-            {
+            } else {
                 // Invoke the target function using the source thread supplied function arguments 
                 // and get the return value
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
@@ -738,13 +710,10 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
-        }
-        else
-        {
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
@@ -767,18 +736,14 @@ public:
             msg->SetInvokerWaiting(false);
 
             // Does the target function have a return value?
-            if constexpr (std::is_void<RetType>::value == false)
-            {
+            if constexpr (std::is_void<RetType>::value == false) {
                 // Is the return value valid? 
-                if (m_retVal.has_value())
-                {
+                if (m_retVal.has_value()) {
                     // Return the destination thread target function return value
-                    return std::any_cast<RetType>(m_retVal);
-                }
-                else
-                {
+                    return GetRetVal();
+                } else {
                     // Return a default return value
-                    return RetType();
+                    return RetType{};
                 }
             }
         }
@@ -791,13 +756,10 @@ public:
     /// `has_value()` to check if the the return value is valid. `value()` contains 
     /// the target function return value.
     auto AsyncInvoke(Args... args) {
-        if constexpr (std::is_void<RetType>::value == true)
-        {
+        if constexpr (std::is_void<RetType>::value == true) {
             operator()(args...);
             return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
-        }
-        else
-        {
+        } else {
             auto retVal = operator()(args...);
             return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
         }
@@ -823,19 +785,15 @@ public:
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
 
         // Is the source thread waiting for the target function invoke to complete?
-        if (delegateMsg->GetInvokerWaiting())
-        {
+        if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
             this->SetSync(true);
 
             // Does target function have a void return value?
-            if constexpr (std::is_void<RetType>::value == true)
-            {
+            if constexpr (std::is_void<RetType>::value == true) {
                 // Invoke the target function using the source thread supplied function arguments
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            }
-            else
-            {
+            } else {
                 // Invoke the target function using the source thread supplied function arguments 
                 // and get the return value
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
@@ -982,13 +940,10 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
-        }
-        else
-        {
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
@@ -1011,18 +966,14 @@ public:
             msg->SetInvokerWaiting(false);
 
             // Does the target function have a return value?
-            if constexpr (std::is_void<RetType>::value == false)
-            {
+            if constexpr (std::is_void<RetType>::value == false) {
                 // Is the return value valid? 
-                if (m_retVal.has_value())
-                {
+                if (m_retVal.has_value()) {
                     // Return the destination thread target function return value
-                    return std::any_cast<RetType>(m_retVal);
-                }
-                else
-                {
+                    return GetRetVal();
+                } else {
                     // Return a default return value
-                    return RetType();
+                    return RetType{};
                 }
             }
         }
@@ -1035,13 +986,10 @@ public:
     /// `has_value()` to check if the the return value is valid. `value()` contains 
     /// the target function return value.
     auto AsyncInvoke(Args... args) {
-        if constexpr (std::is_void<RetType>::value == true)
-        {
+        if constexpr (std::is_void<RetType>::value == true) {
             operator()(args...);
             return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
-        }
-        else
-        {
+        } else {
             auto retVal = operator()(args...);
             return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
         }
@@ -1067,19 +1015,15 @@ public:
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
 
         // Is the source thread waiting for the target function invoke to complete?
-        if (delegateMsg->GetInvokerWaiting())
-        {
+        if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
             this->SetSync(true);
 
             // Does target function have a void return value?
-            if constexpr (std::is_void<RetType>::value == true)
-            {
+            if constexpr (std::is_void<RetType>::value == true) {
                 // Invoke the target function using the source thread supplied function arguments
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            }
-            else
-            {
+            } else {
                 // Invoke the target function using the source thread supplied function arguments 
                 // and get the return value
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
