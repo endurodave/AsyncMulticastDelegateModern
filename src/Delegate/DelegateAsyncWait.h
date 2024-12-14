@@ -59,7 +59,7 @@ public:
     /// @param[in] invoker - the invoker instance
     /// @param[in] args - a parameter pack of all target function arguments
     DelegateAsyncWaitMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsg(invoker),
-        m_args(args...)
+        m_args(std::forward<Args>(args)...)
     {
     }
 
@@ -124,7 +124,7 @@ public:
     /// @param[in] thread The execution thread to invoke `func`.
     /// @param[in] timeout The calling thread timeout for destination thread to
     /// invoke the target function. 
-    DelegateFreeAsyncWait(FreeFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
+    DelegateFreeAsyncWait(FreeFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
         BaseType(func, thread), m_timeout(timeout) {
         Bind(func, thread);
     }
@@ -137,6 +137,12 @@ public:
     DelegateFreeAsyncWait(const ClassType& rhs) :
         BaseType(rhs) {
         Assign(rhs);
+    }
+
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateFreeAsyncWait(ClassType&& rhs) noexcept :
+        BaseType(rhs), m_timeout(rhs.m_timeout) {
     }
 
     DelegateFreeAsyncWait() = delete;
@@ -182,6 +188,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_timeout = rhs.m_timeout;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -215,18 +232,15 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
-        }
-        else
-        {
+            return BaseType::operator()(std::forward<Args>(args)...);
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread.
-            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -244,18 +258,14 @@ public:
             msg->SetInvokerWaiting(false);
 
             // Does the target function have a return value?
-            if constexpr (std::is_void<RetType>::value == false)
-            {
+            if constexpr (std::is_void<RetType>::value == false) {
                 // Is the return value valid? 
-                if (m_retVal.has_value())
-                {
+                if (m_retVal.has_value()) {
                     // Return the destination thread target function return value
-                    return std::any_cast<RetType>(m_retVal);
-                }
-                else
-                {
+                    return GetRetVal();
+                } else {
                     // Return a default return value
-                    return RetType();
+                    return RetType{};
                 }
             }
         }
@@ -268,13 +278,10 @@ public:
     /// `has_value()` to check if the the return value is valid. `value()` contains 
     /// the target function return value.
     auto AsyncInvoke(Args... args) {
-        if constexpr (std::is_void<RetType>::value == true)
-        {
+        if constexpr (std::is_void<RetType>::value == true) {
             operator()(args...);
             return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
-        }
-        else
-        {
+        } else {
             auto retVal = operator()(args...);
             return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
         }
@@ -300,19 +307,15 @@ public:
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
 
         // Is the source thread waiting for the target function invoke to complete?
-        if (delegateMsg->GetInvokerWaiting())
-        {
+        if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
             this->SetSync(true);
 
             // Does target function have a void return value?
-            if constexpr (std::is_void<RetType>::value == true)
-            {
+            if constexpr (std::is_void<RetType>::value == true) {
                 // Invoke the target function using the source thread supplied function arguments
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            }
-            else
-            {
+            } else {
                 // Invoke the target function using the source thread supplied function arguments 
                 // and get the return value
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
@@ -326,11 +329,18 @@ public:
     /// Returns `true` if asynchronous function successfully invoked on the target thread
     /// @return `true` if the target asynchronous function call succeeded. `false` if 
     /// the timeout expired before the target function could be invoked.
-    bool IsSuccess() { return m_success; }
+    bool IsSuccess() noexcept { return m_success; }
 
     /// Get the asynchronous function return value
     /// @return The destination thraed target function return value
-    RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
+    RetType GetRetVal() noexcept {
+        try {
+            return std::any_cast<RetType>(m_retVal);
+        }
+        catch (const std::bad_any_cast&) {
+            return RetType{};  // Return a default value if error
+        }
+    }
 
 private:
     /// Set to `true` if async function call succeeds
@@ -362,7 +372,7 @@ public:
     using BaseType = DelegateMemberAsync<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and delegate thread
-    DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
+    DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
@@ -417,6 +427,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_timeout = rhs.m_timeout;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -427,7 +448,8 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// @brief Invoke delegate function asynchronously and block for function return value. 
+    /// @brief Invoke delegate function asynchronously and block for function return value.
+    /// Called by the source thread.
     /// @details Invoke delegate function asynchronously and wait for the return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
@@ -449,18 +471,15 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
-        }
-        else
-        {
+            return BaseType::operator()(std::forward<Args>(args)...);
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread.
-            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -478,18 +497,14 @@ public:
             msg->SetInvokerWaiting(false);
 
             // Does the target function have a return value?
-            if constexpr (std::is_void<RetType>::value == false)
-            {
+            if constexpr (std::is_void<RetType>::value == false) {
                 // Is the return value valid? 
-                if (m_retVal.has_value())
-                {
+                if (m_retVal.has_value()) {
                     // Return the destination thread target function return value
-                    return std::any_cast<RetType>(m_retVal);
-                }
-                else
-                {
+                    return GetRetVal();
+                } else {
                     // Return a default return value
-                    return RetType();
+                    return RetType{};
                 }
             }
         }
@@ -502,19 +517,17 @@ public:
     /// `has_value()` to check if the the return value is valid. `value()` contains 
     /// the target function return value.
     auto AsyncInvoke(Args... args) {
-        if constexpr (std::is_void<RetType>::value == true)
-        {
+        if constexpr (std::is_void<RetType>::value == true) {
             operator()(args...);
             return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
-        }
-        else
-        {
+        } else {
             auto retVal = operator()(args...);
             return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
         }
     }
 
-    /// @brief Invoke the delegate function on the destination thread. 
+    /// @brief Invoke the delegate function on the destination thread. Called by the 
+    /// destination thread.
     /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
     /// on the destination thread. A lock is used to protect source and destination thread shared 
     /// data. A semaphore is used to signal the source thread when the destination thread 
@@ -533,19 +546,15 @@ public:
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
 
         // Is the source thread waiting for the target function invoke to complete?
-        if (delegateMsg->GetInvokerWaiting())
-        {
+        if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
             this->SetSync(true);
 
             // Does target function have a void return value?
-            if constexpr (std::is_void<RetType>::value == true)
-            {
+            if constexpr (std::is_void<RetType>::value == true) {
                 // Invoke the target function using the source thread supplied function arguments
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            }
-            else
-            {
+            } else {
                 // Invoke the target function using the source thread supplied function arguments 
                 // and get the return value
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
@@ -559,11 +568,18 @@ public:
     /// Returns `true` if asynchronous function successfully invoked on the target thread
     /// @return `true` if the target asynchronous function call succeeded. `false` if 
     /// the timeout expired before the target function could be invoked.
-    bool IsSuccess() { return m_success; }
+    bool IsSuccess() noexcept { return m_success; }
 
     /// Get the asynchronous function return value
     /// @return The destination thraed target function return value
-    RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
+    RetType GetRetVal() noexcept {
+        try {
+            return std::any_cast<RetType>(m_retVal);
+        }
+        catch (const std::bad_any_cast&) {
+            return RetType{};  // Return a default value if error
+        }
+    }
 
 private:
     /// Set to `true` if async function call succeeds
@@ -595,7 +611,7 @@ public:
     using BaseType = DelegateMemberSpAsync<TClass, RetType(Args...)>;
 
     // Contructors take a class instance, member function, and delegate thread
-    DelegateMemberSpAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
+    DelegateMemberSpAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
@@ -650,6 +666,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_timeout = rhs.m_timeout;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -660,7 +687,8 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// @brief Invoke delegate function asynchronously and block for function return value. 
+    /// @brief Invoke delegate function asynchronously and block for function return value.
+    /// Called by the source thread.
     /// @details Invoke delegate function asynchronously and wait for the return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
@@ -682,18 +710,15 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
-        }
-        else
-        {
+            return BaseType::operator()(std::forward<Args>(args)...);
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread.
-            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -711,18 +736,14 @@ public:
             msg->SetInvokerWaiting(false);
 
             // Does the target function have a return value?
-            if constexpr (std::is_void<RetType>::value == false)
-            {
+            if constexpr (std::is_void<RetType>::value == false) {
                 // Is the return value valid? 
-                if (m_retVal.has_value())
-                {
+                if (m_retVal.has_value()) {
                     // Return the destination thread target function return value
-                    return std::any_cast<RetType>(m_retVal);
-                }
-                else
-                {
+                    return GetRetVal();
+                } else {
                     // Return a default return value
-                    return RetType();
+                    return RetType{};
                 }
             }
         }
@@ -735,19 +756,17 @@ public:
     /// `has_value()` to check if the the return value is valid. `value()` contains 
     /// the target function return value.
     auto AsyncInvoke(Args... args) {
-        if constexpr (std::is_void<RetType>::value == true)
-        {
+        if constexpr (std::is_void<RetType>::value == true) {
             operator()(args...);
             return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
-        }
-        else
-        {
+        } else {
             auto retVal = operator()(args...);
             return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
         }
     }
 
-    /// @brief Invoke the delegate function on the destination thread. 
+    /// @brief Invoke the delegate function on the destination thread. Called by the 
+    /// destination thread.
     /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
     /// on the destination thread. A lock is used to protect source and destination thread shared 
     /// data. A semaphore is used to signal the source thread when the destination thread 
@@ -766,19 +785,15 @@ public:
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
 
         // Is the source thread waiting for the target function invoke to complete?
-        if (delegateMsg->GetInvokerWaiting())
-        {
+        if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
             this->SetSync(true);
 
             // Does target function have a void return value?
-            if constexpr (std::is_void<RetType>::value == true)
-            {
+            if constexpr (std::is_void<RetType>::value == true) {
                 // Invoke the target function using the source thread supplied function arguments
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            }
-            else
-            {
+            } else {
                 // Invoke the target function using the source thread supplied function arguments 
                 // and get the return value
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
@@ -792,11 +807,18 @@ public:
     /// Returns `true` if asynchronous function successfully invoked on the target thread
     /// @return `true` if the target asynchronous function call succeeded. `false` if 
     /// the timeout expired before the target function could be invoked.
-    bool IsSuccess() { return m_success; }
+    bool IsSuccess() noexcept { return m_success; }
 
     /// Get the asynchronous function return value
     /// @return The destination thraed target function return value
-    RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
+    RetType GetRetVal() noexcept {
+        try {
+            return std::any_cast<RetType>(m_retVal);
+        }
+        catch (const std::bad_any_cast&) {
+            return RetType{};  // Return a default value if error
+        }
+    }
 
 private:
     /// Set to `true` if async function call succeeds
@@ -828,7 +850,7 @@ public:
     using BaseType = DelegateFunctionAsync<RetType(Args...)>;
 
     // Contructors take a std::function, delegate thread and timeout
-    DelegateFunctionAsyncWait(FunctionType func, DelegateThread& thread, std::chrono::milliseconds timeout) :
+    DelegateFunctionAsyncWait(FunctionType func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
         BaseType(func, thread), m_timeout(timeout) {
         Bind(func, thread);
     }
@@ -874,6 +896,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_timeout = rhs.m_timeout;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -884,7 +917,8 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// @brief Invoke delegate function asynchronously and block for function return value. 
+    /// @brief Invoke delegate function asynchronously and block for function return value.
+    /// Called by the source thread.
     /// @details Invoke delegate function asynchronously and wait for the return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
@@ -906,18 +940,15 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
-        }
-        else
-        {
+            return BaseType::operator()(std::forward<Args>(args)...);
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread.
-            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             msg->SetInvokerWaiting(true);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
@@ -935,18 +966,14 @@ public:
             msg->SetInvokerWaiting(false);
 
             // Does the target function have a return value?
-            if constexpr (std::is_void<RetType>::value == false)
-            {
+            if constexpr (std::is_void<RetType>::value == false) {
                 // Is the return value valid? 
-                if (m_retVal.has_value())
-                {
+                if (m_retVal.has_value()) {
                     // Return the destination thread target function return value
-                    return std::any_cast<RetType>(m_retVal);
-                }
-                else
-                {
+                    return GetRetVal();
+                } else {
                     // Return a default return value
-                    return RetType();
+                    return RetType{};
                 }
             }
         }
@@ -959,19 +986,17 @@ public:
     /// `has_value()` to check if the the return value is valid. `value()` contains 
     /// the target function return value.
     auto AsyncInvoke(Args... args) {
-        if constexpr (std::is_void<RetType>::value == true)
-        {
+        if constexpr (std::is_void<RetType>::value == true) {
             operator()(args...);
             return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
-        }
-        else
-        {
+        } else {
             auto retVal = operator()(args...);
             return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
         }
     }
 
-    /// @brief Invoke the delegate function on the destination thread. 
+    /// @brief Invoke the delegate function on the destination thread. Called by the 
+    /// destination thread.
     /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
     /// on the destination thread. A lock is used to protect source and destination thread shared 
     /// data. A semaphore is used to signal the source thread when the destination thread 
@@ -990,19 +1015,15 @@ public:
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
 
         // Is the source thread waiting for the target function invoke to complete?
-        if (delegateMsg->GetInvokerWaiting())
-        {
+        if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
             this->SetSync(true);
 
             // Does target function have a void return value?
-            if constexpr (std::is_void<RetType>::value == true)
-            {
+            if constexpr (std::is_void<RetType>::value == true) {
                 // Invoke the target function using the source thread supplied function arguments
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            }
-            else
-            {
+            } else {
                 // Invoke the target function using the source thread supplied function arguments 
                 // and get the return value
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
@@ -1016,11 +1037,18 @@ public:
     /// Returns `true` if asynchronous function successfully invoked on the target thread
     /// @return `true` if the target asynchronous function call succeeded. `false` if 
     /// the timeout expired before the target function could be invoked.
-    bool IsSuccess() { return m_success; }
+    bool IsSuccess() noexcept { return m_success; }
 
     /// Get the asynchronous function return value
     /// @return The destination thraed target function return value
-    RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
+    RetType GetRetVal() noexcept {
+        try {
+            return std::any_cast<RetType>(m_retVal);
+        }
+        catch (const std::bad_any_cast&) {
+            return RetType{};  // Return a default value if error
+        }
+    }
 
 private:
     /// Set to `true` if async function call succeeds

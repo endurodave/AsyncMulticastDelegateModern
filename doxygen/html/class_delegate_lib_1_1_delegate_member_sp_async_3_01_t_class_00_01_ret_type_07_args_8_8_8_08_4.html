@@ -154,7 +154,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0415b2d8187f48557166d43ee5746b8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor to create a class instance.  <br /></td></tr>
 <tr class="separator:a0415b2d8187f48557166d43ee5746b8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4aae9e2e271efa00a60d6f6c61d454ec" id="r_a4aae9e2e271efa00a60d6f6c61d454ec"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4aae9e2e271efa00a60d6f6c61d454ec">DelegateMemberSpAsync</a> (const <a class="el" href="#abb7c35431237278eb15b6af710193a11">ClassType</a> &amp;rhs)</td></tr>
-<tr class="memdesc:a4aae9e2e271efa00a60d6f6c61d454ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a copy of the current object.  <br /></td></tr>
+<tr class="memdesc:a4aae9e2e271efa00a60d6f6c61d454ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor that creates a copy of the given instance.  <br /></td></tr>
 <tr class="separator:a4aae9e2e271efa00a60d6f6c61d454ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95abbb7549ad531efec4a5fe629ca925" id="r_a95abbb7549ad531efec4a5fe629ca925"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95abbb7549ad531efec4a5fe629ca925">DelegateMemberSpAsync</a> ()=delete</td></tr>
 <tr class="separator:a95abbb7549ad531efec4a5fe629ca925"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -173,21 +173,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adb92f14347b35af2b3154103b1793196" id="r_adb92f14347b35af2b3154103b1793196"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#abb7c35431237278eb15b6af710193a11">ClassType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adb92f14347b35af2b3154103b1793196">operator=</a> (const <a class="el" href="#abb7c35431237278eb15b6af710193a11">ClassType</a> &amp;rhs)</td></tr>
 <tr class="memdesc:adb92f14347b35af2b3154103b1793196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator that assigns the state of one object to another.  <br /></td></tr>
 <tr class="separator:adb92f14347b35af2b3154103b1793196"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6563fdeb2a74bdfc8fd7aabe3dd38a43" id="r_a6563fdeb2a74bdfc8fd7aabe3dd38a43"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#abb7c35431237278eb15b6af710193a11">ClassType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6563fdeb2a74bdfc8fd7aabe3dd38a43">operator=</a> (<a class="el" href="#abb7c35431237278eb15b6af710193a11">ClassType</a> &amp;&amp;rhs) noexcept</td></tr>
+<tr class="memdesc:a6563fdeb2a74bdfc8fd7aabe3dd38a43"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator that transfers ownership of resources.  <br /></td></tr>
+<tr class="separator:a6563fdeb2a74bdfc8fd7aabe3dd38a43"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6cef069e1ec3020064447a453c3aa91b" id="r_a6cef069e1ec3020064447a453c3aa91b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6cef069e1ec3020064447a453c3aa91b">operator==</a> (const <a class="el" href="class_delegate_lib_1_1_delegate_base.html">DelegateBase</a> &amp;rhs) const override</td></tr>
 <tr class="memdesc:a6cef069e1ec3020064447a453c3aa91b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares two delegate objects for equality.  <br /></td></tr>
 <tr class="separator:a6cef069e1ec3020064447a453c3aa91b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2be69705010b23423760a63822b2f408" id="r_a2be69705010b23423760a63822b2f408"><td class="memItemLeft" align="right" valign="top">virtual RetType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2be69705010b23423760a63822b2f408">operator()</a> (Args... args) override</td></tr>
-<tr class="memdesc:a2be69705010b23423760a63822b2f408"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the bound delegate function asynchronously.  <br /></td></tr>
+<tr class="memdesc:a2be69705010b23423760a63822b2f408"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the bound delegate function asynchronously. Called by the source thread.  <br /></td></tr>
 <tr class="separator:a2be69705010b23423760a63822b2f408"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa1b8f9b21955f6d398fab9ad1153f940" id="r_aa1b8f9b21955f6d398fab9ad1153f940"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1b8f9b21955f6d398fab9ad1153f940">AsyncInvoke</a> (Args... args)</td></tr>
 <tr class="memdesc:aa1b8f9b21955f6d398fab9ad1153f940"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke delegate function asynchronously. Do not wait for return value. Called by the source thread.  <br /></td></tr>
 <tr class="separator:aa1b8f9b21955f6d398fab9ad1153f940"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2402ad65efec989ec7d9bc671ec066ae" id="r_a2402ad65efec989ec7d9bc671ec066ae"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2402ad65efec989ec7d9bc671ec066ae">DelegateInvoke</a> (std::shared_ptr&lt; <a class="el" href="class_delegate_lib_1_1_delegate_msg.html">DelegateMsg</a> &gt; msg)</td></tr>
-<tr class="memdesc:a2402ad65efec989ec7d9bc671ec066ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the delegate function on the destination thread.  <br /></td></tr>
+<tr class="memdesc:a2402ad65efec989ec7d9bc671ec066ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the delegate function on the destination thread. Called by the destintation thread.  <br /></td></tr>
 <tr class="separator:a2402ad65efec989ec7d9bc671ec066ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9cb866c89077cbd0e55a22e8bcbb321a" id="r_a9cb866c89077cbd0e55a22e8bcbb321a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_delegate_lib_1_1_delegate_thread.html">DelegateThread</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9cb866c89077cbd0e55a22e8bcbb321a">GetThread</a> ()</td></tr>
-<tr class="memdesc:a9cb866c89077cbd0e55a22e8bcbb321a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the destination thread that the target function is invoked on.  <br /></td></tr>
-<tr class="separator:a9cb866c89077cbd0e55a22e8bcbb321a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2028e6668b1e1f4ab8538d9e4be230a" id="r_ae2028e6668b1e1f4ab8538d9e4be230a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_delegate_lib_1_1_delegate_thread.html">DelegateThread</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2028e6668b1e1f4ab8538d9e4be230a">GetThread</a> () noexcept</td></tr>
+<tr class="memdesc:ae2028e6668b1e1f4ab8538d9e4be230a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the destination thread that the target function is invoked on.  <br /></td></tr>
+<tr class="separator:ae2028e6668b1e1f4ab8538d9e4be230a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html">DelegateLib::DelegateMemberSp&lt; TClass, RetType(Args...)&gt;</a></td></tr>
 <tr class="memitem:a59cd7235ba47985fddfe207a077da59b inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_a59cd7235ba47985fddfe207a077da59b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a59cd7235ba47985fddfe207a077da59b">DelegateMemberSp</a> (<a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#aa7471802b453627af7ec648b138e902b">ObjectPtr</a> object, <a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#ae43267049d569b72b2f1c96db7ffa582">MemberFunc</a> func)</td></tr>
 <tr class="memdesc:a59cd7235ba47985fddfe207a077da59b inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor to create a class instance.  <br /></td></tr>
@@ -196,8 +199,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a1441cf9d3f8294e73138f88ec0296749 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor to create a class instance.  <br /></td></tr>
 <tr class="separator:a1441cf9d3f8294e73138f88ec0296749 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec2c3e4602c84a524c72e6f0833170e3 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_aec2c3e4602c84a524c72e6f0833170e3"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#aec2c3e4602c84a524c72e6f0833170e3">DelegateMemberSp</a> (const <a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a4954075a9bcc8e94918034d957c4dc65">ClassType</a> &amp;rhs)</td></tr>
-<tr class="memdesc:aec2c3e4602c84a524c72e6f0833170e3 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a copy of the current object.  <br /></td></tr>
+<tr class="memdesc:aec2c3e4602c84a524c72e6f0833170e3 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor that creates a copy of the given instance.  <br /></td></tr>
 <tr class="separator:aec2c3e4602c84a524c72e6f0833170e3 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab0cbc1c7a24738c53121efa1149e24f2 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_ab0cbc1c7a24738c53121efa1149e24f2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#ab0cbc1c7a24738c53121efa1149e24f2">DelegateMemberSp</a> (<a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a4954075a9bcc8e94918034d957c4dc65">ClassType</a> &amp;&amp;rhs) noexcept</td></tr>
+<tr class="memdesc:ab0cbc1c7a24738c53121efa1149e24f2 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor that transfers ownership of resources.  <br /></td></tr>
+<tr class="separator:ab0cbc1c7a24738c53121efa1149e24f2 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a030851905e967595316455be555e2837 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_a030851905e967595316455be555e2837"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a030851905e967595316455be555e2837">DelegateMemberSp</a> ()=default</td></tr>
 <tr class="memdesc:a030851905e967595316455be555e2837 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor creates an empty delegate.  <br /></td></tr>
 <tr class="separator:a030851905e967595316455be555e2837 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -213,15 +219,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a13b7d137db69a41e83da14c9b4f2fb06 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_a13b7d137db69a41e83da14c9b4f2fb06"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a4954075a9bcc8e94918034d957c4dc65">ClassType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a13b7d137db69a41e83da14c9b4f2fb06">operator=</a> (const <a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a4954075a9bcc8e94918034d957c4dc65">ClassType</a> &amp;rhs)</td></tr>
 <tr class="memdesc:a13b7d137db69a41e83da14c9b4f2fb06 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator that assigns the state of one object to another.  <br /></td></tr>
 <tr class="separator:a13b7d137db69a41e83da14c9b4f2fb06 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1231c33ac1e57666ead07191c3f100a8 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_a1231c33ac1e57666ead07191c3f100a8"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a1231c33ac1e57666ead07191c3f100a8">Empty</a> () const</td></tr>
-<tr class="memdesc:a1231c33ac1e57666ead07191c3f100a8 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the delegate is bound to a target function.  <br /></td></tr>
-<tr class="separator:a1231c33ac1e57666ead07191c3f100a8 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4adf6d82811ad2304e0fe01b955f07c2 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_a4adf6d82811ad2304e0fe01b955f07c2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a4adf6d82811ad2304e0fe01b955f07c2">Clear</a> ()</td></tr>
-<tr class="memdesc:a4adf6d82811ad2304e0fe01b955f07c2 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the target function.  <br /></td></tr>
-<tr class="separator:a4adf6d82811ad2304e0fe01b955f07c2 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a0169bdc6741af4bc6d868af60686f4 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_a5a0169bdc6741af4bc6d868af60686f4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a5a0169bdc6741af4bc6d868af60686f4">operator bool</a> () const</td></tr>
-<tr class="memdesc:a5a0169bdc6741af4bc6d868af60686f4 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion operator to <code>bool</code>.  <br /></td></tr>
-<tr class="separator:a5a0169bdc6741af4bc6d868af60686f4 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9030c87d5c2a045761694e1699829a09 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_a9030c87d5c2a045761694e1699829a09"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a4954075a9bcc8e94918034d957c4dc65">ClassType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a9030c87d5c2a045761694e1699829a09">operator=</a> (<a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a4954075a9bcc8e94918034d957c4dc65">ClassType</a> &amp;&amp;rhs) noexcept</td></tr>
+<tr class="memdesc:a9030c87d5c2a045761694e1699829a09 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move assignment operator that transfers ownership of resources.  <br /></td></tr>
+<tr class="separator:a9030c87d5c2a045761694e1699829a09 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5159e7d96232836114759797744dd933 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_a5159e7d96232836114759797744dd933"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a5159e7d96232836114759797744dd933">Empty</a> () const noexcept</td></tr>
+<tr class="memdesc:a5159e7d96232836114759797744dd933 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the delegate is bound to a target function.  <br /></td></tr>
+<tr class="separator:a5159e7d96232836114759797744dd933 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb180dc37eff3728a18b178154c892d8 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_aeb180dc37eff3728a18b178154c892d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#aeb180dc37eff3728a18b178154c892d8">Clear</a> () noexcept</td></tr>
+<tr class="memdesc:aeb180dc37eff3728a18b178154c892d8 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the target function.  <br /></td></tr>
+<tr class="separator:aeb180dc37eff3728a18b178154c892d8 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0464754344807471b4a4b96ac4622006 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4" id="r_a0464754344807471b4a4b96ac4622006"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a0464754344807471b4a4b96ac4622006">operator bool</a> () const noexcept</td></tr>
+<tr class="memdesc:a0464754344807471b4a4b96ac4622006 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implicit conversion operator to <code>bool</code>.  <br /></td></tr>
+<tr class="separator:a0464754344807471b4a4b96ac4622006 inherit pub_methods_class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_delegate_lib_1_1_delegate_3_01_ret_type_07_args_8_8_8_08_4"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_delegate_lib_1_1_delegate_3_01_ret_type_07_args_8_8_8_08_4')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_delegate_lib_1_1_delegate_3_01_ret_type_07_args_8_8_8_08_4.html">DelegateLib::Delegate&lt; RetType(Args...)&gt;</a></td></tr>
 <tr class="inherit_header pub_methods_class_delegate_lib_1_1_delegate_base"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_delegate_lib_1_1_delegate_base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_delegate_lib_1_1_delegate_base.html">DelegateLib::DelegateBase</a></td></tr>
 <tr class="memitem:a0b67663a7b8ab2e491c177235329ad8b inherit pub_methods_class_delegate_lib_1_1_delegate_base" id="r_a0b67663a7b8ab2e491c177235329ad8b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_base.html#a0b67663a7b8ab2e491c177235329ad8b">DelegateBase</a> ()=default</td></tr>
@@ -452,9 +461,13 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a copy of the current object. </p>
-<p>Clones the current instance of the class by creating a new object and copying the state of the current object to it. </p><dl class="section return"><dt>Returns</dt><dd>A pointer to a new <code>ClassType</code> instance. </dd></dl>
-<dl class="section post"><dt>Postcondition</dt><dd>The caller is responsible for deleting the clone object. </dd></dl>
+<p>Copy constructor that creates a copy of the given instance. </p>
+<p>This constructor initializes a new object as a copy of the provided <code>rhs</code> (right-hand side) object. The <code>rhs</code> object is used to set the state of the new instance. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">rhs</td><td>The object to copy from. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -553,7 +566,6 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>None. Function invoked asynchronously without waiting for completion. </dd></dl>
 
 </div>
 </div>
@@ -708,10 +720,10 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Invoke the delegate function on the destination thread. </p>
-<p>Each source thread call to <code>operator()</code> generate a call to <code><a class="el" href="#a2402ad65efec989ec7d9bc671ec066ae" title="Invoke the delegate function on the destination thread.">DelegateInvoke()</a></code> on the destination thread. Unlike <code>DelegateAsyncWait</code>, a lock is not required between source and destination <code>delegateMsg</code> access because the source thread is not waiting for the function call to complete. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Invoke the delegate function on the destination thread. Called by the destintation thread. </p>
+<p>Each source thread call to <code>operator()</code> generate a call to <code><a class="el" href="#a2402ad65efec989ec7d9bc671ec066ae" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">DelegateInvoke()</a></code> on the destination thread. Unlike <code>DelegateAsyncWait</code>, a lock is not required between source and destination <code>delegateMsg</code> access because the source thread is not waiting for the function call to complete. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">msg</td><td>The delegate message created and sent within <code><a class="el" href="#a2be69705010b23423760a63822b2f408" title="Invoke the bound delegate function asynchronously.">operator()(Args... args)</a></code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">msg</td><td>The delegate message created and sent within <code><a class="el" href="#a2be69705010b23423760a63822b2f408" title="Invoke the bound delegate function asynchronously. Called by the source thread.">operator()(Args... args)</a></code>. </td></tr>
   </table>
   </dd>
 </dl>
@@ -748,12 +760,12 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>Get the synchronous target invoke flag. </p>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if <code><a class="el" href="#a2be69705010b23423760a63822b2f408" title="Invoke the bound delegate function asynchronously.">operator()(Args... args)</a></code> is to invoke synchronously. <code>false</code> means asychronously by sending a message. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if <code><a class="el" href="#a2be69705010b23423760a63822b2f408" title="Invoke the bound delegate function asynchronously. Called by the source thread.">operator()(Args... args)</a></code> is to invoke synchronously. <code>false</code> means asychronously by sending a message. </dd></dl>
 
 </div>
 </div>
-<a id="a9cb866c89077cbd0e55a22e8bcbb321a" name="a9cb866c89077cbd0e55a22e8bcbb321a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9cb866c89077cbd0e55a22e8bcbb321a">&#9670;&#160;</a></span>GetThread()</h2>
+<a id="ae2028e6668b1e1f4ab8538d9e4be230a" name="ae2028e6668b1e1f4ab8538d9e4be230a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2028e6668b1e1f4ab8538d9e4be230a">&#9670;&#160;</a></span>GetThread()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -772,7 +784,7 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -806,8 +818,8 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Invoke the bound delegate function asynchronously. </p>
-<p>Invoke delegate function asynchronously and do not wait for return value. This function is called by the source thread. Dispatches the delegate data into the destination thread message queue. <code><a class="el" href="#a2402ad65efec989ec7d9bc671ec066ae" title="Invoke the delegate function on the destination thread.">DelegateInvoke()</a></code> must be called by the destination thread to invoke the target function.</p>
+<p>Invoke the bound delegate function asynchronously. Called by the source thread. </p>
+<p>Invoke delegate function asynchronously and do not wait for return value. This function is called by the source thread. Dispatches the delegate data into the destination thread message queue. <code><a class="el" href="#a2402ad65efec989ec7d9bc671ec066ae" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">DelegateInvoke()</a></code> must be called by the destination thread to invoke the target function.</p>
 <p>The <code><a class="el" href="class_delegate_lib_1_1_delegate_async_msg.html" title="Stores all function arguments suitable for non-blocking asynchronous calls. Argument data is stored i...">DelegateAsyncMsg</a></code> duplicates and copies the function arguments into heap memory. The source thread is not required to place function arguments into the heap. The delegate library performs all necessary heap and argument coping for the caller. Ensure complex argument data types can be safely copied by creating a copy constructor if necessary. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>The function arguments, if any. </td></tr>
@@ -823,8 +835,44 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 
 </div>
 </div>
+<a id="a6563fdeb2a74bdfc8fd7aabe3dd38a43" name="a6563fdeb2a74bdfc8fd7aabe3dd38a43"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6563fdeb2a74bdfc8fd7aabe3dd38a43">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TClass , class RetType , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="#abb7c35431237278eb15b6af710193a11">ClassType</a> &amp; <a class="el" href="struct_delegate_lib_1_1_delegate_member_sp_async.html">DelegateLib::DelegateMemberSpAsync</a>&lt; TClass, RetType(Args...)&gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#abb7c35431237278eb15b6af710193a11">ClassType</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>rhs</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move assignment operator that transfers ownership of resources. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">rhs</td><td>The object to move from. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the current object. </dd></dl>
+
+</div>
+</div>
 <a id="adb92f14347b35af2b3154103b1793196" name="adb92f14347b35af2b3154103b1793196"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adb92f14347b35af2b3154103b1793196">&#9670;&#160;</a></span>operator=()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#adb92f14347b35af2b3154103b1793196">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

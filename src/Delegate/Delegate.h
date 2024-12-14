@@ -91,6 +91,10 @@ public:
     /// @param[in] rhs The object to copy from.
     DelegateFree(const ClassType& rhs) { Assign(rhs); }
 
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateFree(ClassType&& rhs) noexcept : m_func(rhs.m_func) { }
+
     /// @brief Default constructor creates an empty delegate.
     DelegateFree() = default;
 
@@ -122,7 +126,7 @@ public:
     /// @param[in] args - the function arguments, if any.
     /// @return The bound function return value, if any.
     virtual RetType operator()(Args... args) override {
-        return std::invoke(m_func, args...);
+        return std::invoke(m_func, std::forward<Args>(args)...);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -135,6 +139,16 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+        ClassType& operator=(ClassType&& rhs) noexcept {
+            if (&rhs != this) {
+                m_func = rhs.m_func;
+            }
+            return *this;
+        }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -146,15 +160,15 @@ public:
 
     /// @brief Check if the delegate is bound to a target function.
     /// @return `true` if the delegate has a target function, `false` otherwise.
-    bool Empty() const { return !m_func; }
+    bool Empty() const noexcept { return !m_func; }
 
     /// @brief Clear the target function.
     /// @post The delegate is empty.
-    void Clear() { m_func = nullptr; }
+    void Clear() noexcept { m_func = nullptr; }
 
     /// @brief Implicit conversion operator to `bool`.
     /// @return `true` if the object is not empty, `false` if the object is empty.
-    explicit operator bool() const { return !Empty(); }
+    explicit operator bool() const noexcept { return !Empty(); }
 
 private:
     /// @brief Pointer to a free function, representing the bound target function.
@@ -187,12 +201,16 @@ public:
     /// @param[in] func The target const member function to store.
     DelegateMember(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateMember(const ClassType& rhs) { Assign(rhs); }
+
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateMember(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) { }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateMember() = default;
@@ -241,7 +259,7 @@ public:
     /// @param[in] args - the function arguments, if any.
     /// @return The bound function return value, if any.
     virtual RetType operator()(Args... args) override {
-        return std::invoke(m_func, m_object, args...);
+        return std::invoke(m_func, m_object, std::forward<Args>(args)...);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -250,6 +268,17 @@ public:
     ClassType& operator=(const ClassType& rhs) {
         if (&rhs != this) {
             Assign(rhs);
+        }
+        return *this;
+    }
+
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            m_object = rhs.m_object;
+            m_func = rhs.m_func;  
         }
         return *this;
     }
@@ -266,15 +295,15 @@ public:
 
     /// @brief Check if the delegate is bound to a target function.
     /// @return `true` if the delegate has a target function, `false` otherwise.
-    bool Empty() const { return !(m_object && m_func); }
+    bool Empty() const noexcept { return !(m_object && m_func); }
 
     /// @brief Clear the target function.
     /// @post The delegate is empty.
-    void Clear() { m_object = nullptr; m_func = nullptr; }
+    void Clear() noexcept { m_object = nullptr; m_func = nullptr; }
 
     /// @brief Implicit conversion operator to `bool`.
     /// @return `true` if the object is not empty, `false` if the object is empty.
-    explicit operator bool() const { return !Empty(); }
+    explicit operator bool() const noexcept { return !Empty(); }
 
 private:
     /// Pointer to a class object, representing the bound target instance.
@@ -310,12 +339,16 @@ public:
     /// @param[in] func The target const member function to store.
     DelegateMemberSp(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateMemberSp(const ClassType& rhs) { Assign(rhs); }
+
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateMemberSp(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) { }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateMemberSp() = default;
@@ -364,7 +397,7 @@ public:
     /// @param[in] args - the function arguments, if any.
     /// @return The bound function return value, if any.
     virtual RetType operator()(Args... args) override {
-        return std::invoke(m_func, m_object, args...);
+        return std::invoke(m_func, m_object, std::forward<Args>(args)...);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -373,6 +406,17 @@ public:
     ClassType& operator=(const ClassType& rhs) {
         if (&rhs != this) {
             Assign(rhs);
+        }
+        return *this;
+    }
+
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            m_object = rhs.m_object;
+            m_func = rhs.m_func;
         }
         return *this;
     }
@@ -389,15 +433,15 @@ public:
 
     /// @brief Check if the delegate is bound to a target function.
     /// @return `true` if the delegate has a target function, `false` otherwise.
-    bool Empty() const { return !(m_object && m_func); }
+    bool Empty() const noexcept { return !(m_object && m_func); }
 
     /// @brief Clear the target function.
     /// @post The delegate is empty.
-    void Clear() { m_object = nullptr; m_func = nullptr; }
+    void Clear() noexcept { m_object = nullptr; m_func = nullptr; }
 
     /// @brief Implicit conversion operator to `bool`.
     /// @return `true` if the object is not empty, `false` if the object is empty.
-    explicit operator bool() const { return !Empty(); }
+    explicit operator bool() const noexcept { return !Empty(); }
 
 private:
     /// Shared pointer to a class object, representing the bound target instance.
@@ -426,7 +470,7 @@ class DelegateFunction; // Not defined
 /// 
 /// Depending on how usage, this may never be a issue but its worth noting. 
 /// 
-/// The `DelegateMember<>` class has no such limitations and works under all conditions,
+/// The other delegate class has no such limitations and works under all conditions,
 /// including comparing two instance functions of the same class. 
 /// 
 /// @tparam RetType The return type of the bound delegate function.
@@ -441,12 +485,16 @@ public:
     /// @param[in] func The target `std::function` to store.
     DelegateFunction(FunctionType func) { Bind(func); }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateFunction(const ClassType& rhs) { Assign(rhs); }
+
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateFunction(ClassType&& rhs) noexcept : m_func(rhs.m_func) { }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateFunction() = default;
@@ -494,6 +542,16 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            m_func = rhs.m_func;
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -515,15 +573,15 @@ public:
 
     /// @brief Check if the delegate is bound to a target function.
     /// @return `true` if the delegate has a target function, `false` otherwise.
-    bool Empty() const { return !m_func; }
+    bool Empty() const noexcept { return !m_func; }
 
     /// @brief Clear the target function.
     /// @post The delegate is empty.
-    void Clear() { m_func = nullptr; }
+    void Clear() noexcept { m_func = nullptr; }
 
     /// @brief Implicit conversion operator to `bool`.
     /// @return `true` if the object is not empty, `false` if the object is empty.
-    explicit operator bool() const { return !Empty(); }
+    explicit operator bool() const noexcept { return !Empty(); }
 
 private:
     /// A std::function instance, representing the bound target function.

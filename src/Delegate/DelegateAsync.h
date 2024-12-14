@@ -36,9 +36,7 @@ public:
     /// @param[in] invoker - the invoker instance
     /// @param[in] args - a parameter pack of all target function arguments
     DelegateAsyncMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsg(invoker),
-        m_args(make_tuple_heap(m_heapMem, m_start, args...))
-    {
-    }
+        m_args(make_tuple_heap(m_heapMem, m_start, std::forward<Args>(args)...)) { }
 
     virtual ~DelegateAsyncMsg() = default;
 
@@ -88,6 +86,12 @@ public:
         Assign(rhs);
     }
 
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateFreeAsync(ClassType&& rhs) noexcept : 
+        BaseType(rhs), m_thread(rhs.m_thread) {
+    }
+
     DelegateFreeAsync() = delete;
 
     /// @brief Bind a free function to the delegate.
@@ -131,6 +135,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_thread = rhs.m_thread;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -157,18 +172,15 @@ public:
     /// @post Do not use the return value as its not valid.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
-        }
-        else
-        {
+            return BaseType::operator()(std::forward<Args>(args)...);
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread
-            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -191,9 +203,8 @@ public:
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
     /// Called by the source thread.
     /// @param[in] args The function arguments, if any.
-    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
-        operator()(args...);   
+        operator()(std::forward<Args>(args)...);
     }
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 
@@ -219,7 +230,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() { return m_thread; }
+    DelegateThread& GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.
@@ -245,7 +256,7 @@ template <class C, class R>
 struct DelegateMemberAsync; // Not defined
 
 /// @brief `DelegateMemberAsync<>` class asynchronously invokes a class member target function.
-/// @tprarm TClass The class type that contains the member function.
+/// @tparam TClass The class type that contains the member function.
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class TClass, class RetType, class... Args>
@@ -271,11 +282,11 @@ public:
     DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
         { Bind(object, func, thread); }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateMemberAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
@@ -337,6 +348,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_thread = rhs.m_thread;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -347,7 +369,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// @brief Invoke the bound delegate function asynchronously. 
+    /// @brief Invoke the bound delegate function asynchronously. Called by the source thread.
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
@@ -363,18 +385,15 @@ public:
     /// @post Do not use the return value as its not valid.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
-        }
-        else
-        {
+            return BaseType::operator()(std::forward<Args>(args)...);
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread
-            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -397,12 +416,12 @@ public:
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
     /// Called by the source thread.
     /// @param[in] args The function arguments, if any.
-    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
-        operator()(args...);   
+        operator()(std::forward<Args>(args)...);
     }
 
-    /// @brief Invoke the delegate function on the destination thread. 
+    /// @brief Invoke the delegate function on the destination thread. Called by the 
+    /// destintation thread.
     /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
     /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
     /// source and destination `delegateMsg` access because the source thread is not waiting 
@@ -424,7 +443,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() { return m_thread; }
+    DelegateThread& GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.
@@ -478,11 +497,11 @@ public:
         Bind(object, func, thread);
     }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateMemberSpAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
@@ -543,6 +562,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_thread = rhs.m_thread;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -553,7 +583,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// @brief Invoke the bound delegate function asynchronously. 
+    /// @brief Invoke the bound delegate function asynchronously. Called by the source thread.
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
@@ -569,18 +599,15 @@ public:
     /// @post Do not use the return value as its not valid.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
-        }
-        else
-        {
+            return BaseType::operator()(std::forward<Args>(args)...);
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread
-            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -603,12 +630,12 @@ public:
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
     /// Called by the source thread.
     /// @param[in] args The function arguments, if any.
-    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
-        operator()(args...);   
+        operator()(std::forward<Args>(args)...);
     }
 
-    /// @brief Invoke the delegate function on the destination thread. 
+    /// @brief Invoke the delegate function on the destination thread. Called by the 
+    /// destintation thread.
     /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
     /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
     /// source and destination `delegateMsg` access because the source thread is not waiting 
@@ -630,7 +657,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() { return m_thread; }
+    DelegateThread& GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.
@@ -679,11 +706,11 @@ public:
         Bind(func, thread);
     }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateFunctionAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
@@ -732,6 +759,17 @@ public:
         return *this;
     }
 
+    /// @brief Move assignment operator that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    /// @return A reference to the current object.
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            BaseType::operator=(std::move(rhs));
+            m_thread = rhs.m_thread;    // Use the resource
+        }
+        return *this;
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -742,7 +780,7 @@ public:
             BaseType::operator==(rhs);
     }
 
-    /// @brief Invoke the bound delegate function asynchronously. 
+    /// @brief Invoke the bound delegate function asynchronously. Called by the source thread.
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
@@ -758,18 +796,15 @@ public:
     /// @post Do not use the return value as its not valid.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
-        if (this->GetSync())
-        {
+        if (this->GetSync()) {
             // Invoke the target function directly
-            return BaseType::operator()(args...);
-        }
-        else
-        {
+            return BaseType::operator()(std::forward<Args>(args)...);
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
             // Create a new message instance for sending to the destination thread
-            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, args...);
+            auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
 
             // Dispatch message onto the callback destination thread. DelegateInvoke()
             // will be called by the destintation thread. 
@@ -792,12 +827,12 @@ public:
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
     /// Called by the source thread.
     /// @param[in] args The function arguments, if any.
-    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
-        operator()(args...);   
+        operator()(std::forward<Args>(args)...);
     }
 
-    /// @brief Invoke the delegate function on the destination thread. 
+    /// @brief Invoke the delegate function on the destination thread. Called by the 
+    /// destintation thread.
     /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
     /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
     /// source and destination `delegateMsg` access because the source thread is not waiting 
@@ -819,7 +854,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() { return m_thread; }
+    DelegateThread& GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.

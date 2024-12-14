@@ -16,8 +16,9 @@ var class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_
     [ "Clone", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#acbd04f7121278e2dae40311c4f303d9b", null ],
     [ "DelegateInvoke", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a97ee00052f6de71e7910784dce3b0fa4", null ],
     [ "GetSync", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#aec8a8636e131eb2746311426dacb7490", null ],
-    [ "GetThread", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a6af16d159e7441797be012cfafb7eb82", null ],
+    [ "GetThread", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#aca30b381dee966dc0dab34e41080af4e", null ],
     [ "operator()", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#aa73f04631d245b5bf76b6e3025a0b5e5", null ],
+    [ "operator=", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a9cd118df91aa22e6c3d4885b1e39329c", null ],
     [ "operator=", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a46343959b0ea03ef02f1ebe3f8182814", null ],
     [ "operator==", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a367221c5c3b36d7aae675cadaa2c27ba", null ],
     [ "SetSync", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a93e6a8587d6f62f39f9dcf6e0c016d9b", null ]
