@@ -236,7 +236,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() { return m_thread; }
+    DelegateThread& GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.
@@ -453,7 +453,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() { return m_thread; }
+    DelegateThread& GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.
@@ -671,7 +671,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() { return m_thread; }
+    DelegateThread& GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.
@@ -872,7 +872,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() { return m_thread; }
+    DelegateThread& GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.

@@ -160,15 +160,15 @@ public:
 
     /// @brief Check if the delegate is bound to a target function.
     /// @return `true` if the delegate has a target function, `false` otherwise.
-    bool Empty() const { return !m_func; }
+    bool Empty() const noexcept { return !m_func; }
 
     /// @brief Clear the target function.
     /// @post The delegate is empty.
-    void Clear() { m_func = nullptr; }
+    void Clear() noexcept { m_func = nullptr; }
 
     /// @brief Implicit conversion operator to `bool`.
     /// @return `true` if the object is not empty, `false` if the object is empty.
-    explicit operator bool() const { return !Empty(); }
+    explicit operator bool() const noexcept { return !Empty(); }
 
 private:
     /// @brief Pointer to a free function, representing the bound target function.
@@ -295,15 +295,15 @@ public:
 
     /// @brief Check if the delegate is bound to a target function.
     /// @return `true` if the delegate has a target function, `false` otherwise.
-    bool Empty() const { return !(m_object && m_func); }
+    bool Empty() const noexcept { return !(m_object && m_func); }
 
     /// @brief Clear the target function.
     /// @post The delegate is empty.
-    void Clear() { m_object = nullptr; m_func = nullptr; }
+    void Clear() noexcept { m_object = nullptr; m_func = nullptr; }
 
     /// @brief Implicit conversion operator to `bool`.
     /// @return `true` if the object is not empty, `false` if the object is empty.
-    explicit operator bool() const { return !Empty(); }
+    explicit operator bool() const noexcept { return !Empty(); }
 
 private:
     /// Pointer to a class object, representing the bound target instance.
@@ -433,15 +433,15 @@ public:
 
     /// @brief Check if the delegate is bound to a target function.
     /// @return `true` if the delegate has a target function, `false` otherwise.
-    bool Empty() const { return !(m_object && m_func); }
+    bool Empty() const noexcept { return !(m_object && m_func); }
 
     /// @brief Clear the target function.
     /// @post The delegate is empty.
-    void Clear() { m_object = nullptr; m_func = nullptr; }
+    void Clear() noexcept { m_object = nullptr; m_func = nullptr; }
 
     /// @brief Implicit conversion operator to `bool`.
     /// @return `true` if the object is not empty, `false` if the object is empty.
-    explicit operator bool() const { return !Empty(); }
+    explicit operator bool() const noexcept { return !Empty(); }
 
 private:
     /// Shared pointer to a class object, representing the bound target instance.
@@ -573,15 +573,15 @@ public:
 
     /// @brief Check if the delegate is bound to a target function.
     /// @return `true` if the delegate has a target function, `false` otherwise.
-    bool Empty() const { return !m_func; }
+    bool Empty() const noexcept { return !m_func; }
 
     /// @brief Clear the target function.
     /// @post The delegate is empty.
-    void Clear() { m_func = nullptr; }
+    void Clear() noexcept { m_func = nullptr; }
 
     /// @brief Implicit conversion operator to `bool`.
     /// @return `true` if the object is not empty, `false` if the object is empty.
-    explicit operator bool() const { return !Empty(); }
+    explicit operator bool() const noexcept { return !Empty(); }
 
 private:
     /// A std::function instance, representing the bound target function.

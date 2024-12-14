@@ -343,11 +343,18 @@ public:
     /// Returns `true` if asynchronous function successfully invoked on the target thread
     /// @return `true` if the target asynchronous function call succeeded. `false` if 
     /// the timeout expired before the target function could be invoked.
-    bool IsSuccess() { return m_success; }
+    bool IsSuccess() noexcept { return m_success; }
 
     /// Get the asynchronous function return value
     /// @return The destination thraed target function return value
-    RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
+    RetType GetRetVal() noexcept {
+        try {
+            return std::any_cast<RetType>(m_retVal);
+        }
+        catch (const std::bad_any_cast&) {
+            return RetType{};  // Return a default value if error
+        }
+    }
 
 private:
     /// Set to `true` if async function call succeeds
@@ -589,11 +596,18 @@ public:
     /// Returns `true` if asynchronous function successfully invoked on the target thread
     /// @return `true` if the target asynchronous function call succeeded. `false` if 
     /// the timeout expired before the target function could be invoked.
-    bool IsSuccess() { return m_success; }
+    bool IsSuccess() noexcept { return m_success; }
 
     /// Get the asynchronous function return value
     /// @return The destination thraed target function return value
-    RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
+    RetType GetRetVal() noexcept {
+        try {
+            return std::any_cast<RetType>(m_retVal);
+        }
+        catch (const std::bad_any_cast&) {
+            return RetType{};  // Return a default value if error
+        }
+    }
 
 private:
     /// Set to `true` if async function call succeeds
@@ -835,11 +849,18 @@ public:
     /// Returns `true` if asynchronous function successfully invoked on the target thread
     /// @return `true` if the target asynchronous function call succeeded. `false` if 
     /// the timeout expired before the target function could be invoked.
-    bool IsSuccess() { return m_success; }
+    bool IsSuccess() noexcept { return m_success; }
 
     /// Get the asynchronous function return value
     /// @return The destination thraed target function return value
-    RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
+    RetType GetRetVal() noexcept {
+        try {
+            return std::any_cast<RetType>(m_retVal);
+        }
+        catch (const std::bad_any_cast&) {
+            return RetType{};  // Return a default value if error
+        }
+    }
 
 private:
     /// Set to `true` if async function call succeeds
@@ -1072,11 +1093,18 @@ public:
     /// Returns `true` if asynchronous function successfully invoked on the target thread
     /// @return `true` if the target asynchronous function call succeeded. `false` if 
     /// the timeout expired before the target function could be invoked.
-    bool IsSuccess() { return m_success; }
+    bool IsSuccess() noexcept { return m_success; }
 
     /// Get the asynchronous function return value
     /// @return The destination thraed target function return value
-    RetType GetRetVal() { return std::any_cast<RetType>(m_retVal); }
+    RetType GetRetVal() noexcept {
+        try {
+            return std::any_cast<RetType>(m_retVal);
+        }
+        catch (const std::bad_any_cast&) {
+            return RetType{};  // Return a default value if error
+        }
+    }
 
 private:
     /// Set to `true` if async function call succeeds
