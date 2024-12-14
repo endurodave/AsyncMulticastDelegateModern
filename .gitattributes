@@ -2,4 +2,9 @@
 *.h linguist-language=C++
 *.hpp linguist-language=C++
 *.cc linguist-language=C++
+
 *.html linguist-detectable=false 
+*.tex linguist-detectable=false 
+
+# Exclude build/ directory from language stats
+doxygen/* linguist-ignore
