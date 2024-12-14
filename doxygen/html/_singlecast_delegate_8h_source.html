@@ -120,7 +120,7 @@ $(function(){initNavTree('_singlecast_delegate_8h_source.html',''); initResizabl
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
 <div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#a29fd174ba1060d37e164e45ed3e9b383">   24</a></span>    RetType <a class="code hl_function" href="class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#a29fd174ba1060d37e164e45ed3e9b383">operator()</a>(Args... args) {</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keywordflow">return</span> (*m_delegate)(args...);  <span class="comment">// Invoke delegate callback</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        <span class="keywordflow">return</span> (*m_delegate)(std::forward&lt;Args&gt;(args)...);  <span class="comment">// Invoke delegate callback</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    }</div>
 </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>

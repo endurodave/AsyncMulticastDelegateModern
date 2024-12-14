@@ -1,4 +1,5 @@
 #include "DelegateLib.h"
+#include "UnitTestCommon.h"
 #include <iostream>
 #include "WorkerThreadStd.h"
 #ifdef WIN32
@@ -2571,8 +2572,16 @@ void DelegateMemberAsyncWaitTests()
 		int ret = MemberFuncIntWithReturn5Delegate(TEST_INT, TEST_INT, TEST_INT, TEST_INT, TEST_INT);
 }
 
+extern void Delegate_UT();
+extern void DelegateAsync_UT();
+extern void DelegateAsyncWait_UT();
+
 void DelegateUnitTests()
 {
+	Delegate_UT();
+	DelegateAsync_UT();
+	DelegateAsyncWait_UT();
+
 	testThread.CreateThread();
 
 #ifdef WIN32

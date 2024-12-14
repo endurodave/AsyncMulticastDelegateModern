@@ -203,7 +203,6 @@ public:
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
     /// Called by the source thread.
     /// @param[in] args The function arguments, if any.
-    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
         operator()(std::forward<Args>(args)...);
     }
@@ -257,7 +256,7 @@ template <class C, class R>
 struct DelegateMemberAsync; // Not defined
 
 /// @brief `DelegateMemberAsync<>` class asynchronously invokes a class member target function.
-/// @tprarm TClass The class type that contains the member function.
+/// @tparam TClass The class type that contains the member function.
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class TClass, class RetType, class... Args>
@@ -283,11 +282,11 @@ public:
     DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread)
         { Bind(object, func, thread); }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateMemberAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
@@ -417,7 +416,6 @@ public:
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
     /// Called by the source thread.
     /// @param[in] args The function arguments, if any.
-    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
         operator()(std::forward<Args>(args)...);
     }
@@ -499,11 +497,11 @@ public:
         Bind(object, func, thread);
     }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateMemberSpAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
@@ -632,7 +630,6 @@ public:
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
     /// Called by the source thread.
     /// @param[in] args The function arguments, if any.
-    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
         operator()(std::forward<Args>(args)...);
     }
@@ -709,11 +706,11 @@ public:
         Bind(func, thread);
     }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateFunctionAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
@@ -830,7 +827,6 @@ public:
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
     /// Called by the source thread.
     /// @param[in] args The function arguments, if any.
-    /// @return None. Function invoked asynchronously without waiting for completion.
     void AsyncInvoke(Args... args) {
         operator()(std::forward<Args>(args)...);
     }

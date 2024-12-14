@@ -201,11 +201,11 @@ public:
     /// @param[in] func The target const member function to store.
     DelegateMember(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateMember(const ClassType& rhs) { Assign(rhs); }
 
     /// @brief Move constructor that transfers ownership of resources.
@@ -339,11 +339,11 @@ public:
     /// @param[in] func The target const member function to store.
     DelegateMemberSp(ObjectPtr object, ConstMemberFunc func) { Bind(object, func); }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateMemberSp(const ClassType& rhs) { Assign(rhs); }
 
     /// @brief Move constructor that transfers ownership of resources.
@@ -485,11 +485,11 @@ public:
     /// @param[in] func The target `std::function` to store.
     DelegateFunction(FunctionType func) { Bind(func); }
 
-    /// @brief Creates a copy of the current object.
-    /// @details Clones the current instance of the class by creating a new object
-    /// and copying the state of the current object to it. 
-    /// @return A pointer to a new `ClassType` instance.
-    /// @post The caller is responsible for deleting the clone object.
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateFunction(const ClassType& rhs) { Assign(rhs); }
 
     /// @brief Move constructor that transfers ownership of resources.
