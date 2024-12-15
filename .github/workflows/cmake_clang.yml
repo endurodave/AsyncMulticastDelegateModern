@@ -3,10 +3,10 @@ name: Clang
 on:
   push:
     branches:
-      - master  # Trigger on push to 'master' branch
+      - wip/refactoring  # Trigger on push 
   pull_request:
     branches:
-      - master  # Trigger on pull request targeting 'master' branch
+      - wip/refactoring   # Trigger on pull 
 
 jobs:
   build:
