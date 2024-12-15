@@ -90,6 +90,7 @@ public:
     /// @param[in] rhs The object to move from.
     DelegateFreeAsync(ClassType&& rhs) noexcept : 
         BaseType(rhs), m_thread(rhs.m_thread) {
+        rhs.Clear();
     }
 
     DelegateFreeAsync() = delete;
@@ -290,6 +291,13 @@ public:
     DelegateMemberAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
+    }
+
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateMemberAsync(ClassType&& rhs) noexcept :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        rhs.Clear();
     }
 
     DelegateMemberAsync() = delete;
@@ -507,9 +515,16 @@ public:
         Assign(rhs);
     }
 
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateMemberSpAsync(ClassType&& rhs) noexcept :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        rhs.Clear();
+    }
+
     DelegateMemberSpAsync() = delete;
 
-    /// @brief Bind a const member function to the delegate.
+    /// @brief Bind a member function to the delegate.
     /// @details This method associates a member function (`func`) with the delegate. 
     /// Once the function is bound, the delegate can be used to invoke the function.
     /// @param[in] object The target object instance.
@@ -714,6 +729,13 @@ public:
     DelegateFunctionAsync(const ClassType& rhs) :
         BaseType(rhs), m_thread(rhs.m_thread) {
         Assign(rhs);
+    }
+
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateFunctionAsync(ClassType&& rhs) noexcept :
+        BaseType(rhs), m_thread(rhs.m_thread) {
+        rhs.Clear();
     }
 
     DelegateFunctionAsync() = delete;

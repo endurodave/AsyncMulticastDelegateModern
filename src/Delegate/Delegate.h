@@ -93,7 +93,7 @@ public:
 
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
-    DelegateFree(ClassType&& rhs) noexcept : m_func(rhs.m_func) { }
+    DelegateFree(ClassType&& rhs) noexcept : m_func(rhs.m_func) { rhs.Clear(); }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateFree() = default;
@@ -142,12 +142,13 @@ public:
     /// @brief Move assignment operator that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
     /// @return A reference to the current object.
-        ClassType& operator=(ClassType&& rhs) noexcept {
-            if (&rhs != this) {
-                m_func = rhs.m_func;
-            }
-            return *this;
+    ClassType& operator=(ClassType&& rhs) noexcept {
+        if (&rhs != this) {
+            m_func = rhs.m_func;
+            rhs.Clear();
         }
+        return *this;
+    }
 
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
@@ -210,7 +211,7 @@ public:
 
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
-    DelegateMember(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) { }
+    DelegateMember(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) { rhs.Clear(); }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateMember() = default;
@@ -278,7 +279,8 @@ public:
     ClassType& operator=(ClassType&& rhs) noexcept {
         if (&rhs != this) {
             m_object = rhs.m_object;
-            m_func = rhs.m_func;  
+            m_func = rhs.m_func;
+            rhs.Clear();
         }
         return *this;
     }
@@ -348,7 +350,7 @@ public:
 
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
-    DelegateMemberSp(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) { }
+    DelegateMemberSp(ClassType&& rhs) noexcept : m_object(rhs.m_object), m_func(rhs.m_func) { rhs.Clear(); }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateMemberSp() = default;
@@ -417,6 +419,7 @@ public:
         if (&rhs != this) {
             m_object = rhs.m_object;
             m_func = rhs.m_func;
+            rhs.Clear();
         }
         return *this;
     }
@@ -494,7 +497,7 @@ public:
 
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
-    DelegateFunction(ClassType&& rhs) noexcept : m_func(rhs.m_func) { }
+    DelegateFunction(ClassType&& rhs) noexcept : m_func(rhs.m_func) { rhs.Clear(); }
 
     /// @brief Default constructor creates an empty delegate.
     DelegateFunction() = default;
@@ -548,6 +551,7 @@ public:
     ClassType& operator=(ClassType&& rhs) noexcept {
         if (&rhs != this) {
             m_func = rhs.m_func;
+            rhs.Clear();
         }
         return *this;
     }

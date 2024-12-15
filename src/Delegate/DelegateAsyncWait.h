@@ -143,6 +143,7 @@ public:
     /// @param[in] rhs The object to move from.
     DelegateFreeAsyncWait(ClassType&& rhs) noexcept :
         BaseType(rhs), m_timeout(rhs.m_timeout) {
+        rhs.Clear();
     }
 
     DelegateFreeAsyncWait() = delete;
@@ -371,27 +372,65 @@ public:
     using ClassType = DelegateMemberAsyncWait<TClass, RetType(Args...)>;
     using BaseType = DelegateMemberAsync<TClass, RetType(Args...)>;
 
-    // Contructors take a class instance, member function, and delegate thread
+    /// @brief Constructor to create a class instance.
+    /// @param[in] object The target object pointer to store.
+    /// @param[in] func The target member function to store.
+    /// @param[in] thread The execution thread to invoke `func`.
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
     DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
+
+    /// @brief Constructor to create a class instance.
+    /// @param[in] object The target object pointer to store.
+    /// @param[in] func The target const member function to store.
+    /// @param[in] thread The execution thread to invoke `func`.
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
     DelegateMemberAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
+
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateMemberAsyncWait(const ClassType& rhs) :
         BaseType(rhs) {
         Assign(rhs);
     }
+
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateMemberAsyncWait(ClassType&& rhs) noexcept :
+        BaseType(rhs), m_timeout(rhs.m_timeout) {
+        rhs.Clear();
+    }
+
     DelegateMemberAsyncWait() = delete;
 
-    /// Bind a member function to a delegate. 
+    /// @brief Bind a const member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] object The target object instance.
+    /// @param[in] func The function to bind to the delegate. This function must match 
+    /// the signature of the delegate.
+    /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
         BaseType::Bind(object, func, thread);
     }
 
-    /// Bind a const member function to a delegate. 
+    /// @brief Bind a member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] object The target object instance.
+    /// @param[in] func The member function to bind to the delegate. This function must 
+    /// match the signature of the delegate.
+    /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) {
         BaseType::Bind(object, func, thread);
     }
@@ -610,27 +649,65 @@ public:
     using ClassType = DelegateMemberSpAsyncWait<TClass, RetType(Args...)>;
     using BaseType = DelegateMemberSpAsync<TClass, RetType(Args...)>;
 
-    // Contructors take a class instance, member function, and delegate thread
+    /// @brief Constructor to create a class instance.
+    /// @param[in] object The target class shared pointer to store.
+    /// @param[in] func The target member function to store.
+    /// @param[in] thread The execution thread to invoke `func`.
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
     DelegateMemberSpAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
+
+    /// @brief Constructor to create a class instance.
+    /// @param[in] object The target class shared pointer to store.
+    /// @param[in] func The target member function to store.
+    /// @param[in] thread The execution thread to invoke `func`.
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
     DelegateMemberSpAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
         BaseType(object, func, thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
+
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateMemberSpAsyncWait(const ClassType& rhs) :
         BaseType(rhs) {
         Assign(rhs);
     }
+
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateMemberSpAsyncWait(ClassType&& rhs) noexcept :
+        BaseType(rhs), m_timeout(rhs.m_timeout) {
+        rhs.Clear();
+    }
+
     DelegateMemberSpAsyncWait() = delete;
 
-    /// Bind a member function to a delegate. 
+    /// @brief Bind a member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] object The target object instance.
+    /// @param[in] func The function to bind to the delegate. This function must match 
+    /// the signature of the delegate.
+    /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
         BaseType::Bind(object, func, thread);
     }
 
-    /// Bind a const member function to a delegate. 
+    /// @brief Bind a const member function to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] object The target object instance.
+    /// @param[in] func The function to bind to the delegate. This function must match 
+    /// the signature of the delegate.
+    /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) {
         BaseType::Bind(object, func, thread);
     }
@@ -849,18 +926,41 @@ public:
     using ClassType = DelegateFunctionAsyncWait<RetType(Args...)>;
     using BaseType = DelegateFunctionAsync<RetType(Args...)>;
 
-    // Contructors take a std::function, delegate thread and timeout
+    /// @brief Constructor to create a class instance.
+    /// @param[in] func The target `std::function` to store.
+    /// @param[in] thread The execution thread to invoke `func`.
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
     DelegateFunctionAsyncWait(FunctionType func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
         BaseType(func, thread), m_timeout(timeout) {
         Bind(func, thread);
     }
+
+    /// @brief Copy constructor that creates a copy of the given instance.
+    /// @details This constructor initializes a new object as a copy of the 
+    /// provided `rhs` (right-hand side) object. The `rhs` object is used to 
+    /// set the state of the new instance.
+    /// @param[in] rhs The object to copy from.
     DelegateFunctionAsyncWait(const ClassType& rhs) :
         BaseType(rhs) {
         Assign(rhs);
     }
+
+    /// @brief Move constructor that transfers ownership of resources.
+    /// @param[in] rhs The object to move from.
+    DelegateFunctionAsyncWait(ClassType&& rhs) noexcept :
+        BaseType(rhs), m_timeout(rhs.m_timeout) {
+        rhs.Clear();
+    }
+
     DelegateFunctionAsyncWait() = delete;
 
-    /// Bind a std::function to a delegate. 
+    /// @brief Bind a `std::function` to the delegate.
+    /// @details This method associates a member function (`func`) with the delegate. 
+    /// Once the function is bound, the delegate can be used to invoke the function.
+    /// @param[in] func The `std::function` to bind to the delegate. This function must match 
+    /// the signature of the delegate.
+    /// @param[in] thread The execution thread to invoke `func`.
     void Bind(FunctionType func, DelegateThread& thread) {
         BaseType::Bind(func, thread);
     }
