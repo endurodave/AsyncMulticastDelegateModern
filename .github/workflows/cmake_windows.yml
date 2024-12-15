@@ -3,10 +3,10 @@ name: Windows
 on:
   push:
     branches:
-      - wip/refactoring  # Trigger on push 
+      - master  # Trigger on push 
   pull_request:
     branches:
-      - wip/refactoring   # Trigger on pull 
+      - master  # Trigger on pull 
 
 jobs:
   build:
