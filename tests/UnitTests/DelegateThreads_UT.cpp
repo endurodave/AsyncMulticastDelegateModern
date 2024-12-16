@@ -4,6 +4,7 @@
 #include "WorkerThreadStd.h"
 #include <random>
 #include <chrono>
+#include <cstring>
 
 using namespace DelegateLib;
 using namespace std;

@@ -215,7 +215,7 @@ public:
     /// source and destination `delegateMsg` access because the source thread is not waiting 
     /// for the function call to complete.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
@@ -435,7 +435,7 @@ public:
     /// source and destination `delegateMsg` access because the source thread is not waiting 
     /// for the function call to complete.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
@@ -656,7 +656,7 @@ public:
     /// source and destination `delegateMsg` access because the source thread is not waiting 
     /// for the function call to complete.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
@@ -860,7 +860,7 @@ public:
     /// source and destination `delegateMsg` access because the source thread is not waiting 
     /// for the function call to complete.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) {
+    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
