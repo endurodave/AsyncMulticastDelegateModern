@@ -36,6 +36,9 @@ public:
 	/// Get the ID of the currently executing thread
 	static std::thread::id GetCurrentThreadId();
 
+	/// Get size of thread message queue.
+	size_t GetQueueSize();
+
 	virtual void DispatchDelegate(std::shared_ptr<DelegateLib::DelegateMsg> msg);
 
 private:

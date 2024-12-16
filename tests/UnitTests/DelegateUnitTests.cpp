@@ -2575,12 +2575,21 @@ void DelegateMemberAsyncWaitTests()
 extern void Delegate_UT();
 extern void DelegateAsync_UT();
 extern void DelegateAsyncWait_UT();
+extern void DelegateThreads_UT();
 
 void DelegateUnitTests()
 {
-	Delegate_UT();
-	DelegateAsync_UT();
-	DelegateAsyncWait_UT();
+	try
+	{
+		Delegate_UT();
+		DelegateAsync_UT();
+		DelegateAsyncWait_UT();
+		DelegateThreads_UT();
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << "Unit Tests Failed: " << e.what() << std::endl;
+	}
 
 	testThread.CreateThread();
 
@@ -2612,7 +2621,6 @@ void DelegateUnitTests()
 	{
 		std::cout << "Unit Tests Failed: " << e.what() << std::endl;
 	}
-
 
 #ifdef WIN32
 	QueryPerformanceCounter(&EndingTime);

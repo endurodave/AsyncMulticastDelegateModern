@@ -2,9 +2,6 @@
 #include "UnitTestCommon.h"
 #include <iostream>
 #include "WorkerThreadStd.h"
-#ifdef WIN32
-#include <Windows.h>
-#endif
 
 using namespace DelegateLib;
 using namespace std;
