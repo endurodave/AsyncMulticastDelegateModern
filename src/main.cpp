@@ -406,21 +406,12 @@ int main(void)
     // Run all target types example
     TestAllTargetTypes();
 
-    Test t1, t2;
-    std::function<void(int)> f1 = std::bind(&Test::Func, &t1, std::placeholders::_1);
-    std::function<void(int)> f2 = std::bind(&Test::Func, &t2, std::placeholders::_1);
-    MulticastDelegateSafe<void(int)> safe;
-    safe += MakeDelegate(f1);
-    safe += MakeDelegate(f2);
-    safe -= MakeDelegate(f2);   // Should remove f2, not f1!
-
-
     // Create a delegate bound to a free function then invoke
-    DelegateFree<void(int)> delegateFree = MakeDelegate(&FreeFuncInt);
+    auto delegateFree = MakeDelegate(&FreeFuncInt);
     delegateFree(123);
 
     // Create a delegate bound to a member function then invoke
-    DelegateMember<TestClass, void(TestStruct*)> delegateMember = MakeDelegate(&testClass, &TestClass::MemberFunc);
+    auto delegateMember = MakeDelegate(&testClass, &TestClass::MemberFunc);
     delegateMember(&testStruct);
 
     // Create a delegate bound to a member function. Assign and invoke from
@@ -446,7 +437,7 @@ int main(void)
     // Any function with the signature "void Func(TestStruct*)".
     MulticastDelegate<void(TestStruct*)> delegateB;
 
-    // Add a DelegateMember1<TestStruct*> delegate to the container
+    // Add a DelegateMember<TestStruct*> delegate to the container
     delegateB += MakeDelegate(&testClass, &TestClass::MemberFunc);
 
     // Invoke the delegate target member function TestClass::MemberFunc()
@@ -460,7 +451,7 @@ int main(void)
     // Any function with the signature "void Func(TestStruct*)".
     MulticastDelegateSafe<void(TestStruct*)> delegateC;
 
-    // Add a DelegateMember1<TestStruct*> delegate to the container that will invoke on workerThread1
+    // Add a DelegateMember<TestStruct*> delegate to the container that will invoke on workerThread1
     delegateC += MakeDelegate(&testClass, &TestClass::MemberFunc, workerThread1);
 
     // Asynchronously invoke the delegate target member function TestClass::MemberFunc()
@@ -585,7 +576,6 @@ int main(void)
         delegateJ(testStructNoCopy);
     }
 
-
     // Example of using std::shared_ptr function arguments with asynchrononous delegate. Using a 
     // shared_ptr<T> argument ensures that the argument T is not copied for each registered client.
     // Could be helpful if T is very large and two or more clients register to receive asynchronous
@@ -608,7 +598,7 @@ int main(void)
 #endif
 
     // Begin lambda examples. Lambda captures not allowed if delegates used to invoke.
-    auto LambdaFunc1 = +[](int i) -> int
+    std::function LambdaFunc1 = [](int i) -> int
     {
         cout << "Called LambdaFunc1 " << i << std::endl;
         return ++i;
@@ -662,6 +652,15 @@ int main(void)
         countLambdaDelegate);
     cout << "Asynchronous lambda result: " << valAsyncResult << endl;
     // End lambda examples
+
+    // Example shows std::function target limitations
+    Test t1, t2;
+    std::function<void(int)> f1 = std::bind(&Test::Func, &t1, std::placeholders::_1);
+    std::function<void(int)> f2 = std::bind(&Test::Func, &t2, std::placeholders::_1);
+    MulticastDelegateSafe<void(int)> safe;
+    safe += MakeDelegate(f1);
+    safe += MakeDelegate(f2);
+    safe -= MakeDelegate(f2);   // Should remove f2, not f1!
 
     // Create a SysDataClient instance on the stack
     SysDataClient sysDataClient;

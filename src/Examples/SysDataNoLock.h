@@ -36,6 +36,7 @@ public:
 private:
 	SysDataNoLock();
 	~SysDataNoLock();
+	SysDataNoLock(const SysDataNoLock&) = delete;
 
 	/// Private callback to get the SetSystemMode call onto a common thread
 	MulticastDelegateSafe<void(SystemMode::Type)> SetSystemModeDelegate; 

@@ -104,7 +104,7 @@ $(function(){initNavTree('class_delegate_lib_1_1_delegate_member_3_01_t_class_00
 </div><!--header-->
 <div class="contents">
 
-<p><code><a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateMember</a>&lt;&gt;</code> class synchronously invokes a class member target function using a class object pointer.  
+<p><code><a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateMember</a>&lt;&gt;</code> class synchronously invokes a class member target function using a class object pointer or shared pointer.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_delegate_8h_source.html">Delegate.h</a>&gt;</code></p>
@@ -125,6 +125,8 @@ Inheritance diagram for DelegateLib::DelegateMember&lt; TClass, RetType(Args...)
 Public Types</h2></td></tr>
 <tr class="memitem:aeb119acb465b89f74f158f6e3d0c6c3d" id="r_aeb119acb465b89f74f158f6e3d0c6c3d"><td class="memItemLeft" align="right" valign="top">typedef TClass *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeb119acb465b89f74f158f6e3d0c6c3d">ObjectPtr</a></td></tr>
 <tr class="separator:aeb119acb465b89f74f158f6e3d0c6c3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a845057cf22b42ddccfa44228e530529e" id="r_a845057cf22b42ddccfa44228e530529e"><td class="memItemLeft" align="right" valign="top">typedef std::shared_ptr&lt; TClass &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a845057cf22b42ddccfa44228e530529e">SharedPtr</a></td></tr>
+<tr class="separator:a845057cf22b42ddccfa44228e530529e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa8e6bc2879f78d50ac63ac5cc730b755" id="r_aa8e6bc2879f78d50ac63ac5cc730b755"><td class="memItemLeft" align="right" valign="top">typedef RetType(TClass::*)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8e6bc2879f78d50ac63ac5cc730b755">MemberFunc</a>(Args...)</td></tr>
 <tr class="separator:aa8e6bc2879f78d50ac63ac5cc730b755"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab639313353b5269e652b72883adc5c61" id="r_ab639313353b5269e652b72883adc5c61"><td class="memItemLeft" align="right" valign="top">typedef RetType(TClass::*)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab639313353b5269e652b72883adc5c61">ConstMemberFunc</a>(Args...) const</td></tr>
@@ -134,6 +136,12 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a39bb526ecf387e3ce23603c0ddab26ea" id="r_a39bb526ecf387e3ce23603c0ddab26ea"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a39bb526ecf387e3ce23603c0ddab26ea">DelegateMember</a> (<a class="el" href="#a845057cf22b42ddccfa44228e530529e">SharedPtr</a> object, <a class="el" href="#aa8e6bc2879f78d50ac63ac5cc730b755">MemberFunc</a> func)</td></tr>
+<tr class="memdesc:a39bb526ecf387e3ce23603c0ddab26ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor to create a class instance.  <br /></td></tr>
+<tr class="separator:a39bb526ecf387e3ce23603c0ddab26ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ea857874b53a0a99a2cfe20ad31e266" id="r_a6ea857874b53a0a99a2cfe20ad31e266"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6ea857874b53a0a99a2cfe20ad31e266">DelegateMember</a> (<a class="el" href="#a845057cf22b42ddccfa44228e530529e">SharedPtr</a> object, <a class="el" href="#ab639313353b5269e652b72883adc5c61">ConstMemberFunc</a> func)</td></tr>
+<tr class="memdesc:a6ea857874b53a0a99a2cfe20ad31e266"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor to create a class instance.  <br /></td></tr>
+<tr class="separator:a6ea857874b53a0a99a2cfe20ad31e266"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac0ebe807ef2e92dab70422a6f97a461f" id="r_ac0ebe807ef2e92dab70422a6f97a461f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0ebe807ef2e92dab70422a6f97a461f">DelegateMember</a> (<a class="el" href="#aeb119acb465b89f74f158f6e3d0c6c3d">ObjectPtr</a> object, <a class="el" href="#aa8e6bc2879f78d50ac63ac5cc730b755">MemberFunc</a> func)</td></tr>
 <tr class="memdesc:ac0ebe807ef2e92dab70422a6f97a461f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor to create a class instance.  <br /></td></tr>
 <tr class="separator:ac0ebe807ef2e92dab70422a6f97a461f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -149,6 +157,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4ab91c91146c582b15ad0231b539323f" id="r_a4ab91c91146c582b15ad0231b539323f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ab91c91146c582b15ad0231b539323f">DelegateMember</a> ()=default</td></tr>
 <tr class="memdesc:a4ab91c91146c582b15ad0231b539323f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor creates an empty delegate.  <br /></td></tr>
 <tr class="separator:a4ab91c91146c582b15ad0231b539323f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9c24220b7f1ef4f21ba66c7c9ef5086b" id="r_a9c24220b7f1ef4f21ba66c7c9ef5086b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9c24220b7f1ef4f21ba66c7c9ef5086b">Bind</a> (<a class="el" href="#a845057cf22b42ddccfa44228e530529e">SharedPtr</a> object, <a class="el" href="#aa8e6bc2879f78d50ac63ac5cc730b755">MemberFunc</a> func)</td></tr>
+<tr class="memdesc:a9c24220b7f1ef4f21ba66c7c9ef5086b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind a member function to the delegate.  <br /></td></tr>
+<tr class="separator:a9c24220b7f1ef4f21ba66c7c9ef5086b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6397270ea2b42e123a8ff20d7d5cf7a0" id="r_a6397270ea2b42e123a8ff20d7d5cf7a0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6397270ea2b42e123a8ff20d7d5cf7a0">Bind</a> (<a class="el" href="#a845057cf22b42ddccfa44228e530529e">SharedPtr</a> object, <a class="el" href="#ab639313353b5269e652b72883adc5c61">ConstMemberFunc</a> func)</td></tr>
+<tr class="memdesc:a6397270ea2b42e123a8ff20d7d5cf7a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind a const member function to the delegate.  <br /></td></tr>
+<tr class="separator:a6397270ea2b42e123a8ff20d7d5cf7a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a695e30c79885ec8394cd049301fe24" id="r_a2a695e30c79885ec8394cd049301fe24"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a695e30c79885ec8394cd049301fe24">Bind</a> (<a class="el" href="#aeb119acb465b89f74f158f6e3d0c6c3d">ObjectPtr</a> object, <a class="el" href="#aa8e6bc2879f78d50ac63ac5cc730b755">MemberFunc</a> func)</td></tr>
 <tr class="memdesc:a2a695e30c79885ec8394cd049301fe24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind a member function to the delegate.  <br /></td></tr>
 <tr class="separator:a2a695e30c79885ec8394cd049301fe24"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -194,7 +208,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class TClass, class RetType, class... Args&gt;<br />
-class DelegateLib::DelegateMember&lt; TClass, RetType(Args...)&gt;</div><p><code><a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateMember</a>&lt;&gt;</code> class synchronously invokes a class member target function using a class object pointer. </p>
+class DelegateLib::DelegateMember&lt; TClass, RetType(Args...)&gt;</div><p><code><a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateMember</a>&lt;&gt;</code> class synchronously invokes a class member target function using a class object pointer or shared pointer. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">TClass</td><td>The class type that contains the member function. </td></tr>
@@ -268,9 +282,105 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 
 </div>
 </div>
+<a id="a845057cf22b42ddccfa44228e530529e" name="a845057cf22b42ddccfa44228e530529e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a845057cf22b42ddccfa44228e530529e">&#9670;&#160;</a></span>SharedPtr</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TClass , class RetType , class... Args&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;TClass&gt; <a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateLib::DelegateMember</a>&lt; TClass, RetType(Args...)&gt;::SharedPtr</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a39bb526ecf387e3ce23603c0ddab26ea" name="a39bb526ecf387e3ce23603c0ddab26ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39bb526ecf387e3ce23603c0ddab26ea">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[1/7]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TClass , class RetType , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateLib::DelegateMember</a>&lt; TClass, RetType(Args...)&gt;::DelegateMember </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a845057cf22b42ddccfa44228e530529e">SharedPtr</a></td>          <td class="paramname"><span class="paramname"><em>object</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#aa8e6bc2879f78d50ac63ac5cc730b755">MemberFunc</a></td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor to create a class instance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">object</td><td>The target object pointer to store. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">func</td><td>The target member function to store. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6ea857874b53a0a99a2cfe20ad31e266" name="a6ea857874b53a0a99a2cfe20ad31e266"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ea857874b53a0a99a2cfe20ad31e266">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[2/7]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TClass , class RetType , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateLib::DelegateMember</a>&lt; TClass, RetType(Args...)&gt;::DelegateMember </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a845057cf22b42ddccfa44228e530529e">SharedPtr</a></td>          <td class="paramname"><span class="paramname"><em>object</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ab639313353b5269e652b72883adc5c61">ConstMemberFunc</a></td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructor to create a class instance. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">object</td><td>The target object pointer to store. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">func</td><td>The target const member function to store. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ac0ebe807ef2e92dab70422a6f97a461f" name="ac0ebe807ef2e92dab70422a6f97a461f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0ebe807ef2e92dab70422a6f97a461f">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[1/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0ebe807ef2e92dab70422a6f97a461f">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[3/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -310,7 +420,7 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </div>
 </div>
 <a id="ab772a635e195f3553f9c43f344b262df" name="ab772a635e195f3553f9c43f344b262df"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab772a635e195f3553f9c43f344b262df">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[2/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab772a635e195f3553f9c43f344b262df">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[4/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -350,7 +460,7 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </div>
 </div>
 <a id="a322dd315ac65ec9fc88616913cf222c3" name="a322dd315ac65ec9fc88616913cf222c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a322dd315ac65ec9fc88616913cf222c3">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[3/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a322dd315ac65ec9fc88616913cf222c3">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[5/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -385,7 +495,7 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </div>
 </div>
 <a id="a5fc8a23d96dfd6c0fda2d7e9d73966a5" name="a5fc8a23d96dfd6c0fda2d7e9d73966a5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5fc8a23d96dfd6c0fda2d7e9d73966a5">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[4/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a5fc8a23d96dfd6c0fda2d7e9d73966a5">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[6/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -420,7 +530,7 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </div>
 </div>
 <a id="a4ab91c91146c582b15ad0231b539323f" name="a4ab91c91146c582b15ad0231b539323f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ab91c91146c582b15ad0231b539323f">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[5/5]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ab91c91146c582b15ad0231b539323f">&#9670;&#160;</a></span>DelegateMember() <span class="overload">[7/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -485,7 +595,7 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </div>
 </div>
 <a id="a2dcf47b856e718a305b49107349e1d23" name="a2dcf47b856e718a305b49107349e1d23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2dcf47b856e718a305b49107349e1d23">&#9670;&#160;</a></span>Bind() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2dcf47b856e718a305b49107349e1d23">&#9670;&#160;</a></span>Bind() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -525,7 +635,7 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </div>
 </div>
 <a id="a2a695e30c79885ec8394cd049301fe24" name="a2a695e30c79885ec8394cd049301fe24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2a695e30c79885ec8394cd049301fe24">&#9670;&#160;</a></span>Bind() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a695e30c79885ec8394cd049301fe24">&#9670;&#160;</a></span>Bind() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -539,6 +649,86 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
           <td class="memname">void <a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateLib::DelegateMember</a>&lt; TClass, RetType(Args...)&gt;::Bind </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="#aeb119acb465b89f74f158f6e3d0c6c3d">ObjectPtr</a></td>          <td class="paramname"><span class="paramname"><em>object</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#aa8e6bc2879f78d50ac63ac5cc730b755">MemberFunc</a></td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Bind a member function to the delegate. </p>
+<p>This method associates a member function (<code>func</code>) with the delegate. Once the function is bound, the delegate can be used to invoke the function. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">object</td><td>The target object instance. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">func</td><td>The member function to bind to the delegate. This function must match the signature of the delegate. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a6397270ea2b42e123a8ff20d7d5cf7a0" name="a6397270ea2b42e123a8ff20d7d5cf7a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6397270ea2b42e123a8ff20d7d5cf7a0">&#9670;&#160;</a></span>Bind() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TClass , class RetType , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateLib::DelegateMember</a>&lt; TClass, RetType(Args...)&gt;::Bind </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a845057cf22b42ddccfa44228e530529e">SharedPtr</a></td>          <td class="paramname"><span class="paramname"><em>object</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ab639313353b5269e652b72883adc5c61">ConstMemberFunc</a></td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Bind a const member function to the delegate. </p>
+<p>This method associates a member function (<code>func</code>) with the delegate. Once the function is bound, the delegate can be used to invoke the function. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">object</td><td>The target object instance. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">func</td><td>The function to bind to the delegate. The member function to bind to the delegate. This function must match the signature of the delegate. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9c24220b7f1ef4f21ba66c7c9ef5086b" name="a9c24220b7f1ef4f21ba66c7c9ef5086b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9c24220b7f1ef4f21ba66c7c9ef5086b">&#9670;&#160;</a></span>Bind() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class TClass , class RetType , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateLib::DelegateMember</a>&lt; TClass, RetType(Args...)&gt;::Bind </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a845057cf22b42ddccfa44228e530529e">SharedPtr</a></td>          <td class="paramname"><span class="paramname"><em>object</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

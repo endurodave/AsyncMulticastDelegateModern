@@ -140,19 +140,16 @@ DelegateBase
         DelegateMember<>
             DelegateMemberAsync<>
                 DelegateMemberAsyncWait<>
-        DelegateMemberSp<>
-            DelegateMemberSpAsync<>
-                DelegateMemberSpAsyncWait<>
         DelegateFunction<>
             DelegateFunctionAsync<>
                 DelegateFunctionAsyncWait<>
 ``` 
 
-<p><code>DelegateFree<></code> binds to a free or static member function. <code>DelegateMember<> </code>binds to a class instance member function. <code>DelegateMemberSp<></code> binds to a class instance member function using a <code>std::shared_ptr</code> instead of a raw object pointer. All versions offer synchronous function invocation.</p>
+<p><code>DelegateFree<></code> binds to a free or static member function. <code>DelegateMember<> </code>binds to a class instance member function. <code>DelegateFunction<></code> binds to a <code>std::function</code> target. All versions offer synchronous function invocation.</p>
 
-<p><code>DelegateFreeAsync<></code>, <code>DelegateMemberAsync<></code> and <code>DelegateMemberSpAsync<></code> operate in the same way as their synchronous counterparts; except these versions offer non-blocking asynchronous function execution on a specified thread of control.</p>
+<p><code>DelegateFreeAsync<></code>, <code>DelegateMemberAsync<></code> and <code>DelegateFunctionAsync<></code> operate in the same way as their synchronous counterparts; except these versions offer non-blocking asynchronous function execution on a specified thread of control.</p>
 
-<p><code>DelegateFreeAsyncWait<></code>, <code>DelegateMemberAsyncWait<></code> and <code>DelegateMemberAsyncWait<></code> provides blocking asynchronous function execution on a target thread with a caller supplied maximum wait timeout. The destination thread will not invoke the target function if the timeout expires.</p>
+<p><code>DelegateFreeAsyncWait<></code>, <code>DelegateMemberAsyncWait<></code> and <code>DelegateFunctionAsyncWait<></code> provides blocking asynchronous function execution on a target thread with a caller supplied maximum wait timeout. The destination thread will not invoke the target function if the timeout expires.</p>
 
 <p>The three main delegate container classes are:</p>
 
@@ -321,7 +318,7 @@ delegateH("Hello world", 2020);
 
 ## Bind to std::shared_ptr
 
-<p>Binding to instance member function requires a pointer to an object. The delegate library supports binding with a raw pointer and a <code>std::shared_ptr</code> smart pointer. Usage is what you'd expect; just use a <code>std::shared_ptr</code> in place of the raw object pointer in the call to <code>MakeDelegate()</code>. Depending on if a thread argument is passed to <code>MakeDelegate()</code> or not, a <code>DelegateMemberSp<></code> or <code>DelegateMemberSpAsync<></code> instance is returned.</p>
+<p>Binding to instance member function requires a pointer to an object. The delegate library supports binding with a raw pointer and a <code>std::shared_ptr</code> smart pointer. Usage is what you'd expect; just use a <code>std::shared_ptr</code> in place of the raw object pointer in the call to <code>MakeDelegate()</code>. 
 
 ```cpp
 // Create a shared_ptr, create a delegate, then synchronously invoke delegate function
@@ -335,30 +332,30 @@ delegateMemberSp("Hello world using shared_ptr", 2020);
 <p>Certain asynchronous delegate usage patterns can cause a callback invocation to occur on a deleted object. The problem is this: an object function is bound to a delegate and invoked asynchronously, but before the invocation occurs on the target thread, the target object is deleted. In other words, it is possible for an object bound to a delegate to be deleted before the target thread message queue has had a chance to invoke the callback. The following code exposes the issue:</p>
 
 ```cpp
-    // Example of a bug where the testClassHeap is deleted before the asychronous delegate
-    // is invoked on the workerThread1. In other words, by the time workerThread1 calls
-    // the bound delegate function the testClassHeap instance is deleted and no longer valid.
-    TestClass* testClassHeap = new TestClass();
-    auto delegateMemberAsync = 
-           MakeDelegate(testClassHeap, &TestClass::MemberFuncStdString, workerThread1);
-    delegateMemberAsync("Function async invoked on deleted object. Bug!", 2020);
-    delegateMemberAsync.Clear();
-    delete testClassHeap;
+// Example of a bug where the testClassHeap is deleted before the asychronous delegate
+// is invoked on the workerThread1. In other words, by the time workerThread1 calls
+// the bound delegate function the testClassHeap instance is deleted and no longer valid.
+TestClass* testClassHeap = new TestClass();
+auto delegateMemberAsync = 
+       MakeDelegate(testClassHeap, &TestClass::MemberFuncStdString, workerThread1);
+delegateMemberAsync("Function async invoked on deleted object. Bug!", 2020);
+delegateMemberAsync.Clear();
+delete testClassHeap;
 ```
 
 <p>The example above is contrived, but it does clearly show that nothing prevents an object being deleted while waiting for the asynchronous invocation to occur. In many embedded system architectures, the registrations might occur on singleton objects or objects that have a lifetime that spans the entire execution. In this way, the application's usage pattern prevents callbacks into deleted objects. However, if objects pop into existence, temporarily subscribe to a delegate for callbacks, then get deleted later the possibility of a latent delegate stuck in a message queue could invoke a function on a deleted object.</p>
 
-<p>Fortunately, C++ smart pointers are just the ticket to solve these complex object lifetime issues. A <code>DelegateMemberSpAsync<></code> delegate binds using a <code>std::shared_ptr</code> instead of a raw object pointer. Now that the delegate has a shared pointer, the danger of the object being prematurely deleted is eliminated. The shared pointer will only delete the object pointed to once all references are no longer in use. In the code snippet below, all references to <code>testClassSp </code>are removed by the client code yet the delegate's copy placed into the queue prevents <code>TestClass </code>deletion until after the asynchronous delegate callback occurs.</p>
+<p>Fortunately, C++ smart pointers are just the ticket to solve these complex object lifetime issues. A <code>DelegateMemberAsync<></code> delegate binds using a <code>std::shared_ptr</code> instead of a raw object pointer. Now that the delegate has a shared pointer, the danger of the object being prematurely deleted is eliminated. The shared pointer will only delete the object pointed to once all references are no longer in use. In the code snippet below, all references to <code>testClassSp </code>are removed by the client code yet the delegate's copy placed into the queue prevents <code>TestClass </code>deletion until after the asynchronous delegate callback occurs.</p>
 
 ```cpp
-    // Example of the smart pointer function version of the delegate. The testClassSp instance
-    // is only deleted after workerThread1 invokes the callback function thus solving the bug.
-    std::shared_ptr<TestClass> testClassSp(new TestClass());
-    auto delegateMemberSpAsync = MakeDelegate
-         (testClassSp, &TestClass::MemberFuncStdString, workerThread1);
-    delegateMemberSpAsync("Function async invoked using smart pointer. Bug solved!", 2020);
-    delegateMemberSpAsync.Clear();
-    testClassSp.reset();
+// Example of the smart pointer function version of the delegate. The testClassSp instance
+// is only deleted after workerThread1 invokes the callback function thus solving the bug.
+std::shared_ptr<TestClass> testClassSp(new TestClass());
+auto delegateMemberSpAsync = MakeDelegate
+     (testClassSp, &TestClass::MemberFuncStdString, workerThread1);
+delegateMemberSpAsync("Function async invoked using smart pointer. Bug solved!", 2020);
+delegateMemberSpAsync.Clear();
+testClassSp.reset();
 ```
 
 <p>Actually, this technique can be used to call an object function, and then the object automatically deletes after the callback occurs. Using the above example, create a shared pointer instance, bind a delegate, and invoke the delegate. Now <code>testClassSp</code> can go out of scope and <code>TestClass::MemberFuncStdString</code> will still be safely called on <code>workerThread1</code>. The <code>TestClass </code>instance will delete by way of <code>std::shared_ptr<TestClass></code> once the smart pointer reference count goes to 0 after the callback completes without any extra programmer involvement.</p>
@@ -381,17 +378,17 @@ delegateMemberSpAsync("testClassSp deletes after delegate invokes", 2020);
 <p>Adding a timeout as the last argument to <code>MakeDelegate()</code> causes a <code>DelegateFreeAsyncWait<></code> or <code>DelegateMemberAsyncWait<></code> instance to be returned depending on if a free or member function is being bound. A "<code>Wait</code>" delegate is typically not added to a delegate container. The typical usage pattern is to create a delegate and function arguments on the stack, then invoke. The code fragment below creates a blocking delegate with the function signature <code>int (std::string&</code>). The function is called on <code>workerThread1</code>. The function <code>MemberFuncStdStringRetInt()</code> will update the outgoing <code>string msg</code> and return an integer to the caller.</p>
 
 ```cpp
-    // Create a asynchronous blocking delegate and invoke. This thread will block until the
-    // msg and year stack values are set by MemberFuncStdStringRetInt on workerThread1.
-    auto delegateI = 
-          MakeDelegate(&testClass, &TestClass::MemberFuncStdStringRetInt, 
-                       workerThread1, WAIT_INFINITE);
-    std::string msg;
-    int year = delegateI(msg);
-    if (delegateI.IsSuccess())
-    {
-        cout << msg.c_str() << " " << year << endl;
-    }
+// Create a asynchronous blocking delegate and invoke. This thread will block until the
+// msg and year stack values are set by MemberFuncStdStringRetInt on workerThread1.
+auto delegateI = 
+      MakeDelegate(&testClass, &TestClass::MemberFuncStdStringRetInt, 
+                   workerThread1, WAIT_INFINITE);
+std::string msg;
+int year = delegateI(msg);
+if (delegateI.IsSuccess())
+{
+    cout << msg.c_str() << " " << year << endl;
+}
 ```
 
 ## Asynchronous Lambda Invocation
@@ -399,7 +396,7 @@ delegateMemberSpAsync("testClassSp deletes after delegate invokes", 2020);
 <p>Delegates can invoke lambda functions asynchronously. The example below calls <code>LambdaFunc1 </code>on <code>workerThread1</code>. </p>
 
 ```cpp
-auto LambdaFunc1 = +[](int i) -> int
+std::function LambdaFunc1 = [](int i) -> int
 {
     cout << "Called LambdaFunc1 " << i << std::endl;
     return ++i;
@@ -440,9 +437,6 @@ DelegateBase
         DelegateMember<>
             DelegateMemberAsync<>
                 DelegateMemberAsyncWait<>
-        DelegateMemberSp<>
-            DelegateMemberSpAsync<>
-                DelegateMemberSpAsyncWait<>
         DelegateFunction<>
             DelegateFunctionAsync<>
                 DelegateFunctionAsyncWait<>

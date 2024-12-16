@@ -174,9 +174,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2f0ac18839223393d6c8a76beb971478" id="r_a2f0ac18839223393d6c8a76beb971478"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f0ac18839223393d6c8a76beb971478">AsyncInvoke</a> (Args... args)</td></tr>
 <tr class="memdesc:a2f0ac18839223393d6c8a76beb971478"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke delegate function asynchronously. Do not wait for return value. Called by the source thread.  <br /></td></tr>
 <tr class="separator:a2f0ac18839223393d6c8a76beb971478"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18d39e4e8e3e6906fd9c07ada1ac5bc6" id="r_a18d39e4e8e3e6906fd9c07ada1ac5bc6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a18d39e4e8e3e6906fd9c07ada1ac5bc6">DelegateInvoke</a> (std::shared_ptr&lt; <a class="el" href="class_delegate_lib_1_1_delegate_msg.html">DelegateMsg</a> &gt; msg)</td></tr>
-<tr class="memdesc:a18d39e4e8e3e6906fd9c07ada1ac5bc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the delegate function on the destination thread. Called by the destintation thread.  <br /></td></tr>
-<tr class="separator:a18d39e4e8e3e6906fd9c07ada1ac5bc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24785156e3b7888a423a9d4a71573e40" id="r_a24785156e3b7888a423a9d4a71573e40"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a24785156e3b7888a423a9d4a71573e40">DelegateInvoke</a> (std::shared_ptr&lt; <a class="el" href="class_delegate_lib_1_1_delegate_msg.html">DelegateMsg</a> &gt; msg) override</td></tr>
+<tr class="memdesc:a24785156e3b7888a423a9d4a71573e40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the delegate function on the destination thread. Called by the destintation thread.  <br /></td></tr>
+<tr class="separator:a24785156e3b7888a423a9d4a71573e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5e3487debe918c8c62d23a94bd9aac8" id="r_ad5e3487debe918c8c62d23a94bd9aac8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_delegate_lib_1_1_delegate_thread.html">DelegateThread</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad5e3487debe918c8c62d23a94bd9aac8">GetThread</a> () noexcept</td></tr>
 <tr class="memdesc:ad5e3487debe918c8c62d23a94bd9aac8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the destination thread that the target function is invoked on.  <br /></td></tr>
 <tr class="separator:ad5e3487debe918c8c62d23a94bd9aac8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -577,8 +577,8 @@ template&lt;class RetType , class... Args&gt; </div>
 
 </div>
 </div>
-<a id="a18d39e4e8e3e6906fd9c07ada1ac5bc6" name="a18d39e4e8e3e6906fd9c07ada1ac5bc6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a18d39e4e8e3e6906fd9c07ada1ac5bc6">&#9670;&#160;</a></span>DelegateInvoke()</h2>
+<a id="a24785156e3b7888a423a9d4a71573e40" name="a24785156e3b7888a423a9d4a71573e40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24785156e3b7888a423a9d4a71573e40">&#9670;&#160;</a></span>DelegateInvoke()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -597,13 +597,13 @@ template&lt;class RetType , class... Args&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Invoke the delegate function on the destination thread. Called by the destintation thread. </p>
-<p>Each source thread call to <code>operator()</code> generate a call to <code><a class="el" href="#a18d39e4e8e3e6906fd9c07ada1ac5bc6" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">DelegateInvoke()</a></code> on the destination thread. Unlike <code>DelegateAsyncWait</code>, a lock is not required between source and destination <code>delegateMsg</code> access because the source thread is not waiting for the function call to complete. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Each source thread call to <code>operator()</code> generate a call to <code><a class="el" href="#a24785156e3b7888a423a9d4a71573e40" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">DelegateInvoke()</a></code> on the destination thread. Unlike <code>DelegateAsyncWait</code>, a lock is not required between source and destination <code>delegateMsg</code> access because the source thread is not waiting for the function call to complete. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">msg</td><td>The delegate message created and sent within <code><a class="el" href="#a8d6f10d5f2c1b9215b59946a77edf6f6" title="Invoke the bound delegate function asynchronously. Called by the source thread.">operator()(Args... args)</a></code>. </td></tr>
   </table>
@@ -701,7 +701,7 @@ template&lt;class RetType , class... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>Invoke the bound delegate function asynchronously. Called by the source thread. </p>
-<p>Invoke delegate function asynchronously and do not wait for return value. This function is called by the source thread. Dispatches the delegate data into the destination thread message queue. <code><a class="el" href="#a18d39e4e8e3e6906fd9c07ada1ac5bc6" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">DelegateInvoke()</a></code> must be called by the destination thread to invoke the target function.</p>
+<p>Invoke delegate function asynchronously and do not wait for return value. This function is called by the source thread. Dispatches the delegate data into the destination thread message queue. <code><a class="el" href="#a24785156e3b7888a423a9d4a71573e40" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">DelegateInvoke()</a></code> must be called by the destination thread to invoke the target function.</p>
 <p>The <code><a class="el" href="class_delegate_lib_1_1_delegate_async_msg.html" title="Stores all function arguments suitable for non-blocking asynchronous calls. Argument data is stored i...">DelegateAsyncMsg</a></code> duplicates and copies the function arguments into heap memory. The source thread is not required to place function arguments into the heap. The delegate library performs all necessary heap and argument coping for the caller. Ensure complex argument data types can be safely copied by creating a copy constructor if necessary. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>The function arguments, if any. </td></tr>

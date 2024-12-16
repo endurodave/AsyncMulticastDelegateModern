@@ -23,12 +23,6 @@ var searchData=
   ['delegatememberasync_3c_20tclass_2c_20rettype_28args_2e_2e_2e_29_3e_20',['DelegateMemberAsync&lt; TClass, RetType(Args...)&gt;',['../class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html',1,'DelegateLib']]],
   ['delegatememberasyncwait_21',['DelegateMemberAsyncWait',['../struct_delegate_lib_1_1_delegate_member_async_wait.html',1,'DelegateLib']]],
   ['delegatememberasyncwait_3c_20tclass_2c_20rettype_28args_2e_2e_2e_29_3e_22',['DelegateMemberAsyncWait&lt; TClass, RetType(Args...)&gt;',['../class_delegate_lib_1_1_delegate_member_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html',1,'DelegateLib']]],
-  ['delegatemembersp_23',['DelegateMemberSp',['../struct_delegate_lib_1_1_delegate_member_sp.html',1,'DelegateLib']]],
-  ['delegatemembersp_3c_20tclass_2c_20rettype_28args_2e_2e_2e_29_3e_24',['DelegateMemberSp&lt; TClass, RetType(Args...)&gt;',['../class_delegate_lib_1_1_delegate_member_sp_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html',1,'DelegateLib']]],
-  ['delegatememberspasync_25',['DelegateMemberSpAsync',['../struct_delegate_lib_1_1_delegate_member_sp_async.html',1,'DelegateLib']]],
-  ['delegatememberspasync_3c_20tclass_2c_20rettype_28args_2e_2e_2e_29_3e_26',['DelegateMemberSpAsync&lt; TClass, RetType(Args...)&gt;',['../class_delegate_lib_1_1_delegate_member_sp_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html',1,'DelegateLib']]],
-  ['delegatememberspasyncwait_27',['DelegateMemberSpAsyncWait',['../struct_delegate_lib_1_1_delegate_member_sp_async_wait.html',1,'DelegateLib']]],
-  ['delegatememberspasyncwait_3c_20tclass_2c_20rettype_28args_2e_2e_2e_29_3e_28',['DelegateMemberSpAsyncWait&lt; TClass, RetType(Args...)&gt;',['../class_delegate_lib_1_1_delegate_member_sp_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html',1,'DelegateLib']]],
-  ['delegatemsg_29',['DelegateMsg',['../class_delegate_lib_1_1_delegate_msg.html',1,'DelegateLib']]],
-  ['delegatethread_30',['DelegateThread',['../class_delegate_lib_1_1_delegate_thread.html',1,'DelegateLib']]]
+  ['delegatemsg_23',['DelegateMsg',['../class_delegate_lib_1_1_delegate_msg.html',1,'DelegateLib']]],
+  ['delegatethread_24',['DelegateThread',['../class_delegate_lib_1_1_delegate_thread.html',1,'DelegateLib']]]
 ];
