@@ -5,6 +5,7 @@ var class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_
     [ "FunctionType", "class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#a793983b42fc5819a186a891b9cac5806", null ],
     [ "DelegateFunctionAsyncWait", "class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#a12fee611f64b1ff921f144456f735c34", null ],
     [ "DelegateFunctionAsyncWait", "class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#a49ee2d06133beb8f1f97d9435dd233d8", null ],
+    [ "DelegateFunctionAsyncWait", "class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#a61de38703ed39347662b0d523940751a", null ],
     [ "DelegateFunctionAsyncWait", "class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#afae9b073f590b47117d0ee00e100b7e2", null ],
     [ "Assign", "class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#a06a1f3a07b3b85f30d1d149a8ce7694d", null ],
     [ "AsyncInvoke", "class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#a1c4342829881ac285f0d839906c9f930", null ],

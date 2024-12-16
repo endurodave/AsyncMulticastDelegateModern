@@ -558,8 +558,7 @@ public:
         if (this->GetSync()) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
-        }
-        else {
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
@@ -587,8 +586,7 @@ public:
                 if (m_retVal.has_value()) {
                     // Return the destination thread target function return value
                     return GetRetVal();
-                }
-                else {
+                } else {
                     // Return a default return value
                     return RetType{};
                 }
@@ -606,8 +604,7 @@ public:
         if constexpr (std::is_void<RetType>::value == true) {
             operator()(args...);
             return IsSuccess() ? std::optional<bool>(true) : std::optional<bool>();
-        }
-        else {
+        } else {
             auto retVal = operator()(args...);
             return IsSuccess() ? std::optional<RetType>(retVal) : std::optional<RetType>();
         }
@@ -641,8 +638,7 @@ public:
             if constexpr (std::is_void<RetType>::value == true) {
                 // Invoke the target function using the source thread supplied function arguments
                 std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
-            }
-            else {
+            } else {
                 // Invoke the target function using the source thread supplied function arguments 
                 // and get the return value
                 m_retVal = std::apply(&BaseType::operator(), std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
@@ -671,13 +667,13 @@ public:
 
 private:
     /// Set to `true` if async function call succeeds
-    bool m_success = false;
+    bool m_success = false;			        
 
     /// Time in mS to wait for async function to invoke
-    std::chrono::milliseconds m_timeout;
+    std::chrono::milliseconds m_timeout;    
 
     /// Return value of the target invoked function
-    std::any m_retVal;
+    std::any m_retVal;                      
 
     // </common_code>
 };

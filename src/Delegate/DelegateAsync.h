@@ -439,8 +439,7 @@ public:
         if (this->GetSync()) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
-        }
-        else {
+        } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
 
@@ -489,7 +488,7 @@ public:
         SetSync(true);
 
         // Invoke the target function using the source thread supplied function arguments
-        std::apply(&BaseType::operator(),
+        std::apply(&BaseType::operator(), 
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
     }
 
@@ -509,10 +508,10 @@ protected:
 
 private:
     /// The target thread to invoke the delegate function.
-    DelegateThread& m_thread;
+    DelegateThread& m_thread;   
 
     /// Flag to control synchronous vs asynchronous target invoke behavior.
-    bool m_sync = false;
+    bool m_sync = false;        
 
     // </common_code>
 };

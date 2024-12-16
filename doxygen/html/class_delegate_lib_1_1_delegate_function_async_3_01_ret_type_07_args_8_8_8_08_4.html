@@ -145,6 +145,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a2fb983602c9e3fcecc54907f13b748ce" id="r_a2fb983602c9e3fcecc54907f13b748ce"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2fb983602c9e3fcecc54907f13b748ce">DelegateFunctionAsync</a> (const <a class="el" href="#a4e95505c52ba0355839a32e2cacc3480">ClassType</a> &amp;rhs)</td></tr>
 <tr class="memdesc:a2fb983602c9e3fcecc54907f13b748ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy constructor that creates a copy of the given instance.  <br /></td></tr>
 <tr class="separator:a2fb983602c9e3fcecc54907f13b748ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adeef2c1b2f887384a21024779b298445" id="r_adeef2c1b2f887384a21024779b298445"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adeef2c1b2f887384a21024779b298445">DelegateFunctionAsync</a> (<a class="el" href="#a4e95505c52ba0355839a32e2cacc3480">ClassType</a> &amp;&amp;rhs) noexcept</td></tr>
+<tr class="memdesc:adeef2c1b2f887384a21024779b298445"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move constructor that transfers ownership of resources.  <br /></td></tr>
+<tr class="separator:adeef2c1b2f887384a21024779b298445"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae32a58387b3b00e002763f3244310fab" id="r_ae32a58387b3b00e002763f3244310fab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae32a58387b3b00e002763f3244310fab">DelegateFunctionAsync</a> ()=delete</td></tr>
 <tr class="separator:ae32a58387b3b00e002763f3244310fab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56758d6e931fbff1cfc3ea97151fd6b5" id="r_a56758d6e931fbff1cfc3ea97151fd6b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56758d6e931fbff1cfc3ea97151fd6b5">Bind</a> (<a class="el" href="#a4002625654c02248b5b37266bf63ef66">FunctionType</a> func, <a class="el" href="class_delegate_lib_1_1_delegate_thread.html">DelegateThread</a> &amp;thread)</td></tr>
@@ -171,9 +174,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5c0e0c2591b0b02feec73b501325fcb6" id="r_a5c0e0c2591b0b02feec73b501325fcb6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c0e0c2591b0b02feec73b501325fcb6">AsyncInvoke</a> (Args... args)</td></tr>
 <tr class="memdesc:a5c0e0c2591b0b02feec73b501325fcb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke delegate function asynchronously. Do not wait for return value. Called by the source thread.  <br /></td></tr>
 <tr class="separator:a5c0e0c2591b0b02feec73b501325fcb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56930924ffa7d6662874675263e89bc5" id="r_a56930924ffa7d6662874675263e89bc5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56930924ffa7d6662874675263e89bc5">DelegateInvoke</a> (std::shared_ptr&lt; <a class="el" href="class_delegate_lib_1_1_delegate_msg.html">DelegateMsg</a> &gt; msg)</td></tr>
-<tr class="memdesc:a56930924ffa7d6662874675263e89bc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the delegate function on the destination thread. Called by the destintation thread.  <br /></td></tr>
-<tr class="separator:a56930924ffa7d6662874675263e89bc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2091d50db4b3be6334c66dc8a5b8fddc" id="r_a2091d50db4b3be6334c66dc8a5b8fddc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2091d50db4b3be6334c66dc8a5b8fddc">DelegateInvoke</a> (std::shared_ptr&lt; <a class="el" href="class_delegate_lib_1_1_delegate_msg.html">DelegateMsg</a> &gt; msg) override</td></tr>
+<tr class="memdesc:a2091d50db4b3be6334c66dc8a5b8fddc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the delegate function on the destination thread. Called by the destintation thread.  <br /></td></tr>
+<tr class="separator:a2091d50db4b3be6334c66dc8a5b8fddc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeafdaa26caccb52408afe591e5c54aca" id="r_aeafdaa26caccb52408afe591e5c54aca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_delegate_lib_1_1_delegate_thread.html">DelegateThread</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aeafdaa26caccb52408afe591e5c54aca">GetThread</a> () noexcept</td></tr>
 <tr class="memdesc:aeafdaa26caccb52408afe591e5c54aca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the destination thread that the target function is invoked on.  <br /></td></tr>
 <tr class="separator:aeafdaa26caccb52408afe591e5c54aca"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -294,7 +297,7 @@ template&lt;class RetType , class... Args&gt; </div>
 </div>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a46501e1a3392ed1d13e3f3cba8eb2df0" name="a46501e1a3392ed1d13e3f3cba8eb2df0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46501e1a3392ed1d13e3f3cba8eb2df0">&#9670;&#160;</a></span>DelegateFunctionAsync() <span class="overload">[1/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a46501e1a3392ed1d13e3f3cba8eb2df0">&#9670;&#160;</a></span>DelegateFunctionAsync() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -334,7 +337,7 @@ template&lt;class RetType , class... Args&gt; </div>
 </div>
 </div>
 <a id="a2fb983602c9e3fcecc54907f13b748ce" name="a2fb983602c9e3fcecc54907f13b748ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2fb983602c9e3fcecc54907f13b748ce">&#9670;&#160;</a></span>DelegateFunctionAsync() <span class="overload">[2/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a2fb983602c9e3fcecc54907f13b748ce">&#9670;&#160;</a></span>DelegateFunctionAsync() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -368,8 +371,43 @@ template&lt;class RetType , class... Args&gt; </div>
 
 </div>
 </div>
+<a id="adeef2c1b2f887384a21024779b298445" name="adeef2c1b2f887384a21024779b298445"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adeef2c1b2f887384a21024779b298445">&#9670;&#160;</a></span>DelegateFunctionAsync() <span class="overload">[3/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class RetType , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="struct_delegate_lib_1_1_delegate_function_async.html">DelegateLib::DelegateFunctionAsync</a>&lt; RetType(Args...)&gt;::DelegateFunctionAsync </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="#a4e95505c52ba0355839a32e2cacc3480">ClassType</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>rhs</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Move constructor that transfers ownership of resources. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">rhs</td><td>The object to move from. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ae32a58387b3b00e002763f3244310fab" name="ae32a58387b3b00e002763f3244310fab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae32a58387b3b00e002763f3244310fab">&#9670;&#160;</a></span>DelegateFunctionAsync() <span class="overload">[3/3]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ae32a58387b3b00e002763f3244310fab">&#9670;&#160;</a></span>DelegateFunctionAsync() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -541,8 +579,8 @@ template&lt;class RetType , class... Args&gt; </div>
 
 </div>
 </div>
-<a id="a56930924ffa7d6662874675263e89bc5" name="a56930924ffa7d6662874675263e89bc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56930924ffa7d6662874675263e89bc5">&#9670;&#160;</a></span>DelegateInvoke()</h2>
+<a id="a2091d50db4b3be6334c66dc8a5b8fddc" name="a2091d50db4b3be6334c66dc8a5b8fddc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2091d50db4b3be6334c66dc8a5b8fddc">&#9670;&#160;</a></span>DelegateInvoke()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -561,13 +599,13 @@ template&lt;class RetType , class... Args&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>Invoke the delegate function on the destination thread. Called by the destintation thread. </p>
-<p>Each source thread call to <code>operator()</code> generate a call to <code><a class="el" href="#a56930924ffa7d6662874675263e89bc5" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">DelegateInvoke()</a></code> on the destination thread. Unlike <code>DelegateAsyncWait</code>, a lock is not required between source and destination <code>delegateMsg</code> access because the source thread is not waiting for the function call to complete. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Each source thread call to <code>operator()</code> generate a call to <code><a class="el" href="#a2091d50db4b3be6334c66dc8a5b8fddc" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">DelegateInvoke()</a></code> on the destination thread. Unlike <code>DelegateAsyncWait</code>, a lock is not required between source and destination <code>delegateMsg</code> access because the source thread is not waiting for the function call to complete. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">msg</td><td>The delegate message created and sent within <code><a class="el" href="#a1e6153da03f3d607b1e18deb391c04a4" title="Invoke the bound delegate function asynchronously. Called by the source thread.">operator()(Args... args)</a></code>. </td></tr>
   </table>
@@ -665,7 +703,7 @@ template&lt;class RetType , class... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>Invoke the bound delegate function asynchronously. Called by the source thread. </p>
-<p>Invoke delegate function asynchronously and do not wait for return value. This function is called by the source thread. Dispatches the delegate data into the destination thread message queue. <code><a class="el" href="#a56930924ffa7d6662874675263e89bc5" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">DelegateInvoke()</a></code> must be called by the destination thread to invoke the target function.</p>
+<p>Invoke delegate function asynchronously and do not wait for return value. This function is called by the source thread. Dispatches the delegate data into the destination thread message queue. <code><a class="el" href="#a2091d50db4b3be6334c66dc8a5b8fddc" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">DelegateInvoke()</a></code> must be called by the destination thread to invoke the target function.</p>
 <p>The <code><a class="el" href="class_delegate_lib_1_1_delegate_async_msg.html" title="Stores all function arguments suitable for non-blocking asynchronous calls. Argument data is stored i...">DelegateAsyncMsg</a></code> duplicates and copies the function arguments into heap memory. The source thread is not required to place function arguments into the heap. The delegate library performs all necessary heap and argument coping for the caller. Ensure complex argument data types can be safely copied by creating a copy constructor if necessary. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>The function arguments, if any. </td></tr>
