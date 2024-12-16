@@ -83,7 +83,7 @@ static void DelegateMemberSpTests()
 {
     auto testClass1 = std::make_shared<TestClass1>();
 
-    DelegateMemberSp<TestClass1, void(int)> delegate1(testClass1, &TestClass1::MemberFuncInt1);
+    DelegateMember<TestClass1, void(int)> delegate1(testClass1, &TestClass1::MemberFuncInt1);
     delegate1(TEST_INT);
 
     auto delegate2 = delegate1;
@@ -91,7 +91,7 @@ static void DelegateMemberSpTests()
     ASSERT_TRUE(!delegate1.Empty());
     ASSERT_TRUE(!delegate2.Empty());
 
-    DelegateMemberSp<TestClass1, void(int)> delegate3;
+    DelegateMember<TestClass1, void(int)> delegate3;
     delegate3 = delegate1;
     ASSERT_TRUE(delegate3 == delegate1);
     ASSERT_TRUE(delegate3);
@@ -107,7 +107,7 @@ static void DelegateMemberSpTests()
     ASSERT_TRUE(!delegate5.Empty());
     ASSERT_TRUE(delegate1.Empty());
 
-    DelegateMemberSp<TestClass1, void(int)> delegate6;
+    DelegateMember<TestClass1, void(int)> delegate6;
     delegate6 = std::move(delegate2);
     ASSERT_TRUE(!delegate6.Empty());
     ASSERT_TRUE(delegate2.Empty());

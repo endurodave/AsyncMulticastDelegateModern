@@ -11,11 +11,65 @@ Asynchronous function calls support both non-blocking and blocking modes with a 
 
 Originally published on CodeProject at: <a href="https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cpluspl">Asynchronous Multicast Delegates in Modern C++</a>
 
+# Design Details
+
+ See [Design Details](docs/DETAILS.md) for implementation design details and more examples.
+
+ See Doxygen main page located at `doxygen/html/index.html` for source code documentation. Clone the repository to view the pages in a browser.
+
 # Quick Start
 
-A simple publish/subscribe asynchronous delegate example.
+## Basic Examples
 
-## Publisher Example
+Synchronous free and member delegate examples. 
+
+```cpp
+// Create a delegate bound to a free function then invoke
+auto delegateFree = MakeDelegate(&FreeFuncInt);
+delegateFree(123);
+
+// Create a delegate bound to a member function then invoke
+TestClass testClass;
+auto delegateMember = MakeDelegate(&testClass, &TestClass::MemberFunc);
+delegateMember(&testStruct);
+```
+
+Create a delegate container, insert a delegate instance and invoke asynchronously. 
+
+```cpp
+// Create a thread-safe multicast delegate container that accepts Delegate<void (TestStruct*)> delegates
+MulticastDelegateSafe<void(TestStruct*)> delegateC;
+
+// Add a delegate to the container that will invoke on workerThread1
+delegateC += MakeDelegate(&testClass, &TestClass::MemberFunc, workerThread1);
+
+// Asynchronously invoke the delegate target member function TestClass::MemberFunc()
+if (delegateC)
+    delegateC(&testStruct);
+
+// Remove the delegate from the container
+delegateC -= MakeDelegate(&testClass, &TestClass::MemberFunc, workerThread1);
+```
+
+Asynchronously invoke `LambdaFunc1` on `workerThread1` and block waiting for the return value. 
+
+```cpp
+std::function LambdaFunc1 = [](int i) -> int
+{
+    cout << "Called LambdaFunc1 " << i << std::endl;
+    return ++i;
+};
+
+// Asynchronously invoke lambda on workerThread1 and wait for the return value
+auto lambdaDelegate1 = MakeDelegate(LambdaFunc1, workerThread1, WAIT_INFINITE);
+int lambdaRetVal2 = lambdaDelegate1(123);
+```
+
+## Publish/Subscribe Example
+
+A simple publish/subscribe example using asynchronous delegates.
+
+### Publisher
 
 Typically a delegate is inserted into a delegate container. <code>AlarmCd</code> is a delegate container. 
 
@@ -41,7 +95,7 @@ void NotifyAlarmSubscribers(int alarmId, const string& note)
     AlarmCb(alarmId, note);
 }
 ```
-## Subscriber Example
+### Subscriber
 
 <p>Typically a subscriber registers with a delegate container instance to receive callbacks, either synchronously or asynchronously.</p>
 
@@ -82,8 +136,6 @@ class AlarmSub
     }
 }
 ```
-
-<p>This is a simple example. Many other usage patterns exist including asynchronous API's, blocking delegates with a timeout, and more.</p>
 
 ## All Delegate Types Example
 
@@ -258,13 +310,20 @@ DelegateBase
         DelegateMember<>
             DelegateMemberAsync<>
                 DelegateMemberAsyncWait<>
-        DelegateMemberSp<>
-            DelegateMemberSpAsync<>
-                DelegateMemberSpAsyncWait<>
         DelegateFunction<>
             DelegateFunctionAsync<>
                 DelegateFunctionAsyncWait<>
+``` 
 
+<p><code>DelegateFree<></code> binds to a free or static member function. <code>DelegateMember<> </code>binds to a class instance member function. <code>DelegateFunction<></code> binds to a <code>std::function</code> target. All versions offer synchronous function invocation.</p>
+
+<p><code>DelegateFreeAsync<></code>, <code>DelegateMemberAsync<></code> and <code>DelegateFunctionAsync<></code> operate in the same way as their synchronous counterparts; except these versions offer non-blocking asynchronous function execution on a specified thread of control.</p>
+
+<p><code>DelegateFreeAsyncWait<></code>, <code>DelegateMemberAsyncWait<></code> and <code>DelegateFunctionAsyncWait<></code> provides blocking asynchronous function execution on a target thread with a caller supplied maximum wait timeout. The destination thread will not invoke the target function if the timeout expires.</p>
+
+<p>The three main delegate container classes are:</p>
+
+```cpp
 // Delegate Containers
 SinglecastDelegate<>
 MulticastDelegate<>
@@ -275,6 +334,12 @@ IDelegateInvoker
 DelegateMsg
 DelegateThread
 ``` 
+
+<p><code>SinglecastDelegate<></code> is a delegate container accepting a single delegate. The advantage of the single cast version is that it is slightly smaller.</p>
+
+<p><code>MulticastDelegate<></code> is a delegate container accepting multiple delegates.</p>
+
+<p><code>MultcastDelegateSafe<></code> is a thread-safe container accepting multiple delegates. Always use the thread-safe version if multiple threads access the container instance.</p>
 
 # Project Build
 
@@ -307,12 +372,6 @@ After executed, build the software from within the <code>build</code> directory 
     <img src="docs/Figure4.jpg" alt="Figure 4" style="width:70%;">
     <figcaption>Figure 4: Linux Makefile Build</figcaption>
 </figure>
-
-# Design Details
-
- See [Design Details](docs/DETAILS.md) for implementation design details and more examples.
-
- See Doxygen main page located at `doxygen/html/index.html` for source code documentation. Clone the repository to view the pages in a browser.
 
 # Related Repositories
 

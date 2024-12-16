@@ -95,7 +95,7 @@ static void DelegateMemberSpAsyncWaitTests()
 {
     auto testClass1 = std::make_shared<TestClass1>();
 
-    DelegateMemberSpAsyncWait<TestClass1, void(int)> delegate1(testClass1, &TestClass1::MemberFuncInt1, workerThread);
+    DelegateMemberAsyncWait<TestClass1, void(int)> delegate1(testClass1, &TestClass1::MemberFuncInt1, workerThread);
     delegate1(TEST_INT);
     ASSERT_TRUE(delegate1.IsSuccess());
 
@@ -104,7 +104,7 @@ static void DelegateMemberSpAsyncWaitTests()
     ASSERT_TRUE(!delegate1.Empty());
     ASSERT_TRUE(!delegate2.Empty());
 
-    DelegateMemberSpAsyncWait<TestClass1, void(int)> delegate3(testClass1, &TestClass1::MemberFuncInt1, workerThread);
+    DelegateMemberAsyncWait<TestClass1, void(int)> delegate3(testClass1, &TestClass1::MemberFuncInt1, workerThread);
     delegate3 = delegate1;
     ASSERT_TRUE(delegate3 == delegate1);
     ASSERT_TRUE(delegate3);
@@ -120,7 +120,7 @@ static void DelegateMemberSpAsyncWaitTests()
     ASSERT_TRUE(!delegate5.Empty());
     ASSERT_TRUE(delegate1.Empty());
 
-    DelegateMemberSpAsyncWait<TestClass1, void(int)> delegate6(testClass1, &TestClass1::MemberFuncInt1, workerThread);
+    DelegateMemberAsyncWait<TestClass1, void(int)> delegate6(testClass1, &TestClass1::MemberFuncInt1, workerThread);
     delegate6 = std::move(delegate2);
     ASSERT_TRUE(!delegate6.Empty());
     ASSERT_TRUE(delegate2.Empty());
@@ -128,7 +128,7 @@ static void DelegateMemberSpAsyncWaitTests()
     DelegateFunction<void(int)> other;
     ASSERT_TRUE(!(delegate6 == other));
 
-    DelegateMemberSpAsyncWait<TestClass1, void(int)> delegate7(testClass1, &TestClass1::MemberFuncInt1, workerThread, std::chrono::milliseconds(0));
+    DelegateMemberAsyncWait<TestClass1, void(int)> delegate7(testClass1, &TestClass1::MemberFuncInt1, workerThread, std::chrono::milliseconds(0));
     auto success = delegate7.AsyncInvoke(TEST_INT);
     //ASSERT_TRUE(!success.has_value());
 }

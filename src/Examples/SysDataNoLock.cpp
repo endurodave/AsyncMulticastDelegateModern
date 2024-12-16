@@ -28,6 +28,7 @@ SysDataNoLock::SysDataNoLock() :
 SysDataNoLock::~SysDataNoLock()
 {
 	SetSystemModeDelegate -= MakeDelegate(this, &SysDataNoLock::SetSystemModePrivate, workerThread2);
+	workerThread2.ExitThread();
 }
 
 //----------------------------------------------------------------------------
