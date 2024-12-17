@@ -11,11 +11,11 @@ Asynchronous function calls support both non-blocking and blocking modes with a 
 
 Originally published on CodeProject at: <a href="https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cpluspl">Asynchronous Multicast Delegates in Modern C++</a>
 
-# Design Details
+# Design Documentation
 
- See [Design Details](docs/DETAILS.md) for implementation design details and more examples.
+ See [Design Details](docs/DETAILS.md) for implementation design documentation and more examples.
 
- See Doxygen main page located at `doxygen/html/index.html` for source code documentation. Clone the repository to view the pages in a browser.
+ See [Doxygen Documentation](https://endurodave.github.io/AsyncMulticastDelegateModern/html/index.html) for source code documentation. 
 
 # Quick Start
 
