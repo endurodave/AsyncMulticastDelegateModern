@@ -7,7 +7,22 @@
 
 A C++ delegate library capable of invoking any callable function either synchronously or asynchronously on a user specified thread of control. 
 
-Asynchronous function calls support both non-blocking and blocking modes with a timeout. The library supports all types of target functions, including free functions, class member functions, static class functions, and lambdas. It is capable of handling any function signature, regardless of the number of arguments or return value. All argument types are supported, including by value, pointers, pointers to pointers, and references. The delegate library takes care of the intricate details of function invocation across thread boundaries. Thread-safe delegate containers stores delegate instances with a matching function signature.
+Asynchronous function calls support both non-blocking and blocking modes with a timeout. The library supports all types of target functions, including free functions, class member functions, static class functions, lambdas, and `std::function`. It is capable of handling any function signature, regardless of the number of arguments or return value. All argument types are supported, including by value, pointers, pointers to pointers, and references. The delegate library takes care of the intricate details of function invocation across thread boundaries. Thread-safe delegate containers stores delegate instances with a matching function signature.
+
+ A delegate instance can be:
+
+ * Copied freely.
+ * Compared to same type delegates and `nullptr`.
+ * Reassigned.
+ * Called.
+ 
+Typical use cases are:
+
+* Publish/Subscribe (Event-Driven Programming)
+* Thread-Safe Asynchronous API (Subsystem/Library)
+* Anonymous Thread-Safe Callbacks on Specified Thread
+
+The delegate library differs from `std::async` in that the caller-specified thread of control is used to invoke the target function bound to the delegate. The asynchronous variants copy the argument data into the event queue, ensuring safe transport to the destination thread, regardless of the argument type. This approach offers 'fire and forget' functionality without the caller waiting.
 
 Originally published on CodeProject at: <a href="https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cpluspl">Asynchronous Multicast Delegates in Modern C++</a>
 

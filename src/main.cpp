@@ -5,6 +5,7 @@
 #include <chrono>
 #include <thread>
 #include <utility>
+#include <future>
 #include "WorkerThreadStd.h"
 #include "Timer.h"
 
@@ -213,6 +214,16 @@ void TimerExpiredCb(void)
     cout << "TimerExpiredCb " << count++ << endl;
 }
 
+class Base {
+public:
+    virtual void display(std::string msg) { cout << "Base: " << msg << endl; }
+};
+
+class Derived : public Base {
+public:
+    void display(std::string msg) override { cout << "Derviced: " << msg << endl; }
+};
+
 class Coordinates
 {
 public:
@@ -270,6 +281,10 @@ void TestAllTargetTypes() {
 
         void MemberFuncConst(int value) const {
             cout << "MemberFuncConst " << value << " " << ++callCnt << endl;
+        }
+
+        virtual void MemberFuncVirtual(int value) {
+            cout << "MemberFuncVirtual " << value << " " << ++callCnt << endl;
         }
     };
 
@@ -378,21 +393,20 @@ public:
     void Func(int i) { }
 };
 
-
 //------------------------------------------------------------------------------
 // main
 //------------------------------------------------------------------------------
 int main(void)
 {
-	TestStruct testStruct;
-	testStruct.x = 123;
-	TestStruct* pTestStruct = &testStruct;
+    TestStruct testStruct;
+    testStruct.x = 123;
+    TestStruct* pTestStruct = &testStruct;
 
-	TestClass testClass;
+    TestClass testClass;
 
-	// Create the worker threads
-	workerThread1.CreateThread();
-	SysDataNoLock::GetInstance();
+    // Create the worker threads
+    workerThread1.CreateThread();
+    SysDataNoLock::GetInstance();
 
     // Create a timer that expires every 250mS and calls 
     // TimerExpiredCb on workerThread1 upon expiration
@@ -400,8 +414,8 @@ int main(void)
     timer.Expired = MakeDelegate(&TimerExpiredCb, workerThread1);
     timer.Start(std::chrono::milliseconds(250));
 
-	// Run all unit tests
-	DelegateUnitTests();
+    // Run all unit tests
+    DelegateUnitTests();
 
     // Run all target types example
     TestAllTargetTypes();
@@ -588,6 +602,11 @@ int main(void)
     coordinates.y = 99;
     coordinatesHandler.SetData(coordinates);
 
+    // Invoke virtual base function example
+    std::shared_ptr<Base> base = std::make_shared<Derived>();
+    auto baseDelegate = MakeDelegate(base, &Base::display, workerThread1);
+    baseDelegate("Invoke Derviced::display()!");
+
 #if 0
     // Causes compiler error. shared_ptr references not allowed; undefined behavior 
     // in multithreaded system.
@@ -651,6 +670,24 @@ int main(void)
     const auto valAsyncResult = std::count_if(v.begin(), v.end(),
         countLambdaDelegate);
     cout << "Asynchronous lambda result: " << valAsyncResult << endl;
+
+    // Long running function 
+    std::function AddFunc = [](int a, int b) {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        return a + b;
+    };
+
+    // Create async delegate with lambda target function
+    auto addDelegate = MakeDelegate(AddFunc, workerThread1, WAIT_INFINITE);
+
+    // Using std::async, invokes AddFunc on workerThread1
+    std::future<int> result = std::async(std::launch::async, addDelegate, 5, 3);
+
+    cout << "Do work while waiting for AddFunc to complete." << endl;
+
+    // Wait for AddFunc return value
+    int sum = result.get();
+    cout << "AddFunc return value: " << sum << " ";
     // End lambda examples
 
     // Example shows std::function target limitations

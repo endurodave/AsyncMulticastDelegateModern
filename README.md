@@ -9,6 +9,21 @@ A C++ delegate library capable of invoking any callable function either synchron
 
 Asynchronous function calls support both non-blocking and blocking modes with a timeout. The library supports all types of target functions, including free functions, class member functions, static class functions, lambdas, and `std::function`. It is capable of handling any function signature, regardless of the number of arguments or return value. All argument types are supported, including by value, pointers, pointers to pointers, and references. The delegate library takes care of the intricate details of function invocation across thread boundaries. Thread-safe delegate containers stores delegate instances with a matching function signature.
 
+ A delegate instance can be:
+
+ * Copied freely.
+ * Compared to same type delegates and `nullptr`.
+ * Reassigned.
+ * Called.
+ 
+Typical use cases are:
+
+* Publish/Subscribe (Event-Driven Programming)
+* Thread-Safe Asynchronous API (Subsystem/Library)
+* Anonymous Thread-Safe Callbacks on Specified Thread
+
+The delegate library differs from `std::async` in that the caller-specified thread of control is used to invoke the target function bound to the delegate. The asynchronous variants copy the argument data into the event queue, ensuring safe transport to the destination thread, regardless of the argument type. This approach offers 'fire and forget' functionality without the caller waiting.
+
 Originally published on CodeProject at: <a href="https://www.codeproject.com/Articles/5277036/Asynchronous-Multicast-Delegates-in-Modern-Cpluspl">Asynchronous Multicast Delegates in Modern C++</a>
 
 # Design Documentation
@@ -21,41 +36,55 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 
 ## Basic Examples
 
-Synchronous free and member delegate examples. 
+Simple function definitions.
+
+```cpp
+void FreeFunc(int value) {
+	cout << "FreeFuncInt " << value << endl;
+}
+
+class TestClass {
+public:
+	void MemberFunc(int value) {
+		cout << "MemberFunc " << value << endl;
+	}
+};
+```
+
+Create delegates and invoke.  
 
 ```cpp
 // Create a delegate bound to a free function then invoke
-auto delegateFree = MakeDelegate(&FreeFuncInt);
+auto delegateFree = MakeDelegate(&FreeFunc);
 delegateFree(123);
 
 // Create a delegate bound to a member function then invoke
 TestClass testClass;
 auto delegateMember = MakeDelegate(&testClass, &TestClass::MemberFunc);
-delegateMember(&testStruct);
+delegateMember(123);
 ```
 
 Create a delegate container, insert a delegate instance and invoke asynchronously. 
 
 ```cpp
-// Create a thread-safe multicast delegate container that accepts Delegate<void (TestStruct*)> delegates
-MulticastDelegateSafe<void(TestStruct*)> delegateC;
+// Create a thread-safe multicast delegate container that accepts Delegate<void(int)> delegates
+MulticastDelegateSafe<void(int)> delegateSafe;
 
 // Add a delegate to the container that will invoke on workerThread1
-delegateC += MakeDelegate(&testClass, &TestClass::MemberFunc, workerThread1);
+delegateSafe += MakeDelegate(&testClass, &TestClass::MemberFunc, workerThread1);
 
 // Asynchronously invoke the delegate target member function TestClass::MemberFunc()
-if (delegateC)
-    delegateC(&testStruct);
+if (delegateSafe)
+    delegateSafe(123);
 
 // Remove the delegate from the container
-delegateC -= MakeDelegate(&testClass, &TestClass::MemberFunc, workerThread1);
+delegateSafe -= MakeDelegate(&testClass, &TestClass::MemberFunc, workerThread1);
 ```
 
 Asynchronously invoke `LambdaFunc1` on `workerThread1` and block waiting for the return value. 
 
 ```cpp
-std::function LambdaFunc1 = [](int i) -> int
-{
+std::function LambdaFunc1 = [](int i) -> int {
     cout << "Called LambdaFunc1 " << i << std::endl;
     return ++i;
 };
@@ -63,6 +92,28 @@ std::function LambdaFunc1 = [](int i) -> int
 // Asynchronously invoke lambda on workerThread1 and wait for the return value
 auto lambdaDelegate1 = MakeDelegate(LambdaFunc1, workerThread1, WAIT_INFINITE);
 int lambdaRetVal2 = lambdaDelegate1(123);
+```
+
+Asynchronously invoke `AddFunc` on `workerThread1` using `std::async` and do other work while waiting for the return value. 
+
+```cpp
+// Long running function 
+std::function AddFunc = [](int a, int b) {
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    return a + b;
+};
+
+// Create async delegate with lambda target function
+auto addDelegate = MakeDelegate(AddFunc, workerThread1, WAIT_INFINITE);
+
+// Using std::async, invokes AddFunc on workerThread1
+std::future<int> result = std::async(std::launch::async, addDelegate, 5, 3);
+
+cout << "Do work while waiting for AddFunc to complete." << endl;
+
+// Wait for AddFunc return value
+int sum = result.get();
+cout << "AddFunc return value: " << sum << " ";
 ```
 
 ## Publish/Subscribe Example

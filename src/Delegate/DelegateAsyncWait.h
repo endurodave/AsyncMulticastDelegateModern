@@ -142,7 +142,7 @@ public:
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
     DelegateFreeAsyncWait(ClassType&& rhs) noexcept :
-        BaseType(rhs), m_timeout(rhs.m_timeout) {
+        BaseType(rhs), m_timeout(rhs.m_timeout), m_success(rhs.m_success), m_retVal(rhs.m_retVal) {
         rhs.Clear();
     }
 
@@ -166,6 +166,8 @@ public:
     /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
+        m_success = rhs.m_success;
+        m_retVal = rhs.m_retVal;
         BaseType::Assign(rhs);
     }
 
@@ -196,6 +198,8 @@ public:
         if (&rhs != this) {
             BaseType::operator=(std::move(rhs));
             m_timeout = rhs.m_timeout;    // Use the resource
+            m_success = rhs.m_success;
+            m_retVal = rhs.m_retVal;
         }
         return *this;
     }
@@ -430,7 +434,7 @@ public:
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
     DelegateMemberAsyncWait(ClassType&& rhs) noexcept :
-        BaseType(rhs), m_timeout(rhs.m_timeout) {
+        BaseType(rhs), m_timeout(rhs.m_timeout), m_success(rhs.m_success), m_retVal(rhs.m_retVal) {
         rhs.Clear();
     }
 
@@ -488,6 +492,8 @@ public:
     /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
+        m_success = rhs.m_success;
+        m_retVal = rhs.m_retVal;
         BaseType::Assign(rhs);
     }
 
@@ -518,6 +524,8 @@ public:
         if (&rhs != this) {
             BaseType::operator=(std::move(rhs));
             m_timeout = rhs.m_timeout;    // Use the resource
+            m_success = rhs.m_success;
+            m_retVal = rhs.m_retVal;
         }
         return *this;
     }
@@ -717,7 +725,7 @@ public:
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
     DelegateFunctionAsyncWait(ClassType&& rhs) noexcept :
-        BaseType(rhs), m_timeout(rhs.m_timeout) {
+        BaseType(rhs), m_timeout(rhs.m_timeout), m_success(rhs.m_success), m_retVal(rhs.m_retVal) {
         rhs.Clear();
     }
 
@@ -741,6 +749,8 @@ public:
     /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
         m_timeout = rhs.m_timeout;
+        m_success = rhs.m_success;
+        m_retVal = rhs.m_retVal;
         BaseType::Assign(rhs);
     }
 
@@ -771,6 +781,8 @@ public:
         if (&rhs != this) {
             BaseType::operator=(std::move(rhs));
             m_timeout = rhs.m_timeout;    // Use the resource
+            m_success = rhs.m_success;
+            m_retVal = rhs.m_retVal;
         }
         return *this;
     }
