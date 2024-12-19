@@ -237,6 +237,9 @@ public:
     /// @return The bound function return value, if any. Use `IsSuccess()` to determine if 
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
+        if (Empty())
+            return RetType{};
+
         // Synchronously invoke the target function?
         if (this->GetSync()) {
             // Invoke the target function directly
@@ -569,6 +572,9 @@ public:
     /// @return The bound function return value, if any. Use `IsSuccess()` to determine if 
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
+        if (Empty())
+            return RetType{};
+
         // Synchronously invoke the target function?
         if (this->GetSync()) {
             // Invoke the target function directly
@@ -832,6 +838,9 @@ public:
     /// @return The bound function return value, if any. Use `IsSuccess()` to determine if 
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
+        if (Empty())
+            return RetType{};
+
         // Synchronously invoke the target function?
         if (this->GetSync()) {
             // Invoke the target function directly

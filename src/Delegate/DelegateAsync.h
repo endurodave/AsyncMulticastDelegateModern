@@ -182,6 +182,9 @@ public:
     /// @post Do not use the return value as its not valid.
     /// @throws std::bad_alloc If dynamic memory allocation fails.
     virtual RetType operator()(Args... args) override {
+        if (Empty())
+            return RetType{};
+
         // Synchronously invoke the target function?
         if (this->GetSync()) {
             // Invoke the target function directly
@@ -452,6 +455,9 @@ public:
     /// @post Do not use the return value as its not valid.
     /// @throws std::bad_alloc If dynamic memory allocation fails.
     virtual RetType operator()(Args... args) override {
+        if (Empty())
+            return RetType{};
+
         // Synchronously invoke the target function?
         if (this->GetSync()) {
             // Invoke the target function directly
@@ -663,6 +669,9 @@ public:
     /// @post Do not use the return value as its not valid.
     /// @throws std::bad_alloc If dynamic memory allocation fails.
     virtual RetType operator()(Args... args) override {
+        if (Empty())
+            return RetType{};
+
         // Synchronously invoke the target function?
         if (this->GetSync()) {
             // Invoke the target function directly

@@ -33,6 +33,14 @@ public:
     /// @return `true` if the objects are not equal, `false` otherwise.
     virtual bool operator!=(const DelegateBase& rhs) const { return !(*this == rhs); }
 
+    /// Overload operator== to compare the delegate to nullptr
+    /// @return `true` if delegate is null.
+    virtual bool operator==(std::nullptr_t) const noexcept = 0;
+
+    /// Overload operator!= to compare the delegate to nullptr
+    /// @return `true` if delegate is not null.
+    virtual bool operator!=(std::nullptr_t) const noexcept = 0;
+
     /// @brief Clone a delegate instance.
     /// @details Use Clone() to provide a deep copy using a base pointer. Covariant 
     /// overloading is used so that a Clone() method return type is a more 
@@ -124,8 +132,11 @@ public:
 
     /// @brief Invoke the bound delegate function synchronously. 
     /// @param[in] args - the function arguments, if any.
-    /// @return The bound function return value, if any.
+    /// @return The bound function return value, if any. If empty delegate
+    /// default return type returned. 
     virtual RetType operator()(Args... args) override {
+        if (Empty())
+            return RetType{};
         return std::invoke(m_func, std::forward<Args>(args)...);
     }
 
@@ -157,6 +168,18 @@ public:
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_func == derivedRhs->m_func;
+    }
+
+    /// Overload operator!= to compare the delegate to nullptr
+    /// @return `true` if delegate is not null.
+    virtual bool operator==(std::nullptr_t) const noexcept {
+        return Empty();
+    }
+
+    /// Overload operator!= to compare the delegate to nullptr
+    /// @return `true` if delegate is null.
+    virtual bool operator!=(std::nullptr_t) const noexcept {
+        return !Empty();
     }
 
     /// @brief Check if the delegate is bound to a target function.
@@ -293,8 +316,11 @@ public:
 
     /// @brief Invoke the bound delegate function synchronously. 
     /// @param[in] args - the function arguments, if any.
-    /// @return The bound function return value, if any.
+    /// @return The bound function return value, if any. If empty delegate
+    /// default return type returned. 
     virtual RetType operator()(Args... args) override {
+        if (Empty())
+            return RetType{};
         return std::invoke(m_func, m_object, std::forward<Args>(args)...);
     }
 
@@ -328,6 +354,18 @@ public:
         return derivedRhs &&
             m_func == derivedRhs->m_func &&
             m_object == derivedRhs->m_object;
+    }
+
+    /// Overload operator!= to compare the delegate to nullptr
+    /// @return `true` if delegate is not null.
+    virtual bool operator==(std::nullptr_t) const noexcept {
+        return Empty();
+    }
+
+    /// Overload operator!= to compare the delegate to nullptr
+    /// @return `true` if delegate is null.
+    virtual bool operator!=(std::nullptr_t) const noexcept {
+        return !Empty();
     }
 
     /// @brief Check if the delegate is bound to a target function.
@@ -426,8 +464,11 @@ public:
 
     /// @brief Invoke the bound delegate function synchronously. 
     /// @param[in] args - the function arguments, if any.
-    /// @return The bound function return value, if any.
+    /// @return The bound function return value, if any. If empty delegate
+    /// default return type returned. 
     virtual RetType operator()(Args... args) override {
+        if (Empty())
+            return RetType{};
         return m_func(std::forward<Args>(args)...);
     }
 
@@ -469,6 +510,18 @@ public:
         }
 
         return false;  // Return false if dynamic cast failed
+    }
+
+    /// Overload operator!= to compare the delegate to nullptr
+    /// @return `true` if delegate is not null.
+    virtual bool operator==(std::nullptr_t) const noexcept {
+        return Empty();
+    }
+
+    /// Overload operator!= to compare the delegate to nullptr
+    /// @return `true` if delegate is null.
+    virtual bool operator!=(std::nullptr_t) const noexcept {
+        return !Empty();
     }
 
     /// @brief Check if the delegate is bound to a target function.
