@@ -173,13 +173,13 @@ public:
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
-    virtual bool operator==(std::nullptr_t) const noexcept {
+    virtual bool operator==(std::nullptr_t) const noexcept override {
         return this->Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
     /// @return `true` if delegate is not null.
-    virtual bool operator!=(std::nullptr_t) const noexcept {
+    virtual bool operator!=(std::nullptr_t) const noexcept override {
         return !this->Empty();
     }
 
@@ -475,13 +475,13 @@ public:
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
-    virtual bool operator==(std::nullptr_t) const noexcept {
+    virtual bool operator==(std::nullptr_t) const noexcept override {
         return this->Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
     /// @return `true` if delegate is not null.
-    virtual bool operator!=(std::nullptr_t) const noexcept {
+    virtual bool operator!=(std::nullptr_t) const noexcept override {
         return !this->Empty();
     }
 
@@ -718,13 +718,13 @@ public:
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
-    virtual bool operator==(std::nullptr_t) const noexcept {
+    virtual bool operator==(std::nullptr_t) const noexcept override {
         return this->Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
     /// @return `true` if delegate is not null.
-    virtual bool operator!=(std::nullptr_t) const noexcept {
+    virtual bool operator!=(std::nullptr_t) const noexcept override {
         return !this->Empty();
     }
 

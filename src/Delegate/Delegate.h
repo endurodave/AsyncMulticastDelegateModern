@@ -136,7 +136,7 @@ public:
     /// default return type returned. 
     virtual RetType operator()(Args... args) override {
         if (Empty())
-            return RetType{};
+            return RetType();
         return std::invoke(m_func, std::forward<Args>(args)...);
     }
 
@@ -177,13 +177,13 @@ public:
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
-    virtual bool operator==(std::nullptr_t) const noexcept {
+    virtual bool operator==(std::nullptr_t) const noexcept override {
         return Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
     /// @return `true` if delegate is not null.
-    virtual bool operator!=(std::nullptr_t) const noexcept {
+    virtual bool operator!=(std::nullptr_t) const noexcept override {
         return !Empty();
     }
 
@@ -337,7 +337,7 @@ public:
     /// default return type returned. 
     virtual RetType operator()(Args... args) override {
         if (Empty())
-            return RetType{};
+            return RetType();
         return std::invoke(m_func, m_object, std::forward<Args>(args)...);
     }
 
@@ -380,13 +380,13 @@ public:
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
-    virtual bool operator==(std::nullptr_t) const noexcept {
+    virtual bool operator==(std::nullptr_t) const noexcept override {
         return Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
     /// @return `true` if delegate is not null.
-    virtual bool operator!=(std::nullptr_t) const noexcept {
+    virtual bool operator!=(std::nullptr_t) const noexcept override {
         return !Empty();
     }
 
@@ -502,7 +502,7 @@ public:
     /// default return type returned. 
     virtual RetType operator()(Args... args) override {
         if (Empty())
-            return RetType{};
+            return RetType();
         return m_func(std::forward<Args>(args)...);
     }
 
@@ -553,13 +553,13 @@ public:
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
-    virtual bool operator==(std::nullptr_t) const noexcept {
+    virtual bool operator==(std::nullptr_t) const noexcept override {
         return Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
     /// @return `true` if delegate is not null.
-    virtual bool operator!=(std::nullptr_t) const noexcept {
+    virtual bool operator!=(std::nullptr_t) const noexcept override {
         return !Empty();
     }
 
