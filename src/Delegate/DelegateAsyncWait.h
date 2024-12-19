@@ -207,7 +207,7 @@ public:
 
     /// @brief Clear the target function.
     virtual void operator=(std::nullptr_t) noexcept {
-        return Clear();
+        return this->Clear();
     }
 
     /// @brief Compares two delegate objects for equality.
@@ -223,13 +223,13 @@ public:
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
     virtual bool operator==(std::nullptr_t) const noexcept {
-        return Empty();
+        return this->Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
     /// @return `true` if delegate is not null.
     virtual bool operator!=(std::nullptr_t) const noexcept {
-        return !Empty();
+        return !this->Empty();
     }
 
     /// Overload operator== to compare the delegate to nullptr
@@ -571,7 +571,7 @@ public:
 
     /// @brief Clear the target function.
     virtual void operator=(std::nullptr_t) noexcept {
-        return Clear();
+        return this->Clear();
     }
 
     /// @brief Compares two delegate objects for equality.
@@ -587,13 +587,13 @@ public:
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
     virtual bool operator==(std::nullptr_t) const noexcept {
-        return Empty();
+        return this->Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
     /// @return `true` if delegate is not null.
     virtual bool operator!=(std::nullptr_t) const noexcept {
-        return !Empty();
+        return !this->Empty();
     }
 
     /// Overload operator== to compare the delegate to nullptr
@@ -866,7 +866,7 @@ public:
 
     /// @brief Clear the target function.
     virtual void operator=(std::nullptr_t) noexcept {
-        return Clear();
+        return this->Clear();
     }
 
     /// @brief Compares two delegate objects for equality.
@@ -882,13 +882,13 @@ public:
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
     virtual bool operator==(std::nullptr_t) const noexcept {
-        return Empty();
+        return this->Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
     /// @return `true` if delegate is not null.
     virtual bool operator!=(std::nullptr_t) const noexcept {
-        return !Empty();
+        return !this->Empty();
     }
 
     /// Overload operator== to compare the delegate to nullptr
