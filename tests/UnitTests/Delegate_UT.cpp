@@ -9,7 +9,9 @@ using namespace UnitTestData;
 
 static void DelegateFreeTests()
 {
-    DelegateFree<void(int)> delegate1(FreeFuncInt1);
+    using Del = DelegateFree<void(int)>;
+
+    Del delegate1(FreeFuncInt1);
     delegate1(TEST_INT);
 
     auto delegate2 = delegate1;
@@ -17,7 +19,7 @@ static void DelegateFreeTests()
     ASSERT_TRUE(!delegate1.Empty());
     ASSERT_TRUE(!delegate2.Empty());
 
-    DelegateFree<void(int)> delegate3;
+    Del delegate3;
     delegate3 = delegate1;
     ASSERT_TRUE(delegate3 == delegate1);
     ASSERT_TRUE(delegate3);
@@ -33,20 +35,40 @@ static void DelegateFreeTests()
     ASSERT_TRUE(!delegate5.Empty());
     ASSERT_TRUE(delegate1.Empty());
 
-    DelegateFree<void(int)> delegate6;
+    Del delegate6;
     delegate6 = std::move(delegate2);
     ASSERT_TRUE(!delegate6.Empty());
     ASSERT_TRUE(delegate2.Empty());
+    ASSERT_TRUE(delegate6 != nullptr);
+    ASSERT_TRUE(nullptr != delegate6);
+    ASSERT_TRUE(delegate2 == nullptr);
+    ASSERT_TRUE(nullptr == delegate2);
 
     DelegateFunction<void(int)> other;
     ASSERT_TRUE(!(delegate6 == other));
+
+    delegate6 = nullptr;
+    ASSERT_TRUE(delegate6.Empty());
+    ASSERT_TRUE(delegate6 == nullptr);
+
+    Del del1{ &FreeFuncInt1 };
+    Del del2 = del1;
+    Del del3;
+    del3 = &FreeFuncInt1;
+    ASSERT_TRUE(!del1.Empty());
+    ASSERT_TRUE(!del2.Empty());
+    ASSERT_TRUE(!del3.Empty());
+    ASSERT_TRUE(del1 == del2);
+    ASSERT_TRUE(del2 == del3);
 }
 
 static void DelegateMemberTests()
 {
+    using Del = DelegateMember<TestClass1, void(int)>;
+
     TestClass1 testClass1;
 
-    DelegateMember<TestClass1, void(int)> delegate1(&testClass1, &TestClass1::MemberFuncInt1);
+    Del delegate1(&testClass1, &TestClass1::MemberFuncInt1);
     delegate1(TEST_INT);
 
     auto delegate2 = delegate1;
@@ -54,7 +76,7 @@ static void DelegateMemberTests()
     ASSERT_TRUE(!delegate1.Empty());
     ASSERT_TRUE(!delegate2.Empty());
 
-    DelegateMember<TestClass1, void(int)> delegate3;
+    Del delegate3;
     delegate3 = delegate1;
     ASSERT_TRUE(delegate3 == delegate1);
     ASSERT_TRUE(delegate3);
@@ -70,20 +92,30 @@ static void DelegateMemberTests()
     ASSERT_TRUE(!delegate5.Empty());
     ASSERT_TRUE(delegate1.Empty());
 
-    DelegateMember<TestClass1, void(int)> delegate6;
+    Del delegate6;
     delegate6 = std::move(delegate2);
     ASSERT_TRUE(!delegate6.Empty());
     ASSERT_TRUE(delegate2.Empty());
+    ASSERT_TRUE(delegate6 != nullptr);
+    ASSERT_TRUE(nullptr != delegate6);
+    ASSERT_TRUE(delegate2 == nullptr);
+    ASSERT_TRUE(nullptr == delegate2);
 
     DelegateFunction<void(int)> other;
     ASSERT_TRUE(!(delegate6 == other));
+
+    delegate6 = nullptr;
+    ASSERT_TRUE(delegate6.Empty());
+    ASSERT_TRUE(delegate6 == nullptr);
 }
 
 static void DelegateMemberSpTests()
 {
+    using Del = DelegateMember<TestClass1, void(int)>;
+
     auto testClass1 = std::make_shared<TestClass1>();
 
-    DelegateMember<TestClass1, void(int)> delegate1(testClass1, &TestClass1::MemberFuncInt1);
+    Del delegate1(testClass1, &TestClass1::MemberFuncInt1);
     delegate1(TEST_INT);
 
     auto delegate2 = delegate1;
@@ -91,7 +123,7 @@ static void DelegateMemberSpTests()
     ASSERT_TRUE(!delegate1.Empty());
     ASSERT_TRUE(!delegate2.Empty());
 
-    DelegateMember<TestClass1, void(int)> delegate3;
+    Del delegate3;
     delegate3 = delegate1;
     ASSERT_TRUE(delegate3 == delegate1);
     ASSERT_TRUE(delegate3);
@@ -107,18 +139,28 @@ static void DelegateMemberSpTests()
     ASSERT_TRUE(!delegate5.Empty());
     ASSERT_TRUE(delegate1.Empty());
 
-    DelegateMember<TestClass1, void(int)> delegate6;
+    Del delegate6;
     delegate6 = std::move(delegate2);
     ASSERT_TRUE(!delegate6.Empty());
     ASSERT_TRUE(delegate2.Empty());
+    ASSERT_TRUE(delegate6 != nullptr);
+    ASSERT_TRUE(nullptr != delegate6);
+    ASSERT_TRUE(delegate2 == nullptr);
+    ASSERT_TRUE(nullptr == delegate2);
 
     DelegateFunction<void(int)> other;
     ASSERT_TRUE(!(delegate6 == other));
+
+    delegate6 = nullptr;
+    ASSERT_TRUE(delegate6.Empty());
+    ASSERT_TRUE(delegate6 == nullptr);
 }
 
 static void DelegateFunctionTests()
 {
-    DelegateFunction<void(int)> delegate1(LambdaNoCapture);
+    using Del = DelegateFunction<void(int)>;
+
+    Del delegate1(LambdaNoCapture);
     delegate1(TEST_INT);
 
     auto delegate2 = delegate1;
@@ -126,7 +168,7 @@ static void DelegateFunctionTests()
     ASSERT_TRUE(!delegate1.Empty());
     ASSERT_TRUE(!delegate2.Empty());
 
-    DelegateFunction<void(int)> delegate3;
+    Del delegate3;
     delegate3 = delegate1;
     ASSERT_TRUE(delegate3 == delegate1);
     ASSERT_TRUE(delegate3);
@@ -142,13 +184,33 @@ static void DelegateFunctionTests()
     ASSERT_TRUE(!delegate5.Empty());
     ASSERT_TRUE(delegate1.Empty());
 
-    DelegateFunction<void(int)> delegate6;
+    Del delegate6;
     delegate6 = std::move(delegate2);
     ASSERT_TRUE(!delegate6.Empty());
     ASSERT_TRUE(delegate2.Empty());
+    ASSERT_TRUE(delegate6 != nullptr);
+    ASSERT_TRUE(nullptr != delegate6);
+    ASSERT_TRUE(delegate2 == nullptr);
+    ASSERT_TRUE(nullptr == delegate2);
 
     DelegateFree<void(int)> other;
     ASSERT_TRUE(!(delegate6 == other));
+
+    delegate6 = nullptr;
+    ASSERT_TRUE(delegate6.Empty());
+    ASSERT_TRUE(delegate6 == nullptr);
+    ASSERT_TRUE(nullptr == delegate6);
+    ASSERT_TRUE(!(delegate6 != nullptr));
+
+    Del del1{ LambdaNoCapture };
+    Del del2 = del1;
+    Del del3;
+    del3 = LambdaNoCapture;
+    ASSERT_TRUE(!del1.Empty());
+    ASSERT_TRUE(!del2.Empty());
+    ASSERT_TRUE(!del3.Empty());
+    ASSERT_TRUE(del1 == del2);
+    ASSERT_TRUE(del2 == del3);
 }
 
 void Delegate_UT()

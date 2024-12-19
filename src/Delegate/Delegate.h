@@ -161,6 +161,11 @@ public:
         return *this;
     }
 
+    /// @brief Clear the target function.
+    virtual void operator=(std::nullptr_t) noexcept {
+        return Clear();
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -170,16 +175,28 @@ public:
             m_func == derivedRhs->m_func;
     }
 
-    /// Overload operator!= to compare the delegate to nullptr
-    /// @return `true` if delegate is not null.
+    /// Overload operator== to compare the delegate to nullptr
+    /// @return `true` if delegate is null.
     virtual bool operator==(std::nullptr_t) const noexcept {
         return Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
-    /// @return `true` if delegate is null.
+    /// @return `true` if delegate is not null.
     virtual bool operator!=(std::nullptr_t) const noexcept {
         return !Empty();
+    }
+
+    /// Overload operator== to compare the delegate to nullptr
+    /// @return `true` if delegate is null.
+    friend bool operator==(std::nullptr_t, const ClassType& rhs) noexcept {
+        return rhs.Empty();
+    }
+
+    /// Overload operator!= to compare the delegate to nullptr
+    /// @return `true` if delegate is not null.
+    friend bool operator!=(std::nullptr_t, const ClassType& rhs) noexcept {
+        return !rhs.Empty();
     }
 
     /// @brief Check if the delegate is bound to a target function.
@@ -346,6 +363,11 @@ public:
         return *this;
     }
 
+    /// @brief Clear the target function.
+    virtual void operator=(std::nullptr_t) noexcept {
+        return Clear();
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -356,16 +378,28 @@ public:
             m_object == derivedRhs->m_object;
     }
 
-    /// Overload operator!= to compare the delegate to nullptr
-    /// @return `true` if delegate is not null.
+    /// Overload operator== to compare the delegate to nullptr
+    /// @return `true` if delegate is null.
     virtual bool operator==(std::nullptr_t) const noexcept {
         return Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
-    /// @return `true` if delegate is null.
+    /// @return `true` if delegate is not null.
     virtual bool operator!=(std::nullptr_t) const noexcept {
         return !Empty();
+    }
+
+    /// Overload operator== to compare the delegate to nullptr
+    /// @return `true` if delegate is null.
+    friend bool operator==(std::nullptr_t, const ClassType& rhs) noexcept {
+        return rhs.Empty();
+    }
+
+    /// Overload operator!= to compare the delegate to nullptr
+    /// @return `true` if delegate is not null.
+    friend bool operator!=(std::nullptr_t, const ClassType& rhs) noexcept {
+        return !rhs.Empty();
     }
 
     /// @brief Check if the delegate is bound to a target function.
@@ -493,6 +527,11 @@ public:
         return *this;
     }
 
+    /// @brief Clear the target function.
+    virtual void operator=(std::nullptr_t) noexcept {
+        return Clear();
+    }
+
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
@@ -512,16 +551,28 @@ public:
         return false;  // Return false if dynamic cast failed
     }
 
-    /// Overload operator!= to compare the delegate to nullptr
-    /// @return `true` if delegate is not null.
+    /// Overload operator== to compare the delegate to nullptr
+    /// @return `true` if delegate is null.
     virtual bool operator==(std::nullptr_t) const noexcept {
         return Empty();
     }
 
     /// Overload operator!= to compare the delegate to nullptr
-    /// @return `true` if delegate is null.
+    /// @return `true` if delegate is not null.
     virtual bool operator!=(std::nullptr_t) const noexcept {
         return !Empty();
+    }
+
+    /// Overload operator== to compare the delegate to nullptr
+    /// @return `true` if delegate is null.
+    friend bool operator==(std::nullptr_t, const ClassType& rhs) noexcept {
+        return rhs.Empty();
+    }
+
+    /// Overload operator!= to compare the delegate to nullptr
+    /// @return `true` if delegate is not null.
+    friend bool operator!=(std::nullptr_t, const ClassType& rhs) noexcept {
+        return !rhs.Empty();
     }
 
     /// @brief Check if the delegate is bound to a target function.

@@ -617,6 +617,9 @@ int main(void)
 #endif
 
     // Begin lambda examples. Lambda captures not allowed if delegates used to invoke.
+    DelegateFunction<int(int)> delFunc([](int x) -> int { return x + 5; });
+    int val = delFunc(8);
+
     std::function LambdaFunc1 = [](int i) -> int
     {
         cout << "Called LambdaFunc1 " << i << std::endl;

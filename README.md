@@ -9,6 +9,8 @@ A C++ delegate library capable of invoking any callable function either synchron
 
 Asynchronous function calls support both non-blocking and blocking modes with a timeout. The library supports all types of target functions, including free functions, class member functions, static class functions, lambdas, and `std::function`. It is capable of handling any function signature, regardless of the number of arguments or return value. All argument types are supported, including by value, pointers, pointers to pointers, and references. The delegate library takes care of the intricate details of function invocation across thread boundaries. Thread-safe delegate containers stores delegate instances with a matching function signature.
 
+It is always safe to call the delegate. In the null state, a call will not do anything and return a default constructed return value.
+
  A delegate instance can be:
 
  * Copied freely.
@@ -81,6 +83,12 @@ if (delegateSafe)
 delegateSafe -= MakeDelegate(&testClass, &TestClass::MemberFunc, workerThread1);
 ```
 
+Invoke a lambda using a delegate. 
+
+```cpp
+DelegateFunction<int(int)> delFunc([](int x) -> int { return x + 5; });
+int retVal = delFunc(8);
+```
 Asynchronously invoke `LambdaFunc1` on `workerThread1` and block waiting for the return value. 
 
 ```cpp
