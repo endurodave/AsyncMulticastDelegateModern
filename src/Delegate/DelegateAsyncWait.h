@@ -16,7 +16,7 @@
 /// Delegate "`AsyncWait`" series of classes used to invoke a function asynchronously and wait for 
 /// completion by the destination target thread. Invoking a function asynchronously requires making 
 /// a clone of the object to be sent to the destination thread message queue. The destination thread 
-/// calls `DelegateInvoke()` to invoke the target function. The source thread blocks on a semaphore 
+/// calls `Invoke()` to invoke the target function. The source thread blocks on a semaphore 
 /// waiting for the destination thread to complete the function invoke. If the caller timeout expires, 
 /// the target function is not invoked. 
 /// 
@@ -24,9 +24,10 @@
 /// threads using the two thread safe functions below:
 ///
 /// `RetType operator()(Args... args)` - called by the source thread to initiate the async
-/// function call.
+/// function call. May throw `std::bad_alloc` if dynamic storage allocation fails. All
+/// other delegate class functions do not throw exceptions.
 ///
-/// `void DelegateInvoke(std::shared_ptr<DelegateMsg> msg)` - called by the destination
+/// `void Invoke(std::shared_ptr<DelegateMsg> msg)` - called by the destination
 /// thread to invoke the target function. The destination thread must not call any other
 /// delegate instance functions.
 ///
@@ -218,7 +219,7 @@ public:
     /// Called by the source thread.
     /// @details Invoke delegate function asynchronously and wait for the return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
-    /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
+    /// destination thread message queue. `Invoke()` must be called by the destination 
     /// thread to invoke the target function.
     /// 
     /// If the destination thread invokes the function within `m_timeout`, the return 
@@ -243,12 +244,16 @@ public:
         } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
+            if (!delegate)
+                throw std::bad_alloc();
 
             // Create a new message instance for sending to the destination thread.
             auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
+            if (!msg)
+                throw std::bad_alloc();
             msg->SetInvokerWaiting(true);
 
-            // Dispatch message onto the callback destination thread. DelegateInvoke()
+            // Dispatch message onto the callback destination thread. Invoke()
             // will be called by the destination thread. 
             this->GetThread().DispatchDelegate(msg);
 
@@ -294,7 +299,7 @@ public:
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 
     /// destination thread.
-    /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
+    /// @details Each source thread call to `operator()` generate a call to `Invoke()` 
     /// on the destination thread. A lock is used to protect source and destination thread shared 
     /// data. A semaphore is used to signal the source thread when the destination thread 
     /// completes the target function call.
@@ -302,11 +307,12 @@ public:
     /// If source thread timeout expires and before the destination thread invokes the 
     /// target function, the target function is not called.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
+    /// @return `true` if target function invoked or timeout expired; `false` if error. 
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncWaitMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
-            throw std::invalid_argument("Invalid DelegateAsyncWaitMsg cast");
+            return false;
 
         // Protect data shared between source and destination threads
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
@@ -329,6 +335,7 @@ public:
             // Signal the source thread that the destination thread function call is complete
             delegateMsg->GetSema().Signal();
         }
+        return true;
     }
 
     /// Returns `true` if asynchronous function successfully invoked on the target thread
@@ -544,7 +551,7 @@ public:
     /// Called by the source thread.
     /// @details Invoke delegate function asynchronously and wait for the return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
-    /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
+    /// destination thread message queue. `Invoke()` must be called by the destination 
     /// thread to invoke the target function.
     /// 
     /// If the destination thread invokes the function within `m_timeout`, the return 
@@ -569,12 +576,16 @@ public:
         } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
+            if (!delegate)
+                throw std::bad_alloc();
 
             // Create a new message instance for sending to the destination thread.
             auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
+            if (!msg)
+                throw std::bad_alloc();
             msg->SetInvokerWaiting(true);
 
-            // Dispatch message onto the callback destination thread. DelegateInvoke()
+            // Dispatch message onto the callback destination thread. Invoke()
             // will be called by the destination thread. 
             this->GetThread().DispatchDelegate(msg);
 
@@ -620,7 +631,7 @@ public:
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 
     /// destination thread.
-    /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
+    /// @details Each source thread call to `operator()` generate a call to `Invoke()` 
     /// on the destination thread. A lock is used to protect source and destination thread shared 
     /// data. A semaphore is used to signal the source thread when the destination thread 
     /// completes the target function call.
@@ -628,11 +639,12 @@ public:
     /// If source thread timeout expires and before the destination thread invokes the 
     /// target function, the target function is not called.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
+    /// @return `true` if target function invoked or timeout expired; `false` if error. 
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncWaitMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
-            throw std::invalid_argument("Invalid DelegateAsyncWaitMsg cast");
+            return false;
 
         // Protect data shared between source and destination threads
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
@@ -655,6 +667,7 @@ public:
             // Signal the source thread that the destination thread function call is complete
             delegateMsg->GetSema().Signal();
         }
+        return true;
     }
 
     /// Returns `true` if asynchronous function successfully invoked on the target thread
@@ -801,7 +814,7 @@ public:
     /// Called by the source thread.
     /// @details Invoke delegate function asynchronously and wait for the return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
-    /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
+    /// destination thread message queue. `Invoke()` must be called by the destination 
     /// thread to invoke the target function.
     /// 
     /// If the destination thread invokes the function within `m_timeout`, the return 
@@ -826,12 +839,16 @@ public:
         } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
+            if (!delegate)
+                throw std::bad_alloc();
 
             // Create a new message instance for sending to the destination thread.
             auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
+            if (!msg)
+                throw std::bad_alloc();
             msg->SetInvokerWaiting(true);
 
-            // Dispatch message onto the callback destination thread. DelegateInvoke()
+            // Dispatch message onto the callback destination thread. Invoke()
             // will be called by the destination thread. 
             this->GetThread().DispatchDelegate(msg);
 
@@ -877,7 +894,7 @@ public:
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 
     /// destination thread.
-    /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
+    /// @details Each source thread call to `operator()` generate a call to `Invoke()` 
     /// on the destination thread. A lock is used to protect source and destination thread shared 
     /// data. A semaphore is used to signal the source thread when the destination thread 
     /// completes the target function call.
@@ -885,11 +902,12 @@ public:
     /// If source thread timeout expires and before the destination thread invokes the 
     /// target function, the target function is not called.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
+    /// @return `true` if target function invoked or timeout expired; `false` if error. 
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncWaitMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
-            throw std::invalid_argument("Invalid DelegateAsyncWaitMsg cast");
+            return false;
 
         // Protect data shared between source and destination threads
         const std::lock_guard<std::mutex> lock(delegateMsg->GetLock());
@@ -912,6 +930,7 @@ public:
             // Signal the source thread that the destination thread function call is complete
             delegateMsg->GetSema().Signal();
         }
+        return true;
     }
 
     /// Returns `true` if asynchronous function successfully invoked on the target thread

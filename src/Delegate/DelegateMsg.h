@@ -26,8 +26,6 @@ public:
 	DelegateMsg(std::shared_ptr<IDelegateInvoker> invoker) :
 		m_invoker(invoker)
 	{
-        if (!invoker)
-            throw std::invalid_argument("Invoker must not be null");
 	}
 
 	virtual ~DelegateMsg() = default;

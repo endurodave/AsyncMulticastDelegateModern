@@ -41,6 +41,10 @@
 /// destination thread, regardless of the argument type. This approach offers 'fire and forget' 
 /// functionality without the caller waiting.
 /// 
+/// The `Async` and `AsyncWait` class variants may throw `std::alloc` if heap allocation 
+/// fails within `operator()(Args... args)`. All other delegate class functions do not throw 
+/// exceptions.
+/// 
 /// Github responsitory location:  
 /// https://github.com/endurodave/AsyncMulticastDelegateModern
 ///

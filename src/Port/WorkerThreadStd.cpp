@@ -167,14 +167,16 @@ void WorkerThread::Process()
 		{
 			case MSG_DISPATCH_DELEGATE:
 			{
-				if (msg->GetData() == nullptr)
-					throw std::invalid_argument("Message data pointer is null");
-
 				// Get pointer to DelegateMsg data from queue msg data
                 auto delegateMsg = msg->GetData();
+				ASSERT_TRUE(delegateMsg);
+
+				auto invoker = delegateMsg->GetDelegateInvoker();
+				ASSERT_TRUE(invoker);
 
 				// Invoke the delegate destination target function
-				delegateMsg->GetDelegateInvoker()->DelegateInvoke(delegateMsg);
+				bool success = invoker->Invoke(delegateMsg);
+				ASSERT_TRUE(success);
 				break;
 			}
 

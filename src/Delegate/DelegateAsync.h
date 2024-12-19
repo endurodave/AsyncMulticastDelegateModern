@@ -10,7 +10,15 @@
 /// 
 /// @details The classes are not thread safe. Invoking a function asynchronously requires 
 /// sending a clone of the object to the destination thread message queue. The destination 
-/// thread calls `DelegateInvoke()` to invoke the target function.
+/// thread calls `Invoke()` to invoke the target function.
+/// 
+/// `RetType operator()(Args... args)` - called by the source thread to initiate the async
+/// function call. May throw `std::bad_alloc` if dynamic storage allocation fails. All
+/// other delegate class functions do not throw exceptions.
+///
+/// `void Invoke(std::shared_ptr<DelegateMsg> msg)` - called by the destination
+/// thread to invoke the target function. The destination thread must not call any other
+/// delegate instance functions.
 /// 
 /// Code within `<common_code>` and `</common_code>` is updated using sync_src.py. Manually update 
 /// the code within the `DelegateFreeAsync` `common_code` tags, then run the script to 
@@ -35,6 +43,7 @@ public:
     /// Constructor
     /// @param[in] invoker - the invoker instance
     /// @param[in] args - a parameter pack of all target function arguments
+    /// @throws std::bad_alloc If make_tuble_heap() fails to obtain memory.
     DelegateAsyncMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsg(invoker),
         m_args(make_tuple_heap(m_heapMem, m_start, std::forward<Args>(args)...)) { }
 
@@ -160,7 +169,7 @@ public:
     /// @brief Invoke the bound delegate function asynchronously. Called by the source thread.
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
-    /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
+    /// destination thread message queue. `Invoke()` must be called by the destination 
     /// thread to invoke the target function.
     /// 
     /// The `DelegateAsyncMsg` duplicates and copies the function arguments into heap memory. 
@@ -171,6 +180,7 @@ public:
     /// @return A default return value. The return value is *not* returned from the 
     /// target function. Do not use the return value.
     /// @post Do not use the return value as its not valid.
+    /// @throws std::bad_alloc If dynamic memory allocation fails.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
         if (this->GetSync()) {
@@ -179,11 +189,15 @@ public:
         } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
+            if (!delegate)
+                throw std::bad_alloc();
 
             // Create a new message instance for sending to the destination thread
             auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
+            if (!msg)
+                throw std::bad_alloc();
 
-            // Dispatch message onto the callback destination thread. DelegateInvoke()
+            // Dispatch message onto the callback destination thread. Invoke()
             // will be called by the destintation thread. 
             GetThread().DispatchDelegate(msg);
 
@@ -210,23 +224,25 @@ public:
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 
     /// destintation thread.
-    /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
+    /// @details Each source thread call to `operator()` generate a call to `Invoke()` 
     /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
     /// source and destination `delegateMsg` access because the source thread is not waiting 
     /// for the function call to complete.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
+    /// @return `true` if target function invoked; `false` if error. 
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
-            throw std::invalid_argument("Invalid DelegateAsyncMsg cast");
+            return false;
 
-        // Invoke the delegate function asynchronously
+        // Invoke the delegate function synchronously
         SetSync(true);
 
         // Invoke the target function using the source thread supplied function arguments
         std::apply(&BaseType::operator(), 
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
+        return true;
     }
 
     ///@brief Get the destination thread that the target function is invoked on.
@@ -423,7 +439,7 @@ public:
     /// @brief Invoke the bound delegate function asynchronously. Called by the source thread.
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
-    /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
+    /// destination thread message queue. `Invoke()` must be called by the destination 
     /// thread to invoke the target function.
     /// 
     /// The `DelegateAsyncMsg` duplicates and copies the function arguments into heap memory. 
@@ -434,6 +450,7 @@ public:
     /// @return A default return value. The return value is *not* returned from the 
     /// target function. Do not use the return value.
     /// @post Do not use the return value as its not valid.
+    /// @throws std::bad_alloc If dynamic memory allocation fails.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
         if (this->GetSync()) {
@@ -442,11 +459,15 @@ public:
         } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
+            if (!delegate)
+                throw std::bad_alloc();
 
             // Create a new message instance for sending to the destination thread
             auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
+            if (!msg)
+                throw std::bad_alloc();
 
-            // Dispatch message onto the callback destination thread. DelegateInvoke()
+            // Dispatch message onto the callback destination thread. Invoke()
             // will be called by the destintation thread. 
             GetThread().DispatchDelegate(msg);
 
@@ -473,23 +494,25 @@ public:
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 
     /// destintation thread.
-    /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
+    /// @details Each source thread call to `operator()` generate a call to `Invoke()` 
     /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
     /// source and destination `delegateMsg` access because the source thread is not waiting 
     /// for the function call to complete.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
+    /// @return `true` if target function invoked; `false` if error. 
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
-            throw std::invalid_argument("Invalid DelegateAsyncMsg cast");
+            return false;
 
-        // Invoke the delegate function asynchronously
+        // Invoke the delegate function synchronously
         SetSync(true);
 
         // Invoke the target function using the source thread supplied function arguments
         std::apply(&BaseType::operator(), 
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
+        return true;
     }
 
     ///@brief Get the destination thread that the target function is invoked on.
@@ -627,7 +650,7 @@ public:
     /// @brief Invoke the bound delegate function asynchronously. Called by the source thread.
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
-    /// destination thread message queue. `DelegateInvoke()` must be called by the destination 
+    /// destination thread message queue. `Invoke()` must be called by the destination 
     /// thread to invoke the target function.
     /// 
     /// The `DelegateAsyncMsg` duplicates and copies the function arguments into heap memory. 
@@ -638,6 +661,7 @@ public:
     /// @return A default return value. The return value is *not* returned from the 
     /// target function. Do not use the return value.
     /// @post Do not use the return value as its not valid.
+    /// @throws std::bad_alloc If dynamic memory allocation fails.
     virtual RetType operator()(Args... args) override {
         // Synchronously invoke the target function?
         if (this->GetSync()) {
@@ -646,11 +670,15 @@ public:
         } else {
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
+            if (!delegate)
+                throw std::bad_alloc();
 
             // Create a new message instance for sending to the destination thread
             auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
+            if (!msg)
+                throw std::bad_alloc();
 
-            // Dispatch message onto the callback destination thread. DelegateInvoke()
+            // Dispatch message onto the callback destination thread. Invoke()
             // will be called by the destintation thread. 
             GetThread().DispatchDelegate(msg);
 
@@ -677,23 +705,25 @@ public:
 
     /// @brief Invoke the delegate function on the destination thread. Called by the 
     /// destintation thread.
-    /// @details Each source thread call to `operator()` generate a call to `DelegateInvoke()` 
+    /// @details Each source thread call to `operator()` generate a call to `Invoke()` 
     /// on the destination thread. Unlike `DelegateAsyncWait`, a lock is not required between 
     /// source and destination `delegateMsg` access because the source thread is not waiting 
     /// for the function call to complete.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
-    virtual void DelegateInvoke(std::shared_ptr<DelegateMsg> msg) override {
+    /// @return `true` if target function invoked; `false` if error. 
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
-            throw std::invalid_argument("Invalid DelegateAsyncMsg cast");
+            return false;
 
-        // Invoke the delegate function asynchronously
+        // Invoke the delegate function synchronously
         SetSync(true);
 
         // Invoke the target function using the source thread supplied function arguments
         std::apply(&BaseType::operator(), 
             std::tuple_cat(std::make_tuple(this), delegateMsg->GetArgs()));
+        return true;
     }
 
     ///@brief Get the destination thread that the target function is invoked on.
