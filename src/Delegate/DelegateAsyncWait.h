@@ -267,7 +267,7 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         if (Empty())
-            return RetType{};
+            return RetType();
 
         // Synchronously invoke the target function?
         if (this->GetSync()) {
@@ -631,7 +631,7 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         if (Empty())
-            return RetType{};
+            return RetType();
 
         // Synchronously invoke the target function?
         if (this->GetSync()) {
@@ -926,7 +926,7 @@ public:
     /// the return value is valid before use.
     virtual RetType operator()(Args... args) override {
         if (Empty())
-            return RetType{};
+            return RetType();
 
         // Synchronously invoke the target function?
         if (this->GetSync()) {
