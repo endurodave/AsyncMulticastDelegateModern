@@ -81,7 +81,7 @@ public:
     /// @param[in] func The target free function to store.
     /// @param[in] thread The execution thread to invoke `func`.
     DelegateFreeAsync(FreeFunc func, DelegateThread& thread) :
-        BaseType(func), m_thread(thread) { 
+        BaseType(func), m_thread(&thread) { 
         Bind(func, thread); 
     }
 
@@ -102,7 +102,7 @@ public:
         rhs.Clear();
     }
 
-    DelegateFreeAsync() = delete;
+    DelegateFreeAsync() = default;
 
     /// @brief Bind a free function to the delegate.
     /// @details This method associates a free function (`func`) with the delegate. 
@@ -111,7 +111,7 @@ public:
     /// match the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(FreeFunc func, DelegateThread& thread) {
-        m_thread = thread;
+        m_thread = &thread;
         BaseType::Bind(func);
     }
 
@@ -167,7 +167,7 @@ public:
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
-            &m_thread == &derivedRhs->m_thread &&
+            m_thread == derivedRhs->m_thread &&
             BaseType::operator==(rhs);
     }
 
@@ -229,9 +229,12 @@ public:
             if (!msg)
                 throw std::bad_alloc();
 
-            // Dispatch message onto the callback destination thread. Invoke()
-            // will be called by the destintation thread. 
-            GetThread().DispatchDelegate(msg);
+            auto thread = this->GetThread();
+            if (thread) {
+                // Dispatch message onto the callback destination thread. Invoke()
+                // will be called by the destintation thread. 
+                thread->DispatchDelegate(msg);
+            }
 
             // Do not wait for destination thread return value from async function call
             return RetType();
@@ -279,7 +282,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() noexcept { return m_thread; }
+    DelegateThread* GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.
@@ -293,7 +296,7 @@ protected:
 
 private:
     /// The target thread to invoke the delegate function.
-    DelegateThread& m_thread;   
+    DelegateThread* m_thread = nullptr;   
 
     /// Flag to control synchronous vs asynchronous target invoke behavior.
     bool m_sync = false;        
@@ -322,7 +325,7 @@ public:
     /// @param[in] object The target object pointer to store.
     /// @param[in] func The target member function to store.
     /// @param[in] thread The execution thread to invoke `func`.
-    DelegateMemberAsync(SharedPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
+    DelegateMemberAsync(SharedPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(&thread) {
         Bind(object, func, thread);
     }
 
@@ -330,7 +333,7 @@ public:
     /// @param[in] object The target object pointer to store.
     /// @param[in] func The target const member function to store.
     /// @param[in] thread The execution thread to invoke `func`.
-    DelegateMemberAsync(SharedPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
+    DelegateMemberAsync(SharedPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(&thread) {
         Bind(object, func, thread);
     }
 
@@ -338,7 +341,7 @@ public:
     /// @param[in] object The target object pointer to store.
     /// @param[in] func The target member function to store.
     /// @param[in] thread The execution thread to invoke `func`.
-    DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
+    DelegateMemberAsync(ObjectPtr object, MemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(&thread) {
         Bind(object, func, thread);
     }
 
@@ -346,7 +349,7 @@ public:
     /// @param[in] object The target object pointer to store.
     /// @param[in] func The target const member function to store.
     /// @param[in] thread The execution thread to invoke `func`.
-    DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(thread) {
+    DelegateMemberAsync(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) : BaseType(object, func), m_thread(&thread) {
         Bind(object, func, thread);
     }
 
@@ -367,7 +370,7 @@ public:
         rhs.Clear();
     }
 
-    DelegateMemberAsync() = delete;
+    DelegateMemberAsync() = default;
 
     /// @brief Bind a const member function to the delegate.
     /// @details This method associates a member function (`func`) with the delegate. 
@@ -377,7 +380,7 @@ public:
     /// the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(SharedPtr object, MemberFunc func, DelegateThread& thread) {
-        m_thread = thread;
+        m_thread = &thread;
         BaseType::Bind(object, func);
     }
 
@@ -389,7 +392,7 @@ public:
     /// match the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(SharedPtr object, ConstMemberFunc func, DelegateThread& thread) {
-        m_thread = thread;
+        m_thread = &thread;
         BaseType::Bind(object, func);
     }
 
@@ -401,7 +404,7 @@ public:
     /// the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
-        m_thread = thread;
+        m_thread = &thread;
         BaseType::Bind(object, func);
     }
 
@@ -413,7 +416,7 @@ public:
     /// match the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) {
-        m_thread = thread;
+        m_thread = &thread;
         BaseType::Bind(object, func);
     }
 
@@ -469,7 +472,7 @@ public:
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
-            &m_thread == &derivedRhs->m_thread &&
+            m_thread == derivedRhs->m_thread &&
             BaseType::operator==(rhs);
     }
 
@@ -531,9 +534,12 @@ public:
             if (!msg)
                 throw std::bad_alloc();
 
-            // Dispatch message onto the callback destination thread. Invoke()
-            // will be called by the destintation thread. 
-            GetThread().DispatchDelegate(msg);
+            auto thread = this->GetThread();
+            if (thread) {
+                // Dispatch message onto the callback destination thread. Invoke()
+                // will be called by the destintation thread. 
+                thread->DispatchDelegate(msg);
+            }
 
             // Do not wait for destination thread return value from async function call
             return RetType();
@@ -581,7 +587,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() noexcept { return m_thread; }
+    DelegateThread* GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.
@@ -595,7 +601,7 @@ protected:
 
 private:
     /// The target thread to invoke the delegate function.
-    DelegateThread& m_thread;   
+    DelegateThread* m_thread = nullptr;   
 
     /// Flag to control synchronous vs asynchronous target invoke behavior.
     bool m_sync = false;        
@@ -626,7 +632,7 @@ public:
     /// @param[in] func The target `std::function` to store.
     /// @param[in] thread The execution thread to invoke `func`.
     DelegateFunctionAsync(FunctionType func, DelegateThread& thread) :
-        BaseType(func), m_thread(thread) {
+        BaseType(func), m_thread(&thread) {
         Bind(func, thread);
     }
 
@@ -647,7 +653,7 @@ public:
         rhs.Clear();
     }
 
-    DelegateFunctionAsync() = delete;
+    DelegateFunctionAsync() = default;
 
     /// @brief Bind a `std::function` to the delegate.
     /// @details This method associates a member function (`func`) with the delegate. 
@@ -656,7 +662,7 @@ public:
     /// the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(FunctionType func, DelegateThread& thread) {
-        m_thread = thread;
+        m_thread = &thread;
         BaseType::Bind(func);
     }
 
@@ -712,7 +718,7 @@ public:
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
-            &m_thread == &derivedRhs->m_thread &&
+            m_thread == derivedRhs->m_thread &&
             BaseType::operator==(rhs);
     }
 
@@ -774,9 +780,12 @@ public:
             if (!msg)
                 throw std::bad_alloc();
 
-            // Dispatch message onto the callback destination thread. Invoke()
-            // will be called by the destintation thread. 
-            GetThread().DispatchDelegate(msg);
+            auto thread = this->GetThread();
+            if (thread) {
+                // Dispatch message onto the callback destination thread. Invoke()
+                // will be called by the destintation thread. 
+                thread->DispatchDelegate(msg);
+            }
 
             // Do not wait for destination thread return value from async function call
             return RetType();
@@ -824,7 +833,7 @@ public:
 
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
-    DelegateThread& GetThread() noexcept { return m_thread; }
+    DelegateThread* GetThread() noexcept { return m_thread; }
 
 protected:
     /// @brief Get the synchronous target invoke flag.
@@ -838,7 +847,7 @@ protected:
 
 private:
     /// The target thread to invoke the delegate function.
-    DelegateThread& m_thread;   
+    DelegateThread* m_thread = nullptr;   
 
     /// Flag to control synchronous vs asynchronous target invoke behavior.
     bool m_sync = false;        
@@ -853,7 +862,7 @@ private:
 /// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
 /// @return A `DelegateFreeAsync` object bound to the specified free function and thread.
 template <class RetType, class... Args>
-DelegateFreeAsync<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args), DelegateThread& thread) {
+auto MakeDelegate(RetType(*func)(Args... args), DelegateThread& thread) {
     return DelegateFreeAsync<RetType(Args...)>(func, thread);
 }
 
@@ -866,7 +875,7 @@ DelegateFreeAsync<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args), D
 /// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
 /// @return A `DelegateMemberAsync` object bound to the specified non-const member function and thread.
 template <class TClass, class RetType, class... Args>
-DelegateMemberAsync<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args), DelegateThread& thread) {
+auto MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args), DelegateThread& thread) {
     return DelegateMemberAsync<TClass, RetType(Args...)>(object, func, thread);
 }
 
@@ -879,7 +888,7 @@ DelegateMemberAsync<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetTy
 /// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
 /// @return A `DelegateMemberAsync` object bound to the specified const member function and thread.
 template <class TClass, class RetType, class... Args>
-DelegateMemberAsync<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args) const, DelegateThread& thread) {
+auto MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args) const, DelegateThread& thread) {
     return DelegateMemberAsync<TClass, RetType(Args...)>(object, func, thread);
 }
 
@@ -892,7 +901,7 @@ DelegateMemberAsync<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetTy
 /// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
 /// @return A `DelegateMemberAsync` shared pointer bound to the specified non-const member function and thread.
 template <class TClass, class RetVal, class... Args>
-DelegateMemberAsync<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args), DelegateThread& thread) {
+auto MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args), DelegateThread& thread) {
     return DelegateMemberAsync<TClass, RetVal(Args...)>(object, func, thread);
 }
 
@@ -906,7 +915,7 @@ DelegateMemberAsync<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass
 /// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
 /// @return A `DelegateMemberAsync` shared pointer bound to the specified const member function and thread.
 template <class TClass, class RetVal, class... Args>
-DelegateMemberAsync<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args) const, DelegateThread& thread) {
+auto MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args) const, DelegateThread& thread) {
     return DelegateMemberAsync<TClass, RetVal(Args...)>(object, func, thread);
 }
 
@@ -917,7 +926,7 @@ DelegateMemberAsync<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass
 /// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
 /// @return A `DelegateFunctionAsync` object bound to the specified `std::function` and thread.
 template <class RetType, class... Args>
-DelegateFunctionAsync<RetType(Args...)> MakeDelegate(std::function<RetType(Args...)> func, DelegateThread& thread) {
+auto MakeDelegate(std::function<RetType(Args...)> func, DelegateThread& thread) {
     return DelegateFunctionAsync<RetType(Args...)>(func, thread);
 }
 

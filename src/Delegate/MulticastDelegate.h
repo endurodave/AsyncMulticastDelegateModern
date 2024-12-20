@@ -29,7 +29,7 @@ public:
     /// @param[in] args The farguments used when invoking the target function
     void operator()(Args... args) {
         for (Delegate<RetType(Args...)>* delegate : m_delegates)
-            (*delegate)(std::forward<Args>(args)...);	// Invoke delegate callback
+            (*delegate)(args...);	// Invoke delegate callback
     }
 
     /// Insert a delegate into the container.

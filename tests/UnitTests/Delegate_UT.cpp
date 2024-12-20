@@ -60,6 +60,18 @@ static void DelegateFreeTests()
     ASSERT_TRUE(!del3.Empty());
     ASSERT_TRUE(del1 == del2);
     ASSERT_TRUE(del2 == del3);
+
+    DelegateFree<std::uint16_t(void)> d;
+    ASSERT_TRUE(!d);
+    auto r = d();
+    using ArgT = decltype(r);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::max() == 0xffff);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_signed == false);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
+    ASSERT_TRUE(r == 0);
 }
 
 static void DelegateMemberTests()
@@ -107,6 +119,23 @@ static void DelegateMemberTests()
     delegate6 = nullptr;
     ASSERT_TRUE(delegate6.Empty());
     ASSERT_TRUE(delegate6 == nullptr);
+
+    Base* base = new Derive;
+    DelegateMember<Base, int(void)> delegate7;
+    delegate7 = MakeDelegate(base, &Base::Func);
+    ASSERT_TRUE(delegate7() == TEST_INT);
+
+    DelegateMember<Class, std::uint16_t(void)> d;
+    ASSERT_TRUE(!d);
+    auto r = d();
+    using ArgT = decltype(r);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::max() == 0xffff);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_signed == false);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
+    ASSERT_TRUE(r == 0);
 }
 
 static void DelegateMemberSpTests()
@@ -154,6 +183,23 @@ static void DelegateMemberSpTests()
     delegate6 = nullptr;
     ASSERT_TRUE(delegate6.Empty());
     ASSERT_TRUE(delegate6 == nullptr);
+
+    std::shared_ptr<Base> base = std::make_shared<Derive>();
+    DelegateMember<Base, int(void)> delegate7;
+    delegate7 = MakeDelegate(base, &Base::Func);
+    ASSERT_TRUE(delegate7() == TEST_INT);
+
+    DelegateMember<Class, std::uint16_t(void)> d;
+    ASSERT_TRUE(!d);
+    auto r = d();
+    using ArgT = decltype(r);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::max() == 0xffff);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_signed == false);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
+    ASSERT_TRUE(r == 0);
 }
 
 static void DelegateFunctionTests()
@@ -211,6 +257,18 @@ static void DelegateFunctionTests()
     ASSERT_TRUE(!del3.Empty());
     ASSERT_TRUE(del1 == del2);
     ASSERT_TRUE(del2 == del3);
+
+    DelegateFunction<std::uint16_t(void)> d;
+    ASSERT_TRUE(!d);
+    auto r = d();
+    using ArgT = decltype(r);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::max() == 0xffff);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_signed == false);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
+    ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
+    ASSERT_TRUE(r == 0);
 }
 
 void Delegate_UT()

@@ -15,6 +15,23 @@ namespace UnitTestData
 	static std::function<void(int)> LambdaForcedCapture = +[](int i) {
 	};
 
+	class Class {
+	public:
+		std::uint16_t Func() { return 0; }
+	};
+
+	class Base {
+	public:
+		virtual int Func() { return 0; }
+	};
+
+	class Derive : public Base {
+	public:
+		virtual int Func() { return TEST_INT; }
+	};
+
+	static std::uint16_t Func() { return 0; }
+
 	struct StructParam { int val; };
 	static int FreeFuncIntWithReturn0() { return TEST_INT; }
 

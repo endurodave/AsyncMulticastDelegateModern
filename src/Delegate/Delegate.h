@@ -598,7 +598,7 @@ private:
 /// @param[in] func A pointer to the free function to bind to the delegate.
 /// @return A `DelegateFree` object bound to the specified free function.
 template <class RetType, class... Args>
-DelegateFree<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args)) {
+auto MakeDelegate(RetType(*func)(Args... args)) {
     return DelegateFree<RetType(Args...)>(func);
 }
 
@@ -610,7 +610,7 @@ DelegateFree<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args)) {
 /// @param[in] func A pointer to the non-const member function of `TClass` to bind to the delegate.
 /// @return A `DelegateMember` object bound to the specified non-const member function.
 template <class TClass, class RetType, class... Args>
-DelegateMember<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args)) {
+auto MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args)) {
     return DelegateMember<TClass, RetType(Args...)>(object, func);
 }
 
@@ -622,7 +622,7 @@ DelegateMember<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TC
 /// @param[in] func A pointer to the const member function of `TClass` to bind to the delegate.
 /// @return A `DelegateMember` object bound to the specified const member function.
 template <class TClass, class RetType, class... Args>
-DelegateMember<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args) const) {
+auto MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args) const) {
     return DelegateMember<TClass, RetType(Args...)>(object, func);
 }
 
@@ -634,7 +634,7 @@ DelegateMember<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TC
 /// @param[in] func A pointer to the non-const member function of `TClass` to bind to the delegate.
 /// @return A `DelegateMember` shared pointer bound to the specified non-const member function.
 template <class TClass, class RetType, class... Args>
-DelegateMember<TClass, RetType(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetType(TClass::* func)(Args... args)) {
+auto MakeDelegate(std::shared_ptr<TClass> object, RetType(TClass::* func)(Args... args)) {
     return DelegateMember<TClass, RetType(Args...)>(object, func);
 }
 
@@ -646,7 +646,7 @@ DelegateMember<TClass, RetType(Args...)> MakeDelegate(std::shared_ptr<TClass> ob
 /// @param[in] func A pointer to the const member function of `TClass` to bind to the delegate.
 /// @return A `DelegateMember` shared pointer bound to the specified const member function.
 template <class TClass, class RetType, class... Args>
-DelegateMember<TClass, RetType(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetType(TClass::* func)(Args... args) const) {
+auto MakeDelegate(std::shared_ptr<TClass> object, RetType(TClass::* func)(Args... args) const) {
     return DelegateMember<TClass, RetType(Args...)>(object, func);
 }
 
@@ -656,7 +656,7 @@ DelegateMember<TClass, RetType(Args...)> MakeDelegate(std::shared_ptr<TClass> ob
 /// @param[in] func The `std::function` to bind to the delegate.
 /// @return A `DelegateFunction` object bound to the specified `std::function`.
 template <class RetType, class... Args>
-DelegateFunction<RetType(Args...)> MakeDelegate(std::function<RetType(Args...)> func) {
+auto MakeDelegate(std::function<RetType(Args...)> func) {
     return DelegateFunction<RetType(Args...)>(func);
 }
 

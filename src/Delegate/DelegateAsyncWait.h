@@ -147,7 +147,7 @@ public:
         rhs.Clear();
     }
 
-    DelegateFreeAsyncWait() = delete;
+    DelegateFreeAsyncWait() = default;
 
     /// @brief Bind a free function to the delegate.
     /// @details This method associates a free function (`func`) with the delegate. 
@@ -285,13 +285,16 @@ public:
                 throw std::bad_alloc();
             msg->SetInvokerWaiting(true);
 
-            // Dispatch message onto the callback destination thread. Invoke()
-            // will be called by the destination thread. 
-            this->GetThread().DispatchDelegate(msg);
+            auto thread = this->GetThread();
+            if (thread) {
+                // Dispatch message onto the callback destination thread. Invoke()
+                // will be called by the destination thread. 
+                thread->DispatchDelegate(msg);
 
-            // Wait for destination thread to execute the delegate function and get return value
-            if ((m_success = msg->GetSema().Wait(m_timeout)))
-                m_retVal = delegate->m_retVal;
+                // Wait for destination thread to execute the delegate function and get return value
+                if ((m_success = msg->GetSema().Wait(m_timeout)))
+                    m_retVal = delegate->m_retVal;
+            }
 
             // Protect data shared between source and destination threads
             const std::lock_guard<std::mutex> lock(msg->GetLock());
@@ -477,7 +480,7 @@ public:
         rhs.Clear();
     }
 
-    DelegateMemberAsyncWait() = delete;
+    DelegateMemberAsyncWait() = default;
 
     /// @brief Bind a const member function to the delegate.
     /// @details This method associates a member function (`func`) with the delegate. 
@@ -649,13 +652,16 @@ public:
                 throw std::bad_alloc();
             msg->SetInvokerWaiting(true);
 
-            // Dispatch message onto the callback destination thread. Invoke()
-            // will be called by the destination thread. 
-            this->GetThread().DispatchDelegate(msg);
+            auto thread = this->GetThread();
+            if (thread) {
+                // Dispatch message onto the callback destination thread. Invoke()
+                // will be called by the destination thread. 
+                thread->DispatchDelegate(msg);
 
-            // Wait for destination thread to execute the delegate function and get return value
-            if ((m_success = msg->GetSema().Wait(m_timeout)))
-                m_retVal = delegate->m_retVal;
+                // Wait for destination thread to execute the delegate function and get return value
+                if ((m_success = msg->GetSema().Wait(m_timeout)))
+                    m_retVal = delegate->m_retVal;
+            }
 
             // Protect data shared between source and destination threads
             const std::lock_guard<std::mutex> lock(msg->GetLock());
@@ -806,7 +812,7 @@ public:
         rhs.Clear();
     }
 
-    DelegateFunctionAsyncWait() = delete;
+    DelegateFunctionAsyncWait() = default;
 
     /// @brief Bind a `std::function` to the delegate.
     /// @details This method associates a member function (`func`) with the delegate. 
@@ -944,13 +950,16 @@ public:
                 throw std::bad_alloc();
             msg->SetInvokerWaiting(true);
 
-            // Dispatch message onto the callback destination thread. Invoke()
-            // will be called by the destination thread. 
-            this->GetThread().DispatchDelegate(msg);
+            auto thread = this->GetThread();
+            if (thread) {
+                // Dispatch message onto the callback destination thread. Invoke()
+                // will be called by the destination thread. 
+                thread->DispatchDelegate(msg);
 
-            // Wait for destination thread to execute the delegate function and get return value
-            if ((m_success = msg->GetSema().Wait(m_timeout)))
-                m_retVal = delegate->m_retVal;
+                // Wait for destination thread to execute the delegate function and get return value
+                if ((m_success = msg->GetSema().Wait(m_timeout)))
+                    m_retVal = delegate->m_retVal;
+            }
 
             // Protect data shared between source and destination threads
             const std::lock_guard<std::mutex> lock(msg->GetLock());
@@ -1066,7 +1075,7 @@ private:
 /// @param[in] timeout The duration to wait for the function to complete before returning.
 /// @return A `DelegateFreeAsyncWait` object bound to the specified free function, thread, and timeout.
 template <class RetType, class... Args>
-DelegateFreeAsyncWait<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
+auto MakeDelegate(RetType(*func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateFreeAsyncWait<RetType(Args...)>(func, thread, timeout);
 }
 
@@ -1080,7 +1089,7 @@ DelegateFreeAsyncWait<RetType(Args...)> MakeDelegate(RetType(*func)(Args... args
 /// @param[in] timeout The duration to wait for the function to complete before returning.
 /// @return A `DelegateMemberAsyncWait` object bound to the specified non-const member function, thread, and timeout.
 template <class TClass, class RetType, class... Args>
-DelegateMemberAsyncWait<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
+auto MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateMemberAsyncWait<TClass, RetType(Args...)>(object, func, thread, timeout);
 }
 
@@ -1094,7 +1103,7 @@ DelegateMemberAsyncWait<TClass, RetType(Args...)> MakeDelegate(TClass* object, R
 /// @param[in] timeout The duration to wait for the function to complete before returning.
 /// @return A `DelegateMemberAsyncWait` object bound to the specified const member function, thread, and timeout.
 template <class TClass, class RetType, class... Args>
-DelegateMemberAsyncWait<TClass, RetType(Args...)> MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args) const, DelegateThread& thread, std::chrono::milliseconds timeout) {
+auto MakeDelegate(TClass* object, RetType(TClass::*func)(Args... args) const, DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateMemberAsyncWait<TClass, RetType(Args...)>(object, func, thread, timeout);
 }
 
@@ -1109,7 +1118,7 @@ DelegateMemberAsyncWait<TClass, RetType(Args...)> MakeDelegate(TClass* object, R
 /// @param[in] timeout The duration to wait for the function to complete before returning.
 /// @return A `DelegateMemberAsyncWait` shared pointer bound to the specified non-const member function, thread, and timeout.
 template <class TClass, class RetVal, class... Args>
-DelegateMemberAsyncWait<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
+auto MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args), DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateMemberAsyncWait<TClass, RetVal(Args...)>(object, func, thread, timeout);
 }
 
@@ -1123,7 +1132,7 @@ DelegateMemberAsyncWait<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TC
 /// @param[in] timeout The duration to wait for the function to complete before returning.
 /// @return A `DelegateMemberAsyncWait` shared pointer bound to the specified const member function, thread, and timeout.
 template <class TClass, class RetVal, class... Args>
-DelegateMemberAsyncWait<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args) const, DelegateThread& thread, std::chrono::milliseconds timeout) {
+auto MakeDelegate(std::shared_ptr<TClass> object, RetVal(TClass::* func)(Args... args) const, DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateMemberAsyncWait<TClass, RetVal(Args...)>(object, func, thread, timeout);
 }
 
@@ -1135,7 +1144,7 @@ DelegateMemberAsyncWait<TClass, RetVal(Args...)> MakeDelegate(std::shared_ptr<TC
 /// @param[in] timeout The duration to wait for the function to complete before returning.
 /// @return A `DelegateFunctionAsyncWait` object bound to the specified `std::function`, thread, and timeout.
 template <class RetType, class... Args>
-DelegateFunctionAsyncWait<RetType(Args...)> MakeDelegate(std::function<RetType(Args...)> func, DelegateThread& thread, std::chrono::milliseconds timeout) {
+auto MakeDelegate(std::function<RetType(Args...)> func, DelegateThread& thread, std::chrono::milliseconds timeout) {
     return DelegateFunctionAsyncWait<RetType(Args...)>(func, thread, timeout);
 }
 
