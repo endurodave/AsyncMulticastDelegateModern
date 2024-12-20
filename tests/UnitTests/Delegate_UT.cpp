@@ -136,6 +136,13 @@ static void DelegateMemberTests()
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
     ASSERT_TRUE(r == 0);
+
+    // Check for const correctness
+    Class c;
+    DelegateMember<const Class, std::uint16_t(void)> dConstClass;
+    //dConstClass.Bind(&c, &Class::Func);     // Not OK. Should fail compile.
+    dConstClass.Bind(&c, &Class::FuncConst);  // OK
+    auto rConst = dConstClass();
 }
 
 static void DelegateMemberSpTests()
@@ -200,6 +207,13 @@ static void DelegateMemberSpTests()
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
     ASSERT_TRUE(r == 0);
+
+    // Check for const correctness
+    auto c = std::make_shared<const Class>();
+    DelegateMember<const Class, std::uint16_t(void)> dConstClass;
+    //dConstClass.Bind(c, &Class::Func);     // Not OK. Should fail compile.
+    dConstClass.Bind(c, &Class::FuncConst);  // OK
+    auto rConst = dConstClass();
 }
 
 static void DelegateFunctionTests()

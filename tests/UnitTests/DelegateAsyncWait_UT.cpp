@@ -129,6 +129,13 @@ static void DelegateMemberAsyncWaitTests()
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
     ASSERT_TRUE(r == 0);
+
+    // Check for const correctness
+    Class c;
+    DelegateMemberAsyncWait<const Class, std::uint16_t(void)> dConstClass;
+    //dConstClass.Bind(&c, &Class::Func, workerThread);     // Not OK. Should fail compile.
+    dConstClass.Bind(&c, &Class::FuncConst, workerThread);  // OK
+    auto rConst = dConstClass();
 }
 
 static void DelegateMemberSpAsyncWaitTests()
@@ -193,6 +200,13 @@ static void DelegateMemberSpAsyncWaitTests()
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
     ASSERT_TRUE(r == 0);
+
+    // Check for const correctness
+    auto c = std::make_shared<const Class>();
+    DelegateMemberAsyncWait<const Class, std::uint16_t(void)> dConstClass;
+    //dConstClass.Bind(c, &Class::Func, workerThread);     // Not OK. Should fail compile.
+    dConstClass.Bind(c, &Class::FuncConst, workerThread);  // OK
+    auto rConst = dConstClass();
 }
 
 static void DelegateFunctionAsyncWaitTests()

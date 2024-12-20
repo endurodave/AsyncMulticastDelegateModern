@@ -99,6 +99,13 @@ static void DelegateMemberAsyncTests()
     delegate6 = nullptr;
     ASSERT_TRUE(delegate6.Empty());
     ASSERT_TRUE(delegate6 == nullptr);
+
+    // Check for const correctness
+    Class c;
+    DelegateMemberAsync<const Class, std::uint16_t(void)> dConstClass;
+    //dConstClass.Bind(&c, &Class::Func, workerThread);     // Not OK. Should fail compile.
+    dConstClass.Bind(&c, &Class::FuncConst, workerThread);  // OK
+    auto rConst = dConstClass();
 }
 
 static void DelegateMemberSpAsyncTests()
@@ -146,6 +153,13 @@ static void DelegateMemberSpAsyncTests()
     delegate6 = nullptr;
     ASSERT_TRUE(delegate6.Empty());
     ASSERT_TRUE(delegate6 == nullptr);
+
+    // Check for const correctness
+    auto c = std::make_shared<const Class>();
+    DelegateMemberAsync<const Class, std::uint16_t(void)> dConstClass;
+    //dConstClass.Bind(c, &Class::Func, workerThread);     // Not OK. Should fail compile.
+    dConstClass.Bind(c, &Class::FuncConst, workerThread);  // OK
+    auto rConst = dConstClass();
 }
 
 static void DelegateFunctionAsyncTests()

@@ -274,6 +274,7 @@ public:
     /// @param[in] func The member function to bind to the delegate. This function must 
     /// match the signature of the delegate.
     void Bind(SharedPtr object, MemberFunc func) {
+        static_assert(!std::is_const<TClass>::value, "Cannot bind non-const function to const object.");
         m_object = object;
         m_func = func;
     }
@@ -296,6 +297,7 @@ public:
     /// @param[in] func The member function to bind to the delegate. This function must 
     /// match the signature of the delegate.
     void Bind(ObjectPtr object, MemberFunc func) {
+        static_assert(!std::is_const<TClass>::value, "Cannot bind non-const function to const object.");
         auto deleter = [](TClass*) {};                        // No-op deleter
         m_object = std::shared_ptr<TClass>(object, deleter);  // Not deleted when out of scope
         m_func = func;
@@ -338,7 +340,11 @@ public:
     virtual RetType operator()(Args... args) override {
         if (Empty())
             return RetType();
-        return std::invoke(m_func, m_object, std::forward<Args>(args)...);
+
+        if constexpr (std::is_const<TClass>::value) 
+            return std::invoke(reinterpret_cast<ConstMemberFunc>(m_func), m_object, std::forward<Args>(args)...);
+        else
+            return std::invoke(m_func, m_object, std::forward<Args>(args)...);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.

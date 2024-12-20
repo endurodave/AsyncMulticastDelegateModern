@@ -18,6 +18,7 @@ namespace UnitTestData
 	class Class {
 	public:
 		std::uint16_t Func() { return 0; }
+		std::uint16_t FuncConst() const { return 0; }
 	};
 
 	class Base {
