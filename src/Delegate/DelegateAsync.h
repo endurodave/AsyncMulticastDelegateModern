@@ -885,7 +885,7 @@ auto MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args), Delegat
 }
 
 /// @brief Creates an asynchronous delegate that binds to a const member function.
-/// @tparam TClass The class type that contains the member function.
+/// @tparam TClass The class type that contains the const member function.
 /// @tparam RetType The return type of the member function.
 /// @tparam Args The types of the function arguments.
 /// @param[in] object A pointer to the instance of `TClass` that will be used for the delegate.
@@ -895,6 +895,18 @@ auto MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args), Delegat
 template <class TClass, class RetType, class... Args>
 auto MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args) const, DelegateThread& thread) {
     return DelegateMemberAsync<TClass, RetType(Args...)>(object, func, thread);
+}
+
+/// @brief Creates a delegate that binds to a const member function.
+/// @tparam TClass The const class type that contains the const member function.
+/// @tparam RetType The return type of the member function.
+/// @tparam Args The types of the function arguments.
+/// @param[in] object A pointer to the instance of `TClass` that will be used for the delegate.
+/// @param[in] func A pointer to the non-const member function of `TClass` to bind to the delegate.
+/// @return A `DelegateMemberAsync` object bound to the specified non-const member function.
+template <class TClass, class RetType, class... Args>
+auto MakeDelegate(const TClass* object, RetType(TClass::* func)(Args... args) const, DelegateThread& thread) {
+    return DelegateMemberAsync<const TClass, RetType(Args...)>(object, func, thread);
 }
 
 /// @brief Creates an asynchronous delegate that binds to a non-const member function using a shared pointer.

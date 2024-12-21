@@ -81,6 +81,9 @@ namespace UnitTestData
 	class TestClass1
 	{
 	public:
+		int ConstCheck(int i) { ASSERT_TRUE(i == TEST_INT); return TEST_INT; }
+		int ConstCheck(int i) const { ASSERT_TRUE(i == TEST_INT); return TEST_INT; }
+
 		void MemberFuncInt1(int i) { ASSERT_TRUE(i == TEST_INT); }
 		void MemberFuncInt1_2(int i) { ASSERT_TRUE(i == TEST_INT); }
 		void MemberFuncInt1Const(int i) const { ASSERT_TRUE(i == TEST_INT); }

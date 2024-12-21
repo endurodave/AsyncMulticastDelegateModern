@@ -179,6 +179,11 @@ static void DelegateMemberAsyncTests()
     setDel.insert(delS2);
     ASSERT_TRUE(setDel.size() == 2);
 #endif
+
+    const TestClass1 tcConst;
+    auto delConstCheck = MakeDelegate(&tcConst, &TestClass1::ConstCheck, workerThread);
+    auto delConstCheckRetVal = delConstCheck(TEST_INT);
+    ASSERT_TRUE(delConstCheckRetVal == 0);
 }
 
 static void DelegateMemberSpAsyncTests()
