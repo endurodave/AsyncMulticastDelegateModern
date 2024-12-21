@@ -118,6 +118,16 @@ static void DelegateFreeTests()
     setDel.insert(delS1);
     setDel.insert(delS2);
     ASSERT_TRUE(setDel.size() == 2);
+
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
+
+    std::function<int(int)> stdFunc = MakeDelegate(&FreeFuncIntWithReturn1);
+    int stdFuncRetVal = stdFunc(TEST_INT);
+    ASSERT_TRUE(stdFuncRetVal == TEST_INT);
 }
 
 static void DelegateMemberTests()
@@ -217,10 +227,20 @@ static void DelegateMemberTests()
     ASSERT_TRUE(setDel.size() == 2);
 #endif
 
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
+
     const TestClass1 tcConst;
     auto delConstCheck = MakeDelegate(&tcConst, &TestClass1::ConstCheck);
     auto delConstCheckRetVal = delConstCheck(TEST_INT);
     ASSERT_TRUE(delConstCheckRetVal == TEST_INT);
+
+    std::function<int(int)> stdFunc = MakeDelegate(&testClass1, &TestClass1::MemberFuncIntWithReturn1);
+    int stdFuncRetVal = stdFunc(TEST_INT);
+    ASSERT_TRUE(stdFuncRetVal == TEST_INT);
 }
 
 static void DelegateMemberSpTests()
@@ -319,6 +339,16 @@ static void DelegateMemberSpTests()
     setDel.insert(delS2);
     ASSERT_TRUE(setDel.size() == 2);
 #endif
+
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
+
+    std::function<int(int)> stdFunc = MakeDelegate(testClass1, &TestClass1::MemberFuncIntWithReturn1);
+    int stdFuncRetVal = stdFunc(TEST_INT);
+    ASSERT_TRUE(stdFuncRetVal == TEST_INT);
 }
 
 static void DelegateFunctionTests()
@@ -408,6 +438,12 @@ static void DelegateFunctionTests()
     auto delS1 = MakeDelegate(LambdaNoCapture);
     auto delS2 = MakeDelegate(LambdaNoCapture2);
     //ASSERT_TRUE(!(delS1 == delS2));  // std::function can't distriguish difference
+
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
 
     std::set<Del> setDel;
     setDel.insert(delS1);

@@ -98,6 +98,16 @@ static void DelegateFreeAsyncTests()
     setDel.insert(delS1);
     setDel.insert(delS2);
     ASSERT_TRUE(setDel.size() == 2);
+
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
+
+    std::function<int(int)> stdFunc = MakeDelegate(&FreeFuncIntWithReturn1, workerThread);
+    int stdFuncRetVal = stdFunc(TEST_INT);
+    ASSERT_TRUE(stdFuncRetVal == 0);
 }
 
 static void DelegateMemberAsyncTests()
@@ -184,6 +194,16 @@ static void DelegateMemberAsyncTests()
     auto delConstCheck = MakeDelegate(&tcConst, &TestClass1::ConstCheck, workerThread);
     auto delConstCheckRetVal = delConstCheck(TEST_INT);
     ASSERT_TRUE(delConstCheckRetVal == 0);
+
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
+
+    std::function<int(int)> stdFunc = MakeDelegate(&testClass1, &TestClass1::MemberFuncIntWithReturn1, workerThread);
+    int stdFuncRetVal = stdFunc(TEST_INT);
+    ASSERT_TRUE(stdFuncRetVal == 0);
 }
 
 static void DelegateMemberSpAsyncTests()
@@ -265,6 +285,16 @@ static void DelegateMemberSpAsyncTests()
     setDel.insert(delS2);
     ASSERT_TRUE(setDel.size() == 2);
 #endif
+
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
+
+    std::function<int(int)> stdFunc = MakeDelegate(testClass1, &TestClass1::MemberFuncIntWithReturn1, workerThread);
+    int stdFuncRetVal = stdFunc(TEST_INT);
+    ASSERT_TRUE(stdFuncRetVal == 0);
 }
 
 static void DelegateFunctionAsyncTests()
@@ -335,6 +365,12 @@ static void DelegateFunctionAsyncTests()
     setDel.insert(delS1);
     setDel.insert(delS2);
     ASSERT_TRUE(setDel.size() == 1);
+
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
 }
 
 void DelegateAsync_UT()

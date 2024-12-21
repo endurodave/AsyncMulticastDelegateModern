@@ -343,8 +343,7 @@ void TestAllTargetTypes() {
     delegateA += MakeDelegate(testClassSp, &Class::MemberFuncConst, workerThread1, WAIT_INFINITE);
 
     // Invoke all callable function targets stored within the delegate container
-    if (delegateA)
-        delegateA(123);
+    delegateA(123);
 
     // Wait for async callbacks to complete
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

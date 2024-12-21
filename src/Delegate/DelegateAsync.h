@@ -903,6 +903,7 @@ auto MakeDelegate(TClass* object, RetType(TClass::* func)(Args... args) const, D
 /// @tparam Args The types of the function arguments.
 /// @param[in] object A pointer to the instance of `TClass` that will be used for the delegate.
 /// @param[in] func A pointer to the non-const member function of `TClass` to bind to the delegate.
+/// @param[in] thread The `DelegateThread` on which the function will be invoked asynchronously.
 /// @return A `DelegateMemberAsync` object bound to the specified non-const member function.
 template <class TClass, class RetType, class... Args>
 auto MakeDelegate(const TClass* object, RetType(TClass::* func)(Args... args) const, DelegateThread& thread) {

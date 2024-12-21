@@ -114,6 +114,16 @@ static void DelegateFreeAsyncWaitTests()
     setDel.insert(delS1);
     setDel.insert(delS2);
     ASSERT_TRUE(setDel.size() == 2);
+
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
+
+    std::function<int(int)> stdFunc = MakeDelegate(&FreeFuncIntWithReturn1, workerThread, WAIT_INFINITE);
+    int stdFuncRetVal = stdFunc(TEST_INT);
+    ASSERT_TRUE(stdFuncRetVal == TEST_INT);
 }
 
 static void DelegateMemberAsyncWaitTests()
@@ -216,10 +226,20 @@ static void DelegateMemberAsyncWaitTests()
     ASSERT_TRUE(setDel.size() == 2);
 #endif
 
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
+
     const TestClass1 tcConst;
     auto delConstCheck = MakeDelegate(&tcConst, &TestClass1::ConstCheck, workerThread, WAIT_INFINITE);
     auto delConstCheckRetVal = delConstCheck(TEST_INT);
     ASSERT_TRUE(delConstCheckRetVal == TEST_INT);
+
+    std::function<int(int)> stdFunc = MakeDelegate(&testClass1, &TestClass1::MemberFuncIntWithReturn1, workerThread, WAIT_INFINITE);
+    int stdFuncRetVal = stdFunc(TEST_INT);
+    ASSERT_TRUE(stdFuncRetVal == TEST_INT);
 }
 
 static void DelegateMemberSpAsyncWaitTests()
@@ -321,6 +341,16 @@ static void DelegateMemberSpAsyncWaitTests()
     setDel.insert(delS2);
     ASSERT_TRUE(setDel.size() == 2);
 #endif
+
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
+
+    std::function<int(int)> stdFunc = MakeDelegate(testClass1, &TestClass1::MemberFuncIntWithReturn1, workerThread, WAIT_INFINITE);
+    int stdFuncRetVal = stdFunc(TEST_INT);
+    ASSERT_TRUE(stdFuncRetVal == TEST_INT);
 }
 
 static void DelegateFunctionAsyncWaitTests()
@@ -416,6 +446,12 @@ static void DelegateFunctionAsyncWaitTests()
     setDel.insert(delS1);
     setDel.insert(delS2);
     ASSERT_TRUE(setDel.size() == 1);
+
+    delS1.Clear();
+    ASSERT_TRUE(delS1.Empty());
+    std::swap(delS1, delS2);
+    ASSERT_TRUE(!delS1.Empty());
+    ASSERT_TRUE(delS2.Empty());
 }
 
 void DelegateAsyncWait_UT()
