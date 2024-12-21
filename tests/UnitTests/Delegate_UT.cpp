@@ -1,11 +1,33 @@
 #include "DelegateLib.h"
 #include "UnitTestCommon.h"
 #include <iostream>
+#include <set>
 #include "WorkerThreadStd.h"
 
 using namespace DelegateLib;
 using namespace std;
 using namespace UnitTestData;
+
+namespace Sync
+{
+    struct TestReturn
+    {
+        ~TestReturn()
+        {
+            val++;
+        }
+        static int val;
+    };
+
+    int TestReturn::val = 0;
+
+    class TestReturnClass
+    {
+    public:
+        TestReturn Func() { return TestReturn{}; }
+    };
+}
+using namespace Sync;
 
 static void DelegateFreeTests()
 {
@@ -13,6 +35,7 @@ static void DelegateFreeTests()
 
     Del delegate1(FreeFuncInt1);
     delegate1(TEST_INT);
+    std::invoke(delegate1, TEST_INT);
 
     auto delegate2 = delegate1;
     ASSERT_TRUE(delegate1 == delegate2);
@@ -72,6 +95,29 @@ static void DelegateFreeTests()
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
     ASSERT_TRUE(r == 0);
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateFree<TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+    DelegateFree<std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(&FuncUnique);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(*up == 12);
+
+    auto delS1 = MakeDelegate(FreeFuncInt1);
+    auto delS2 = MakeDelegate(FreeFuncInt1_2);
+    ASSERT_TRUE(!(delS1 == delS2));
+
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 2);
 }
 
 static void DelegateMemberTests()
@@ -82,6 +128,7 @@ static void DelegateMemberTests()
 
     Del delegate1(&testClass1, &TestClass1::MemberFuncInt1);
     delegate1(TEST_INT);
+    std::invoke(delegate1, TEST_INT);
 
     auto delegate2 = delegate1;
     ASSERT_TRUE(delegate1 == delegate2);
@@ -138,11 +185,37 @@ static void DelegateMemberTests()
     ASSERT_TRUE(r == 0);
 
     // Check for const correctness
-    Class c;
+    const Class c;
     DelegateMember<const Class, std::uint16_t(void)> dConstClass;
     //dConstClass.Bind(&c, &Class::Func);     // Not OK. Should fail compile.
     dConstClass.Bind(&c, &Class::FuncConst);  // OK
     auto rConst = dConstClass();
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateMember<TestReturnClass, TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+    Class c2;
+    DelegateMember<Class, std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(&c2, &Class::FuncUnique);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(*up == 12);
+
+    auto delS1 = MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1);
+    auto delS2 = MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1_2);
+    ASSERT_TRUE(!(delS1 == delS2));
+
+#if 0  // DelegateMember can't be inserted into ordered container
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 2);
+#endif
 }
 
 static void DelegateMemberSpTests()
@@ -153,6 +226,7 @@ static void DelegateMemberSpTests()
 
     Del delegate1(testClass1, &TestClass1::MemberFuncInt1);
     delegate1(TEST_INT);
+    std::invoke(delegate1, TEST_INT);
 
     auto delegate2 = delegate1;
     ASSERT_TRUE(delegate1 == delegate2);
@@ -214,6 +288,32 @@ static void DelegateMemberSpTests()
     //dConstClass.Bind(c, &Class::Func);     // Not OK. Should fail compile.
     dConstClass.Bind(c, &Class::FuncConst);  // OK
     auto rConst = dConstClass();
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateMember<TestReturnClass, TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+    auto c2 = std::make_shared<Class>();
+    DelegateMember<Class, std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(c2, &Class::FuncUnique);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(*up == 12);
+
+    auto delS1 = MakeDelegate(testClass1, &TestClass1::MemberFuncInt1);
+    auto delS2 = MakeDelegate(testClass1, &TestClass1::MemberFuncInt1_2);
+    ASSERT_TRUE(!(delS1 == delS2));
+
+#if 0  // DelegateMember can't be inserted into ordered container
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 2);
+#endif
 }
 
 static void DelegateFunctionTests()
@@ -222,6 +322,7 @@ static void DelegateFunctionTests()
 
     Del delegate1(LambdaNoCapture);
     delegate1(TEST_INT);
+    std::invoke(delegate1, TEST_INT);
 
     auto delegate2 = delegate1;
     ASSERT_TRUE(delegate1 == delegate2);
@@ -283,6 +384,30 @@ static void DelegateFunctionTests()
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
     ASSERT_TRUE(r == 0);
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateFunction<TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+    auto c2 = std::make_shared<Class>();
+    DelegateFunction<std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(LambdaUnqiue);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(*up == 12);
+
+    auto delS1 = MakeDelegate(LambdaNoCapture);
+    auto delS2 = MakeDelegate(LambdaNoCapture2);
+    //ASSERT_TRUE(!(delS1 == delS2));  // std::function can't distriguish difference
+
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 1);
 }
 
 void Delegate_UT()

@@ -1,6 +1,7 @@
 #include "DelegateLib.h"
 #include "UnitTestCommon.h"
 #include <iostream>
+#include <set>
 #include "WorkerThreadStd.h"
 
 using namespace DelegateLib;
@@ -9,12 +10,34 @@ using namespace UnitTestData;
 
 static WorkerThread workerThread("DelegateAsync_UT");
 
+namespace Async
+{
+    struct TestReturn
+    {
+        ~TestReturn()
+        {
+            val++;
+        }
+        static int val;
+    };
+
+    int TestReturn::val = 0;
+
+    class TestReturnClass
+    {
+    public:
+        TestReturn Func() { return TestReturn{}; }
+    };
+}
+using namespace Async;
+
 static void DelegateFreeAsyncTests()
 {
     using Del = DelegateFreeAsync<void(int)>;
 
     Del delegate1(FreeFuncInt1, workerThread);
     delegate1(TEST_INT);
+    std::invoke(delegate1, TEST_INT);
 
     auto delegate2 = delegate1;
     ASSERT_TRUE(delegate1 == delegate2);
@@ -52,6 +75,29 @@ static void DelegateFreeAsyncTests()
     delegate6 = nullptr;
     ASSERT_TRUE(delegate6.Empty());
     ASSERT_TRUE(delegate6 == nullptr);
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateFreeAsync<TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+    DelegateFreeAsync<std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(&FuncUnique, workerThread);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(up == nullptr);  // Async delegate has default return value 
+
+    auto delS1 = MakeDelegate(FreeFuncInt1, workerThread);
+    auto delS2 = MakeDelegate(FreeFuncInt1_2, workerThread);
+    ASSERT_TRUE(!(delS1 == delS2));
+
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 2);
 }
 
 static void DelegateMemberAsyncTests()
@@ -62,6 +108,7 @@ static void DelegateMemberAsyncTests()
 
     Del delegate1(&testClass1, &TestClass1::MemberFuncInt1, workerThread);
     delegate1(TEST_INT);
+    std::invoke(delegate1, TEST_INT);
 
     auto delegate2 = delegate1;
     ASSERT_TRUE(delegate1 == delegate2);
@@ -101,11 +148,37 @@ static void DelegateMemberAsyncTests()
     ASSERT_TRUE(delegate6 == nullptr);
 
     // Check for const correctness
-    Class c;
+    const Class c;
     DelegateMemberAsync<const Class, std::uint16_t(void)> dConstClass;
     //dConstClass.Bind(&c, &Class::Func, workerThread);     // Not OK. Should fail compile.
     dConstClass.Bind(&c, &Class::FuncConst, workerThread);  // OK
     auto rConst = dConstClass();
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateMemberAsync<TestReturnClass, TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+    Class c2;
+    DelegateMemberAsync<Class, std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(&c2, &Class::FuncUnique, workerThread);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(up == nullptr);  // Async delegate has default return value 
+
+    auto delS1 = MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1, workerThread);
+    auto delS2 = MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1_2, workerThread);
+    ASSERT_TRUE(!(delS1 == delS2));
+
+#if 0  // DelegateMemberAsync can't be inserted into ordered container
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 2);
+#endif
 }
 
 static void DelegateMemberSpAsyncTests()
@@ -116,6 +189,7 @@ static void DelegateMemberSpAsyncTests()
 
     Del delegate1(testClass1, &TestClass1::MemberFuncInt1, workerThread);
     delegate1(TEST_INT);
+    std::invoke(delegate1, TEST_INT);
 
     auto delegate2 = delegate1;
     ASSERT_TRUE(delegate1 == delegate2);
@@ -160,6 +234,32 @@ static void DelegateMemberSpAsyncTests()
     //dConstClass.Bind(c, &Class::Func, workerThread);     // Not OK. Should fail compile.
     dConstClass.Bind(c, &Class::FuncConst, workerThread);  // OK
     auto rConst = dConstClass();
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateMemberAsync<TestReturnClass, TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+    auto c2 = std::make_shared<Class>();
+    DelegateMemberAsync<Class, std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(c2, &Class::FuncUnique, workerThread);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(up == nullptr);  // Async delegate has default return value 
+
+    auto delS1 = MakeDelegate(testClass1, &TestClass1::MemberFuncInt1, workerThread);
+    auto delS2 = MakeDelegate(testClass1, &TestClass1::MemberFuncInt1_2, workerThread);
+    ASSERT_TRUE(!(delS1 == delS2));
+
+#if 0  // DelegateMemberAsync can't be inserted into ordered container
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 2);
+#endif
 }
 
 static void DelegateFunctionAsyncTests()
@@ -168,6 +268,7 @@ static void DelegateFunctionAsyncTests()
 
     Del delegate1(LambdaNoCapture, workerThread);
     delegate1(TEST_INT);
+    std::invoke(delegate1, TEST_INT);
 
     auto delegate2 = delegate1;
     ASSERT_TRUE(delegate1 == delegate2);
@@ -205,6 +306,30 @@ static void DelegateFunctionAsyncTests()
     delegate6 = nullptr;
     ASSERT_TRUE(delegate6.Empty());
     ASSERT_TRUE(delegate6 == nullptr);
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateFunction<TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+    auto c2 = std::make_shared<Class>();
+    DelegateFunctionAsync<std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(LambdaUnqiue, workerThread);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(up == nullptr);  // Async delegate has default return value 
+
+    auto delS1 = MakeDelegate(LambdaNoCapture, workerThread);
+    auto delS2 = MakeDelegate(LambdaNoCapture2, workerThread);
+    //ASSERT_TRUE(!(delS1 == delS2));  // std::function can't distriguish difference
+
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 1);
 }
 
 void DelegateAsync_UT()

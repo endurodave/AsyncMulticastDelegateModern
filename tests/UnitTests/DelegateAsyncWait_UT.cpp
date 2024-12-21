@@ -1,6 +1,7 @@
 #include "DelegateLib.h"
 #include "UnitTestCommon.h"
 #include <iostream>
+#include <set>
 #include "WorkerThreadStd.h"
 
 using namespace DelegateLib;
@@ -9,12 +10,35 @@ using namespace UnitTestData;
 
 static WorkerThread workerThread("DelegateAsyncWait_UT");
 
+namespace AsyncWait
+{
+    struct TestReturn
+    {
+        ~TestReturn()
+        {
+            val++;
+        }
+        static int val;
+    };
+
+    int TestReturn::val = 0;
+
+    class TestReturnClass
+    {
+    public:
+        TestReturn Func() { return TestReturn{}; }
+    };
+}
+using namespace AsyncWait;
+
 static void DelegateFreeAsyncWaitTests()
 {
     using Del = DelegateFreeAsyncWait<void(int)>;
 
     Del delegate1(FreeFuncInt1, workerThread);
     delegate1(TEST_INT);
+    ASSERT_TRUE(delegate1.IsSuccess());
+    std::invoke(delegate1, TEST_INT);
     ASSERT_TRUE(delegate1.IsSuccess());
 
     auto delegate2 = delegate1;
@@ -65,6 +89,31 @@ static void DelegateFreeAsyncWaitTests()
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
     ASSERT_TRUE(r == 0);
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateFreeAsyncWait<TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+#if 0  // AsyncWait cannot return a unique_ptr
+    DelegateFreeAsyncWait<std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(&FuncUnique, workerThread);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(*up == 12);
+#endif
+
+    auto delS1 = MakeDelegate(FreeFuncInt1, workerThread, WAIT_INFINITE);
+    auto delS2 = MakeDelegate(FreeFuncInt1_2, workerThread, WAIT_INFINITE);
+    ASSERT_TRUE(!(delS1 == delS2));
+
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 2);
 }
 
 static void DelegateMemberAsyncWaitTests()
@@ -75,6 +124,8 @@ static void DelegateMemberAsyncWaitTests()
 
     Del delegate1(&testClass1, &TestClass1::MemberFuncInt1, workerThread);
     delegate1(TEST_INT);
+    ASSERT_TRUE(delegate1.IsSuccess());
+    std::invoke(delegate1, TEST_INT);
     ASSERT_TRUE(delegate1.IsSuccess());
 
     auto delegate2 = delegate1;
@@ -131,11 +182,39 @@ static void DelegateMemberAsyncWaitTests()
     ASSERT_TRUE(r == 0);
 
     // Check for const correctness
-    Class c;
+    const Class c;
     DelegateMemberAsyncWait<const Class, std::uint16_t(void)> dConstClass;
     //dConstClass.Bind(&c, &Class::Func, workerThread);     // Not OK. Should fail compile.
     dConstClass.Bind(&c, &Class::FuncConst, workerThread);  // OK
     auto rConst = dConstClass();
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateMemberAsyncWait<TestReturnClass, TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+#if 0  // AsyncWait cannot return a unique_ptr
+    Class c2;
+    DelegateMemberAsyncWait<Class, std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(&c2, &Class::FuncUnique, workerThread);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(*up == 12);
+#endif
+
+    auto delS1 = MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1, workerThread, WAIT_INFINITE);
+    auto delS2 = MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1_2, workerThread, WAIT_INFINITE);
+    ASSERT_TRUE(!(delS1 == delS2));
+
+#if 0  // DelegateMemberAsyncWait can't be inserted into ordered container
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 2);
+#endif
 }
 
 static void DelegateMemberSpAsyncWaitTests()
@@ -146,6 +225,8 @@ static void DelegateMemberSpAsyncWaitTests()
 
     Del delegate1(testClass1, &TestClass1::MemberFuncInt1, workerThread);
     delegate1(TEST_INT);
+    ASSERT_TRUE(delegate1.IsSuccess());
+    std::invoke(delegate1, TEST_INT);
     ASSERT_TRUE(delegate1.IsSuccess());
 
     auto delegate2 = delegate1;
@@ -207,6 +288,34 @@ static void DelegateMemberSpAsyncWaitTests()
     //dConstClass.Bind(c, &Class::Func, workerThread);     // Not OK. Should fail compile.
     dConstClass.Bind(c, &Class::FuncConst, workerThread);  // OK
     auto rConst = dConstClass();
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateMemberAsyncWait<TestReturnClass, TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+#if 0  // AsyncWait cannot return a unique_ptr
+    Class c2;
+    DelegateMemberAsyncWait<Class, std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(&c2, &Class::FuncUnique, workerThread);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(*up == 12);
+#endif
+
+    auto delS1 = MakeDelegate(testClass1, &TestClass1::MemberFuncInt1, workerThread, WAIT_INFINITE);
+    auto delS2 = MakeDelegate(testClass1, &TestClass1::MemberFuncInt1_2, workerThread, WAIT_INFINITE);
+    ASSERT_TRUE(!(delS1 == delS2));
+
+#if 0  // DelegateMemberAsyncWait can't be inserted into ordered container
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 2);
+#endif
 }
 
 static void DelegateFunctionAsyncWaitTests()
@@ -215,6 +324,8 @@ static void DelegateFunctionAsyncWaitTests()
 
     Del delegate1(LambdaNoCapture, workerThread);
     delegate1(TEST_INT);
+    ASSERT_TRUE(delegate1.IsSuccess());
+    std::invoke(delegate1, TEST_INT);
     ASSERT_TRUE(delegate1.IsSuccess());
 
     auto delegate2 = delegate1;
@@ -274,6 +385,32 @@ static void DelegateFunctionAsyncWaitTests()
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_integer == true);
     ASSERT_TRUE(r == 0);
+
+    // Make sure we get a default constructed return value.
+    TestReturn::val = 0;
+    DelegateFunctionAsyncWait<TestReturn()> testRet;
+    ASSERT_TRUE(TestReturn::val == 0);
+    testRet();
+    ASSERT_TRUE(TestReturn::val == 1);
+
+#if 0  // AsyncWait cannot return a unique_ptr
+    auto c2 = std::make_shared<Class>();
+    DelegateMemberAsyncWait<Class, std::unique_ptr<int>(int)> delUnique;
+    auto tmp = delUnique(10);
+    ASSERT_TRUE(tmp == nullptr);
+    delUnique.Bind(c2, &Class::FuncUnique, workerThread);
+    std::unique_ptr<int> up = delUnique(12);
+    ASSERT_TRUE(*up == 12);
+#endif
+
+    auto delS1 = MakeDelegate(LambdaNoCapture, workerThread, WAIT_INFINITE);
+    auto delS2 = MakeDelegate(LambdaNoCapture2, workerThread, WAIT_INFINITE);
+    //ASSERT_TRUE(!(delS1 == delS2));  // std::function can't distriguish difference
+
+    std::set<Del> setDel;
+    setDel.insert(delS1);
+    setDel.insert(delS2);
+    ASSERT_TRUE(setDel.size() == 1);
 }
 
 void DelegateAsyncWait_UT()

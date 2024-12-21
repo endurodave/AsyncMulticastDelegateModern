@@ -30,6 +30,14 @@
 /// `void Invoke(std::shared_ptr<DelegateMsg> msg)` - called by the destination
 /// thread to invoke the target function. The destination thread must not call any other
 /// delegate instance functions.
+/// 
+/// Limitations:
+/// 
+/// * The target function cannot return a `std::unique_ptr` since `AsyncWait` destination 
+/// target thread stores the return value (`m_retVal`) for later use by the calling source thread.
+/// 
+/// * Cannot insert `DelegateMemberAsyncWait` into an ordered container. e.g. `std::list` ok, 
+/// `std::set` not ok.
 ///
 /// Code within `<common_code>` and `</common_code>` is updated using sync_src.py. Manually update 
 /// the code within the `DelegateFreeAsyncWait` `common_code` tags, then run the script to 
@@ -344,6 +352,8 @@ public:
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     /// @return `true` if target function invoked or timeout expired; `false` if error. 
     virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
+        static_assert(!(is_unique_ptr<RetType>::value), "std::unique_ptr return value not allowed");
+
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncWaitMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
@@ -711,6 +721,8 @@ public:
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     /// @return `true` if target function invoked or timeout expired; `false` if error. 
     virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
+        static_assert(!(is_unique_ptr<RetType>::value), "std::unique_ptr return value not allowed");
+
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncWaitMsg<Args...>>(msg);
         if (delegateMsg == nullptr)
@@ -1009,6 +1021,8 @@ public:
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     /// @return `true` if target function invoked or timeout expired; `false` if error. 
     virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
+        static_assert(!(is_unique_ptr<RetType>::value), "std::unique_ptr return value not allowed");
+
         // Typecast the base pointer to back correct derived to instance
         auto delegateMsg = std::dynamic_pointer_cast<DelegateAsyncWaitMsg<Args...>>(msg);
         if (delegateMsg == nullptr)

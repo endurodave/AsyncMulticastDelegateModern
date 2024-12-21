@@ -20,6 +20,11 @@
 /// thread to invoke the target function. The destination thread must not call any other
 /// delegate instance functions.
 /// 
+/// Limitations:
+/// 
+/// * Cannot insert `DelegateMemberAsync` into an ordered container. e.g. `std::list` ok, 
+/// `std::set` not ok.
+/// 
 /// Code within `<common_code>` and `</common_code>` is updated using sync_src.py. Manually update 
 /// the code within the `DelegateFreeAsync` `common_code` tags, then run the script to 
 /// propagate to the remaining delegate classes to simplify code maintenance.

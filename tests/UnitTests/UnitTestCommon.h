@@ -12,14 +12,27 @@ namespace UnitTestData
 	static std::function<void(int)> LambdaNoCapture = [](int i) {
 	};
 
+	static std::function<void(int)> LambdaNoCapture2 = [](int i) {
+	};
+
 	static std::function<void(int)> LambdaForcedCapture = +[](int i) {
+	};
+
+	static auto LambdaUnqiue = [](int x) -> std::unique_ptr<int> {
+		std::unique_ptr<int> t2{ new int };
+		*t2 = x;
+		return t2;
 	};
 
 	class Class {
 	public:
 		std::uint16_t Func() { return 0; }
 		std::uint16_t FuncConst() const { return 0; }
+		std::unique_ptr<int> FuncUnique(int i) { return std::make_unique<int>(i); }
 	};
+
+	static std::uint16_t Func() { return 0; }
+	static std::unique_ptr<int> FuncUnique(int i) { return std::make_unique<int>(i); }
 
 	class Base {
 	public:
@@ -31,14 +44,13 @@ namespace UnitTestData
 		virtual int Func() { return TEST_INT; }
 	};
 
-	static std::uint16_t Func() { return 0; }
-
 	struct StructParam { int val; };
 	static int FreeFuncIntWithReturn0() { return TEST_INT; }
 
 	static void FreeFunc0() { }
 
 	static void FreeFuncInt1(int i) { ASSERT_TRUE(i == TEST_INT); }
+	static void FreeFuncInt1_2(int i) { ASSERT_TRUE(i == TEST_INT); }
 	static int FreeFuncIntWithReturn1(int i) { ASSERT_TRUE(i == TEST_INT); return i; }
 	static void FreeFuncPtrPtr1(StructParam** s) { ASSERT_TRUE((*s)->val == TEST_INT); }
 	static void FreeFuncStruct1(StructParam s) { ASSERT_TRUE(s.val == TEST_INT); }
@@ -70,6 +82,7 @@ namespace UnitTestData
 	{
 	public:
 		void MemberFuncInt1(int i) { ASSERT_TRUE(i == TEST_INT); }
+		void MemberFuncInt1_2(int i) { ASSERT_TRUE(i == TEST_INT); }
 		void MemberFuncInt1Const(int i) const { ASSERT_TRUE(i == TEST_INT); }
 		int MemberFuncIntWithReturn1(int i) { ASSERT_TRUE(i == TEST_INT); return i; }
 		void MemberFuncStruct1(StructParam s) { ASSERT_TRUE(s.val == TEST_INT); }

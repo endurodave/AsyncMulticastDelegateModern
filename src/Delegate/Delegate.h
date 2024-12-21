@@ -10,6 +10,11 @@
 /// @details Delgates support binding to free functions, class instance functions, class 
 /// static function, and std::function targets. Lambda functions can be bound to a delegate 
 /// when assigned to a `std::function`. The classes are not thread safe.
+/// 
+/// Limitations:
+/// 
+/// * Cannot insert `DelegateMember` into an ordered container. e.g. `std::list` ok, 
+/// `std::set` not ok.
 
 #include <functional>
 #include <memory>
@@ -112,6 +117,14 @@ public:
     /// @param[in] func The free function to bind to the delegate. This function must 
     /// match the signature of the delegate.
     void Bind(FreeFunc func) { m_func = func; }
+
+    /// Compares two ClassType objects using the '<' operator.
+    /// @param rhs The object to compare with.
+    /// @return `true` if the current object's value is less than the other object's value,
+    /// `false` otherwise.
+    bool operator<(const ClassType& rhs) const {
+        return m_func < rhs.m_func;
+    }
 
     /// @brief Creates a copy of the current object.
     /// @details Clones the current instance of the class by creating a new object
@@ -315,6 +328,16 @@ public:
         m_func = reinterpret_cast<MemberFunc>(func);
     }
 
+    /// Compares two ClassType objects using the '<' operator.
+    /// @param rhs The object to compare with.
+    /// @return `true` if the current object's value is less than the other object's value,
+    /// `false` otherwise.
+    /// @note Do not call! Not allowed since comparing member function 
+    /// pointers for operator< not allowed in C++.
+    bool operator<(const ClassType& rhs) const {
+        static_assert(false, "Cannot compare member function pointers");
+    }
+
     /// @brief Creates a copy of the current object.
     /// @details Clones the current instance of the class by creating a new object
     /// and copying the state of the current object to it. 
@@ -483,6 +506,14 @@ public:
     /// match the signature of the delegate.
     void Bind(FunctionType func) {
         m_func = func;
+    }
+
+    /// Compares two ClassType objects using the '<' operator.
+    /// @param rhs The object to compare with.
+    /// @return `true` if the current object's value is less than the other object's value,
+    /// `false` otherwise.
+    bool operator<(const ClassType& rhs) const {
+        return m_func.target<FunctionType>() < rhs.m_func.target<FunctionType>();
     }
 
     /// @brief Creates a copy of the current object.
