@@ -336,6 +336,7 @@ public:
     /// pointers for operator< not allowed in C++.
     bool operator<(const ClassType& rhs) const {
         static_assert(false, "Cannot compare member function pointers");
+        return false;
     }
 
     /// @brief Creates a copy of the current object.
@@ -513,7 +514,7 @@ public:
     /// @return `true` if the current object's value is less than the other object's value,
     /// `false` otherwise.
     bool operator<(const ClassType& rhs) const {
-        return m_func.target<FunctionType>() < rhs.m_func.target<FunctionType>();
+        return m_func.template target<FunctionType>() < rhs.m_func.template target<FunctionType>();
     }
 
     /// @brief Creates a copy of the current object.
