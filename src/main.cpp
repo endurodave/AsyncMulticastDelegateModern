@@ -390,6 +390,7 @@ class Test
 {
 public:
     void Func(int i) { }
+    void Func2(int i) { }
 };
 
 //------------------------------------------------------------------------------
@@ -429,7 +430,7 @@ int main(void)
 
     // Create a delegate bound to a member function. Assign and invoke from
     // a base reference. 
-    DelegateMember<TestClass, void(TestStruct*)> delegateMember2 = MakeDelegate(&testClass, &TestClass::MemberFunc);
+    auto delegateMember2 = MakeDelegate(&testClass, &TestClass::MemberFunc);
     delegateMember2(&testStruct);
 
     // Create a multicast delegate container that accepts Delegate<void(int)> delegates.
@@ -695,7 +696,7 @@ int main(void)
     // Example shows std::function target limitations
     Test t1, t2;
     std::function<void(int)> f1 = std::bind(&Test::Func, &t1, std::placeholders::_1);
-    std::function<void(int)> f2 = std::bind(&Test::Func, &t2, std::placeholders::_1);
+    std::function<void(int)> f2 = std::bind(&Test::Func2, &t2, std::placeholders::_1);
     MulticastDelegateSafe<void(int)> safe;
     safe += MakeDelegate(f1);
     safe += MakeDelegate(f2);

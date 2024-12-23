@@ -108,6 +108,79 @@ static void DelegateFreeAsyncTests()
     std::function<int(int)> stdFunc = MakeDelegate(&FreeFuncIntWithReturn1, workerThread);
     int stdFuncRetVal = stdFunc(TEST_INT);
     ASSERT_TRUE(stdFuncRetVal == 0);
+
+#if 0
+    // ClassSingleton private constructor. Can't use singleton as ref (&),
+    // pointer (*), or pointer-to-pointer (**) since async delegate makes 
+    // copy of ClassSingleton argument.
+    auto& singleton = ClassSingleton::GetInstance();
+    auto delRef = MakeDelegate(&SetClassSingletonRef, workerThread);
+    auto delPtr = MakeDelegate(&SetClassSingletonPtr, workerThread);
+    auto delPtrPtr = MakeDelegate(&SetClassSingletonPtrPtr, workerThread);
+#endif
+
+    // Shared pointer does not copy singleton object; no copy of shared_ptr arg.
+    auto singletonSp = ClassSingleton::GetInstanceSp();
+    auto delShared = MakeDelegate(&SetClassSingletonShared, workerThread);
+    delShared(singletonSp);
+
+    // Test nullptr arguments
+    auto nullPtrArg = MakeDelegate(&NullPtrArg, workerThread);
+    nullPtrArg(nullptr);
+    auto nullPtrPtrArg = MakeDelegate(&NullPtrPtrArg, workerThread);
+    nullPtrPtrArg(nullptr);
+
+    // Test outgoing ptr argument
+    // Target function does *not* change local instance data. A copy of delegate
+    // and all arguments is sent to the destination thread.
+    StructParam sparam;
+    int iparam = 100;
+    sparam.val = TEST_INT;
+    auto outgoingArg = MakeDelegate(&OutgoingPtrArg, workerThread);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    outgoingArg(&sparam, &iparam);
+    ASSERT_TRUE(sparam.val == TEST_INT); 
+    ASSERT_TRUE(iparam == 100);
+
+    // Test outgoing ptr-ptr argument
+    StructParam* psparam = nullptr;
+    sparam.val = TEST_INT;
+    auto outgoingArg2 = MakeDelegate(&OutgoingPtrPtrArg, workerThread);
+    outgoingArg2(&psparam);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    ASSERT_TRUE(psparam == nullptr);
+
+    // Test outgoing ref argument
+    sparam.val = TEST_INT;
+    auto outgoingArg3 = MakeDelegate(&OutgoingRefArg, workerThread);
+    outgoingArg3(sparam);
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    ASSERT_TRUE(sparam.val == TEST_INT);
+
+    // Aync invoke copies Class object when passed to func
+    Class classInstance;
+    Class::m_construtorCnt = 0;
+    auto cntDel = MakeDelegate(&ConstructorCnt, workerThread);
+    cntDel(&classInstance);
+    ASSERT_TRUE(Class::m_construtorCnt == 1);
+
+    // Compile error. Invalid to pass void* argument to async target function
+#if 0   
+    // Test void* args
+    const char* str = "Hello World!";
+    void* voidPtr = (void*)str;
+    auto voidPtrNotNullDel = MakeDelegate(&VoidPtrArgNotNull, workerThread);
+    voidPtrNotNullDel(voidPtr);
+    auto voidPtrNullDel = MakeDelegate(&VoidPtrArgNull, workerThread);
+    voidPtrNullDel(nullptr);
+#endif
+
+    // Test void* return
+    auto retVoidPtrDel = MakeDelegate(&RetVoidPtr);
+    auto retVoidPtr = retVoidPtrDel();
+    ASSERT_TRUE(retVoidPtr != nullptr);
+    const char* retStr = (const char*)retVoidPtr;
+    ASSERT_TRUE(strcmp(retStr, "Hello World!") == 0);
 }
 
 static void DelegateMemberAsyncTests()
@@ -204,6 +277,22 @@ static void DelegateMemberAsyncTests()
     std::function<int(int)> stdFunc = MakeDelegate(&testClass1, &TestClass1::MemberFuncIntWithReturn1, workerThread);
     int stdFuncRetVal = stdFunc(TEST_INT);
     ASSERT_TRUE(stdFuncRetVal == 0);
+
+    SetClassSingleton setClassSingleton;
+#if 0
+    // ClassSingleton private constructor. Can't use singleton as ref (&),
+    // pointer (*), or pointer-to-pointer (**) since async delegate makes 
+    // copy of ClassSingleton argument.
+    auto& singleton = ClassSingleton::GetInstance();
+    auto delRef = MakeDelegate(&setClassSingleton, &SetClassSingleton::Ref, workerThread);
+    auto delPtr = MakeDelegate(&setClassSingleton, &SetClassSingleton::Ptr, workerThread);
+    auto delPtrPtr = MakeDelegate(&setClassSingleton, &SetClassSingleton::PtrPtr, workerThread);
+#endif
+
+    // Shared pointer does not copy singleton object; no copy of shared_ptr arg.
+    auto singletonSp = ClassSingleton::GetInstanceSp();
+    auto delShared = MakeDelegate(&setClassSingleton, &SetClassSingleton::Shared, workerThread);
+    delShared(singletonSp);
 }
 
 static void DelegateMemberSpAsyncTests()

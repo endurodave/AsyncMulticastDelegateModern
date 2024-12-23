@@ -22,8 +22,18 @@
 /// 
 /// Limitations:
 /// 
+/// * The target function return value is not valid after invoke since the delegate does 
+/// not wait for the target function to be called.
+/// 
+/// * Cannot use a `void*` as a target function argument.
+/// 
+/// * Cannot use rvalue reference (T&&) as a target function argument.
+/// 
 /// * Cannot insert `DelegateMemberAsync` into an ordered container. e.g. `std::list` ok, 
 /// `std::set` not ok.
+/// 
+/// * `std::function` compares the function signature type, not the underlying object instance.
+/// See `DelegateFunction<>` class for more info.
 /// 
 /// Code within `<common_code>` and `</common_code>` is updated using sync_src.py. Manually update 
 /// the code within the `DelegateFreeAsync` `common_code` tags, then run the script to 

@@ -124,6 +124,68 @@ static void DelegateFreeAsyncWaitTests()
     std::function<int(int)> stdFunc = MakeDelegate(&FreeFuncIntWithReturn1, workerThread, WAIT_INFINITE);
     int stdFuncRetVal = stdFunc(TEST_INT);
     ASSERT_TRUE(stdFuncRetVal == TEST_INT);
+
+#if 0
+    // ClassSingleton private constructor. Can't sent singleton as ref (&),
+    // pointer (*), or pointer-to-pointer (**) since async delegate makes 
+    // copy of ClassSingleton argument.
+    auto& singleton = ClassSingleton::GetInstance();
+    auto delRef = MakeDelegate(&SetClassSingletonRef, workerThread, WAIT_INFINITE);
+    auto delPtr = MakeDelegate(&SetClassSingletonPtr, workerThread, WAIT_INFINITE);
+    auto delPtrPtr = MakeDelegate(&SetClassSingletonPtrPtr, workerThread, WAIT_INFINITE);
+#endif
+
+    // Shared pointer does not copy singleton object; no copy of shared_ptr arg.
+    auto singletonSp = ClassSingleton::GetInstanceSp();
+    auto delShared = MakeDelegate(&SetClassSingletonShared, workerThread, WAIT_INFINITE);
+    delShared(singletonSp);
+
+    // Test outgoing ptr argument
+    StructParam sparam;
+    int iparam = 100;
+    sparam.val = TEST_INT;
+    auto outgoingArg = MakeDelegate(&OutgoingPtrArg, workerThread, WAIT_INFINITE);
+    outgoingArg(&sparam, &iparam);
+    ASSERT_TRUE(sparam.val == TEST_INT + 1);
+    ASSERT_TRUE(iparam == 101);
+
+    // Test outgoing ptr-ptr argument
+    StructParam* psparam = nullptr;
+    sparam.val = TEST_INT;
+    auto outgoingArg2 = MakeDelegate(&OutgoingPtrPtrArg, workerThread, WAIT_INFINITE);
+    outgoingArg2(&psparam);
+    ASSERT_TRUE(psparam->val == TEST_INT);
+
+    // Test outgoing ref argument
+    sparam.val = TEST_INT;
+    auto outgoingArg3 = MakeDelegate(&OutgoingRefArg, workerThread, WAIT_INFINITE);
+    outgoingArg3(sparam);
+    ASSERT_TRUE(sparam.val == TEST_INT + 1);
+
+    // AsyncWait invoke does not copy Class object when passed to func
+    Class classInstance;
+    Class::m_construtorCnt = 0;
+    auto cntDel = MakeDelegate(&ConstructorCnt, workerThread, WAIT_INFINITE);
+    cntDel(&classInstance);
+    ASSERT_TRUE(Class::m_construtorCnt == 0);
+
+    // Compile error. Invalid to pass void* argument to async target function
+#if 0   
+    // Test void* args
+    const char* str = "Hello World!";
+    void* voidPtr = (void*)str;
+    auto voidPtrNotNullDel = MakeDelegate(&VoidPtrArgNotNull, workerThread, WAIT_INFINITE);
+    voidPtrNotNullDel(voidPtr);
+    auto voidPtrNullDel = MakeDelegate(&VoidPtrArgNull, workerThread, WAIT_INFINITE);
+    voidPtrNullDel(nullptr);
+#endif
+
+    // Test void* return
+    auto retVoidPtrDel = MakeDelegate(&RetVoidPtr);
+    auto retVoidPtr = retVoidPtrDel();
+    ASSERT_TRUE(retVoidPtr != nullptr);
+    const char* retStr = (const char*)retVoidPtr;
+    ASSERT_TRUE(strcmp(retStr, "Hello World!") == 0);
 }
 
 static void DelegateMemberAsyncWaitTests()
@@ -240,6 +302,22 @@ static void DelegateMemberAsyncWaitTests()
     std::function<int(int)> stdFunc = MakeDelegate(&testClass1, &TestClass1::MemberFuncIntWithReturn1, workerThread, WAIT_INFINITE);
     int stdFuncRetVal = stdFunc(TEST_INT);
     ASSERT_TRUE(stdFuncRetVal == TEST_INT);
+
+    SetClassSingleton setClassSingleton;
+#if 0
+    // ClassSingleton private constructor. Can't sent singleton as ref (&),
+    // pointer (*), or pointer-to-pointer (**) since async delegate makes 
+    // copy of ClassSingleton argument.
+    auto& singleton = ClassSingleton::GetInstance();
+    auto delRef = MakeDelegate(&setClassSingleton, &SetClassSingleton::Ref, workerThread, WAIT_INFINITE);
+    auto delPtr = MakeDelegate(&setClassSingleton, &SetClassSingleton::Ptr, workerThread, WAIT_INFINITE);
+    auto delPtrPtr = MakeDelegate(&setClassSingleton, &SetClassSingleton::PtrPtr, workerThread, WAIT_INFINITE);
+#endif
+
+    // Shared pointer does not copy singleton object; no copy of shared_ptr arg.
+    auto singletonSp = ClassSingleton::GetInstanceSp();
+    auto delShared = MakeDelegate(&setClassSingleton, &SetClassSingleton::Shared, workerThread, WAIT_INFINITE);
+    delShared(singletonSp);
 }
 
 static void DelegateMemberSpAsyncWaitTests()

@@ -113,8 +113,16 @@ auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const
     Arg** heap_arg = nullptr;
     try 
     {
-        heap_arg = new Arg*();
-        *heap_arg = new Arg(**arg);
+        // Check if arg is nullptr or *arg is nullptr
+        if (arg != nullptr && *arg != nullptr) {
+            // Allocate memory for heap_arg and copy the value
+            heap_arg = new Arg * ();
+            *heap_arg = new Arg(**arg);
+        }
+        else {
+            // If arg is nullptr or *arg is nullptr, create heap_arg as nullptr
+            heap_arg = new Arg * (nullptr);
+        }
 
         std::shared_ptr<heap_arg_deleter_base> deleter(new heap_arg_deleter<Arg**>(heap_arg));
         heapArgs.push_back(deleter);
@@ -123,10 +131,12 @@ auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const
     }
     catch (std::bad_alloc&)
     {
-        if (*heap_arg)
-            delete *heap_arg;
-        if (heap_arg)
-            delete heap_arg;
+        if (heap_arg && *heap_arg) {
+            delete* heap_arg; // Delete the Arg* pointed to by heap_arg
+        }
+        if (heap_arg) {
+            delete heap_arg; // Delete the heap_arg itself (which is a Arg**)
+        }
         throw;
     }
 }
@@ -135,7 +145,10 @@ auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const
 template <typename Arg, typename... TupleElem>
 auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg* arg)
 {
-    Arg* heap_arg = new Arg(*arg);
+    Arg* heap_arg = nullptr;
+    if (arg != nullptr) {
+        heap_arg = new Arg(*arg);  // Only create a new Arg if arg is not nullptr
+    }
     std::shared_ptr<heap_arg_deleter_base> deleter(new heap_arg_deleter<Arg*>(heap_arg));
     heapArgs.push_back(deleter);
 
@@ -189,6 +202,7 @@ auto make_tuple_heap(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, st
     static_assert(!(
         (is_shared_ptr<Arg1>::value && (std::is_lvalue_reference_v<Arg1> || std::is_pointer_v<Arg1>))),
         "std::shared_ptr reference argument not allowed");
+    static_assert(!std::is_same<Arg1, void*>::value, "void* argument not allowed");
 
     auto new_tup = tuple_append(heapArgs, tup, arg1);
     return make_tuple_heap(heapArgs, new_tup, args...);

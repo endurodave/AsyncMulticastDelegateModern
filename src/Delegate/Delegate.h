@@ -15,6 +15,9 @@
 /// 
 /// * Cannot insert `DelegateMember` into an ordered container. e.g. `std::list` ok, 
 /// `std::set` not ok.
+/// 
+/// * `std::function` compares the function signature type, not the underlying object instance.
+/// See `DelegateFunction<>` class for more info.
 
 #include <functional>
 #include <memory>

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <functional>
+#include "Fault.h"
 
 namespace UnitTestData
 {
@@ -26,13 +27,24 @@ namespace UnitTestData
 
 	class Class {
 	public:
+		Class() { m_construtorCnt++; }
+		Class(const Class& rhs) { m_construtorCnt++; }
 		std::uint16_t Func() { return 0; }
 		std::uint16_t FuncConst() const { return 0; }
 		std::unique_ptr<int> FuncUnique(int i) { return std::make_unique<int>(i); }
+		static int m_construtorCnt;
 	};
 
+	static void ConstructorCnt(Class* c) {}
 	static std::uint16_t Func() { return 0; }
 	static std::unique_ptr<int> FuncUnique(int i) { return std::make_unique<int>(i); }
+	static void FuncRvalueRef(int&& i) { ASSERT_TRUE(i == TEST_INT); }
+	static void VoidPtrArgNull(void* p) { ASSERT_TRUE(p == nullptr); }
+	static void VoidPtrArgNotNull(void* p) { ASSERT_TRUE(p != nullptr); }
+	static void* RetVoidPtr() { 
+		static const char* str = "Hello World!";
+		return (void*)str;
+	}
 
 	class Base {
 	public:
@@ -44,7 +56,63 @@ namespace UnitTestData
 		virtual int Func() { return TEST_INT; }
 	};
 
+	class ClassSingleton
+	{
+	public:
+		static ClassSingleton& GetInstance() {
+			static ClassSingleton instance;
+			return instance;
+		}
+		static std::shared_ptr<ClassSingleton> GetInstanceSp() {
+			auto deleter = [](ClassSingleton*) {};
+			return std::shared_ptr<ClassSingleton>(&GetInstance(), deleter);
+		}
+		void SetData(int data) { m_data = data; }
+
+	private:
+		ClassSingleton() = default;
+		ClassSingleton(const ClassSingleton& other) = delete;
+		ClassSingleton& operator=(const ClassSingleton&) = delete;
+		int m_data = 0;
+	};
+
+	static void SetClassSingletonRef(ClassSingleton& s) {}
+	static void SetClassSingletonPtr(ClassSingleton* s) {}
+	static void SetClassSingletonPtrPtr(ClassSingleton** s) {}
+	static void SetClassSingletonShared(std::shared_ptr<ClassSingleton> s) {}
+
+	class SetClassSingleton
+	{
+	public:
+		void Ref(ClassSingleton& s) {}
+		void Ptr(ClassSingleton* s) {}
+		void PtrPtr(ClassSingleton** s) {}
+		void Shared(std::shared_ptr<ClassSingleton> s) {}
+	};
+
+	static void NullPtrArg(int* n) { ASSERT_TRUE(n == nullptr); }
+	static void NullPtrPtrArg(int** n) { ASSERT_TRUE(*n == nullptr); }
+
 	struct StructParam { int val; };
+
+	static void OutgoingPtrArg(StructParam* s, int* i) { 
+		ASSERT_TRUE(s != nullptr);
+		ASSERT_TRUE(s->val == TEST_INT);
+		s->val++; 
+		(*i)++;
+	}
+
+	static void OutgoingPtrPtrArg(StructParam** s) {
+		StructParam* param = new StructParam;
+		param->val = TEST_INT;
+		ASSERT_TRUE(*s == nullptr);
+		(*s) = param;
+	}
+
+	static void OutgoingRefArg(StructParam& s) {
+		s.val++;
+	}
+
 	static int FreeFuncIntWithReturn0() { return TEST_INT; }
 
 	static void FreeFunc0() { }
@@ -52,11 +120,11 @@ namespace UnitTestData
 	static void FreeFuncInt1(int i) { ASSERT_TRUE(i == TEST_INT); }
 	static void FreeFuncInt1_2(int i) { ASSERT_TRUE(i == TEST_INT); }
 	static int FreeFuncIntWithReturn1(int i) { ASSERT_TRUE(i == TEST_INT); return i; }
-	static void FreeFuncPtrPtr1(StructParam** s) { ASSERT_TRUE((*s)->val == TEST_INT); }
+	static void FreeFuncPtrPtr1(StructParam** s) { ASSERT_TRUE((*s)->val == TEST_INT); (*s)->val++; }
 	static void FreeFuncStruct1(StructParam s) { ASSERT_TRUE(s.val == TEST_INT); }
-	static void FreeFuncStructPtr1(StructParam* s) { ASSERT_TRUE(s->val == TEST_INT); }
+	static void FreeFuncStructPtr1(StructParam* s) { ASSERT_TRUE(s->val == TEST_INT); s->val++; }
 	static void FreeFuncStructConstPtr1(const StructParam* s) { ASSERT_TRUE(s->val == TEST_INT); }
-	static void FreeFuncStructRef1(StructParam& s) { ASSERT_TRUE(s.val == TEST_INT); }
+	static void FreeFuncStructRef1(StructParam& s) { ASSERT_TRUE(s.val == TEST_INT); s.val++; }
 	static void FreeFuncStructConstRef1(const StructParam& s) { ASSERT_TRUE(s.val == TEST_INT); }
 
 	static void FreeFuncInt2(int i, int i2) { ASSERT_TRUE(i == TEST_INT); ASSERT_TRUE(i2 == TEST_INT); }
@@ -83,6 +151,7 @@ namespace UnitTestData
 	public:
 		int ConstCheck(int i) { ASSERT_TRUE(i == TEST_INT); return TEST_INT; }
 		int ConstCheck(int i) const { ASSERT_TRUE(i == TEST_INT); return TEST_INT; }
+		void FuncRvalueRef(int&& i) { ASSERT_TRUE(i == TEST_INT); }
 
 		void MemberFuncInt1(int i) { ASSERT_TRUE(i == TEST_INT); }
 		void MemberFuncInt1_2(int i) { ASSERT_TRUE(i == TEST_INT); }

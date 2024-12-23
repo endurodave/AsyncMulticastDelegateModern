@@ -11,7 +11,7 @@
 /// 
 /// @details Asynchronous delegate that invokes the target function on the specified thread of control
 /// and waits for the function to be executed or a timeout occurs. Use IsSuccess() to determine if 
-/// asynchronous call succeeded.
+/// asynchronous call succeeded before using the return value and outgoing argument values.
 /// 
 /// Delegate "`AsyncWait`" series of classes used to invoke a function asynchronously and wait for 
 /// completion by the destination target thread. Invoking a function asynchronously requires making 
@@ -33,11 +33,18 @@
 /// 
 /// Limitations:
 /// 
+/// * Cannot use a `void*` as a target function argument.
+/// 
+/// * Cannot use rvalue reference (T&&) as a target function argument.
+/// 
 /// * The target function cannot return a `std::unique_ptr` since `AsyncWait` destination 
 /// target thread stores the return value (`m_retVal`) for later use by the calling source thread.
 /// 
 /// * Cannot insert `DelegateMemberAsyncWait` into an ordered container. e.g. `std::list` ok, 
 /// `std::set` not ok.
+/// 
+/// * `std::function` compares the function signature type, not the underlying object instance.
+/// See `DelegateFunction<>` class for more info.
 ///
 /// Code within `<common_code>` and `</common_code>` is updated using sync_src.py. Manually update 
 /// the code within the `DelegateFreeAsyncWait` `common_code` tags, then run the script to 
@@ -68,9 +75,7 @@ public:
     /// @param[in] invoker - the invoker instance
     /// @param[in] args - a parameter pack of all target function arguments
     DelegateAsyncWaitMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsg(invoker),
-        m_args(std::forward<Args>(args)...)
-    {
-    }
+        m_args(std::forward<Args>(args)...) {}
 
     virtual ~DelegateAsyncWaitMsg() {}
 
