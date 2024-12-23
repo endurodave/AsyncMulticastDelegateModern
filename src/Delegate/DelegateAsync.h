@@ -172,7 +172,7 @@ public:
     }
 
     /// @brief Clear the target function.
-    virtual void operator=(std::nullptr_t) noexcept {
+    virtual void operator=(std::nullptr_t) noexcept override {
         return this->Clear();
     }
 
@@ -477,7 +477,7 @@ public:
     }
 
     /// @brief Clear the target function.
-    virtual void operator=(std::nullptr_t) noexcept {
+    virtual void operator=(std::nullptr_t) noexcept override {
         return this->Clear();
     }
 
@@ -723,7 +723,7 @@ public:
     }
 
     /// @brief Clear the target function.
-    virtual void operator=(std::nullptr_t) noexcept {
+    virtual void operator=(std::nullptr_t) noexcept override {
         return this->Clear();
     }
 
