@@ -1,7 +1,7 @@
 ![License MIT](https://img.shields.io/github/license/BehaviorTree/BehaviorTree.CPP?color=blue)
-[![conan Ubuntu](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cmake_ubuntu.yml/badge.svg)](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cmake_ubuntu.yml)
-[![conan Ubuntu](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cmake_clang.yml/badge.svg)](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cmake_clang.yml)
-[![conan Windows](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cmake_windows.yml/badge.svg)](https://github.com/endurodave/AsyncMulticastDelegateModern/actions/workflows/cmake_windows.yml)
+[![conan Ubuntu](https://github.com/endurodave/cpp-async-delegate/actions/workflows/cmake_ubuntu.yml/badge.svg)](https://github.com/endurodave/cpp-async-delegate/actions/workflows/cmake_ubuntu.yml)
+[![conan Ubuntu](https://github.com/endurodave/cpp-async-delegate/actions/workflows/cmake_clang.yml/badge.svg)](https://github.com/endurodave/cpp-async-delegate/actions/workflows/cmake_clang.yml)
+[![conan Windows](https://github.com/endurodave/cpp-async-delegate/actions/workflows/cmake_windows.yml/badge.svg)](https://github.com/endurodave/cpp-async-delegate/actions/workflows/cmake_windows.yml)
 
 # Asynchronous Delegates in C++
 
@@ -37,7 +37,7 @@ Originally published on CodeProject at: <a href="https://www.codeproject.com/Art
 
  See [Design Details](docs/DETAILS.md) for implementation design documentation and more examples.
 
- See [Doxygen Documentation](https://endurodave.github.io/AsyncMulticastDelegateModern/html/index.html) for source code documentation. 
+ See [Doxygen Documentation](https://endurodave.github.io/cpp-async-delegate/html/index.html) for source code documentation. 
 
 # Quick Start
 
@@ -459,7 +459,7 @@ Repositories utilizing the delegate library within different multithreaded appli
 
 Find this repository useful? Consider giving it a star!
 
-[![Star History Chart](https://api.star-history.com/svg?repos=endurodave/AsyncMulticastDelegateModern&type=Date)](https://star-history.com/#endurodave/AsyncMulticastDelegateModern&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=endurodave/cpp-async-delegate&type=Date)](https://star-history.com/#endurodave/cpp-async-delegate&Date)
 
 
 
