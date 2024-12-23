@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <functional>
+#include <memory>
+#include <cstdint>
 #include "Fault.h"
 
 namespace UnitTestData
