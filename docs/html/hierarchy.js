@@ -35,7 +35,8 @@ var hierarchy =
     ] ],
     [ "DelegateLib::DelegateThread", "class_delegate_lib_1_1_delegate_thread.html", null ],
     [ "std::false_type", null, [
-      [ "DelegateLib::is_shared_ptr< T >", "struct_delegate_lib_1_1is__shared__ptr.html", null ]
+      [ "DelegateLib::is_shared_ptr< T >", "struct_delegate_lib_1_1is__shared__ptr.html", null ],
+      [ "DelegateLib::is_unique_ptr< T >", "struct_delegate_lib_1_1is__unique__ptr.html", null ]
     ] ],
     [ "DelegateLib::heap_arg_deleter_base", "class_delegate_lib_1_1heap__arg__deleter__base.html", [
       [ "DelegateLib::heap_arg_deleter< T >", "class_delegate_lib_1_1heap__arg__deleter.html", null ],
@@ -60,6 +61,7 @@ var hierarchy =
       [ "DelegateLib::is_shared_ptr< const std::shared_ptr< T > * >", "struct_delegate_lib_1_1is__shared__ptr_3_01const_01std_1_1shared__ptr_3_01_t_01_4_01_5_01_4.html", null ],
       [ "DelegateLib::is_shared_ptr< std::shared_ptr< T > & >", "struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_6_01_4.html", null ],
       [ "DelegateLib::is_shared_ptr< std::shared_ptr< T > * >", "struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_5_01_4.html", null ],
-      [ "DelegateLib::is_shared_ptr< std::shared_ptr< T > >", "struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_4.html", null ]
+      [ "DelegateLib::is_shared_ptr< std::shared_ptr< T > >", "struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_4.html", null ],
+      [ "DelegateLib::is_unique_ptr< std::unique_ptr< T > >", "struct_delegate_lib_1_1is__unique__ptr_3_01std_1_1unique__ptr_3_01_t_01_4_01_4.html", null ]
     ] ]
 ];

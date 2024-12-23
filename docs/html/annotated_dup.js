@@ -37,6 +37,8 @@ var annotated_dup =
       [ "is_shared_ptr< std::shared_ptr< T > & >", "struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_6_01_4.html", null ],
       [ "is_shared_ptr< std::shared_ptr< T > * >", "struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_5_01_4.html", null ],
       [ "is_shared_ptr< std::shared_ptr< T > >", "struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_4.html", null ],
+      [ "is_unique_ptr", "struct_delegate_lib_1_1is__unique__ptr.html", null ],
+      [ "is_unique_ptr< std::unique_ptr< T > >", "struct_delegate_lib_1_1is__unique__ptr_3_01std_1_1unique__ptr_3_01_t_01_4_01_4.html", null ],
       [ "MulticastDelegate", "struct_delegate_lib_1_1_multicast_delegate.html", null ],
       [ "MulticastDelegate< RetType(Args...)>", "class_delegate_lib_1_1_multicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html", "class_delegate_lib_1_1_multicast_delegate_3_01_ret_type_07_args_8_8_8_08_4" ],
       [ "MulticastDelegateSafe", "struct_delegate_lib_1_1_multicast_delegate_safe.html", null ],

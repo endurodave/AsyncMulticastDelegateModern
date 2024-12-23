@@ -124,19 +124,19 @@ Inheritance diagram for DelegateLib::IDelegateInvoker:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1386e5a1c2650fb1e5511a16cbb5b1f6" id="r_a1386e5a1c2650fb1e5511a16cbb5b1f6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1386e5a1c2650fb1e5511a16cbb5b1f6">DelegateInvoke</a> (std::shared_ptr&lt; <a class="el" href="class_delegate_lib_1_1_delegate_msg.html">DelegateMsg</a> &gt; msg)=0</td></tr>
-<tr class="separator:a1386e5a1c2650fb1e5511a16cbb5b1f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca69f324a6770793cb2c9311fa22273a" id="r_aca69f324a6770793cb2c9311fa22273a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca69f324a6770793cb2c9311fa22273a">Invoke</a> (std::shared_ptr&lt; <a class="el" href="class_delegate_lib_1_1_delegate_msg.html">DelegateMsg</a> &gt; msg)=0</td></tr>
+<tr class="separator:aca69f324a6770793cb2c9311fa22273a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstract base class to support asynchronous delegate function invoke on destination thread of control. </p>
-<p>Inherit form this class and implement <code><a class="el" href="#a1386e5a1c2650fb1e5511a16cbb5b1f6">DelegateInvoke()</a></code>. The implementation typically posts a message into the destination thread message queue. The destination thread receives the message and invokes the target bound function. Destintation thread invoke example:</p>
+<p>Inherit form this class and implement <code><a class="el" href="#aca69f324a6770793cb2c9311fa22273a">Invoke()</a></code>. The implementation typically posts a message into the destination thread message queue. The destination thread receives the message and invokes the target bound function. Destination thread invoke example:</p>
 <p>// Get pointer to <a class="el" href="class_delegate_lib_1_1_delegate_msg.html" title="Base class for all delegate inter-thread messages.">DelegateMsg</a> data from queue msg data <br  />
  <code>auto delegateMsg = msg-&gt;GetData();</code></p>
 <p>// Invoke the delegate destination target function <br  />
- <code>delegateMsg-&gt;GetDelegateInvoker()-&gt;DelegateInvoke(delegateMsg);</code> </p>
+ <code>delegateMsg-&gt;GetDelegateInvoker()-&gt;Invoke(delegateMsg);</code> </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a1386e5a1c2650fb1e5511a16cbb5b1f6" name="a1386e5a1c2650fb1e5511a16cbb5b1f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1386e5a1c2650fb1e5511a16cbb5b1f6">&#9670;&#160;</a></span>DelegateInvoke()</h2>
+<a id="aca69f324a6770793cb2c9311fa22273a" name="aca69f324a6770793cb2c9311fa22273a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aca69f324a6770793cb2c9311fa22273a">&#9670;&#160;</a></span>Invoke()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -145,7 +145,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void DelegateLib::IDelegateInvoker::DelegateInvoke </td>
+          <td class="memname">virtual bool DelegateLib::IDelegateInvoker::Invoke </td>
           <td>(</td>
           <td class="paramtype">std::shared_ptr&lt; <a class="el" href="class_delegate_lib_1_1_delegate_msg.html">DelegateMsg</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>msg</em></span></td><td>)</td>
           <td></td>
@@ -157,15 +157,16 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Called to invoke the callback by the destination thread of control. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Called to invoke the bound target function by the destination thread of control. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">msg</td><td>- the incoming delegate message. <br  />
- </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">msg</td><td>- the incoming delegate message. </td></tr>
   </table>
   </dd>
 </dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if function was invoked; <code>false</code> if failed. <br  />
+ </dd></dl>
 
-<p>Implemented in <a class="el" href="class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a24785156e3b7888a423a9d4a71573e40">DelegateLib::DelegateFreeAsync&lt; RetType(Args...)&gt;</a>, <a class="el" href="class_delegate_lib_1_1_delegate_free_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#aeca8d0211d34404e9fd2ecb4d0d356b9">DelegateLib::DelegateFreeAsyncWait&lt; RetType(Args...)&gt;</a>, <a class="el" href="class_delegate_lib_1_1_delegate_function_async_3_01_ret_type_07_args_8_8_8_08_4.html#a2091d50db4b3be6334c66dc8a5b8fddc">DelegateLib::DelegateFunctionAsync&lt; RetType(Args...)&gt;</a>, <a class="el" href="class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#a8a0cfe8f1e6f7bc06c161a1f210c6aa7">DelegateLib::DelegateFunctionAsyncWait&lt; RetType(Args...)&gt;</a>, <a class="el" href="class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a470bad2bda18c47a169b88a923d06fa6">DelegateLib::DelegateMemberAsync&lt; TClass, RetType(Args...)&gt;</a>, and <a class="el" href="class_delegate_lib_1_1_delegate_member_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a20e9f7755ba4b19fb12988da5f8fe6f7">DelegateLib::DelegateMemberAsyncWait&lt; TClass, RetType(Args...)&gt;</a>.</p>
+<p>Implemented in <a class="el" href="class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#ac404a20415f5d23d59cee82ace7e8d05">DelegateLib::DelegateFreeAsync&lt; RetType(Args...)&gt;</a>, <a class="el" href="class_delegate_lib_1_1_delegate_free_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#afc48c06e5a0580a12d90cf78a165ac89">DelegateLib::DelegateFreeAsyncWait&lt; RetType(Args...)&gt;</a>, <a class="el" href="class_delegate_lib_1_1_delegate_function_async_3_01_ret_type_07_args_8_8_8_08_4.html#a2b54529a25ce5ee655ce18baa8527f3a">DelegateLib::DelegateFunctionAsync&lt; RetType(Args...)&gt;</a>, <a class="el" href="class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#a8863a62cc16b05704bd2515d391c237f">DelegateLib::DelegateFunctionAsyncWait&lt; RetType(Args...)&gt;</a>, <a class="el" href="class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#ac18c6244f1a4faa8d56e34a9ecec7504">DelegateLib::DelegateMemberAsync&lt; TClass, RetType(Args...)&gt;</a>, and <a class="el" href="class_delegate_lib_1_1_delegate_member_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#afcb5693bc14f4e1393899e5ec57ba5a4">DelegateLib::DelegateMemberAsyncWait&lt; TClass, RetType(Args...)&gt;</a>.</p>
 
 </div>
 </div>

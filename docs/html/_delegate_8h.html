@@ -137,26 +137,35 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a75ff1e13f1cb691402002bfccaf9d1b2" id="r_a75ff1e13f1cb691402002bfccaf9d1b2"><td class="memTemplParams" colspan="2">template&lt;class RetType , class... Args&gt; </td></tr>
-<tr class="memitem:a75ff1e13f1cb691402002bfccaf9d1b2"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="struct_delegate_lib_1_1_delegate_free.html">DelegateFree</a>&lt; RetType(Args...)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_delegate_lib.html#a75ff1e13f1cb691402002bfccaf9d1b2">DelegateLib::MakeDelegate</a> (RetType(*func)(Args... args))</td></tr>
-<tr class="memdesc:a75ff1e13f1cb691402002bfccaf9d1b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a delegate that binds to a free function.  <br /></td></tr>
-<tr class="separator:a75ff1e13f1cb691402002bfccaf9d1b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a388d9eb1fda04113138b8be61dc94650" id="r_a388d9eb1fda04113138b8be61dc94650"><td class="memTemplParams" colspan="2">template&lt;class TClass , class RetType , class... Args&gt; </td></tr>
-<tr class="memitem:a388d9eb1fda04113138b8be61dc94650"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateMember</a>&lt; TClass, RetType(Args...)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_delegate_lib.html#a388d9eb1fda04113138b8be61dc94650">DelegateLib::MakeDelegate</a> (TClass *object, RetType(TClass::*func)(Args... args))</td></tr>
-<tr class="memdesc:a388d9eb1fda04113138b8be61dc94650"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a delegate that binds to a non-const member function.  <br /></td></tr>
-<tr class="separator:a388d9eb1fda04113138b8be61dc94650"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a739d90362b129b98ba2c5a626d655c6a" id="r_a739d90362b129b98ba2c5a626d655c6a"><td class="memTemplParams" colspan="2">template&lt;class TClass , class RetType , class... Args&gt; </td></tr>
-<tr class="memitem:a739d90362b129b98ba2c5a626d655c6a"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="struct_delegate_lib_1_1_delegate_member.html">DelegateMember</a>&lt; TClass, RetType(Args...)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_delegate_lib.html#a739d90362b129b98ba2c5a626d655c6a">DelegateLib::MakeDelegate</a> (std::shared_ptr&lt; TClass &gt; object, RetType(TClass::*func)(Args... args))</td></tr>
-<tr class="memdesc:a739d90362b129b98ba2c5a626d655c6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a delegate that binds to a non-const member function with a shared pointer to the object.  <br /></td></tr>
-<tr class="separator:a739d90362b129b98ba2c5a626d655c6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7616e4b38fca0742748de407497d12c6" id="r_a7616e4b38fca0742748de407497d12c6"><td class="memTemplParams" colspan="2">template&lt;class RetType , class... Args&gt; </td></tr>
-<tr class="memitem:a7616e4b38fca0742748de407497d12c6"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="class_delegate_lib_1_1_delegate_function.html">DelegateFunction</a>&lt; RetType(Args...)&gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_delegate_lib.html#a7616e4b38fca0742748de407497d12c6">DelegateLib::MakeDelegate</a> (std::function&lt; RetType(Args...)&gt; func)</td></tr>
-<tr class="memdesc:a7616e4b38fca0742748de407497d12c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a delegate that binds to a <code>std::function</code>.  <br /></td></tr>
-<tr class="separator:a7616e4b38fca0742748de407497d12c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4815e70cd651512c838e354bf81a0c80" id="r_a4815e70cd651512c838e354bf81a0c80"><td class="memTemplParams" colspan="2">template&lt;class RetType , class... Args&gt; </td></tr>
+<tr class="memitem:a4815e70cd651512c838e354bf81a0c80"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_delegate_lib.html#a4815e70cd651512c838e354bf81a0c80">DelegateLib::MakeDelegate</a> (RetType(*func)(Args... args))</td></tr>
+<tr class="memdesc:a4815e70cd651512c838e354bf81a0c80"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a delegate that binds to a free function.  <br /></td></tr>
+<tr class="separator:a4815e70cd651512c838e354bf81a0c80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3040a5f123faf2bcd4aeb94732aebf6" id="r_ae3040a5f123faf2bcd4aeb94732aebf6"><td class="memTemplParams" colspan="2">template&lt;class TClass , class RetType , class... Args&gt; </td></tr>
+<tr class="memitem:ae3040a5f123faf2bcd4aeb94732aebf6"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_delegate_lib.html#ae3040a5f123faf2bcd4aeb94732aebf6">DelegateLib::MakeDelegate</a> (TClass *object, RetType(TClass::*func)(Args... args))</td></tr>
+<tr class="memdesc:ae3040a5f123faf2bcd4aeb94732aebf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a delegate that binds to a non-const member function.  <br /></td></tr>
+<tr class="separator:ae3040a5f123faf2bcd4aeb94732aebf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7bfe87a21e1856b5eac23c0e75afe63" id="r_ab7bfe87a21e1856b5eac23c0e75afe63"><td class="memTemplParams" colspan="2">template&lt;class TClass , class RetType , class... Args&gt; </td></tr>
+<tr class="memitem:ab7bfe87a21e1856b5eac23c0e75afe63"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_delegate_lib.html#ab7bfe87a21e1856b5eac23c0e75afe63">DelegateLib::MakeDelegate</a> (const TClass *object, RetType(TClass::*func)(Args... args) const)</td></tr>
+<tr class="memdesc:ab7bfe87a21e1856b5eac23c0e75afe63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a delegate that binds to a const member function.  <br /></td></tr>
+<tr class="separator:ab7bfe87a21e1856b5eac23c0e75afe63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6be9e0f17709a1c3d2b3473aa2e60e1f" id="r_a6be9e0f17709a1c3d2b3473aa2e60e1f"><td class="memTemplParams" colspan="2">template&lt;class TClass , class RetType , class... Args&gt; </td></tr>
+<tr class="memitem:a6be9e0f17709a1c3d2b3473aa2e60e1f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_delegate_lib.html#a6be9e0f17709a1c3d2b3473aa2e60e1f">DelegateLib::MakeDelegate</a> (std::shared_ptr&lt; TClass &gt; object, RetType(TClass::*func)(Args... args))</td></tr>
+<tr class="memdesc:a6be9e0f17709a1c3d2b3473aa2e60e1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a delegate that binds to a non-const member function with a shared pointer to the object.  <br /></td></tr>
+<tr class="separator:a6be9e0f17709a1c3d2b3473aa2e60e1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b710eb4c2c53fbe7cfe6d778ae4b546" id="r_a0b710eb4c2c53fbe7cfe6d778ae4b546"><td class="memTemplParams" colspan="2">template&lt;class RetType , class... Args&gt; </td></tr>
+<tr class="memitem:a0b710eb4c2c53fbe7cfe6d778ae4b546"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespace_delegate_lib.html#a0b710eb4c2c53fbe7cfe6d778ae4b546">DelegateLib::MakeDelegate</a> (std::function&lt; RetType(Args...)&gt; func)</td></tr>
+<tr class="memdesc:a0b710eb4c2c53fbe7cfe6d778ae4b546"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a delegate that binds to a <code>std::function</code>.  <br /></td></tr>
+<tr class="separator:a0b710eb4c2c53fbe7cfe6d778ae4b546"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Delegate series of classes are used to invoke a function synchronously. </p>
-<p>Delgates support binding to free functions, class instance functions, class static function, and std::function targets. Lambda functions can be bound to a delegate when assigned to a <code>std::function</code>. The classes are not thread safe. </p>
+<p>Delgates support binding to free functions, class instance functions, class static function, and std::function targets. Lambda functions can be bound to a delegate when assigned to a <code>std::function</code>. The classes are not thread safe.</p>
+<p>Limitations:</p>
+<ul>
+<li>Cannot insert <code>DelegateMember</code> into an ordered container. e.g. <code>std::list</code> ok, <code>std::set</code> not ok.</li>
+<li><code>std::function</code> compares the function signature type, not the underlying object instance. See <code>DelegateFunction&lt;&gt;</code> class for more info. </li>
+</ul>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

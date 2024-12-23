@@ -21,8 +21,14 @@ var class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8
     [ "Clone", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#af4eb4fba1da063063b5d4ba47de4299a", null ],
     [ "Empty", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#aa34f567d476fb8cba1d28d7ec664e3e2", null ],
     [ "operator bool", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a412150bb991a3941c45353e4d20303ec", null ],
+    [ "operator!=", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a9c6f70589a807e99ca245a8e3a964c46", null ],
     [ "operator()", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#ac37f599bb6493c11c88a015c877b1530", null ],
+    [ "operator<", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#ae0ec2197f447865cb33f7c42b005449a", null ],
     [ "operator=", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#ae31b9598c8f3e72d2adcbd9c0a1269e1", null ],
     [ "operator=", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#ad06b7ee91cc4f40440a2841a2fe2ec83", null ],
-    [ "operator==", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a90f7904623f6945bd232747a207ef5a7", null ]
+    [ "operator=", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a461bd27f48dafd244733dc09a7123193", null ],
+    [ "operator==", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a90f7904623f6945bd232747a207ef5a7", null ],
+    [ "operator==", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a4c8642a7df9fd5eacc6f84907a23b24a", null ],
+    [ "operator!=", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a9060a79c701f93a271858cb8b787f534", null ],
+    [ "operator==", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#a4c3606cc50df42a8086afe833332c797", null ]
 ];

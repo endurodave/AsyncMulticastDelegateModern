@@ -70,7 +70,8 @@ var menudata={children:[
 {text:"f",url:"functions_type.html#index_f"},
 {text:"m",url:"functions_type.html#index_m"},
 {text:"o",url:"functions_type.html#index_o"},
-{text:"s",url:"functions_type.html#index_s"}]}]}]},
+{text:"s",url:"functions_type.html#index_s"}]},
+{text:"Related Symbols",url:"functions_rela.html"}]}]},
 {text:"Files",url:"files.html",children:[
 {text:"File List",url:"files.html"},
 {text:"File Members",url:"globals.html",children:[
