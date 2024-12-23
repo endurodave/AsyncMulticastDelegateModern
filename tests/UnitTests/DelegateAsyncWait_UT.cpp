@@ -2,6 +2,7 @@
 #include "UnitTestCommon.h"
 #include <iostream>
 #include <set>
+#include <cstring>
 #include "WorkerThreadStd.h"
 
 using namespace DelegateLib;
