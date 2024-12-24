@@ -166,7 +166,7 @@ static void DelegateFreeAsyncTests()
     ASSERT_TRUE(Class::m_construtorCnt == 1);
 
     // Compile error. Invalid to pass void* argument to async target function
-#if 0   
+#if 0
     // Test void* args
     const char* str = "Hello World!";
     void* voidPtr = (void*)str;
@@ -176,12 +176,22 @@ static void DelegateFreeAsyncTests()
     voidPtrNullDel(nullptr);
 #endif
 
-    // Test void* return
-    auto retVoidPtrDel = MakeDelegate(&RetVoidPtr);
+    // Test void* return. Return value is nullptr because return 
+    // value is invalid on a non-blocking async delegate
+    auto retVoidPtrDel = MakeDelegate(&RetVoidPtr, workerThread);
     auto retVoidPtr = retVoidPtrDel();
-    ASSERT_TRUE(retVoidPtr != nullptr);
+    ASSERT_TRUE(retVoidPtr == nullptr);
     const char* retStr = (const char*)retVoidPtr;
-    ASSERT_TRUE(strcmp(retStr, "Hello World!") == 0);
+    ASSERT_TRUE(retStr == nullptr);
+
+#if 0
+    // Invalid: Can't pass a && argument through a message queue
+    // Test rvalue ref
+    auto rvalueRefDel = MakeDelegate(&FuncRvalueRef, workerThread);
+    int rv = TEST_INT;
+    rvalueRefDel(std::move(rv));
+    rvalueRefDel(12345678);
+#endif
 }
 
 static void DelegateMemberAsyncTests()
@@ -294,6 +304,26 @@ static void DelegateMemberAsyncTests()
     auto singletonSp = ClassSingleton::GetInstanceSp();
     auto delShared = MakeDelegate(&setClassSingleton, &SetClassSingleton::Shared, workerThread);
     delShared(singletonSp);
+
+    Class voidTest;
+    // Compile error. Invalid to pass void* argument to async target function
+#if 0
+    // Test void* args
+    const char* str = "Hello World!";
+    void* voidPtr = (void*)str;
+    auto voidPtrNotNullDel = MakeDelegate(&voidTest, &Class::VoidPtrArgNotNull, workerThread);
+    voidPtrNotNullDel(voidPtr);
+    auto voidPtrNullDel = MakeDelegate(&voidTest, &Class::VoidPtrArgNull, workerThread);
+    voidPtrNullDel(nullptr);
+#endif
+
+    // Test void* return. Return value is nullptr because return 
+    // value is invalid on a non-blocking async delegate
+    auto retVoidPtrDel = MakeDelegate(&voidTest, &Class::RetVoidPtr, workerThread);
+    auto retVoidPtr = retVoidPtrDel();
+    ASSERT_TRUE(retVoidPtr == nullptr);
+    const char* retStr = (const char*)retVoidPtr;
+    ASSERT_TRUE(retStr == nullptr);
 }
 
 static void DelegateMemberSpAsyncTests()

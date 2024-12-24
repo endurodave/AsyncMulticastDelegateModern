@@ -31,9 +31,18 @@ namespace UnitTestData
 	public:
 		Class() { m_construtorCnt++; }
 		Class(const Class& rhs) { m_construtorCnt++; }
+
 		std::uint16_t Func() { return 0; }
 		std::uint16_t FuncConst() const { return 0; }
 		std::unique_ptr<int> FuncUnique(int i) { return std::make_unique<int>(i); }
+		void FuncRvalueRef(int&& i) { ASSERT_TRUE(i == TEST_INT); }
+		void VoidPtrArgNull(void* p) { ASSERT_TRUE(p == nullptr); }
+		void VoidPtrArgNotNull(void* p) { ASSERT_TRUE(p != nullptr); }
+		void* RetVoidPtr() {
+			static const char* str = "Hello World!";
+			return (void*)str;
+		}
+
 		static int m_construtorCnt;
 	};
 

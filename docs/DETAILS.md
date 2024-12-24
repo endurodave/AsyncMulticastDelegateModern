@@ -138,13 +138,13 @@ DelegateBase
     Delegate<>
         DelegateFree<>
             DelegateFreeAsync<>
-                DelegateFreeAsyncWait<>
+            DelegateFreeAsyncWait<>
         DelegateMember<>
             DelegateMemberAsync<>
-                DelegateMemberAsyncWait<>
+            DelegateMemberAsyncWait<>
         DelegateFunction<>
             DelegateFunctionAsync<>
-                DelegateFunctionAsyncWait<>
+            DelegateFunctionAsyncWait<>
 ``` 
 
 `DelegateFree<>` binds to a free or static member function. `DelegateMember<>` binds to a class instance member function. `DelegateFunction<>` binds to a `std::function` target. All versions offer synchronous function invocation.
@@ -340,7 +340,7 @@ const auto valAsyncResult = std::count_if(v.begin(), v.end(),
 cout << "Asynchronous lambda result: " << valAsyncResult << endl;
 ```
 
-Binding to instance member function requires a pointer to an object. The delegate library supports binding with a raw pointer and a `std::shared_ptr` smart pointer. Use a `std::shared_ptr` in place of the raw object pointer in the call to `MakeDelegate()`.
+The delegate library supports binding with a object pointer and a `std::shared_ptr` smart pointer. Use a `std::shared_ptr` in place of the raw object pointer in the call to `MakeDelegate()`.
 
 ```cpp
 // Create a shared_ptr, create a delegate, then synchronously invoke delegate function
@@ -350,7 +350,11 @@ delegateMemberSp("Hello world using shared_ptr", 2020);
 ```
 ## Function Argument Copy
 
-The behavior of the delegate library when invoking asynchronous delegates is to copy arguments into heap memory for safe transport to the destination thread. All arguments (if any) are duplicated. If your data is not plain old data (POD) and cannot be bitwise copied, ensure you implement an appropriate copy constructor to handle the copying. Synchronous delegates, on the other hand, do not copy target function arguments when invoked.
+The behavior of the delegate library when invoking asynchronous non-blocking delegates (e.g. `DelegateAsyncFree<>`) is to copy arguments into heap memory for safe transport to the destination thread. All arguments (if any) are duplicated. If your data is not plain old data (POD) and cannot be bitwise copied, ensure you implement an appropriate copy constructor to handle the copying.
+
+Since argument data is duplicated, an outgoing pointer argument passed to a function invoked using an asynchronous non-blocking delegate is not updated. A copy of the pointed to data is sent to the destination target thread.
+
+Synchronous and asynchronous blocking delegates, on the other hand, do not copy the target function's arguments when invoked. Outgoing pointer arguments passed through an asynchronous blocking delegate (e.g., `DelegateAsyncFreeWait<>`) behave exactly as if the native target function were called directly.
 
 ## Caution Using Raw Object Pointers
 
@@ -476,13 +480,13 @@ DelegateBase
     Delegate<>
         DelegateFree<>
             DelegateFreeAsync<>
-                DelegateFreeAsyncWait<>
+            DelegateFreeAsyncWait<>
         DelegateMember<>
             DelegateMemberAsync<>
-                DelegateMemberAsyncWait<>
+            DelegateMemberAsyncWait<>
         DelegateFunction<>
             DelegateFunctionAsync<>
-                DelegateFunctionAsyncWait<>
+            DelegateFunctionAsyncWait<>
 
 // Delegate Containers
 SinglecastDelegate<>
@@ -568,7 +572,7 @@ private:
 
 ### Argument Heap Copy
 
-Asynchronous invocations means that all argument data must be copied into the heap for transport to the destination thread. This means all arguments, regardless of the argument type, will be duplicated including: value, pointer, pointer to pointer, reference. If your data is something other than plain old data (POD) and can't be bitwise copied, then be sure to implement an appropriate copy constructor to handle the copying yourself.
+Asynchronous non-blocking delegate invocations mean that all argument data must be copied to the heap for transport to the destination thread. All arguments, regardless of their type, will be duplicated, including: value, pointer, pointer to pointer, and reference. If your data is not plain old data (POD) and cannot be bitwise copied, be sure to implement an appropriate copy constructor to handle the copying yourself.
 
 For instance, invoking this function asynchronously the argument `TestStruct` will be copied.
 
@@ -1006,7 +1010,7 @@ The table below summarizes the various asynchronous function invocation implemen
 
 | Repository                                                                                            | Language | Key Delegate Features                                                                                                                                                                                                               | Notes                                                                                                                                                                                                      |
 |-------------------------------------------------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <a href="https://github.com/endurodave/cpp-async-delegate">AsyncMulticastDelegateModern</a> | C++17    | * Function-like template syntax<br> * Any delegate target function type (member, static, free, lambda)<br>  * N target function arguments<br> * N delegate subscribers<br>  * Optional fixed block allocator     | * Modern C++ implementation<br> * Extensive unit tests<br> * Metaprogramming and variadic templates used for library implementation<br> * Any C++17 and higher compiler |
+| <a href="https://github.com/endurodave/cpp-async-delegate">cpp-async-delegate</a> | C++17    | * Function-like template syntax<br> * Any delegate target function type (member, static, free, lambda)<br>  * N target function arguments<br> * N delegate subscribers<br>  * Optional fixed block allocator     | * Modern C++ implementation<br> * Extensive unit tests<br> * Metaprogramming and variadic templates used for library implementation<br> * Any C++17 and higher compiler |
 <a href="https://github.com/endurodave/AsyncCallback">AsyncCallback</a>                               | C++      | * Traditional template syntax<br> * Delegate target function type (static, free)<br> * 1 target function argument<br> * N delegate subscribers                                                                                      | * Low lines of source code<br> * Compact C++ implementation<br> * Any C++ compiler                                                                                                                    |
 | <a href="https://github.com/endurodave/C_AsyncCallback">C_AsyncCallback</a>                           | C        | * Macros provide type-safety<br> * Delegate target function type (static, free)<br> * 1 target function argument<br> * Fixed callback subscribers (set at compile time)<br> * Optional fixed block allocator                        | * Low lines of source code<br> * Compact C implementation<br> * Any C compiler                                            
 

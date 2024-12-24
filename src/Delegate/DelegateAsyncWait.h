@@ -52,7 +52,7 @@
 /// 
 /// `python src_dup.py DelegateAsyncWait.h`
 
-#include "DelegateAsync.h"
+#include "Delegate.h"
 #include "DelegateThread.h"
 #include "DelegateInvoker.h"
 #include <optional>
@@ -127,11 +127,11 @@ struct DelegateFreeAsyncWait; // Not defined
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class RetType, class... Args>
-class DelegateFreeAsyncWait<RetType(Args...)> : public DelegateFreeAsync<RetType(Args...)> {
+class DelegateFreeAsyncWait<RetType(Args...)> : public DelegateFree<RetType(Args...)>, public IDelegateInvoker {
 public:
     typedef RetType(*FreeFunc)(Args...);
     using ClassType = DelegateFreeAsyncWait<RetType(Args...)>;
-    using BaseType = DelegateFreeAsync<RetType(Args...)>;
+    using BaseType = DelegateFree<RetType(Args...)>;
 
     /// @brief Constructor to create a class instance.
     /// @param[in] func The target free function to store.
@@ -139,7 +139,7 @@ public:
     /// @param[in] timeout The calling thread timeout for destination thread to
     /// invoke the target function. 
     DelegateFreeAsyncWait(FreeFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
-        BaseType(func, thread), m_timeout(timeout) {
+        BaseType(func), m_thread(&thread), m_timeout(timeout) {
         Bind(func, thread);
     }
 
@@ -156,7 +156,7 @@ public:
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
     DelegateFreeAsyncWait(ClassType&& rhs) noexcept :
-        BaseType(rhs), m_timeout(rhs.m_timeout), m_success(rhs.m_success), m_retVal(rhs.m_retVal) {
+        BaseType(rhs), m_thread(rhs.m_thread), m_timeout(rhs.m_timeout), m_success(rhs.m_success), m_retVal(rhs.m_retVal) {
         rhs.Clear();
     }
 
@@ -169,7 +169,8 @@ public:
     /// match the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(FreeFunc func, DelegateThread& thread) {
-        BaseType::Bind(func, thread);
+        m_thread = &thread;
+        BaseType::Bind(func);
     }
 
     // <common_code>
@@ -179,6 +180,7 @@ public:
     /// current object.
     /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
+        m_thread = rhs.m_thread;
         m_timeout = rhs.m_timeout;
         m_success = rhs.m_success;
         m_retVal = rhs.m_retVal;
@@ -211,7 +213,8 @@ public:
     ClassType& operator=(ClassType&& rhs) noexcept {
         if (&rhs != this) {
             BaseType::operator=(std::move(rhs));
-            m_timeout = rhs.m_timeout;    // Use the resource
+            m_thread = rhs.m_thread;    // Use the resource
+            m_timeout = rhs.m_timeout;    
             m_success = rhs.m_success;
             m_retVal = rhs.m_retVal;
         }
@@ -229,6 +232,7 @@ public:
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
+            m_thread == derivedRhs->m_thread &&
             m_timeout == derivedRhs->m_timeout &&
             BaseType::operator==(rhs);
     }
@@ -283,7 +287,7 @@ public:
             return RetType();
 
         // Synchronously invoke the target function?
-        if (this->GetSync()) {
+        if (m_sync) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
         } else {
@@ -356,7 +360,7 @@ public:
     /// target function, the target function is not called.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     /// @return `true` if target function invoked or timeout expired; `false` if error. 
-    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) {
         static_assert(!(is_unique_ptr<RetType>::value), "std::unique_ptr return value not allowed");
 
         // Typecast the base pointer to back correct derived to instance
@@ -370,7 +374,7 @@ public:
         // Is the source thread waiting for the target function invoke to complete?
         if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
-            this->SetSync(true);
+            m_sync = true;
 
             // Does target function have a void return value?
             if constexpr (std::is_void<RetType>::value == true) {
@@ -404,12 +408,22 @@ public:
         }
     }
 
+    ///@brief Get the destination thread that the target function is invoked on.
+    // @return The target thread.
+    DelegateThread* GetThread() noexcept { return m_thread; }
+
 private:
+    /// The target thread to invoke the delegate function.
+    DelegateThread* m_thread = nullptr;
+
+    /// Flag to control synchronous vs asynchronous target invoke behavior.
+    bool m_sync = false;
+
     /// Set to `true` if async function call succeeds
     bool m_success = false;			        
 
     /// Time in mS to wait for async function to invoke
-    std::chrono::milliseconds m_timeout;    
+    std::chrono::milliseconds m_timeout = WAIT_INFINITE;    
 
     /// Return value of the target invoked function
     std::any m_retVal;                      
@@ -425,14 +439,14 @@ struct DelegateMemberAsyncWait; // Not defined
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class TClass, class RetType, class... Args>
-class DelegateMemberAsyncWait<TClass, RetType(Args...)> : public DelegateMemberAsync<TClass, RetType(Args...)> {
+class DelegateMemberAsyncWait<TClass, RetType(Args...)> : public DelegateMember<TClass, RetType(Args...)>, public IDelegateInvoker {
 public:
     typedef TClass* ObjectPtr;
     typedef std::shared_ptr<TClass> SharedPtr;
     typedef RetType(TClass::* MemberFunc)(Args...);
     typedef RetType(TClass::* ConstMemberFunc)(Args...) const;
     using ClassType = DelegateMemberAsyncWait<TClass, RetType(Args...)>;
-    using BaseType = DelegateMemberAsync<TClass, RetType(Args...)>;
+    using BaseType = DelegateMember<TClass, RetType(Args...)>;
 
     /// @brief Constructor to create a class instance.
     /// @param[in] object The target object pointer to store.
@@ -441,7 +455,7 @@ public:
     /// @param[in] timeout The calling thread timeout for destination thread to
     /// invoke the target function. 
     DelegateMemberAsyncWait(SharedPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
-        BaseType(object, func, thread), m_timeout(timeout) {
+        BaseType(object, func), m_thread(&thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
 
@@ -452,7 +466,7 @@ public:
     /// @param[in] timeout The calling thread timeout for destination thread to
     /// invoke the target function. 
     DelegateMemberAsyncWait(SharedPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
-        BaseType(object, func, thread), m_timeout(timeout) {
+        BaseType(object, func), m_thread(&thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
 
@@ -463,7 +477,7 @@ public:
     /// @param[in] timeout The calling thread timeout for destination thread to
     /// invoke the target function. 
     DelegateMemberAsyncWait(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
-        BaseType(object, func, thread), m_timeout(timeout) {
+        BaseType(object, func), m_thread(&thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
 
@@ -474,7 +488,7 @@ public:
     /// @param[in] timeout The calling thread timeout for destination thread to
     /// invoke the target function. 
     DelegateMemberAsyncWait(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout) :
-        BaseType(object, func, thread), m_timeout(timeout) {
+        BaseType(object, func), m_thread(&thread), m_timeout(timeout) {
         Bind(object, func, thread);
     }
 
@@ -491,7 +505,7 @@ public:
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
     DelegateMemberAsyncWait(ClassType&& rhs) noexcept :
-        BaseType(rhs), m_timeout(rhs.m_timeout), m_success(rhs.m_success), m_retVal(rhs.m_retVal) {
+        BaseType(rhs), m_thread(rhs.m_thread), m_timeout(rhs.m_timeout), m_success(rhs.m_success), m_retVal(rhs.m_retVal) {
         rhs.Clear();
     }
 
@@ -505,7 +519,8 @@ public:
     /// the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(SharedPtr object, MemberFunc func, DelegateThread& thread) {
-        BaseType::Bind(object, func, thread);
+        m_thread = &thread;
+        BaseType::Bind(object, func);
     }
 
     /// @brief Bind a member function to the delegate.
@@ -516,7 +531,8 @@ public:
     /// match the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(SharedPtr object, ConstMemberFunc func, DelegateThread& thread) {
-        BaseType::Bind(object, func, thread);
+        m_thread = &thread;
+        BaseType::Bind(object, func);
     }
 
     /// @brief Bind a const member function to the delegate.
@@ -527,7 +543,8 @@ public:
     /// the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
-        BaseType::Bind(object, func, thread);
+        m_thread = &thread;
+        BaseType::Bind(object, func);
     }
 
     /// @brief Bind a member function to the delegate.
@@ -538,7 +555,8 @@ public:
     /// match the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) {
-        BaseType::Bind(object, func, thread);
+        m_thread = &thread;
+        BaseType::Bind(object, func);
     }
 
     // <common_code>
@@ -548,6 +566,7 @@ public:
     /// current object.
     /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
+        m_thread = rhs.m_thread;
         m_timeout = rhs.m_timeout;
         m_success = rhs.m_success;
         m_retVal = rhs.m_retVal;
@@ -580,7 +599,8 @@ public:
     ClassType& operator=(ClassType&& rhs) noexcept {
         if (&rhs != this) {
             BaseType::operator=(std::move(rhs));
-            m_timeout = rhs.m_timeout;    // Use the resource
+            m_thread = rhs.m_thread;    // Use the resource
+            m_timeout = rhs.m_timeout;    
             m_success = rhs.m_success;
             m_retVal = rhs.m_retVal;
         }
@@ -598,6 +618,7 @@ public:
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
+            m_thread == derivedRhs->m_thread &&
             m_timeout == derivedRhs->m_timeout &&
             BaseType::operator==(rhs);
     }
@@ -652,7 +673,7 @@ public:
             return RetType();
 
         // Synchronously invoke the target function?
-        if (this->GetSync()) {
+        if (m_sync) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
         } else {
@@ -725,7 +746,7 @@ public:
     /// target function, the target function is not called.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     /// @return `true` if target function invoked or timeout expired; `false` if error. 
-    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) {
         static_assert(!(is_unique_ptr<RetType>::value), "std::unique_ptr return value not allowed");
 
         // Typecast the base pointer to back correct derived to instance
@@ -739,7 +760,7 @@ public:
         // Is the source thread waiting for the target function invoke to complete?
         if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
-            this->SetSync(true);
+            m_sync = true;
 
             // Does target function have a void return value?
             if constexpr (std::is_void<RetType>::value == true) {
@@ -773,12 +794,22 @@ public:
         }
     }
 
+    ///@brief Get the destination thread that the target function is invoked on.
+    // @return The target thread.
+    DelegateThread* GetThread() noexcept { return m_thread; }
+
 private:
+    /// The target thread to invoke the delegate function.
+    DelegateThread* m_thread = nullptr;
+
+    /// Flag to control synchronous vs asynchronous target invoke behavior.
+    bool m_sync = false;
+
     /// Set to `true` if async function call succeeds
     bool m_success = false;			        
 
     /// Time in mS to wait for async function to invoke
-    std::chrono::milliseconds m_timeout;    
+    std::chrono::milliseconds m_timeout = WAIT_INFINITE;    
 
     /// Return value of the target invoked function
     std::any m_retVal;                      
@@ -796,11 +827,11 @@ struct DelegateFunctionAsyncWait; // Not defined
 /// @tparam RetType The return type of the bound delegate function.
 /// @tparam Args The argument types of the bound delegate function.
 template <class RetType, class... Args>
-class DelegateFunctionAsyncWait<RetType(Args...)> : public DelegateFunctionAsync<RetType(Args...)> {
+class DelegateFunctionAsyncWait<RetType(Args...)> : public DelegateFunction<RetType(Args...)>, public IDelegateInvoker {
 public:
     using FunctionType = std::function<RetType(Args...)>;
     using ClassType = DelegateFunctionAsyncWait<RetType(Args...)>;
-    using BaseType = DelegateFunctionAsync<RetType(Args...)>;
+    using BaseType = DelegateFunction<RetType(Args...)>;
 
     /// @brief Constructor to create a class instance.
     /// @param[in] func The target `std::function` to store.
@@ -808,7 +839,7 @@ public:
     /// @param[in] timeout The calling thread timeout for destination thread to
     /// invoke the target function. 
     DelegateFunctionAsyncWait(FunctionType func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) :
-        BaseType(func, thread), m_timeout(timeout) {
+        BaseType(func), m_thread(&thread), m_timeout(timeout) {
         Bind(func, thread);
     }
 
@@ -825,7 +856,7 @@ public:
     /// @brief Move constructor that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
     DelegateFunctionAsyncWait(ClassType&& rhs) noexcept :
-        BaseType(rhs), m_timeout(rhs.m_timeout), m_success(rhs.m_success), m_retVal(rhs.m_retVal) {
+        BaseType(rhs), m_thread(rhs.m_thread), m_timeout(rhs.m_timeout), m_success(rhs.m_success), m_retVal(rhs.m_retVal) {
         rhs.Clear();
     }
 
@@ -838,7 +869,8 @@ public:
     /// the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
     void Bind(FunctionType func, DelegateThread& thread) {
-        BaseType::Bind(func, thread);
+        m_thread = &thread;
+        BaseType::Bind(func);
     }
 
     // <common_code>
@@ -848,6 +880,7 @@ public:
     /// current object.
     /// @param[in] rhs The object whose state is to be copied.
     void Assign(const ClassType& rhs) {
+        m_thread = rhs.m_thread;
         m_timeout = rhs.m_timeout;
         m_success = rhs.m_success;
         m_retVal = rhs.m_retVal;
@@ -880,7 +913,8 @@ public:
     ClassType& operator=(ClassType&& rhs) noexcept {
         if (&rhs != this) {
             BaseType::operator=(std::move(rhs));
-            m_timeout = rhs.m_timeout;    // Use the resource
+            m_thread = rhs.m_thread;    // Use the resource
+            m_timeout = rhs.m_timeout;    
             m_success = rhs.m_success;
             m_retVal = rhs.m_retVal;
         }
@@ -898,6 +932,7 @@ public:
     virtual bool operator==(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
+            m_thread == derivedRhs->m_thread &&
             m_timeout == derivedRhs->m_timeout &&
             BaseType::operator==(rhs);
     }
@@ -952,7 +987,7 @@ public:
             return RetType();
 
         // Synchronously invoke the target function?
-        if (this->GetSync()) {
+        if (m_sync) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
         } else {
@@ -1025,7 +1060,7 @@ public:
     /// target function, the target function is not called.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     /// @return `true` if target function invoked or timeout expired; `false` if error. 
-    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) {
         static_assert(!(is_unique_ptr<RetType>::value), "std::unique_ptr return value not allowed");
 
         // Typecast the base pointer to back correct derived to instance
@@ -1039,7 +1074,7 @@ public:
         // Is the source thread waiting for the target function invoke to complete?
         if (delegateMsg->GetInvokerWaiting()) {
             // Invoke the delegate function synchronously
-            this->SetSync(true);
+            m_sync = true;
 
             // Does target function have a void return value?
             if constexpr (std::is_void<RetType>::value == true) {
@@ -1073,12 +1108,22 @@ public:
         }
     }
 
+    ///@brief Get the destination thread that the target function is invoked on.
+    // @return The target thread.
+    DelegateThread* GetThread() noexcept { return m_thread; }
+
 private:
+    /// The target thread to invoke the delegate function.
+    DelegateThread* m_thread = nullptr;
+
+    /// Flag to control synchronous vs asynchronous target invoke behavior.
+    bool m_sync = false;
+
     /// Set to `true` if async function call succeeds
     bool m_success = false;			        
 
     /// Time in mS to wait for async function to invoke
-    std::chrono::milliseconds m_timeout;    
+    std::chrono::milliseconds m_timeout = WAIT_INFINITE;    
 
     /// Return value of the target invoked function
     std::any m_retVal;                      

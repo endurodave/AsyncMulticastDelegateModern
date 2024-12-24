@@ -230,7 +230,7 @@ public:
             return RetType();
 
         // Synchronously invoke the target function?
-        if (this->GetSync()) {
+        if (m_sync) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
         } else {
@@ -287,7 +287,7 @@ public:
             return false;
 
         // Invoke the delegate function synchronously
-        SetSync(true);
+        m_sync = true;
 
         // Invoke the target function using the source thread supplied function arguments
         std::apply(&BaseType::operator(), 
@@ -298,16 +298,6 @@ public:
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
     DelegateThread* GetThread() noexcept { return m_thread; }
-
-protected:
-    /// @brief Get the synchronous target invoke flag.
-    /// @return `true` if `operator()(Args... args)` is to invoke synchronously. 
-    /// `false` means asychronously by sending a message.
-    bool GetSync() { return m_sync; }
-
-    /// @brief Set the synchronous target invoke flag.
-    /// @param[in] sync The new target invoke flag state.
-    void SetSync(bool sync) { m_sync = sync; }
 
 private:
     /// The target thread to invoke the delegate function.
@@ -535,7 +525,7 @@ public:
             return RetType();
 
         // Synchronously invoke the target function?
-        if (this->GetSync()) {
+        if (m_sync) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
         } else {
@@ -592,7 +582,7 @@ public:
             return false;
 
         // Invoke the delegate function synchronously
-        SetSync(true);
+        m_sync = true;
 
         // Invoke the target function using the source thread supplied function arguments
         std::apply(&BaseType::operator(), 
@@ -603,16 +593,6 @@ public:
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
     DelegateThread* GetThread() noexcept { return m_thread; }
-
-protected:
-    /// @brief Get the synchronous target invoke flag.
-    /// @return `true` if `operator()(Args... args)` is to invoke synchronously. 
-    /// `false` means asychronously by sending a message.
-    bool GetSync() { return m_sync; }
-
-    /// @brief Set the synchronous target invoke flag.
-    /// @param[in] sync The new target invoke flag state.
-    void SetSync(bool sync) { m_sync = sync; }
 
 private:
     /// The target thread to invoke the delegate function.
@@ -781,7 +761,7 @@ public:
             return RetType();
 
         // Synchronously invoke the target function?
-        if (this->GetSync()) {
+        if (m_sync) {
             // Invoke the target function directly
             return BaseType::operator()(std::forward<Args>(args)...);
         } else {
@@ -838,7 +818,7 @@ public:
             return false;
 
         // Invoke the delegate function synchronously
-        SetSync(true);
+        m_sync = true;
 
         // Invoke the target function using the source thread supplied function arguments
         std::apply(&BaseType::operator(), 
@@ -849,16 +829,6 @@ public:
     ///@brief Get the destination thread that the target function is invoked on.
     // @return The target thread.
     DelegateThread* GetThread() noexcept { return m_thread; }
-
-protected:
-    /// @brief Get the synchronous target invoke flag.
-    /// @return `true` if `operator()(Args... args)` is to invoke synchronously. 
-    /// `false` means asychronously by sending a message.
-    bool GetSync() { return m_sync; }
-
-    /// @brief Set the synchronous target invoke flag.
-    /// @param[in] sync The new target invoke flag state.
-    void SetSync(bool sync) { m_sync = sync; }
 
 private:
     /// The target thread to invoke the delegate function.

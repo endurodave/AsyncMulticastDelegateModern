@@ -170,8 +170,6 @@ static void DelegateFreeAsyncWaitTests()
     cntDel(&classInstance);
     ASSERT_TRUE(Class::m_construtorCnt == 0);
 
-    // Compile error. Invalid to pass void* argument to async target function
-#if 0   
     // Test void* args
     const char* str = "Hello World!";
     void* voidPtr = (void*)str;
@@ -179,14 +177,22 @@ static void DelegateFreeAsyncWaitTests()
     voidPtrNotNullDel(voidPtr);
     auto voidPtrNullDel = MakeDelegate(&VoidPtrArgNull, workerThread, WAIT_INFINITE);
     voidPtrNullDel(nullptr);
-#endif
 
     // Test void* return
-    auto retVoidPtrDel = MakeDelegate(&RetVoidPtr);
+    auto retVoidPtrDel = MakeDelegate(&RetVoidPtr, workerThread, WAIT_INFINITE);
     auto retVoidPtr = retVoidPtrDel();
     ASSERT_TRUE(retVoidPtr != nullptr);
     const char* retStr = (const char*)retVoidPtr;
     ASSERT_TRUE(strcmp(retStr, "Hello World!") == 0);
+
+#if 0
+    // Invalid: Can't pass a && argument through a message queue
+    // Test rvalue ref
+    auto rvalueRefDel = MakeDelegate(&FuncRvalueRef, workerThread, WAIT_INFINITE);
+    int rv = TEST_INT;
+    rvalueRefDel(std::move(rv));
+    rvalueRefDel(12345678);
+#endif
 }
 
 static void DelegateMemberAsyncWaitTests()
@@ -319,6 +325,31 @@ static void DelegateMemberAsyncWaitTests()
     auto singletonSp = ClassSingleton::GetInstanceSp();
     auto delShared = MakeDelegate(&setClassSingleton, &SetClassSingleton::Shared, workerThread, WAIT_INFINITE);
     delShared(singletonSp);
+
+    // Test void* args
+    Class voidTest;
+    const char* str = "Hello World!";
+    void* voidPtr = (void*)str;
+    auto voidPtrNotNullDel = MakeDelegate(&voidTest, &Class::VoidPtrArgNotNull, workerThread, WAIT_INFINITE);
+    voidPtrNotNullDel(voidPtr);
+    auto voidPtrNullDel = MakeDelegate(&voidTest, &Class::VoidPtrArgNull, workerThread, WAIT_INFINITE);
+    voidPtrNullDel(nullptr);
+
+    // Test void* return
+    auto retVoidPtrDel = MakeDelegate(&voidTest, &Class::RetVoidPtr, workerThread, WAIT_INFINITE);
+    auto retVoidPtr = retVoidPtrDel();
+    ASSERT_TRUE(retVoidPtr != nullptr);
+    const char* retStr = (const char*)retVoidPtr;
+    ASSERT_TRUE(strcmp(retStr, "Hello World!") == 0);
+
+#if 0
+    // Not supported; can't send T&& arg through message queue
+    // Test rvalue ref
+    auto rvalueRefDel = MakeDelegate(&FuncRvalueRef, workerThread, WAIT_INFINITE);
+    int rv = TEST_INT;
+    rvalueRefDel(std::move(rv));
+    rvalueRefDel(12345678);
+#endif
 }
 
 static void DelegateMemberSpAsyncWaitTests()

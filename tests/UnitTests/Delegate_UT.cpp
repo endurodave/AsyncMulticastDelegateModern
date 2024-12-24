@@ -318,6 +318,22 @@ static void DelegateMemberTests()
     auto delShared = MakeDelegate(&setClassSingleton, &SetClassSingleton::Shared);
     delShared(singletonSp);
 
+    // Test void* args
+    Class voidTest;
+    const char* str = "Hello World!";
+    void* voidPtr = (void*)str;
+    auto voidPtrNotNullDel = MakeDelegate(&voidTest, &Class::VoidPtrArgNotNull);
+    voidPtrNotNullDel(voidPtr);
+    auto voidPtrNullDel = MakeDelegate(&voidTest, &Class::VoidPtrArgNull);
+    voidPtrNullDel(nullptr);
+
+    // Test void* return
+    auto retVoidPtrDel = MakeDelegate(&voidTest, &Class::RetVoidPtr);
+    auto retVoidPtr = retVoidPtrDel();
+    ASSERT_TRUE(retVoidPtr != nullptr);
+    const char* retStr = (const char*)retVoidPtr;
+    ASSERT_TRUE(strcmp(retStr, "Hello World!") == 0);
+
     // Test rvalue ref
     auto rvalueRefDel = MakeDelegate(&testClass1, &TestClass1::FuncRvalueRef);
     int rv = TEST_INT;

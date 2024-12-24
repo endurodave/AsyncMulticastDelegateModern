@@ -371,13 +371,13 @@ DelegateBase
     Delegate<>
         DelegateFree<>
             DelegateFreeAsync<>
-                DelegateFreeAsyncWait<>
+            DelegateFreeAsyncWait<>
         DelegateMember<>
             DelegateMemberAsync<>
-                DelegateMemberAsyncWait<>
+            DelegateMemberAsyncWait<>
         DelegateFunction<>
             DelegateFunctionAsync<>
-                DelegateFunctionAsyncWait<>
+            DelegateFunctionAsyncWait<>
 ``` 
 
 `DelegateFree<>` binds to a free or static member function. `DelegateMember<>` binds to a class instance member function. `DelegateFunction<>` binds to a `std::function` target. All versions offer synchronous function invocation.
