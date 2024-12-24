@@ -11,17 +11,15 @@ var class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4 
     [ "AsyncInvoke", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a2f0ac18839223393d6c8a76beb971478", null ],
     [ "Bind", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#aba44cf5c963b9b7667cc1ea70023e343", null ],
     [ "Clone", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#afe0877cb9e0d97f5b5ca408de1562b89", null ],
-    [ "GetSync", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a73fa99c10f6b68b771bb8e83adffc444", null ],
     [ "GetThread", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a397b49f5a8c8d84b2b88821955a502af", null ],
     [ "Invoke", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#ac404a20415f5d23d59cee82ace7e8d05", null ],
     [ "operator!=", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#ac964fc52b698c8d85ff2c1608b149439", null ],
     [ "operator()", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a8d6f10d5f2c1b9215b59946a77edf6f6", null ],
     [ "operator=", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#aec5509934f475c10b4eee26512a08c33", null ],
     [ "operator=", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a681a97f01b1b14b4149cd82e3269ddb4", null ],
-    [ "operator=", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a13befe2a1ef87be8d324ce451eb35426", null ],
+    [ "operator=", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a3a7d8dc2d57b167844df43787e874236", null ],
     [ "operator==", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a9ef5e4510f2f3378d0dd0c3ff714e3bf", null ],
     [ "operator==", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#acff6660ed131637f93b740874e81b45e", null ],
-    [ "SetSync", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#ae1af8ea348c4121033e815ffb91ffc7f", null ],
     [ "operator!=", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a9060a79c701f93a271858cb8b787f534", null ],
     [ "operator==", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html#a4c3606cc50df42a8086afe833332c797", null ]
 ];

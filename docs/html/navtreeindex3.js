@@ -1,11 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"namespace_delegate_lib.html#acd191a94679356fb915612440acf7a52":[1,0,0,63],
-"namespace_delegate_lib.html#ae3040a5f123faf2bcd4aeb94732aebf6":[1,0,0,59],
-"namespace_delegate_lib.html#afcc494e28640f3620d005b448a0df490":[1,0,0,51],
-"namespacemembers.html":[1,1,0],
-"namespacemembers_func.html":[1,1,1],
-"namespacemembers_vars.html":[1,1,2],
 "namespaces.html":[1,0],
 "namespacesrc__dup.html":[1,0,1],
 "namespacesrc__dup.html#a15dd702d0fd7d58585504fa19b49623d":[1,0,1,2],

@@ -4,19 +4,16 @@ var hierarchy =
     [ "DelegateLib::DelegateBase", "class_delegate_lib_1_1_delegate_base.html", [
       [ "DelegateLib::Delegate< RetType(Args...)>", "class_delegate_lib_1_1_delegate_3_01_ret_type_07_args_8_8_8_08_4.html", [
         [ "DelegateLib::DelegateFree< RetType(Args...)>", "class_delegate_lib_1_1_delegate_free_3_01_ret_type_07_args_8_8_8_08_4.html", [
-          [ "DelegateLib::DelegateFreeAsync< RetType(Args...)>", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html", [
-            [ "DelegateLib::DelegateFreeAsyncWait< RetType(Args...)>", "class_delegate_lib_1_1_delegate_free_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html", null ]
-          ] ]
+          [ "DelegateLib::DelegateFreeAsync< RetType(Args...)>", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html", null ],
+          [ "DelegateLib::DelegateFreeAsyncWait< RetType(Args...)>", "class_delegate_lib_1_1_delegate_free_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html", null ]
         ] ],
         [ "DelegateLib::DelegateFunction< RetType(Args...)>", "class_delegate_lib_1_1_delegate_function_3_01_ret_type_07_args_8_8_8_08_4.html", [
-          [ "DelegateLib::DelegateFunctionAsync< RetType(Args...)>", "class_delegate_lib_1_1_delegate_function_async_3_01_ret_type_07_args_8_8_8_08_4.html", [
-            [ "DelegateLib::DelegateFunctionAsyncWait< RetType(Args...)>", "class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html", null ]
-          ] ]
+          [ "DelegateLib::DelegateFunctionAsync< RetType(Args...)>", "class_delegate_lib_1_1_delegate_function_async_3_01_ret_type_07_args_8_8_8_08_4.html", null ],
+          [ "DelegateLib::DelegateFunctionAsyncWait< RetType(Args...)>", "class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html", null ]
         ] ],
         [ "DelegateLib::DelegateMember< TClass, RetType(Args...)>", "class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html", [
-          [ "DelegateLib::DelegateMemberAsync< TClass, RetType(Args...)>", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html", [
-            [ "DelegateLib::DelegateMemberAsyncWait< TClass, RetType(Args...)>", "class_delegate_lib_1_1_delegate_member_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html", null ]
-          ] ]
+          [ "DelegateLib::DelegateMemberAsync< TClass, RetType(Args...)>", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html", null ],
+          [ "DelegateLib::DelegateMemberAsyncWait< TClass, RetType(Args...)>", "class_delegate_lib_1_1_delegate_member_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html", null ]
         ] ]
       ] ]
     ] ],
@@ -45,8 +42,11 @@ var hierarchy =
     ] ],
     [ "DelegateLib::IDelegateInvoker", "class_delegate_lib_1_1_i_delegate_invoker.html", [
       [ "DelegateLib::DelegateFreeAsync< RetType(Args...)>", "class_delegate_lib_1_1_delegate_free_async_3_01_ret_type_07_args_8_8_8_08_4.html", null ],
+      [ "DelegateLib::DelegateFreeAsyncWait< RetType(Args...)>", "class_delegate_lib_1_1_delegate_free_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html", null ],
       [ "DelegateLib::DelegateFunctionAsync< RetType(Args...)>", "class_delegate_lib_1_1_delegate_function_async_3_01_ret_type_07_args_8_8_8_08_4.html", null ],
-      [ "DelegateLib::DelegateMemberAsync< TClass, RetType(Args...)>", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html", null ]
+      [ "DelegateLib::DelegateFunctionAsyncWait< RetType(Args...)>", "class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html", null ],
+      [ "DelegateLib::DelegateMemberAsync< TClass, RetType(Args...)>", "class_delegate_lib_1_1_delegate_member_async_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html", null ],
+      [ "DelegateLib::DelegateMemberAsyncWait< TClass, RetType(Args...)>", "class_delegate_lib_1_1_delegate_member_async_wait_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html", null ]
     ] ],
     [ "DelegateLib::MulticastDelegate< R >", "struct_delegate_lib_1_1_multicast_delegate.html", null ],
     [ "DelegateLib::MulticastDelegate< RetType(Args...)>", "class_delegate_lib_1_1_multicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html", [
