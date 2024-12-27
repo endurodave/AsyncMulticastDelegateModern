@@ -38,6 +38,10 @@ static void DelegateFreeTests()
     delegate1(TEST_INT);
     std::invoke(delegate1, TEST_INT);
 
+    Delegate<void(int)>* baseDel = new Del(FreeFuncInt1);
+    (*baseDel)(TEST_INT);
+    delete baseDel;
+
     auto delegate2 = delegate1;
     ASSERT_TRUE(delegate1 == delegate2);
     ASSERT_TRUE(!delegate1.Empty());
@@ -153,7 +157,6 @@ static void DelegateFreeTests()
 
     // Test outgoing ptr-ptr argument
     StructParam* psparam = nullptr;
-    sparam.val = TEST_INT;
     auto outgoingArg2 = MakeDelegate(&OutgoingPtrPtrArg);
     outgoingArg2(&psparam);
     ASSERT_TRUE(psparam->val == TEST_INT);
@@ -191,6 +194,14 @@ static void DelegateFreeTests()
     int rv = TEST_INT;
     rvalueRefDel(std::move(rv));
     rvalueRefDel(12345678);
+
+    // Array of delegates
+    Del* arr = new Del[2];
+    arr[0].Bind(FreeFuncInt1);
+    arr[1].Bind(FreeFuncInt1);
+    for (int i = 0; i < 2; i++)
+        arr[i](TEST_INT);
+    delete[] arr;
 }
 
 static void DelegateMemberTests()
@@ -339,6 +350,14 @@ static void DelegateMemberTests()
     int rv = TEST_INT;
     rvalueRefDel(std::move(rv));
     rvalueRefDel(12345678);
+
+    // Array of delegates
+    Del* arr = new Del[2];
+    arr[0].Bind(&testClass1, &TestClass1::MemberFuncInt1);
+    arr[1].Bind(&testClass1, &TestClass1::MemberFuncInt1);
+    for (int i = 0; i < 2; i++)
+        arr[i](TEST_INT);
+    delete[] arr;
 }
 
 static void DelegateMemberSpTests()
@@ -447,6 +466,14 @@ static void DelegateMemberSpTests()
     std::function<int(int)> stdFunc = MakeDelegate(testClass1, &TestClass1::MemberFuncIntWithReturn1);
     int stdFuncRetVal = stdFunc(TEST_INT);
     ASSERT_TRUE(stdFuncRetVal == TEST_INT);
+
+    // Array of delegates
+    Del* arr = new Del[2];
+    arr[0].Bind(testClass1, &TestClass1::MemberFuncInt1);
+    arr[1].Bind(testClass1, &TestClass1::MemberFuncInt1);
+    for (int i = 0; i < 2; i++)
+        arr[i](TEST_INT);
+    delete[] arr;
 }
 
 static void DelegateFunctionTests()
@@ -547,6 +574,14 @@ static void DelegateFunctionTests()
     setDel.insert(delS1);
     setDel.insert(delS2);
     ASSERT_TRUE(setDel.size() == 1);
+
+    // Array of delegates
+    Del* arr = new Del[2];
+    arr[0].Bind(LambdaNoCapture);
+    arr[1].Bind(LambdaNoCapture);
+    for (int i = 0; i < 2; i++)
+        arr[i](TEST_INT);
+    delete[] arr;
 }
 
 void Delegate_UT()

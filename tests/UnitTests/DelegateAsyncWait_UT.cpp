@@ -152,7 +152,6 @@ static void DelegateFreeAsyncWaitTests()
 
     // Test outgoing ptr-ptr argument
     StructParam* psparam = nullptr;
-    sparam.val = TEST_INT;
     auto outgoingArg2 = MakeDelegate(&OutgoingPtrPtrArg, workerThread, WAIT_INFINITE);
     outgoingArg2(&psparam);
     ASSERT_TRUE(psparam->val == TEST_INT);
@@ -193,6 +192,14 @@ static void DelegateFreeAsyncWaitTests()
     rvalueRefDel(std::move(rv));
     rvalueRefDel(12345678);
 #endif
+
+    // Array of delegates
+    Del* arr = new Del[2];
+    arr[0].Bind(FreeFuncInt1, workerThread);
+    arr[1].Bind(FreeFuncInt1, workerThread);
+    for (int i = 0; i < 2; i++)
+        arr[i](TEST_INT);
+    delete[] arr;
 }
 
 static void DelegateMemberAsyncWaitTests()
@@ -350,6 +357,14 @@ static void DelegateMemberAsyncWaitTests()
     rvalueRefDel(std::move(rv));
     rvalueRefDel(12345678);
 #endif
+
+    // Array of delegates
+    Del* arr = new Del[2];
+    arr[0].Bind(&testClass1, &TestClass1::MemberFuncInt1, workerThread);
+    arr[1].Bind(&testClass1, &TestClass1::MemberFuncInt1, workerThread);
+    for (int i = 0; i < 2; i++)
+        arr[i](TEST_INT);
+    delete[] arr;
 }
 
 static void DelegateMemberSpAsyncWaitTests()
@@ -461,6 +476,14 @@ static void DelegateMemberSpAsyncWaitTests()
     std::function<int(int)> stdFunc = MakeDelegate(testClass1, &TestClass1::MemberFuncIntWithReturn1, workerThread, WAIT_INFINITE);
     int stdFuncRetVal = stdFunc(TEST_INT);
     ASSERT_TRUE(stdFuncRetVal == TEST_INT);
+
+    // Array of delegates
+    Del* arr = new Del[2];
+    arr[0].Bind(testClass1, &TestClass1::MemberFuncInt1, workerThread);
+    arr[1].Bind(testClass1, &TestClass1::MemberFuncInt1, workerThread);
+    for (int i = 0; i < 2; i++)
+        arr[i](TEST_INT);
+    delete[] arr;
 }
 
 static void DelegateFunctionAsyncWaitTests()
@@ -562,6 +585,14 @@ static void DelegateFunctionAsyncWaitTests()
     std::swap(delS1, delS2);
     ASSERT_TRUE(!delS1.Empty());
     ASSERT_TRUE(delS2.Empty());
+
+    // Array of delegates
+    Del* arr = new Del[2];
+    arr[0].Bind(LambdaNoCapture, workerThread);
+    arr[1].Bind(LambdaNoCapture, workerThread);
+    for (int i = 0; i < 2; i++)
+        arr[i](TEST_INT);
+    delete[] arr;
 }
 
 void DelegateAsyncWait_UT()

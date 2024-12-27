@@ -24,16 +24,14 @@
 /// threads using the two thread safe functions below:
 ///
 /// `RetType operator()(Args... args)` - called by the source thread to initiate the async
-/// function call. May throw `std::bad_alloc` if dynamic storage allocation fails. All
-/// other delegate class functions do not throw exceptions.
+/// function call. May throw `std::bad_alloc` if dynamic storage allocation fails. Clone()
+/// also may throw `std::bad_alloc`. All other delegate class functions do not throw exceptions.
 ///
 /// `void Invoke(std::shared_ptr<DelegateMsg> msg)` - called by the destination
 /// thread to invoke the target function. The destination thread must not call any other
 /// delegate instance functions.
 /// 
 /// Limitations:
-/// 
-/// * Cannot use a `void*` as a target function argument.
 /// 
 /// * Cannot use rvalue reference (T&&) as a target function argument.
 /// 
@@ -168,8 +166,11 @@ public:
     /// @param[in] func The free function to bind to the delegate. This function must 
     /// match the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
-    void Bind(FreeFunc func, DelegateThread& thread) {
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
+    void Bind(FreeFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) {
         m_thread = &thread;
+        m_timeout = timeout;
         BaseType::Bind(func);
     }
 
@@ -192,6 +193,7 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
+    /// @throws std::bad_alloc If dynamic memory allocation fails.
     virtual ClassType* Clone() const override {
         return new ClassType(*this);
     }
@@ -518,8 +520,11 @@ public:
     /// @param[in] func The function to bind to the delegate. This function must match 
     /// the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
-    void Bind(SharedPtr object, MemberFunc func, DelegateThread& thread) {
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
+    void Bind(SharedPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) {
         m_thread = &thread;
+        m_timeout = timeout;
         BaseType::Bind(object, func);
     }
 
@@ -530,8 +535,11 @@ public:
     /// @param[in] func The member function to bind to the delegate. This function must 
     /// match the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
-    void Bind(SharedPtr object, ConstMemberFunc func, DelegateThread& thread) {
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
+    void Bind(SharedPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) {
         m_thread = &thread;
+        m_timeout = timeout;
         BaseType::Bind(object, func);
     }
 
@@ -542,8 +550,11 @@ public:
     /// @param[in] func The function to bind to the delegate. This function must match 
     /// the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
-    void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread) {
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
+    void Bind(ObjectPtr object, MemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) {
         m_thread = &thread;
+        m_timeout = timeout;
         BaseType::Bind(object, func);
     }
 
@@ -554,8 +565,11 @@ public:
     /// @param[in] func The member function to bind to the delegate. This function must 
     /// match the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
-    void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread) {
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
+    void Bind(ObjectPtr object, ConstMemberFunc func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) {
         m_thread = &thread;
+        m_timeout = timeout;
         BaseType::Bind(object, func);
     }
 
@@ -578,6 +592,7 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
+    /// @throws std::bad_alloc If dynamic memory allocation fails.
     virtual ClassType* Clone() const override {
         return new ClassType(*this);
     }
@@ -868,8 +883,11 @@ public:
     /// @param[in] func The `std::function` to bind to the delegate. This function must match 
     /// the signature of the delegate.
     /// @param[in] thread The execution thread to invoke `func`.
-    void Bind(FunctionType func, DelegateThread& thread) {
+    /// @param[in] timeout The calling thread timeout for destination thread to
+    /// invoke the target function. 
+    void Bind(FunctionType func, DelegateThread& thread, std::chrono::milliseconds timeout = WAIT_INFINITE) {
         m_thread = &thread;
+        m_timeout = timeout;
         BaseType::Bind(func);
     }
 
@@ -892,6 +910,7 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
+    /// @throws std::bad_alloc If dynamic memory allocation fails.
     virtual ClassType* Clone() const override {
         return new ClassType(*this);
     }

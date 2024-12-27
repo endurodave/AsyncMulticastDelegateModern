@@ -52,7 +52,7 @@
 
 #include "DelegateOpt.h"
 #include "MulticastDelegateSafe.h"
-#include "SinglecastDelegate.h"
+#include "UnicastDelegate.h"
 #include "DelegateAsync.h"
 #include "DelegateAsyncWait.h"
 

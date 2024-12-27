@@ -493,9 +493,9 @@ int main(void)
     // Remove the delegate from the container
     delegateD -= MakeDelegate(&testClass, &TestClass::MemberFuncThreeArgs, workerThread1);
 
-    // Create a singlecast delegate container that accepts Delegate<int (int)> delegates.
+    // Create a unicast delegate container that accepts Delegate<int (int)> delegates.
     // Any function with the signature "int Func(int)".
-    SinglecastDelegate<int(int)> delegateF;
+    UnicastDelegate<int(int)> delegateF;
 
     // Add a DelegateFree<int(int)> delegate to the container 
     delegateF = MakeDelegate(&FreeFuncIntRetInt);
@@ -508,9 +508,9 @@ int main(void)
     // Remove the delegate from the container
     delegateF.Clear();
 
-    // Create a singlecast delegate container that accepts delegates with 
+    // Create a unicast delegate container that accepts delegates with 
     // the signature "void Func(TestStruct**)"
-    SinglecastDelegate<void(TestStruct**)> delegateG;
+    UnicastDelegate<void(TestStruct**)> delegateG;
 
     // Make a delegate that points to a free function 
     delegateG = MakeDelegate(&FreeFuncPtrPtrTestStruct);

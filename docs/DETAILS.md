@@ -15,7 +15,10 @@ A C++ delegate library capable of anonymously invoking any callable function eit
 - [Delegates Background](#delegates-background)
   - [`std::function`](#stdfunction)
   - [`std::async` and `std::future`](#stdasync-and-stdfuture)
+  - [`Delegate` vs. `std::async` Feature Comparisons](#delegate-vs-stdasync-feature-comparisons)
 - [Using the Code](#using-the-code)
+  - [Delegates](#delegates)
+  - [Delegate Containers](#delegate-containers)
   - [Synchronous Delegates](#synchronous-delegates)
   - [Asynchronous Non-Blocking Delegates](#asynchronous-non-blocking-delegates)
   - [Asynchronous Blocking Delegates](#asynchronous-blocking-delegates)
@@ -27,7 +30,9 @@ A C++ delegate library capable of anonymously invoking any callable function eit
     - [Argument Heap Copy](#argument-heap-copy)
     - [Bypassing Argument Heap Copy](#bypassing-argument-heap-copy)
     - [Array Argument Heap Copy](#array-argument-heap-copy)
-  - [Worker Thread (std::thread)](#worker-thread-stdthread)
+- [Delegate Thread](#delegate-thread)
+  - [Send `DelegateMsg`](#send-delegatemsg)
+  - [Receive `DelegateMsg`](#receive-delegatemsg)
 - [Examples](#examples)
   - [SysData Example](#sysdata-example)
   - [SysDataClient Example](#sysdataclient-example)
@@ -64,9 +69,9 @@ The features of the modern C++ delegate library are:
 10. **Lambda Support** - bind and invoke lambda functions asynchronously using delegates
 11. **Automatic Heap Handling** – automatically copy argument data to the heap for safe transport through a message queue
 12. **Any OS** – easy porting to any OS. C++11 `std::thread` port included
-13. **32/64-bit** - Support for 32 and 64-bit projects.
+13. **32/64-bit** - Support for 32 and 64-bit projects
 14. **Dynamic Storage Allocation** - optional fixed block memory allocator
-15. **CMake Build** - CMake supports most toolchains including Windows and Linux.
+15. **CMake Build** - CMake supports most toolchains including Windows and Linux
 16. **Unit Tests** - extensive unit testing of the delegate library included
 17. **No External Libraries** – delegate does not rely upon external libraries
 18. **Ease of Use** – function signature template arguments (e.g., `DelegateFree<void(TestStruct*)>`)
@@ -85,7 +90,7 @@ This C++ delegate implementation is full featured and allows calling any functio
 
 ## `std::function`
 
-`std::function` compares the function signature type, not the underlying object instance. The example below shows the limitation. 
+`std::function` compares the function signature, not the underlying callable instance. The example below demonstrates this limitation.
 
 ```cpp
 #include <iostream>
@@ -126,11 +131,37 @@ The delegate library's asynchronous features differ from `std::async` in that th
 
 In short, the delegate library offers features that are not natively available in the C++ standard library to ease multi-threaded application development.
 
+ ## `Delegate` vs. `std::async` Feature Comparisons
+
+| Feature | `Delegate` | `DelegateAsync` | `DelegateAsyncWait` | `std::async` |
+| ---- | ----| ---- | ---- | ---- |
+| Callable | Yes | Yes | Yes | Yes |
+| Synchronous Call | Yes | No | No | No |
+| Asynchronous Call | No | Yes | Yes | Yes |
+| Asynchronous Blocking Call | No | No | Yes | Yes |
+| Asynchronous Wait Timeout | No | No | Yes | No |
+| Specify Target Thread | n/a | Yes | Yes | No |
+| Copyable | Yes | Yes | Yes | Yes |
+| Equality | Yes | Yes | Yes | Yes |
+| Compare with `nullptr` | Yes | Yes | Yes | No |
+| Callable Argument Copy | No | Yes<sup>1</sup> | No | No |
+| Dangling `Arg&`/`Arg*` Possible | No | No | No | Yes<sup>2</sup> |
+| Callable Ambiguity | No | No | No | Yes<sup>3</sup> |
+| Thread-Safe Container <sup>4</sup> | Yes | Yes | Yes | No |
+
+<sup>1</sup> `DelegateAsync` function call operator copies all function data arguments using a copy constructor for safe transport to the target thread.   
+<sup>2</sup> `std::async` could fail if dangling reference or pointer function argument is accessed. Delegates copy argument data when needed to prevent this failure mode.  
+<sup>3</sup> `std::function` cannot resolve difference between functions with matching signature `std::function` instances (e.g `void Class:One(int)` and `void Class::Two(int)` are equal).  
+<sup>4</sup> `MulticastDelegateSafe` a thread-safe container used to hold and invoke a collection of delegates.
+
 # Using the Code
 
-The delegate library is comprised of delegates and delegate containers. A delegate is capable of binding to a single callable function. A multicast delegate container holds one or more delegates in a list to be invoked sequentially. A single cast delegate container holds at most one delegate.
+The delegate library is comprised of delegates and delegate containers. 
 
-The primary delegate classes are listed below:
+
+## Delegates 
+
+A delegate binds to a single callable function. The delegate classes are:
 
 ```cpp
 // Delegates
@@ -153,21 +184,20 @@ DelegateBase
 
 `DelegateFreeAsyncWait<>`, `DelegateMemberAsyncWait<>` and `DelegateFunctionAsyncWait<>` provides blocking asynchronous function execution on a target thread with a caller supplied maximum wait timeout. The destination thread will not invoke the target function if the timeout expires.
 
-The delegate container and helper classes are:
+The template-overloaded `MakeDelegate()` helper function eases delegate creation.
+
+## Delegate Containers
+
+A delegate container stores one or more delegates. A delegate container is callable and invokes all stored delegates sequentially. A unicast delegate container holds at most one delegate.
 
 ```cpp
 // Delegate Containers
-SinglecastDelegate<>
+UnicastDelegate<>
 MulticastDelegate<>
     MulticastDelegateSafe<>
-
-// Helper Classes
-IDelegateInvoker
-DelegateMsg
-DelegateThread
 ``` 
 
-`SinglecastDelegate<>` is a delegate container accepting a single delegate. 
+`UnicastDelegate<>` is a delegate container accepting a single delegate. 
 
 `MulticastDelegate<>` is a delegate container accepting multiple delegates.
 
@@ -248,18 +278,18 @@ Alternatively, `Clear()` is used to remove all delegates within the container.
 delegateA.Clear();
 ```
 
-A delegate is added to the single cast container `operator=`.
+A delegate is added to the unicast container `operator=`.
 
 ```cpp
-SinglecastDelegate<int(int)> delegateF;
+UnicastDelegate<int(int)> delegateF;
 delegateF = MakeDelegate(&FreeFuncIntRetInt);
 ```
 
-Removal is with `Clear()` or assign `0`.
+Removal is with `Clear()` or assign `nullptr`.
 
 ```cpp
 delegateF.Clear();
-delegateF = 0;
+delegateF = nullptr;
 ```
 
 ## Asynchronous Non-Blocking Delegates
@@ -270,6 +300,8 @@ Create an asynchronous delegate by adding an extra thread argument to `MakeDeleg
 WorkerThread workerThread1("WorkerThread1");
 workerThread.CreateThread();
 
+// Create delegate and invoke FreeFuncInt() on workerThread
+// Does not wait for function call to complete
 auto delegateFree = MakeDelegate(&FreeFuncInt, workerThread);
 delegateFree(123);
 ```
@@ -302,6 +334,8 @@ Create an asynchronous blocking delegate by adding an thread and timeout argumen
 WorkerThread workerThread1("WorkerThread1");
 workerThread.CreateThread();
 
+// Create delegate and invoke FreeFuncInt() on workerThread 
+// Waits for the function call to complete
 auto delegateFree = MakeDelegate(&FreeFuncInt, workerThread, WAIT_INFINITE);
 delegateFree(123);
 ```
@@ -426,7 +460,7 @@ auto freeDelegate = MakeDelegate(&MyFreeFunc, myThread, WAIT_INFINITE);
 auto memberDelegate = MakeDelegate(&myClass, &MyClass::MyMemberFunc, myThread, std::chrono::milliseconds(5000));
 ```
 
-Delegates are added/removed from multicast containers using `operator+=` and `operator-=`. 
+Add to a multicast containers using `operator+=` and `operator-=`. 
 
 ```cpp
 MulticastDelegate<void(int)> multicastContainer;
@@ -442,12 +476,12 @@ multicastContainer += MakeDelegate(&MyFreeFunc, myThread);
 multicastContainer -= MakeDelegate(&MyFreeFunc, myThread);
 ```
 
-Single cast delegates are added and removed using `operator=.
+Add to a unicast container using `operator=`.
 
 ```cpp
-SinglecastDelegate<void(int)> singlecastContainer;
-singlecastContainer = MakeDelegate(&MyFreeFunc);
-singlecastContainer = 0;
+UnicastDelegate<void(int)> unicastContainer;
+unicastContainer = MakeDelegate(&MyFreeFunc);
+unicastContainer = 0;
 ```
 
 All delegates and delegate containers are invoked using `operator()`.
@@ -489,14 +523,14 @@ DelegateBase
             DelegateFunctionAsyncWait<>
 
 // Delegate Containers
-SinglecastDelegate<>
+UnicastDelegate<>
 MulticastDelegate<>
     MulticastDelegateSafe<>
 
 // Helper Classes
-IDelegateInvoker
 DelegateMsg
 DelegateThread
+IDelegateInvoker
 ```
 
 Some degree of code duplication exists within the delegate inheritance hierarchy. This arises because the `Free`, `Member`, and `Function` classes support different target function types, making code sharing via inheritance difficult. Alternative solutions to share code either compromised type safety, caused non-intuitive user syntax, or significantly increased implementation complexity and code readability. Extensive unit tests ensure a reliable implementation.
@@ -610,9 +644,83 @@ delegateArrayFunc(cArray);
 
 There is no way to asynchronously pass a C-style array by value. Avoid C-style arrays if possible when using asynchronous delegates to avoid confusion and mistakes.
 
-## Worker Thread (std::thread)
+# Delegate Thread
 
-The `std::thread` implemented thread loop is shown below. The loop calls the `Invoke()` function on each asynchronous delegate instance removed from the queue.
+A delegate thread is required to dispatch asynchronous delegates to a specified target thread. Interface base classes enable customization of the thread and message queue for any target operating system platform.
+
+## Send `DelegateMsg`
+
+An asynchronous delegate library function operator `RetType operator()(Args... args)` calls `DispatchDelegate()` to send a delegate message to the destination target thread.
+
+```cpp
+auto thread = this->GetThread();
+if (thread) {
+    // Dispatch message onto the callback destination thread. Invoke()
+    // will be called by the destination thread. 
+    thread->DispatchDelegate(msg);
+}
+```
+
+An application specific class inherits from `DelegateThread` interface. 
+
+```cpp
+class DelegateThread
+{
+public:
+	/// Destructor
+	virtual ~DelegateThread() = default;
+
+	/// Dispatch a DelegateMsg onto this thread. The implementer is responsible
+	/// for getting the DelegateMsg into an OS message queue. Once DelegateMsg
+	/// is on the correct thread of control, the DelegateInvoker::Invoke() function
+	/// must be called to execute the delegate. 
+	/// @param[in] msg - a pointer to the delegate message that must be created dynamically.
+	/// @pre Caller *must* create the DelegateMsg argument dynamically.
+	/// @post The destination thread calls Invoke().
+	virtual void DispatchDelegate(std::shared_ptr<DelegateMsg> msg) = 0;
+};
+```
+
+`DispatchDelegate()` inserts a message into the thread message queue. `WorkerThread` class uses a underlying `std::thread`. `WorkerThread` is an implementation detail; create a unique `DispatchDelegate()` function based on the platform operating system API.
+
+```cpp
+void WorkerThread::DispatchDelegate(std::shared_ptr<DelegateLib::DelegateMsg> msg)
+{
+	if (m_thread == nullptr)
+		throw std::invalid_argument("Thread pointer is null");
+
+	// Create a new ThreadMsg
+    std::shared_ptr<ThreadMsg> threadMsg(new ThreadMsg(MSG_DISPATCH_DELEGATE, msg));
+
+	// Add dispatch delegate msg to queue and notify worker thread
+	std::unique_lock<std::mutex> lk(m_mutex);
+	m_queue.push(threadMsg);
+	m_cv.notify_one();
+}
+```
+
+## Receive `DelegateMsg`
+
+ Inherit from `IDelegateInvoker` and implement the `Invoke()` function. The implementation typically inserts a `std::shared_ptr<DelegateMsg>` into the thread's message queue for processing.
+
+```cpp
+/// @brief Abstract base class to support asynchronous delegate function invoke
+/// on destination thread of control. 
+/// 
+/// @details Inherit form this class and implement `Invoke()`. The implementation
+/// typically posts a message into the destination thread message queue. The destination
+/// thread receives the message and invokes the target bound function. 
+class IDelegateInvoker
+{
+public:
+	/// Called to invoke the bound target function by the destination thread of control.
+	/// @param[in] msg - the incoming delegate message.
+	/// @return `true` if function was invoked; `false` if failed. 
+	virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) = 0;
+};
+```
+
+The `WorkerThread::Process()` thread loop is shown below. `Invoke()` is called for each incoming `MSG_DISPATCH_DELEGATE` queue message.
 
 ```cpp
 void WorkerThread::Process()
@@ -669,25 +777,6 @@ void WorkerThread::Process()
 		}
 	}
 }
-```
-
-Any project-specific thread loop can call `Invoke()`. The only requirement is that your worker thread class must inherit from `DelegateThread` and implement the abstract function `DispatchDelegate()`. The `DispatchDelegate()` function will insert a shared pointer to a message into the thread's queue for processing.
-
-```cpp
-/// @brief Abstract base class to support asynchronous delegate function invoke
-/// on destination thread of control. 
-/// 
-/// @details Inherit form this class and implement `Invoke()`. The implementation
-/// typically posts a message into the destination thread message queue. The destination
-/// thread receives the message and invokes the target bound function. 
-class IDelegateInvoker
-{
-public:
-	/// Called to invoke the bound target function by the destination thread of control.
-	/// @param[in] msg - the incoming delegate message.
-	/// @return `true` if function was invoked; `false` if failed. 
-	virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) = 0;
-};
 ```
 
 # Examples
@@ -933,7 +1022,7 @@ SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type syste
 
 ## Timer Example
 
-Creating a timer callback service is trivial. A `SinglecastDelegate<void(void)>` used inside a `Timer` class solves this nicely.
+Creating a timer callback service is trivial. A `UnicastDelegate<void(void)>` used inside a `Timer` class solves this nicely.
 
 ```cpp
 /// @brief A timer class provides periodic timer callbacks on the client's 
@@ -942,7 +1031,7 @@ class Timer
 {
 public:
     /// Client's register with Expired to get timer callbacks
-    SinglecastDelegate<void(void)> Expired;
+    UnicastDelegate<void(void)> Expired;
 
     /// Starts a timer for callbacks on the specified timeout interval.
     /// @param[in] timeout - the timeout in milliseconds.

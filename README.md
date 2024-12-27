@@ -390,17 +390,17 @@ The three main delegate container classes are:
 
 ```cpp
 // Delegate Containers
-SinglecastDelegate<>
+UnicastDelegate<>
 MulticastDelegate<>
     MulticastDelegateSafe<>
 
 // Helper Classes
-IDelegateInvoker
 DelegateMsg
 DelegateThread
+IDelegateInvoker
 ``` 
 
-`SinglecastDelegate<>` is a delegate container accepting a single delegate.
+`UnicastDelegate<>` is a delegate container accepting a single delegate.
 
 `MulticastDelegate<>` is a delegate container accepting multiple delegates.
 

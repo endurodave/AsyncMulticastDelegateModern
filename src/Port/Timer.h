@@ -13,7 +13,7 @@ class Timer
 {
 public:
 	/// Client's register with Expired to get timer callbacks
-	SinglecastDelegate<void(void)> Expired;
+	UnicastDelegate<void(void)> Expired;
 
 	/// Constructor
 	Timer(void);
