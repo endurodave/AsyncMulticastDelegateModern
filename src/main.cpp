@@ -10,7 +10,7 @@
 #include "Timer.h"
 
 // main.cpp
-// @see https://github.com/endurodave/AsyncMulticastDelegateModern
+// @see https://github.com/endurodave/cpp-async-delegate
 // David Lafreniere, Aug 2020.
 
 #if 0 // Not reliable

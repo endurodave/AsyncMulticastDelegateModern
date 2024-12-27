@@ -2,7 +2,7 @@
 #define _DELEGATE_ASYNC_WAIT_H
 
 // DelegateAsyncWait.h
-// @see https://github.com/endurodave/AsyncMulticastDelegateModern
+// @see https://github.com/endurodave/cpp-async-delegate
 // David Lafreniere, Aug 2020.
 
 /// @file
