@@ -961,6 +961,12 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 <p>Creates a copy of the current object. </p>
 <p>Clones the current instance of the class by creating a new object and copying the state of the current object to it. </p><dl class="section return"><dt>Returns</dt><dd>A pointer to a new <code>ClassType</code> instance. </dd></dl>
 <dl class="section post"><dt>Postcondition</dt><dd>The caller is responsible for deleting the clone object. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::bad_alloc</td><td>If dynamic memory allocation fails. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Reimplemented from <a class="el" href="class_delegate_lib_1_1_delegate_member_3_01_t_class_00_01_ret_type_07_args_8_8_8_08_4.html#af4eb4fba1da063063b5d4ba47de4299a">DelegateLib::DelegateMember&lt; TClass, RetType(Args...)&gt;</a>.</p>
 

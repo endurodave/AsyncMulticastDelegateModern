@@ -44,7 +44,7 @@ var annotated_dup =
       [ "MulticastDelegateSafe", "struct_delegate_lib_1_1_multicast_delegate_safe.html", null ],
       [ "MulticastDelegateSafe< RetType(Args...)>", "class_delegate_lib_1_1_multicast_delegate_safe_3_01_ret_type_07_args_8_8_8_08_4.html", "class_delegate_lib_1_1_multicast_delegate_safe_3_01_ret_type_07_args_8_8_8_08_4" ],
       [ "Semaphore", "class_delegate_lib_1_1_semaphore.html", "class_delegate_lib_1_1_semaphore" ],
-      [ "SinglecastDelegate", "struct_delegate_lib_1_1_singlecast_delegate.html", null ],
-      [ "SinglecastDelegate< RetType(Args...)>", "class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html", "class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4" ]
+      [ "UnicastDelegate", "struct_delegate_lib_1_1_unicast_delegate.html", null ],
+      [ "UnicastDelegate< RetType(Args...)>", "class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html", "class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4" ]
     ] ]
 ];

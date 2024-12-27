@@ -169,11 +169,10 @@ Variables</h2></td></tr>
 <p>Asynchronous delegate that invokes the target function on the specified thread of control and waits for the function to be executed or a timeout occurs. Use IsSuccess() to determine if asynchronous call succeeded before using the return value and outgoing argument values.</p>
 <p>Delegate "`AsyncWait`" series of classes used to invoke a function asynchronously and wait for completion by the destination target thread. Invoking a function asynchronously requires making a clone of the object to be sent to the destination thread message queue. The destination thread calls <code>Invoke()</code> to invoke the target function. The source thread blocks on a semaphore waiting for the destination thread to complete the function invoke. If the caller timeout expires, the target function is not invoked.</p>
 <p>The <code>m_lock</code> mutex is used to protect shared state data between the source and destination threads using the two thread safe functions below:</p>
-<p><code>RetType operator()(Args... args)</code> - called by the source thread to initiate the async function call. May throw <code>std::bad_alloc</code> if dynamic storage allocation fails. All other delegate class functions do not throw exceptions.</p>
+<p><code>RetType operator()(Args... args)</code> - called by the source thread to initiate the async function call. May throw <code>std::bad_alloc</code> if dynamic storage allocation fails. Clone() also may throw <code>std::bad_alloc</code>. All other delegate class functions do not throw exceptions.</p>
 <p><code>void Invoke(std::shared_ptr&lt;DelegateMsg&gt; msg)</code> - called by the destination thread to invoke the target function. The destination thread must not call any other delegate instance functions.</p>
 <p>Limitations:</p>
 <ul>
-<li>Cannot use a <code>void*</code> as a target function argument.</li>
 <li>Cannot use rvalue reference (T&amp;&amp;) as a target function argument.</li>
 <li>The target function cannot return a <code>std::unique_ptr</code> since <code>AsyncWait</code> destination target thread stores the return value (<code>m_retVal</code>) for later use by the calling source thread.</li>
 <li>Cannot insert <code>DelegateMemberAsyncWait</code> into an ordered container. e.g. <code>std::list</code> ok, <code>std::set</code> not ok.</li>

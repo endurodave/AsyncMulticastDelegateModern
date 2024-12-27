@@ -54,8 +54,6 @@ var hierarchy =
     ] ],
     [ "DelegateLib::MulticastDelegateSafe< R >", "struct_delegate_lib_1_1_multicast_delegate_safe.html", null ],
     [ "DelegateLib::Semaphore", "class_delegate_lib_1_1_semaphore.html", null ],
-    [ "DelegateLib::SinglecastDelegate< R >", "struct_delegate_lib_1_1_singlecast_delegate.html", null ],
-    [ "DelegateLib::SinglecastDelegate< RetType(Args...)>", "class_delegate_lib_1_1_singlecast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html", null ],
     [ "std::true_type", null, [
       [ "DelegateLib::is_shared_ptr< const std::shared_ptr< T > & >", "struct_delegate_lib_1_1is__shared__ptr_3_01const_01std_1_1shared__ptr_3_01_t_01_4_01_6_01_4.html", null ],
       [ "DelegateLib::is_shared_ptr< const std::shared_ptr< T > * >", "struct_delegate_lib_1_1is__shared__ptr_3_01const_01std_1_1shared__ptr_3_01_t_01_4_01_5_01_4.html", null ],
@@ -63,5 +61,7 @@ var hierarchy =
       [ "DelegateLib::is_shared_ptr< std::shared_ptr< T > * >", "struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_5_01_4.html", null ],
       [ "DelegateLib::is_shared_ptr< std::shared_ptr< T > >", "struct_delegate_lib_1_1is__shared__ptr_3_01std_1_1shared__ptr_3_01_t_01_4_01_4.html", null ],
       [ "DelegateLib::is_unique_ptr< std::unique_ptr< T > >", "struct_delegate_lib_1_1is__unique__ptr_3_01std_1_1unique__ptr_3_01_t_01_4_01_4.html", null ]
-    ] ]
+    ] ],
+    [ "DelegateLib::UnicastDelegate< R >", "struct_delegate_lib_1_1_unicast_delegate.html", null ],
+    [ "DelegateLib::UnicastDelegate< RetType(Args...)>", "class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html", null ]
 ];

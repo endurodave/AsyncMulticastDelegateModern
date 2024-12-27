@@ -35,6 +35,7 @@ var searchData=
   ['delegateopt_2eh_32',['DelegateOpt.h',['../_delegate_opt_8h.html',1,'']]],
   ['delegatethread_33',['DelegateThread',['../class_delegate_lib_1_1_delegate_thread.html',1,'DelegateLib']]],
   ['delegatethread_2eh_34',['DelegateThread.h',['../_delegate_thread_8h.html',1,'']]],
-  ['dispatchdelegate_35',['DispatchDelegate',['../class_delegate_lib_1_1_delegate_thread.html#a9a69145597e92bd096062489b14560ad',1,'DelegateLib::DelegateThread']]],
-  ['documentation_36',['C++ Delegate Library Documentation',['../index.html',1,'']]]
+  ['delegatetype_35',['DelegateType',['../class_delegate_lib_1_1_multicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#a08417044ec2be7bbc0f5df9ab675ff04',1,'DelegateLib::MulticastDelegate&lt; RetType(Args...)&gt;::DelegateType'],['../class_delegate_lib_1_1_multicast_delegate_safe_3_01_ret_type_07_args_8_8_8_08_4.html#adc16a5822cdfae709a624ca1a657c28e',1,'DelegateLib::MulticastDelegateSafe&lt; RetType(Args...)&gt;::DelegateType'],['../class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#ab1154af6b77e08826e8493dd5029815e',1,'DelegateLib::UnicastDelegate&lt; RetType(Args...)&gt;::DelegateType']]],
+  ['dispatchdelegate_36',['DispatchDelegate',['../class_delegate_lib_1_1_delegate_thread.html#a9a69145597e92bd096062489b14560ad',1,'DelegateLib::DelegateThread']]],
+  ['documentation_37',['C++ Delegate Library Documentation',['../index.html',1,'']]]
 ];

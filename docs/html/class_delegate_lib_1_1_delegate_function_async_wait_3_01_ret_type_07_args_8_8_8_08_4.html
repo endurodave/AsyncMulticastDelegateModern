@@ -149,9 +149,9 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a61de38703ed39347662b0d523940751a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5619cfb84f2bc1f1217a0051e0172e7f" id="r_a5619cfb84f2bc1f1217a0051e0172e7f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5619cfb84f2bc1f1217a0051e0172e7f">DelegateFunctionAsyncWait</a> ()=default</td></tr>
 <tr class="separator:a5619cfb84f2bc1f1217a0051e0172e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56245374ac83ac8ae2cb5ea0de8907f8" id="r_a56245374ac83ac8ae2cb5ea0de8907f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56245374ac83ac8ae2cb5ea0de8907f8">Bind</a> (<a class="el" href="#a793983b42fc5819a186a891b9cac5806">FunctionType</a> func, <a class="el" href="class_delegate_lib_1_1_delegate_thread.html">DelegateThread</a> &amp;thread)</td></tr>
-<tr class="memdesc:a56245374ac83ac8ae2cb5ea0de8907f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind a <code>std::function</code> to the delegate.  <br /></td></tr>
-<tr class="separator:a56245374ac83ac8ae2cb5ea0de8907f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a30607bfeb5eaec0aa46a48ffb469ce" id="r_a2a30607bfeb5eaec0aa46a48ffb469ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a30607bfeb5eaec0aa46a48ffb469ce">Bind</a> (<a class="el" href="#a793983b42fc5819a186a891b9cac5806">FunctionType</a> func, <a class="el" href="class_delegate_lib_1_1_delegate_thread.html">DelegateThread</a> &amp;thread, std::chrono::milliseconds timeout=<a class="el" href="namespace_delegate_lib.html#aa0e7491d38d4053d6218bf874d56e868">WAIT_INFINITE</a>)</td></tr>
+<tr class="memdesc:a2a30607bfeb5eaec0aa46a48ffb469ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind a <code>std::function</code> to the delegate.  <br /></td></tr>
+<tr class="separator:a2a30607bfeb5eaec0aa46a48ffb469ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a06a1f3a07b3b85f30d1d149a8ce7694d" id="r_a06a1f3a07b3b85f30d1d149a8ce7694d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a06a1f3a07b3b85f30d1d149a8ce7694d">Assign</a> (const <a class="el" href="#ab18be594adc125473e2967684953ac1c">ClassType</a> &amp;rhs)</td></tr>
 <tr class="memdesc:a06a1f3a07b3b85f30d1d149a8ce7694d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns the state of one object to another.  <br /></td></tr>
 <tr class="separator:a06a1f3a07b3b85f30d1d149a8ce7694d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -522,8 +522,8 @@ template&lt;class RetType , class... Args&gt; </div>
 
 </div>
 </div>
-<a id="a56245374ac83ac8ae2cb5ea0de8907f8" name="a56245374ac83ac8ae2cb5ea0de8907f8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a56245374ac83ac8ae2cb5ea0de8907f8">&#9670;&#160;</a></span>Bind()</h2>
+<a id="a2a30607bfeb5eaec0aa46a48ffb469ce" name="a2a30607bfeb5eaec0aa46a48ffb469ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a30607bfeb5eaec0aa46a48ffb469ce">&#9670;&#160;</a></span>Bind()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -541,7 +541,12 @@ template&lt;class RetType , class... Args&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="class_delegate_lib_1_1_delegate_thread.html">DelegateThread</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>thread</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="class_delegate_lib_1_1_delegate_thread.html">DelegateThread</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>thread</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::chrono::milliseconds</td>          <td class="paramname"><span class="paramname"><em>timeout</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespace_delegate_lib.html#aa0e7491d38d4053d6218bf874d56e868">WAIT_INFINITE</a></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -556,6 +561,8 @@ template&lt;class RetType , class... Args&gt; </div>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">func</td><td>The <code>std::function</code> to bind to the delegate. This function must match the signature of the delegate. </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">thread</td><td>The execution thread to invoke <code>func</code>. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">timeout</td><td>The calling thread timeout for destination thread to invoke the target function. <br  />
+ </td></tr>
   </table>
   </dd>
 </dl>
@@ -590,6 +597,12 @@ template&lt;class RetType , class... Args&gt; </div>
 <p>Creates a copy of the current object. </p>
 <p>Clones the current instance of the class by creating a new object and copying the state of the current object to it. </p><dl class="section return"><dt>Returns</dt><dd>A pointer to a new <code>ClassType</code> instance. </dd></dl>
 <dl class="section post"><dt>Postcondition</dt><dd>The caller is responsible for deleting the clone object. </dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">std::bad_alloc</td><td>If dynamic memory allocation fails. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 <p>Reimplemented from <a class="el" href="class_delegate_lib_1_1_delegate_function_3_01_ret_type_07_args_8_8_8_08_4.html#aff35a45eb0c37f87d4a566c3fabd0850">DelegateLib::DelegateFunction&lt; RetType(Args...)&gt;</a>.</p>
 

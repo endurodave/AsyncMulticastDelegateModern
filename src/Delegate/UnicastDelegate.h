@@ -48,7 +48,6 @@ public:
 
     /// Assign a delegate to the container.
     /// @param[in] rhs A delegate target to assign
-    /// @return A reference to the current object.
     void operator=(const DelegateType& rhs) {
         auto delegateClone = rhs.Clone();
         std::shared_ptr<DelegateType> sharedDelegate(delegateClone);
@@ -57,7 +56,6 @@ public:
 
     /// Assign a delegate to the container.
     /// @param[in] rhs A delegate target to assign
-    /// @return A reference to the current object.
     void operator=(DelegateType&& rhs) {
         auto delegateClone = rhs.Clone();
         std::shared_ptr<DelegateType> sharedDelegate(delegateClone);
