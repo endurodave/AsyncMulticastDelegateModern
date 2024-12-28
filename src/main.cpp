@@ -1,6 +1,8 @@
 #include "DelegateLib.h"
 #include "SysData.h"
 #include "SysDataNoLock.h"
+#include "ProducerConsumer.h"
+#include "CountdownLatch.h"
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -701,6 +703,12 @@ int main(void)
     safe += MakeDelegate(f1);
     safe += MakeDelegate(f2);
     safe -= MakeDelegate(f2);   // Should remove f2, not f1!
+
+    // Run countdown latch example
+    CountdownLatchExample();
+
+    // Run producer-consumer pattern example
+    ProducerConsumerExample();
 
     // Create a SysDataClient instance on the stack
     SysDataClient sysDataClient;

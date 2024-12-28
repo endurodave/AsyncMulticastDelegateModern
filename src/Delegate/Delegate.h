@@ -331,17 +331,6 @@ public:
         m_func = reinterpret_cast<MemberFunc>(func);
     }
 
-    /// Compares two ClassType objects using the '<' operator.
-    /// @param rhs The object to compare with.
-    /// @return `true` if the current object's value is less than the other object's value,
-    /// `false` otherwise.
-    /// @note Do not call! Not allowed since comparing member function 
-    /// pointers for operator< not allowed in C++.
-    bool operator<(const ClassType& rhs) const {
-        static_assert(false, "Cannot compare member function pointers");
-        return false;
-    }
-
     /// @brief Creates a copy of the current object.
     /// @details Clones the current instance of the class by creating a new object
     /// and copying the state of the current object to it. 
@@ -448,6 +437,14 @@ public:
     explicit operator bool() const noexcept { return !Empty(); }
 
 private:
+    /// Compares two ClassType objects using the '<' operator.
+    /// @param rhs The object to compare with.
+    /// @return `true` if the current object's value is less than the other object's value,
+    /// `false` otherwise.
+    /// @note Do not call! Not allowed since comparing member function 
+    /// pointers for operator< not allowed in C++.
+    bool operator<(const ClassType& rhs) const = delete; 
+
     /// Pointer to a class object, representing the bound target instance.
     SharedPtr m_object = nullptr;
 
@@ -474,7 +471,7 @@ class DelegateFunction; // Not defined
 /// 
 /// Depending on how usage, this may never be a issue but its worth noting. 
 /// 
-/// The other delegate class has no such limitations and works under all conditions,
+/// The other delegate classes has no such limitations and works under all conditions,
 /// including comparing two instance functions of the same class. 
 /// 
 /// @tparam RetType The return type of the bound delegate function.

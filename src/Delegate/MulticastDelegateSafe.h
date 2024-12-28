@@ -74,7 +74,7 @@ public:
     /// @brief Move assignment operator that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
     /// @return A reference to the current object.
-    MulticastDelegateSafe& operator=(MulticastDelegateSafe&& rhs) {
+    MulticastDelegateSafe& operator=(MulticastDelegateSafe&& rhs) noexcept {
         const std::lock_guard<std::mutex> lock(m_lock);
         BaseType::operator=(std::forward<MulticastDelegateSafe>(rhs));
         return *this;

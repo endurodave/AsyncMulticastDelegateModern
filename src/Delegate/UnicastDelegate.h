@@ -77,7 +77,7 @@ public:
     /// @brief Move assignment operator that transfers ownership of resources.
     /// @param[in] rhs The object to move from.
     /// @return A reference to the current object.
-    UnicastDelegate& operator=(UnicastDelegate&& rhs) {
+    UnicastDelegate& operator=(UnicastDelegate&& rhs) noexcept {
         if (&rhs != this) {
             m_delegate = rhs.m_delegate;
             rhs.Clear();

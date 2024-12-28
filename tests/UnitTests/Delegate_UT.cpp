@@ -72,8 +72,10 @@ static void DelegateFreeTests()
     ASSERT_TRUE(delegate2 == nullptr);
     ASSERT_TRUE(nullptr == delegate2);
 
+#if 0 // Can't compare disparate delegate types in C++20
     DelegateFunction<void(int)> other;
     ASSERT_TRUE(!(delegate6 == other));
+#endif
 
     delegate6 = nullptr;
     ASSERT_TRUE(delegate6.Empty());
@@ -244,8 +246,10 @@ static void DelegateMemberTests()
     ASSERT_TRUE(delegate2 == nullptr);
     ASSERT_TRUE(nullptr == delegate2);
 
+#if 0 // Can't compare disparate delegate types in C++20
     DelegateFunction<void(int)> other;
     ASSERT_TRUE(!(delegate6 == other));
+#endif
 
     delegate6 = nullptr;
     ASSERT_TRUE(delegate6.Empty());
@@ -400,8 +404,10 @@ static void DelegateMemberSpTests()
     ASSERT_TRUE(delegate2 == nullptr);
     ASSERT_TRUE(nullptr == delegate2);
 
+#if 0 // Can't compare disparate delegate types in C++20
     DelegateFunction<void(int)> other;
     ASSERT_TRUE(!(delegate6 == other));
+#endif
 
     delegate6 = nullptr;
     ASSERT_TRUE(delegate6.Empty());
@@ -514,8 +520,10 @@ static void DelegateFunctionTests()
     ASSERT_TRUE(delegate2 == nullptr);
     ASSERT_TRUE(nullptr == delegate2);
 
+#if 0 // Can't compare disparate delegate types in C++20
     DelegateFree<void(int)> other;
     ASSERT_TRUE(!(delegate6 == other));
+#endif
 
     delegate6 = nullptr;
     ASSERT_TRUE(delegate6.Empty());

@@ -14,7 +14,7 @@
 /// pointer, pointer-to-pointer, and reference.
 /// 
 /// The destination thread uses `std::apply()` to invoke the target function using
-/// the tuple of arguments. See `DelegateInvoke()` and `DelegateAsyncMsg()` in the
+/// the tuple of arguments. See `Invoke()` and `DelegateAsyncMsg()` in the
 /// file `DelegateAsync.h` for example usage.
 
 #include <tuple>
