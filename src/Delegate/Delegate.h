@@ -34,12 +34,12 @@ public:
     /// @brief Compares two delegate objects for equality.
     /// @param rhs The delegate object to compare with the current object.
     /// @return `true` if the objects are equal, `false` otherwise.
-    virtual bool operator==(const DelegateBase& rhs) const = 0;
+    bool operator==(const DelegateBase& rhs) const noexcept { return Equal(rhs); }
 
     /// @brief Compares two delegate objects for inequality.
     /// @param rhs The delegate object to compare with the current object.
     /// @return `true` if the objects are not equal, `false` otherwise.
-    virtual bool operator!=(const DelegateBase& rhs) const { return !(*this == rhs); }
+    bool operator!=(const DelegateBase& rhs) const { return !Equal(rhs); }
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
@@ -48,6 +48,10 @@ public:
     /// Overload operator!= to compare the delegate to nullptr
     /// @return `true` if delegate is not null.
     virtual bool operator!=(std::nullptr_t) const noexcept = 0;
+
+    /// Compares two delegate objects for equality.
+    /// @return `true` if the objects are equal, `false` otherwise.
+    virtual bool Equal(const DelegateBase& other) const = 0;
 
     /// @brief Clone a delegate instance.
     /// @details Use Clone() to provide a deep copy using a base pointer. Covariant 
@@ -185,11 +189,15 @@ public:
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
-    virtual bool operator==(const DelegateBase& rhs) const override {
+    virtual bool Equal(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_func == derivedRhs->m_func;
     }
+
+    /// Compares two delegate objects for equality.
+    /// @return `true` if the objects are equal, `false` otherwise.
+    bool operator==(const ClassType& rhs) const noexcept { return Equal(rhs); }
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
@@ -393,12 +401,16 @@ public:
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
-    virtual bool operator==(const DelegateBase& rhs) const override {
+    virtual bool Equal(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_func == derivedRhs->m_func &&
             m_object == derivedRhs->m_object;
     }
+
+    /// Compares two delegate objects for equality.
+    /// @return `true` if the objects are equal, `false` otherwise.
+    bool operator==(const ClassType& rhs) const noexcept { return Equal(rhs); }
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
@@ -573,7 +585,7 @@ public:
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
-    virtual bool operator==(const DelegateBase& rhs) const override {
+    virtual bool Equal(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         if (derivedRhs) {
             // If both delegates are empty, they are equal
@@ -588,6 +600,10 @@ public:
 
         return false;  // Return false if dynamic cast failed
     }
+
+    /// Compares two delegate objects for equality.
+    /// @return `true` if the objects are equal, `false` otherwise.
+    bool operator==(const ClassType& rhs) const noexcept { return Equal(rhs); }
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.

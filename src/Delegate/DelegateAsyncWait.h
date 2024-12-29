@@ -231,13 +231,17 @@ public:
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
-    virtual bool operator==(const DelegateBase& rhs) const override {
+    virtual bool Equal(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
             m_timeout == derivedRhs->m_timeout &&
-            BaseType::operator==(rhs);
+            BaseType::Equal(rhs);
     }
+
+    /// Compares two delegate objects for equality.
+    /// @return `true` if the objects are equal, `false` otherwise.
+    bool operator==(const ClassType& rhs) const noexcept { return Equal(rhs); }
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
@@ -630,13 +634,17 @@ public:
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
-    virtual bool operator==(const DelegateBase& rhs) const override {
+    virtual bool Equal(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
             m_timeout == derivedRhs->m_timeout &&
-            BaseType::operator==(rhs);
+            BaseType::Equal(rhs);
     }
+
+    /// Compares two delegate objects for equality.
+    /// @return `true` if the objects are equal, `false` otherwise.
+    bool operator==(const ClassType& rhs) const noexcept { return Equal(rhs); }
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
@@ -948,13 +956,17 @@ public:
     /// @brief Compares two delegate objects for equality.
     /// @param[in] rhs The `DelegateBase` object to compare with the current object.
     /// @return `true` if the two delegate objects are equal, `false` otherwise.
-    virtual bool operator==(const DelegateBase& rhs) const override {
+    virtual bool Equal(const DelegateBase& rhs) const override {
         auto derivedRhs = dynamic_cast<const ClassType*>(&rhs);
         return derivedRhs &&
             m_thread == derivedRhs->m_thread &&
             m_timeout == derivedRhs->m_timeout &&
-            BaseType::operator==(rhs);
+            BaseType::Equal(rhs);
     }
+
+    /// Compares two delegate objects for equality.
+    /// @return `true` if the objects are equal, `false` otherwise.
+    bool operator==(const ClassType& rhs) const noexcept { return Equal(rhs); }
 
     /// Overload operator== to compare the delegate to nullptr
     /// @return `true` if delegate is null.
