@@ -1,5 +1,5 @@
-#ifndef _SEMAPHORE_H
-#define _SEMAPHORE_H
+#ifndef _DELEGATELIB_SEMAPHORE_H
+#define _DELEGATELIB_SEMAPHORE_H
 
 /// @file
 /// @brief Delegate library semaphore wrapper class. 
