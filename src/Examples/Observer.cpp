@@ -35,8 +35,8 @@ public:
 class Subject {
 public:
     virtual ~Subject() = default;
-    virtual void attach(Delegate<void(int)>& observer) = 0;
-    virtual void detach(Delegate<void(int)>& observer) = 0;
+    virtual void attach(const Delegate<void(int)>& observer) = 0;
+    virtual void detach(const Delegate<void(int)>& observer) = 0;
     virtual void notify() = 0;
 };
 
@@ -50,12 +50,12 @@ public:
     ConcreteSubject(int initialState) : state(initialState) {}
 
     // Attach observer
-    void attach(Delegate<void(int)>& observer) override { 
+    void attach(const Delegate<void(int)>& observer) override { 
         observers += observer;
     }
 
     // Detach observer
-    void detach(Delegate<void(int)>& observer) override {
+    void detach(const Delegate<void(int)>& observer) override {
         observers -= observer;
     }
 
