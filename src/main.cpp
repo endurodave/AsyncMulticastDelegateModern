@@ -3,6 +3,7 @@
 #include "SysDataNoLock.h"
 #include "ProducerConsumer.h"
 #include "CountdownLatch.h"
+#include "ActiveObject.h"
 #include "Observer.h"
 #include <iostream>
 #include <chrono>
@@ -704,6 +705,9 @@ int main(void)
     safe += MakeDelegate(f1);
     safe += MakeDelegate(f2);
     safe -= MakeDelegate(f2);   // Should remove f2, not f1!
+
+    // Run the active object pattern example
+    ActiveObjectExample();
 
     // Run observer pattern example
     ObserverExample();

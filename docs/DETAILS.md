@@ -22,6 +22,8 @@ A C++ delegate library capable of anonymously invoking any callable function eit
   - [Synchronous Delegates](#synchronous-delegates)
   - [Asynchronous Non-Blocking Delegates](#asynchronous-non-blocking-delegates)
   - [Asynchronous Blocking Delegates](#asynchronous-blocking-delegates)
+  - [Fixed-Block Memory Allocator](#fixed-block-memory-allocator)
+  - [Error Handling](#error-handling)
   - [Function Argument Copy](#function-argument-copy)
   - [Caution Using Raw Object Pointers](#caution-using-raw-object-pointers)
   - [Usage Summary](#usage-summary)
@@ -44,7 +46,7 @@ A C++ delegate library capable of anonymously invoking any callable function eit
   - [Unit Tests](#unit-tests)
   - [Valgrind Memory Tests](#valgrind-memory-tests)
     - [Heap Memory Test Results](#heap-memory-test-results)
-    - [Fixed Block Memory Allocator Test Results](#fixed-block-memory-allocator-test-results)
+    - [Fixed-Block Memory Allocator Test Results](#fixed-block-memory-allocator-test-results)
 - [Library Comparison](#library-comparison)
 - [References](#references)
 
@@ -70,7 +72,7 @@ The features of the modern C++ delegate library are:
 11. **Automatic Heap Handling** – automatically copy argument data to the heap for safe transport through a message queue
 12. **Any OS** – easy porting to any OS. C++11 `std::thread` port included
 13. **32/64-bit** - Support for 32 and 64-bit projects
-14. **Dynamic Storage Allocation** - optional fixed block memory allocator
+14. **Dynamic Storage Allocation** - optional fixed-block memory allocator
 15. **CMake Build** - CMake supports most toolchains including Windows and Linux
 16. **Unit Tests** - extensive unit testing of the delegate library included
 17. **No External Libraries** – delegate does not rely upon external libraries
@@ -382,6 +384,15 @@ std::shared_ptr<TestClass> spObject(new TestClass());
 auto delegateMemberSp = MakeDelegate(spObject, &TestClass::MemberFuncStdString);
 delegateMemberSp("Hello world using shared_ptr", 2020);
 ```
+
+## Fixed-Block Memory Allocator
+
+The delegate library optionally uses a fixed-block memory allocator when `USE_ALLOCATOR` is defined. See `DelegateOpt.h` and the `Allocator` directory for more details. The allocator design is available in the [stl_allocator](https://github.com/endurodave/stl_allocator) repository.
+
+## Error Handling
+
+The delegate library uses dynamic memory to send asynchronous delegate messages to the target thread. By default, out-of-memory failures throw a `std::bad_alloc` exception. Optionally, if `USE_ASSERTS` is defined, exceptions are not thrown, and an assert is triggered instead. See `DelegateOpt.h` for more details.
+
 ## Function Argument Copy
 
 The behavior of the delegate library when invoking asynchronous non-blocking delegates (e.g. `DelegateAsyncFree<>`) is to copy arguments into heap memory for safe transport to the destination thread. All arguments (if any) are duplicated. If your data is not plain old data (POD) and cannot be bitwise copied, ensure you implement an appropriate copy constructor to handle the copying.
@@ -1061,7 +1072,7 @@ Build and execute runs all the unit tests contained within the `tests\UnitTests`
 
 ## Valgrind Memory Tests
 
-[Valgrind](https://valgrind.org/) dynamic storage allocation tests were performed using the heap and fixed block allocator builds. Valgrind is a programming tool for detecting memory leaks, memory errors, and profiling performance in applications, primarily for Linux-based systems. All tests run on Linux.
+[Valgrind](https://valgrind.org/) dynamic storage allocation tests were performed using the heap and fixed-block allocator builds. Valgrind is a programming tool for detecting memory leaks, memory errors, and profiling performance in applications, primarily for Linux-based systems. All tests run on Linux.
 
 ### Heap Memory Test Results
 
@@ -1078,9 +1089,9 @@ The delegate library Valgrind test results using the heap.
 ==1779805== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ```
 
-### Fixed Block Memory Allocator Test Results
+### Fixed-Block Memory Allocator Test Results
 
-Test results with the `ENABLE_ALLOCATOR` fixed block allocator build option enabled. Notice the fixed block runtime uses 22MB verses 50MB for the heap build. Heap storage *recycling* mode was used by the fixed block allocator. See [stl_allocator](https://github.com/endurodave/stl_allocator) and [xallocator](https://github.com/endurodave/xallocator) for information about the memory allocators.
+Test results with the `ENABLE_ALLOCATOR` fixed-block allocator build option enabled. Notice the fixed-block runtime uses 22MB verses 50MB for the heap build. Heap storage *recycling* mode was used by the fixed-block allocator. See [stl_allocator](https://github.com/endurodave/stl_allocator) and [xallocator](https://github.com/endurodave/xallocator) for information about the memory allocators.
 
 ```
 ==1780037== HEAP SUMMARY:
@@ -1099,9 +1110,9 @@ The table below summarizes the various asynchronous function invocation implemen
 
 | Repository                                                                                            | Language | Key Delegate Features                                                                                                                                                                                                               | Notes                                                                                                                                                                                                      |
 |-------------------------------------------------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| <a href="https://github.com/endurodave/cpp-async-delegate">cpp-async-delegate</a> | C++17    | * Function-like template syntax<br> * Any delegate target function type (member, static, free, lambda)<br>  * N target function arguments<br> * N delegate subscribers<br>  * Optional fixed block allocator     | * Modern C++ implementation<br> * Extensive unit tests<br> * Metaprogramming and variadic templates used for library implementation<br> * Any C++17 and higher compiler |
+| <a href="https://github.com/endurodave/cpp-async-delegate">cpp-async-delegate</a> | C++17    | * Function-like template syntax<br> * Any delegate target function type (member, static, free, lambda)<br>  * N target function arguments<br> * N delegate subscribers<br>  * Optional fixed-block allocator     | * Modern C++ implementation<br> * Extensive unit tests<br> * Metaprogramming and variadic templates used for library implementation<br> * Any C++17 and higher compiler |
 <a href="https://github.com/endurodave/AsyncCallback">AsyncCallback</a>                               | C++      | * Traditional template syntax<br> * Delegate target function type (static, free)<br> * 1 target function argument<br> * N delegate subscribers                                                                                      | * Low lines of source code<br> * Compact C++ implementation<br> * Any C++ compiler                                                                                                                    |
-| <a href="https://github.com/endurodave/C_AsyncCallback">C_AsyncCallback</a>                           | C        | * Macros provide type-safety<br> * Delegate target function type (static, free)<br> * 1 target function argument<br> * Fixed callback subscribers (set at compile time)<br> * Optional fixed block allocator                        | * Low lines of source code<br> * Compact C implementation<br> * Any C compiler                                            
+| <a href="https://github.com/endurodave/C_AsyncCallback">C_AsyncCallback</a>                           | C        | * Macros provide type-safety<br> * Delegate target function type (static, free)<br> * 1 target function argument<br> * Fixed callback subscribers (set at compile time)<br> * Optional fixed-block allocator                        | * Low lines of source code<br> * Compact C implementation<br> * Any C compiler                                            
 
 # References
 
