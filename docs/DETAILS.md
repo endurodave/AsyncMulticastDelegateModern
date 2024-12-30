@@ -42,6 +42,7 @@ A C++ delegate library capable of anonymously invoking any callable function eit
   - [SysDataNoLock Reinvoke Example](#sysdatanolock-reinvoke-example)
   - [SysDataNoLock Blocking Reinvoke Example](#sysdatanolock-blocking-reinvoke-example)
   - [Timer Example](#timer-example)
+  - [More Examples](#more-examples)
 - [Testing](#testing)
   - [Unit Tests](#unit-tests)
   - [Valgrind Memory Tests](#valgrind-memory-tests)
@@ -70,13 +71,14 @@ The features of the modern C++ delegate library are:
 9. **Smart Pointer Support** - bind an instance function using a raw object pointer or `std::shared_ptr`
 10. **Lambda Support** - bind and invoke lambda functions asynchronously using delegates
 11. **Automatic Heap Handling** – automatically copy argument data to the heap for safe transport through a message queue
-12. **Any OS** – easy porting to any OS. C++11 `std::thread` port included
-13. **32/64-bit** - Support for 32 and 64-bit projects
-14. **Dynamic Storage Allocation** - optional fixed-block memory allocator
-15. **CMake Build** - CMake supports most toolchains including Windows and Linux
-16. **Unit Tests** - extensive unit testing of the delegate library included
-17. **No External Libraries** – delegate does not rely upon external libraries
-18. **Ease of Use** – function signature template arguments (e.g., `DelegateFree<void(TestStruct*)>`)
+12. **Memory Management** - support for global heap or fixed-block memory allocator
+13. **Any OS** – easy porting to any OS. C++11 `std::thread` port included
+14. **32/64-bit** - Support for 32 and 64-bit projects
+15. **Dynamic Storage Allocation** - optional fixed-block memory allocator
+16. **CMake Build** - CMake supports most toolchains including Windows and Linux
+17. **Unit Tests** - extensive unit testing of the delegate library included
+18. **No External Libraries** – delegate does not rely upon external libraries
+19. **Ease of Use** – function signature template arguments (e.g., `DelegateFree<void(TestStruct*)>`)
 
 The delegate implementation greatly simplifies multithreaded application development by executing the delegate function with all of its arguments on the specified thread of control. The framework manages all the low-level operations needed to safely invoke any function signature on the target thread. CMake build files allow experimentation on Windows, Linux, and other platforms.
 
@@ -387,7 +389,7 @@ delegateMemberSp("Hello world using shared_ptr", 2020);
 
 ## Fixed-Block Memory Allocator
 
-The delegate library optionally uses a fixed-block memory allocator when `USE_ALLOCATOR` is defined. See `DelegateOpt.h` and the `Allocator` directory for more details. The allocator design is available in the [stl_allocator](https://github.com/endurodave/stl_allocator) repository.
+The delegate library optionally uses a fixed-block memory allocator when `USE_ALLOCATOR` is defined. See `DelegateOpt.h`, `CMakeLists.txt`, and the `Allocator` directory for more details. The allocator design is available in the [stl_allocator](https://github.com/endurodave/stl_allocator) repository.
 
 ## Error Handling
 
@@ -1061,6 +1063,10 @@ Users create an instance of the timer and register for the expiration. In this c
 m_timer.Expired = MakeDelegate(&myClass, &MyClass::MyCallback, myThread);
 m_timer.Start(1000);
 ```
+
+## More Examples
+
+See the `Examples` folder for additional examples.
 
 # Testing
 

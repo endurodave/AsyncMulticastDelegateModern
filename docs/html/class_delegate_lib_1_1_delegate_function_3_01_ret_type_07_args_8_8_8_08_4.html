@@ -143,6 +143,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7080af7cb53567524dcfa05eb092c427" id="r_a7080af7cb53567524dcfa05eb092c427"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7080af7cb53567524dcfa05eb092c427">DelegateFunction</a> ()=default</td></tr>
 <tr class="memdesc:a7080af7cb53567524dcfa05eb092c427"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor creates an empty delegate.  <br /></td></tr>
 <tr class="separator:a7080af7cb53567524dcfa05eb092c427"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a118c91ba17e9b57240a1cbf9072a6574" id="r_a118c91ba17e9b57240a1cbf9072a6574"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a118c91ba17e9b57240a1cbf9072a6574">~DelegateFunction</a> ()</td></tr>
+<tr class="memdesc:a118c91ba17e9b57240a1cbf9072a6574"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor ensures empty when destroyed.  <br /></td></tr>
+<tr class="separator:a118c91ba17e9b57240a1cbf9072a6574"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae08b89338a2ebf38fe31af77c5f9b400" id="r_ae08b89338a2ebf38fe31af77c5f9b400"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae08b89338a2ebf38fe31af77c5f9b400">Bind</a> (<a class="el" href="#ab301553daa1552051356610973a9a284">FunctionType</a> func)</td></tr>
 <tr class="memdesc:ae08b89338a2ebf38fe31af77c5f9b400"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind a member function to the delegate.  <br /></td></tr>
 <tr class="separator:ae08b89338a2ebf38fe31af77c5f9b400"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,9 +169,11 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ac1cbcefd3ef63028b61e2c467b551ebf" id="r_ac1cbcefd3ef63028b61e2c467b551ebf"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1cbcefd3ef63028b61e2c467b551ebf">operator=</a> (std::nullptr_t) noexcept</td></tr>
 <tr class="memdesc:ac1cbcefd3ef63028b61e2c467b551ebf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear the target function.  <br /></td></tr>
 <tr class="separator:ac1cbcefd3ef63028b61e2c467b551ebf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a318105c4baad7edc3ab08154aced10cc" id="r_a318105c4baad7edc3ab08154aced10cc"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a318105c4baad7edc3ab08154aced10cc">operator==</a> (const <a class="el" href="class_delegate_lib_1_1_delegate_base.html">DelegateBase</a> &amp;rhs) const override</td></tr>
-<tr class="memdesc:a318105c4baad7edc3ab08154aced10cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares two delegate objects for equality.  <br /></td></tr>
-<tr class="separator:a318105c4baad7edc3ab08154aced10cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf4659cce1b8cbaef7989399cfd1bb67" id="r_acf4659cce1b8cbaef7989399cfd1bb67"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acf4659cce1b8cbaef7989399cfd1bb67">Equal</a> (const <a class="el" href="class_delegate_lib_1_1_delegate_base.html">DelegateBase</a> &amp;rhs) const override</td></tr>
+<tr class="memdesc:acf4659cce1b8cbaef7989399cfd1bb67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares two delegate objects for equality.  <br /></td></tr>
+<tr class="separator:acf4659cce1b8cbaef7989399cfd1bb67"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae960e617e5485070dac4afcb09aa31c3" id="r_ae960e617e5485070dac4afcb09aa31c3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae960e617e5485070dac4afcb09aa31c3">operator==</a> (const <a class="el" href="#a50a948c89c10c03e795303f752c828c7">ClassType</a> &amp;rhs) const noexcept</td></tr>
+<tr class="separator:ae960e617e5485070dac4afcb09aa31c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c083176824748f380c99f04f4c6c3f3" id="r_a3c083176824748f380c99f04f4c6c3f3"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c083176824748f380c99f04f4c6c3f3">operator==</a> (std::nullptr_t) const noexcept override</td></tr>
 <tr class="separator:a3c083176824748f380c99f04f4c6c3f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0e0c1a6087b659b9efcb9843f3a41f8" id="r_ae0e0c1a6087b659b9efcb9843f3a41f8"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae0e0c1a6087b659b9efcb9843f3a41f8">operator!=</a> (std::nullptr_t) const noexcept override</td></tr>
@@ -188,9 +193,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0b67663a7b8ab2e491c177235329ad8b inherit pub_methods_class_delegate_lib_1_1_delegate_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab8e2ba60d330e779b0e993b2f42d9442 inherit pub_methods_class_delegate_lib_1_1_delegate_base" id="r_ab8e2ba60d330e779b0e993b2f42d9442"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_base.html#ab8e2ba60d330e779b0e993b2f42d9442">~DelegateBase</a> () noexcept=default</td></tr>
 <tr class="separator:ab8e2ba60d330e779b0e993b2f42d9442 inherit pub_methods_class_delegate_lib_1_1_delegate_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6e908a657cd3651bf4e833a0b79e1564 inherit pub_methods_class_delegate_lib_1_1_delegate_base" id="r_a6e908a657cd3651bf4e833a0b79e1564"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_base.html#a6e908a657cd3651bf4e833a0b79e1564">operator!=</a> (const <a class="el" href="class_delegate_lib_1_1_delegate_base.html">DelegateBase</a> &amp;rhs) const</td></tr>
-<tr class="memdesc:a6e908a657cd3651bf4e833a0b79e1564 inherit pub_methods_class_delegate_lib_1_1_delegate_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares two delegate objects for inequality.  <br /></td></tr>
-<tr class="separator:a6e908a657cd3651bf4e833a0b79e1564 inherit pub_methods_class_delegate_lib_1_1_delegate_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cc7f961ee7acc86ce42724e1ef3f5f6 inherit pub_methods_class_delegate_lib_1_1_delegate_base" id="r_a1cc7f961ee7acc86ce42724e1ef3f5f6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_base.html#a1cc7f961ee7acc86ce42724e1ef3f5f6">operator==</a> (const <a class="el" href="class_delegate_lib_1_1_delegate_base.html">DelegateBase</a> &amp;rhs) const noexcept</td></tr>
+<tr class="memdesc:a1cc7f961ee7acc86ce42724e1ef3f5f6 inherit pub_methods_class_delegate_lib_1_1_delegate_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares two delegate objects for equality.  <br /></td></tr>
+<tr class="separator:a1cc7f961ee7acc86ce42724e1ef3f5f6 inherit pub_methods_class_delegate_lib_1_1_delegate_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a170fcb3125188fa4338c90fb2d9cfa73 inherit pub_methods_class_delegate_lib_1_1_delegate_base" id="r_a170fcb3125188fa4338c90fb2d9cfa73"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_delegate_lib_1_1_delegate_base.html#a170fcb3125188fa4338c90fb2d9cfa73">operator!=</a> (const <a class="el" href="class_delegate_lib_1_1_delegate_base.html">DelegateBase</a> &amp;rhs) const</td></tr>
+<tr class="memdesc:a170fcb3125188fa4338c90fb2d9cfa73 inherit pub_methods_class_delegate_lib_1_1_delegate_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compares two delegate objects for inequality.  <br /></td></tr>
+<tr class="separator:a170fcb3125188fa4338c90fb2d9cfa73 inherit pub_methods_class_delegate_lib_1_1_delegate_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
@@ -212,7 +220,7 @@ class DelegateLib::DelegateFunction&lt; RetType(Args...)&gt;</div><p><code><a cl
  <code>safe -= MakeDelegate(f2); // Should remove f2, not f1!</code> <br  />
 </p>
 <p>Depending on how usage, this may never be a issue but its worth noting.</p>
-<p>The other delegate class has no such limitations and works under all conditions, including comparing two instance functions of the same class.</p>
+<p>The other delegate classes has no such limitations and works under all conditions, including comparing two instance functions of the same class.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">RetType</td><td>The return type of the bound delegate function. </td></tr>
@@ -388,6 +396,35 @@ template&lt;class RetType , class... Args&gt; </div>
 
 </div>
 </div>
+<a id="a118c91ba17e9b57240a1cbf9072a6574" name="a118c91ba17e9b57240a1cbf9072a6574"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a118c91ba17e9b57240a1cbf9072a6574">&#9670;&#160;</a></span>~DelegateFunction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class RetType , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_delegate_lib_1_1_delegate_function.html">DelegateLib::DelegateFunction</a>&lt; RetType(Args...)&gt;::~<a class="el" href="class_delegate_lib_1_1_delegate_function.html">DelegateFunction</a> </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Destructor ensures empty when destroyed. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a813f00fad959f24480192a5a44b12cdc" name="a813f00fad959f24480192a5a44b12cdc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a813f00fad959f24480192a5a44b12cdc">&#9670;&#160;</a></span>Assign()</h2>
@@ -551,6 +588,46 @@ template&lt;class RetType , class... Args&gt; </div>
 
 <p>Check if the delegate is bound to a target function. </p>
 <dl class="section return"><dt>Returns</dt><dd><code>true</code> if the delegate has a target function, <code>false</code> otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="acf4659cce1b8cbaef7989399cfd1bb67" name="acf4659cce1b8cbaef7989399cfd1bb67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf4659cce1b8cbaef7989399cfd1bb67">&#9670;&#160;</a></span>Equal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class RetType , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual bool <a class="el" href="class_delegate_lib_1_1_delegate_function.html">DelegateLib::DelegateFunction</a>&lt; RetType(Args...)&gt;::Equal </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_delegate_lib_1_1_delegate_base.html">DelegateBase</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>rhs</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Compares two delegate objects for equality. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">rhs</td><td>The <code><a class="el" href="class_delegate_lib_1_1_delegate_base.html" title="Non-template base class for all delegates.">DelegateBase</a></code> object to compare with the current object. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the two delegate objects are equal, <code>false</code> otherwise. </dd></dl>
+
+<p>Implements <a class="el" href="class_delegate_lib_1_1_delegate_base.html#a3b6bbfc2744b1a261bfcbe86cf35894e">DelegateLib::DelegateBase</a>.</p>
+
+<p>Reimplemented in <a class="el" href="class_delegate_lib_1_1_delegate_function_async_3_01_ret_type_07_args_8_8_8_08_4.html#aa26e80dc355d468498afff49fe33762e">DelegateLib::DelegateFunctionAsync&lt; RetType(Args...)&gt;</a>, and <a class="el" href="class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#abb4565ae99fbe20a227497c323cb9f12">DelegateLib::DelegateFunctionAsyncWait&lt; RetType(Args...)&gt;</a>.</p>
 
 </div>
 </div>
@@ -794,8 +871,8 @@ template&lt;class RetType , class... Args&gt; </div>
 
 </div>
 </div>
-<a id="a318105c4baad7edc3ab08154aced10cc" name="a318105c4baad7edc3ab08154aced10cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a318105c4baad7edc3ab08154aced10cc">&#9670;&#160;</a></span>operator==() <span class="overload">[1/2]</span></h2>
+<a id="ae960e617e5485070dac4afcb09aa31c3" name="ae960e617e5485070dac4afcb09aa31c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae960e617e5485070dac4afcb09aa31c3">&#9670;&#160;</a></span>operator==() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -806,31 +883,19 @@ template&lt;class RetType , class... Args&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual bool <a class="el" href="class_delegate_lib_1_1_delegate_function.html">DelegateLib::DelegateFunction</a>&lt; RetType(Args...)&gt;::operator== </td>
+          <td class="memname">bool <a class="el" href="class_delegate_lib_1_1_delegate_function.html">DelegateLib::DelegateFunction</a>&lt; RetType(Args...)&gt;::operator== </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="class_delegate_lib_1_1_delegate_base.html">DelegateBase</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>rhs</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="#a50a948c89c10c03e795303f752c828c7">ClassType</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>rhs</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Compares two delegate objects for equality. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramdir">[in]</td><td class="paramname">rhs</td><td>The <code><a class="el" href="class_delegate_lib_1_1_delegate_base.html" title="Non-template base class for all delegates.">DelegateBase</a></code> object to compare with the current object. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd><code>true</code> if the two delegate objects are equal, <code>false</code> otherwise. </dd></dl>
-
-<p>Implements <a class="el" href="class_delegate_lib_1_1_delegate_base.html#aa77532684ca24f7924662c1f6e2f3bce">DelegateLib::DelegateBase</a>.</p>
-
-<p>Reimplemented in <a class="el" href="class_delegate_lib_1_1_delegate_function_async_3_01_ret_type_07_args_8_8_8_08_4.html#a642fc55c2dfa6f7eb29f016a7194af9a">DelegateLib::DelegateFunctionAsync&lt; RetType(Args...)&gt;</a>, and <a class="el" href="class_delegate_lib_1_1_delegate_function_async_wait_3_01_ret_type_07_args_8_8_8_08_4.html#a0cc272f27fb57a62d2c762f74f032eb2">DelegateLib::DelegateFunctionAsyncWait&lt; RetType(Args...)&gt;</a>.</p>
+<p>Compares two delegate objects for equality. </p><dl class="section return"><dt>Returns</dt><dd><code>true</code> if the objects are equal, <code>false</code> otherwise. </dd></dl>
 
 </div>
 </div>

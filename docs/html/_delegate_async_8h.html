@@ -159,7 +159,7 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Delegate "`Async`" series of classes used to invoke a function asynchronously. </p>
 <p>The classes are not thread safe. Invoking a function asynchronously requires sending a clone of the object to the destination thread message queue. The destination thread calls <code>Invoke()</code> to invoke the target function.</p>
-<p><code>RetType operator()(Args... args)</code> - called by the source thread to initiate the async function call. May throw <code>std::bad_alloc</code> if dynamic storage allocation fails. Clone() may also throw <code>std::bad_alloc</code>. All other delegate class functions do not throw exceptions.</p>
+<p><code>RetType operator()(Args... args)</code> - called by the source thread to initiate the async function call. May throw <code>std::bad_alloc</code> if dynamic storage allocation fails and USE_ASSERTS is not defined. Clone() may also throw <code>std::bad_alloc</code>. All other delegate class functions do not throw exceptions.</p>
 <p><code>void Invoke(std::shared_ptr&lt;DelegateMsg&gt; msg)</code> - called by the destination thread to invoke the target function. The destination thread must not call any other delegate instance functions.</p>
 <p>Limitations:</p>
 <ul>

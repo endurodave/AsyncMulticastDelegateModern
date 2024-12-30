@@ -5,7 +5,7 @@
 
 # Asynchronous Delegates in C++
 
-A C++ delegate library capable of anonymously invoking any callable function either synchronously or asynchronously on a user-specified thread of control. 
+A C++ delegate library capable of anonymously invoking any callable function either synchronously or asynchronously on a user-specified thread of control. Extensive unit tests ensure compatibility with any C++17 and higher platform.
 
 In C++, a delegate encapsulates a callable entity, such as a function, method, or lambda, so it can be invoked later. A delegate is a type-safe wrapper around a callable function that allows it to be passed around, stored, or invoked at a later time, typically within different contexts or on different threads. Delegates are particularly useful for event-driven programming, callbacks, or when you need to pass functions as arguments.
 
@@ -22,10 +22,12 @@ It is always safe to call the delegate. In its null state, a call will not perfo
  
 Typical use cases are:
 
-* Publish/Subscribe (Event-Driven Programming)
-* Subsystem Intercommunication
-* Thread-Safe Asynchronous API (Wrapping Subsystem, Library, or Class)
-* Anonymous Thread-Safe Callbacks on Specified Thread
+* Asynchronous Method Invocation (AMI)
+* Publish/Subscribe (Observer) Pattern
+* Anonymous, Asynchronous Thread-Safe Callbacks
+* Event-Driven Programming
+* Thread-Safe Asynchronous API
+* Design Patterns (Active Object)
 
 The delegate library's asynchronous features differ from `std::async` in that the caller-specified thread of control is used to invoke the target function bound to the delegate, rather than a random thread from the thread pool. The asynchronous variants copy the argument data into the event queue, ensuring safe transport to the destination thread, regardless of the argument type. This approach provides 'fire and forget' functionality, allowing the caller to avoid waiting or worrying about out-of-scope stack variables being accessed by the target thread.
 

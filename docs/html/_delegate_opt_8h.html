@@ -106,12 +106,15 @@ $(function(){initNavTree('_delegate_opt_8h.html',''); initResizable(true); });
 <p>Delegate library options header file. <br  />
   
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;list&gt;</code><br />
+<div class="textblock"><code>#include &lt;new&gt;</code><br />
+<code>#include &lt;list&gt;</code><br />
 </div>
 <p><a href="_delegate_opt_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:abe89b46e296c7421855410a08d6d31fe" id="r_abe89b46e296c7421855410a08d6d31fe"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe89b46e296c7421855410a08d6d31fe">BAD_ALLOC</a>()</td></tr>
+<tr class="separator:abe89b46e296c7421855410a08d6d31fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e800c556290ed548055177c33a66f5c" id="r_a5e800c556290ed548055177c33a66f5c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e800c556290ed548055177c33a66f5c">XALLOCATOR</a></td></tr>
 <tr class="separator:a5e800c556290ed548055177c33a66f5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -125,6 +128,24 @@ Typedefs</h2></td></tr>
 <div class="textblock"><p>Delegate library options header file. <br  />
  </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="abe89b46e296c7421855410a08d6d31fe" name="abe89b46e296c7421855410a08d6d31fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe89b46e296c7421855410a08d6d31fe">&#9670;&#160;</a></span>BAD_ALLOC</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define BAD_ALLOC</td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordflow">throw</span> std::bad_alloc()</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a5e800c556290ed548055177c33a66f5c" name="a5e800c556290ed548055177c33a66f5c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a5e800c556290ed548055177c33a66f5c">&#9670;&#160;</a></span>XALLOCATOR</h2>
 

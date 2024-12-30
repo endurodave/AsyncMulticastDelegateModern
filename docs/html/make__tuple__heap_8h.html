@@ -176,7 +176,7 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Helper functions for creating dynamic copies of function arguments stored within a tuple. </p>
 <p>The template function <code>make_tuple_heap()</code> creates dynamic copies of function arguments, storing them within a tuple for transport through a thread message queue. It supports all types of function arguments, including by value, pointer, pointer-to-pointer, and reference.</p>
-<p>The destination thread uses <code>std::apply()</code> to invoke the target function using the tuple of arguments. See <code>DelegateInvoke()</code> and <code>DelegateAsyncMsg()</code> in the file <code><a class="el" href="_delegate_async_8h.html" title="Delegate &quot;`Async`&quot; series of classes used to invoke a function asynchronously.">DelegateAsync.h</a></code> for example usage. </p>
+<p>The destination thread uses <code>std::apply()</code> to invoke the target function using the tuple of arguments. See <code>Invoke()</code> and <code>DelegateAsyncMsg()</code> in the file <code><a class="el" href="_delegate_async_8h.html" title="Delegate &quot;`Async`&quot; series of classes used to invoke a function asynchronously.">DelegateAsync.h</a></code> for example usage. </p>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
