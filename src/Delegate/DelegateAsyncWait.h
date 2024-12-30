@@ -193,9 +193,9 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
     virtual ClassType* Clone() const override {
-        return new ClassType(*this);
+        return new(std::nothrow) ClassType(*this);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -300,12 +300,12 @@ public:
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
             if (!delegate)
-                throw std::bad_alloc();
+                BAD_ALLOC();
 
             // Create a new message instance for sending to the destination thread.
             auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             if (!msg)
-                throw std::bad_alloc();
+                BAD_ALLOC();
             msg->SetInvokerWaiting(true);
 
             auto thread = this->GetThread();
@@ -596,9 +596,9 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
     virtual ClassType* Clone() const override {
-        return new ClassType(*this);
+        return new(std::nothrow) ClassType(*this);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -703,12 +703,12 @@ public:
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
             if (!delegate)
-                throw std::bad_alloc();
+                BAD_ALLOC();
 
             // Create a new message instance for sending to the destination thread.
             auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             if (!msg)
-                throw std::bad_alloc();
+                BAD_ALLOC();
             msg->SetInvokerWaiting(true);
 
             auto thread = this->GetThread();
@@ -918,9 +918,9 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
     virtual ClassType* Clone() const override {
-        return new ClassType(*this);
+        return new(std::nothrow) ClassType(*this);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -1025,12 +1025,12 @@ public:
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
             if (!delegate)
-                throw std::bad_alloc();
+                BAD_ALLOC();
 
             // Create a new message instance for sending to the destination thread.
             auto msg = std::make_shared<DelegateAsyncWaitMsg<Args...>>(delegate, std::forward<Args>(args)...);
             if (!msg)
-                throw std::bad_alloc();
+                BAD_ALLOC();
             msg->SetInvokerWaiting(true);
 
             auto thread = this->GetThread();

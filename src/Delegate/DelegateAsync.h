@@ -13,8 +13,9 @@
 /// thread calls `Invoke()` to invoke the target function.
 /// 
 /// `RetType operator()(Args... args)` - called by the source thread to initiate the async
-/// function call. May throw `std::bad_alloc` if dynamic storage allocation fails. Clone() 
-/// may also throw `std::bad_alloc`. All other delegate class functions do not throw exceptions.
+/// function call. May throw `std::bad_alloc` if dynamic storage allocation fails and USE_ASSERTS 
+/// is not defined. Clone() may also throw `std::bad_alloc`. All other delegate class functions do 
+/// not throw exceptions.
 ///
 /// `void Invoke(std::shared_ptr<DelegateMsg> msg)` - called by the destination
 /// thread to invoke the target function. The destination thread must not call any other
@@ -58,7 +59,7 @@ public:
     /// Constructor
     /// @param[in] invoker - the invoker instance
     /// @param[in] args - a parameter pack of all target function arguments
-    /// @throws std::bad_alloc If make_tuble_heap() fails to obtain memory.
+    /// @throws std::bad_alloc If make_tuble_heap() fails to obtain memory and USE_ASSERTS not defined.
     DelegateAsyncMsg(std::shared_ptr<IDelegateInvoker> invoker, Args... args) : DelegateMsg(invoker),
         m_args(make_tuple_heap(m_heapMem, m_start, std::forward<Args>(args)...)) { }
 
@@ -145,9 +146,9 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
     virtual ClassType* Clone() const override {
-        return new ClassType(*this);
+        return new(std::nothrow) ClassType(*this);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -229,7 +230,7 @@ public:
     /// @return A default return value. The return value is *not* returned from the 
     /// target function. Do not use the return value.
     /// @post Do not use the return value as its not valid.
-    /// @throws std::bad_alloc If dynamic memory allocation fails.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
     virtual RetType operator()(Args... args) override {
         if (this->Empty())
             return RetType();
@@ -242,12 +243,12 @@ public:
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
             if (!delegate)
-                throw std::bad_alloc();
+                BAD_ALLOC();
 
             // Create a new message instance for sending to the destination thread
             auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
             if (!msg)
-                throw std::bad_alloc();
+                BAD_ALLOC();
 
             auto thread = this->GetThread();
             if (thread) {
@@ -445,9 +446,9 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
     virtual ClassType* Clone() const override {
-        return new ClassType(*this);
+        return new(std::nothrow) ClassType(*this);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -529,7 +530,7 @@ public:
     /// @return A default return value. The return value is *not* returned from the 
     /// target function. Do not use the return value.
     /// @post Do not use the return value as its not valid.
-    /// @throws std::bad_alloc If dynamic memory allocation fails.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
     virtual RetType operator()(Args... args) override {
         if (this->Empty())
             return RetType();
@@ -542,12 +543,12 @@ public:
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
             if (!delegate)
-                throw std::bad_alloc();
+                BAD_ALLOC();
 
             // Create a new message instance for sending to the destination thread
             auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
             if (!msg)
-                throw std::bad_alloc();
+                BAD_ALLOC();
 
             auto thread = this->GetThread();
             if (thread) {
@@ -686,9 +687,9 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
     virtual ClassType* Clone() const override {
-        return new ClassType(*this);
+        return new(std::nothrow) ClassType(*this);
     }
 
     /// @brief Assignment operator that assigns the state of one object to another.
@@ -770,7 +771,7 @@ public:
     /// @return A default return value. The return value is *not* returned from the 
     /// target function. Do not use the return value.
     /// @post Do not use the return value as its not valid.
-    /// @throws std::bad_alloc If dynamic memory allocation fails.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
     virtual RetType operator()(Args... args) override {
         if (this->Empty())
             return RetType();
@@ -783,12 +784,12 @@ public:
             // Create a clone instance of this delegate 
             auto delegate = std::shared_ptr<ClassType>(Clone());
             if (!delegate)
-                throw std::bad_alloc();
+                BAD_ALLOC();
 
             // Create a new message instance for sending to the destination thread
             auto msg = std::make_shared<DelegateAsyncMsg<Args...>>(delegate, std::forward<Args>(args)...);
             if (!msg)
-                throw std::bad_alloc();
+                BAD_ALLOC();
 
             auto thread = this->GetThread();
             if (thread) {

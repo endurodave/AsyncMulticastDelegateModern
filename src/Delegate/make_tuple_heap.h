@@ -111,32 +111,38 @@ template <typename Arg, typename... TupleElem>
 auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg** arg)
 {
     Arg** heap_arg = nullptr;
-    try 
-    {
-        // Check if arg is nullptr or *arg is nullptr
-        if (arg != nullptr && *arg != nullptr) {
-            // Allocate memory for heap_arg and copy the value
-            heap_arg = new Arg * ();
-            *heap_arg = new Arg(**arg);
-        }
-        else {
-            // If arg is nullptr or *arg is nullptr, create heap_arg as nullptr
-            heap_arg = new Arg * (nullptr);
-        }
 
-        std::shared_ptr<heap_arg_deleter_base> deleter(new heap_arg_deleter<Arg**>(heap_arg));
-        heapArgs.push_back(deleter);
-
-        return std::tuple_cat(tup, std::make_tuple(heap_arg));
+    // Check if arg is nullptr or *arg is nullptr
+    if (arg != nullptr && *arg != nullptr) {
+        // Allocate memory for heap_arg and copy the value
+        heap_arg = new(std::nothrow) Arg * ();
+        if (!heap_arg) {
+            BAD_ALLOC();
+        }
+            
+        *heap_arg = new(std::nothrow) Arg(**arg);
+        if (!*heap_arg) {
+            delete heap_arg;
+            BAD_ALLOC();
+        }
     }
-    catch (std::bad_alloc&)
-    {
-        if (heap_arg && *heap_arg) {
-            delete* heap_arg; // Delete the Arg* pointed to by heap_arg
+    else {
+        // If arg is nullptr or *arg is nullptr, create heap_arg as nullptr
+        heap_arg = new(std::nothrow) Arg * (nullptr);
+        if (!heap_arg) {
+            BAD_ALLOC();
         }
-        if (heap_arg) {
-            delete heap_arg; // Delete the heap_arg itself (which is a Arg**)
-        }
+    }
+    std::shared_ptr<heap_arg_deleter_base> deleter(new(std::nothrow) heap_arg_deleter<Arg**>(heap_arg));
+    if (!deleter) {
+        BAD_ALLOC();
+    }
+    try {
+        heapArgs.push_back(deleter);
+        return std::tuple_cat(tup, std::make_tuple(heap_arg));
+    } 
+    catch (...) {
+        BAD_ALLOC();
         throw;
     }
 }
@@ -147,25 +153,48 @@ auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const
 {
     Arg* heap_arg = nullptr;
     if (arg != nullptr) {
-        heap_arg = new Arg(*arg);  // Only create a new Arg if arg is not nullptr
+        heap_arg = new(std::nothrow) Arg(*arg);  // Only create a new Arg if arg is not nullptr
+        if (!heap_arg) {
+            BAD_ALLOC();
+        }
     }
-    std::shared_ptr<heap_arg_deleter_base> deleter(new heap_arg_deleter<Arg*>(heap_arg));
-    heapArgs.push_back(deleter);
-
-    return std::tuple_cat(tup, std::make_tuple(heap_arg));
+    std::shared_ptr<heap_arg_deleter_base> deleter(new(std::nothrow) heap_arg_deleter<Arg*>(heap_arg));
+    if (!deleter) {
+        BAD_ALLOC();
+    }
+    try {
+        heapArgs.push_back(deleter);
+        return std::tuple_cat(tup, std::make_tuple(heap_arg));
+    }
+    catch (...) {
+        BAD_ALLOC();
+        throw;
+    }
 }
 
 /// @brief Append a reference argument to the tuple
 template <typename Arg, typename... TupleElem>
 auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const std::tuple<TupleElem...> &tup, Arg& arg)
 {
-    Arg* heap_arg = new Arg(arg);
-    std::shared_ptr<heap_arg_deleter_base> deleter(new heap_arg_deleter<Arg*>(heap_arg));
-    heapArgs.push_back(deleter);
+    Arg* heap_arg = new(std::nothrow) Arg(arg);
+    if (!heap_arg) {
+        BAD_ALLOC();
+    }
+    std::shared_ptr<heap_arg_deleter_base> deleter(new(std::nothrow) heap_arg_deleter<Arg*>(heap_arg));
+    if (!deleter) {
+        BAD_ALLOC();
+    }
+    try {
+        heapArgs.push_back(deleter);
 
-    auto temp = std::make_tuple(std::forward_as_tuple(*heap_arg));  // Dereference heap_arg when creating tuple element
-    auto new_type = std::get<0>(temp);
-    return std::tuple_cat(tup, new_type);
+        auto temp = std::make_tuple(std::forward_as_tuple(*heap_arg));  // Dereference heap_arg when creating tuple element
+        auto new_type = std::get<0>(temp);
+        return std::tuple_cat(tup, new_type);
+    }
+    catch (...) {
+        BAD_ALLOC();
+        throw;
+    }
 }
 
 /// @brief Terminate the template metaprogramming argument loop. This function is 

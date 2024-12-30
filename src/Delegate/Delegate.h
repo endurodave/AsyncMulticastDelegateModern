@@ -142,7 +142,7 @@ public:
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
     virtual ClassType* Clone() const override { 
-        return new ClassType(*this); 
+        return new(std::nothrow) ClassType(*this); 
     }
 
     /// @brief Assigns the state of one object to another.
@@ -351,7 +351,7 @@ public:
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
     virtual ClassType* Clone() const override {
-        return new ClassType(*this);
+        return new(std::nothrow) ClassType(*this);
     }
 
     /// @brief Assigns the state of one object to another.
@@ -544,7 +544,7 @@ public:
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
     virtual ClassType* Clone() const override { 
-        return new ClassType(*this); 
+        return new(std::nothrow) ClassType(*this); 
     }
 
     /// @brief Assigns the state of one object to another.
