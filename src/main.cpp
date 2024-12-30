@@ -3,6 +3,7 @@
 #include "SysDataNoLock.h"
 #include "ProducerConsumer.h"
 #include "CountdownLatch.h"
+#include "Observer.h"
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -703,6 +704,9 @@ int main(void)
     safe += MakeDelegate(f1);
     safe += MakeDelegate(f2);
     safe -= MakeDelegate(f2);   // Should remove f2, not f1!
+
+    // Run observer pattern example
+    ObserverExample();
 
     // Run countdown latch example
     CountdownLatchExample();

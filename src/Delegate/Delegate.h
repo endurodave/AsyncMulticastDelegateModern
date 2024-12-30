@@ -118,6 +118,9 @@ public:
     /// @brief Default constructor creates an empty delegate.
     DelegateFree() = default;
 
+    /// @brief Destructor ensures empty when destroyed.
+    ~DelegateFree() { Clear(); }
+
     /// @brief Bind a free function to the delegate.
     /// @details This method associates a free function (`func`) with the delegate. 
     /// Once the function is bound, the delegate can be used to invoke the function.
@@ -290,6 +293,9 @@ public:
 
     /// @brief Default constructor creates an empty delegate.
     DelegateMember() = default;
+
+    /// @brief Destructor ensures empty when destroyed.
+    ~DelegateMember() { Clear(); }
 
     /// @brief Bind a member function to the delegate.
     /// @details This method associates a member function (`func`) with the delegate. 
@@ -511,6 +517,9 @@ public:
 
     /// @brief Default constructor creates an empty delegate.
     DelegateFunction() = default;
+
+    /// @brief Destructor ensures empty when destroyed.
+    ~DelegateFunction() { Clear(); }
 
     /// @brief Bind a member function to the delegate.
     /// @details This method associates a member function (`func`) with the delegate. 

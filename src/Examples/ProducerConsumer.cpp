@@ -1,3 +1,6 @@
+/// @file
+/// @brief Implement the consumer-producer pattern using asynchronous delegates. 
+
 #include "ProducerConsumer.h"
 #include "DelegateLib.h"
 #include "WorkerThreadStd.h"

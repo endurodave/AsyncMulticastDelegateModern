@@ -1,3 +1,6 @@
+/// @file
+/// @brief Implement a countdown latch using C++20 std::latch and delegates. 
+
 #include "CountdownLatch.h"
 #include "DelegateLib.h"
 #include "WorkerThreadStd.h"

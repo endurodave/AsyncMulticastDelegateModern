@@ -203,6 +203,21 @@ static void DelegateFreeTests()
     for (int i = 0; i < 2; i++)
         arr[i](TEST_INT);
     delete[] arr;
+
+    {
+        // Should never be called!
+        auto lambdaInt1 = [](int i) { ASSERT_TRUE(i == TEST_INT); };
+        TestClass1 testClass1;
+        
+        // Invalid runtime. Add temporary objects to list should not work. Checks 
+        // that delegate destructor sets delegate Empty() to help prevent misused. 
+        std::list<Delegate<void(int)>*> delList;
+        delList.push_back(&MakeDelegate(FreeFuncInt1));
+        delList.push_back(&MakeDelegate(&testClass1, &TestClass1::MemberFuncInt1));
+        delList.push_back(&MakeDelegate(std::function(lambdaInt1)));
+        for (auto& d : delList)
+            (*d)(0);     // All invalid targets; no delegates called
+    }
 }
 
 static void DelegateMemberTests()
