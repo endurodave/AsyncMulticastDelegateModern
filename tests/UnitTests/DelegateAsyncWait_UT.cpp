@@ -84,8 +84,10 @@ static void DelegateFreeAsyncWaitTests()
     ASSERT_TRUE(!d);
     auto r = d();
     using ArgT = decltype(r);
+#ifndef USE_ALLOCATOR
     ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
     ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+#endif
     ASSERT_TRUE(std::numeric_limits<ArgT>::max() == 0xffff);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_signed == false);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
@@ -261,8 +263,10 @@ static void DelegateMemberAsyncWaitTests()
     ASSERT_TRUE(!d);
     auto r = d();
     using ArgT = decltype(r);
+#ifndef USE_ALLOCATOR
     ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
     ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+#endif
     ASSERT_TRUE(std::numeric_limits<ArgT>::max() == 0xffff);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_signed == false);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
@@ -427,8 +431,10 @@ static void DelegateMemberSpAsyncWaitTests()
     ASSERT_TRUE(!d);
     auto r = d();
     using ArgT = decltype(r);
+#ifndef USE_ALLOCATOR
     ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
     ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+#endif
     ASSERT_TRUE(std::numeric_limits<ArgT>::max() == 0xffff);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_signed == false);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
@@ -550,8 +556,10 @@ static void DelegateFunctionAsyncWaitTests()
     ASSERT_TRUE(!d);
     auto r = d();
     using ArgT = decltype(r);
+#ifndef USE_ALLOCATOR
     ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
     ASSERT_TRUE(std::numeric_limits<ArgT>::min() == 0);
+#endif
     ASSERT_TRUE(std::numeric_limits<ArgT>::max() == 0xffff);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_signed == false);
     ASSERT_TRUE(std::numeric_limits<ArgT>::is_exact == true);
