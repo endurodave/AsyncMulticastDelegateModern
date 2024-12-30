@@ -366,7 +366,7 @@ public:
     /// target function, the target function is not called.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     /// @return `true` if target function invoked or timeout expired; `false` if error. 
-    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) {
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
         static_assert(!(is_unique_ptr<RetType>::value), "std::unique_ptr return value not allowed");
 
         // Typecast the base pointer to back correct derived to instance
@@ -769,7 +769,7 @@ public:
     /// target function, the target function is not called.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     /// @return `true` if target function invoked or timeout expired; `false` if error. 
-    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) {
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
         static_assert(!(is_unique_ptr<RetType>::value), "std::unique_ptr return value not allowed");
 
         // Typecast the base pointer to back correct derived to instance
@@ -1091,7 +1091,7 @@ public:
     /// target function, the target function is not called.
     /// @param[in] msg The delegate message created and sent within `operator()(Args... args)`.
     /// @return `true` if target function invoked or timeout expired; `false` if error. 
-    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) {
+    virtual bool Invoke(std::shared_ptr<DelegateMsg> msg) override {
         static_assert(!(is_unique_ptr<RetType>::value), "std::unique_ptr return value not allowed");
 
         // Typecast the base pointer to back correct derived to instance
