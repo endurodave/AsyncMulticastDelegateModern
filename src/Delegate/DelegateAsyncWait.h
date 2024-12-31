@@ -193,7 +193,7 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS not defined.
     virtual ClassType* Clone() const override {
         return new(std::nothrow) ClassType(*this);
     }
@@ -596,7 +596,7 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS not defined.
     virtual ClassType* Clone() const override {
         return new(std::nothrow) ClassType(*this);
     }
@@ -918,7 +918,7 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS not defined.
     virtual ClassType* Clone() const override {
         return new(std::nothrow) ClassType(*this);
     }

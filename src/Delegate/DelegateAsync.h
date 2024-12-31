@@ -146,7 +146,7 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS not defined.
     virtual ClassType* Clone() const override {
         return new(std::nothrow) ClassType(*this);
     }
@@ -230,7 +230,7 @@ public:
     /// @return A default return value. The return value is *not* returned from the 
     /// target function. Do not use the return value.
     /// @post Do not use the return value as its not valid.
-    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS not defined.
     virtual RetType operator()(Args... args) override {
         if (this->Empty())
             return RetType();
@@ -446,7 +446,7 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS not defined.
     virtual ClassType* Clone() const override {
         return new(std::nothrow) ClassType(*this);
     }
@@ -530,7 +530,7 @@ public:
     /// @return A default return value. The return value is *not* returned from the 
     /// target function. Do not use the return value.
     /// @post Do not use the return value as its not valid.
-    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS not defined.
     virtual RetType operator()(Args... args) override {
         if (this->Empty())
             return RetType();
@@ -687,7 +687,7 @@ public:
     /// and copying the state of the current object to it. 
     /// @return A pointer to a new `ClassType` instance.
     /// @post The caller is responsible for deleting the clone object.
-    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS not defined.
     virtual ClassType* Clone() const override {
         return new(std::nothrow) ClassType(*this);
     }
@@ -771,7 +771,7 @@ public:
     /// @return A default return value. The return value is *not* returned from the 
     /// target function. Do not use the return value.
     /// @post Do not use the return value as its not valid.
-    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS no defined.
+    /// @throws std::bad_alloc If dynamic memory allocation fails and USE_ASSERTS not defined.
     virtual RetType operator()(Args... args) override {
         if (this->Empty())
             return RetType();

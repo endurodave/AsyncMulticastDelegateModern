@@ -408,7 +408,7 @@ Synchronous and asynchronous blocking delegates, on the other hand, do not copy 
 Certain asynchronous delegate usage patterns can cause a callback invocation to occur on a deleted object. The problem is this: an object function is bound to a delegate and invoked asynchronously, but before the invocation occurs on the target thread, the target object is deleted. In other words, it is possible for an object bound to a delegate to be deleted before the target thread message queue has had a chance to invoke the callback. The following code exposes the issue:
 
 ```cpp
-// Example of a bug where the testClassHeap is deleted before the asychronous delegate
+// Example of a bug where the testClassHeap is deleted before the asynchronous delegate
 // is invoked on the workerThread1. In other words, by the time workerThread1 calls
 // the bound delegate function the testClassHeap instance is deleted and no longer valid.
 TestClass* testClassHeap = new TestClass();
@@ -590,12 +590,23 @@ auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const
 {
     Arg* heap_arg = nullptr;
     if (arg != nullptr) {
-        heap_arg = new Arg(*arg);  // Only create a new Arg if arg is not nullptr
+        heap_arg = new(std::nothrow) Arg(*arg);  // Only create a new Arg if arg is not nullptr
+        if (!heap_arg) {
+            BAD_ALLOC();
+        }
     }
-    std::shared_ptr<heap_arg_deleter_base> deleter(new heap_arg_deleter<Arg*>(heap_arg));
-    heapArgs.push_back(deleter);
-
-    return std::tuple_cat(tup, std::make_tuple(heap_arg));
+    std::shared_ptr<heap_arg_deleter_base> deleter(new(std::nothrow) heap_arg_deleter<Arg*>(heap_arg));
+    if (!deleter) {
+        BAD_ALLOC();
+    }
+    try {
+        heapArgs.push_back(deleter);
+        return std::tuple_cat(tup, std::make_tuple(heap_arg));
+    }
+    catch (...) {
+        BAD_ALLOC();
+        throw;
+    }
 }
 ```
 

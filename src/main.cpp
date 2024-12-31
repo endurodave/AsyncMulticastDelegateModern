@@ -569,14 +569,16 @@ int main(void)
     auto delegateMemberSp = MakeDelegate(spObject, &TestClass::MemberFuncStdString);
     delegateMemberSp("Hello world using shared_ptr", 2020);
 
-    // Example of a bug where the testClassHeap is deleted before the asychronous delegate 
+    // Example of a bug where the testClassHeap is deleted before the asynchronous delegate 
     // is invoked on the workerThread1. In other words, by the time workerThread1 calls
     // the bound delegate function the testClassHeap instance is deleted and no longer valid.
+#if 0
     TestClass* testClassHeap = new TestClass();
     auto delegateMemberAsync = MakeDelegate(testClassHeap, &TestClass::MemberFuncStdString, workerThread1);
     delegateMemberAsync("Function async invoked on deleted object. Bug!", 2020);
     delegateMemberAsync.Clear();
     delete testClassHeap;
+#endif
 
     // Example of the smart pointer function version of the delegate. The testClassSp instance 
     // is only deleted after workerThread1 invokes the callback function thus solving the bug.
@@ -661,7 +663,7 @@ int main(void)
         [](int v) { return v > 2 && v <= 6; });
     cout << "Synchronous lambda result: " << valResult << endl;
 
-    // Asychronous lambda example (pass delegate to algorithm)
+    // Asynchronous lambda example (pass delegate to algorithm)
     auto CountLambda = +[](int v) -> int
     {
         return v > 2 && v <= 6;

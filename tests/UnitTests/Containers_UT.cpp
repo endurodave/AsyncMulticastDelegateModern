@@ -80,7 +80,7 @@ static void MulticastDelegateTests()
     ASSERT_TRUE(src.Size() == 0);
 
     dest.Clear();
-    src += MakeDelegate(&FreeFuncInt1);
+    src.PushBack(MakeDelegate(&FreeFuncInt1));
     dest = src;
     ASSERT_TRUE(src.Size() == 1);
     ASSERT_TRUE(dest.Size() == 1);
@@ -88,7 +88,7 @@ static void MulticastDelegateTests()
     src += DelegateFree<void(int)>();
     src += DelegateFree<void(int)>();
     ASSERT_TRUE(src.Size() == 3);
-    src -= DelegateFree<void(int)>();
+    src.Remove(DelegateFree<void(int)>());
     ASSERT_TRUE(src.Size() == 2);
 }
 
@@ -120,7 +120,7 @@ static void MulticastDelegateSafeTests()
     ASSERT_TRUE(src.Size() == 0);
 
     dest.Clear();
-    src += MakeDelegate(&FreeFuncInt1);
+    src.PushBack(MakeDelegate(&FreeFuncInt1));
     dest = src;
     ASSERT_TRUE(src.Size() == 1);
     ASSERT_TRUE(dest.Size() == 1);
@@ -128,7 +128,7 @@ static void MulticastDelegateSafeTests()
     src += DelegateFree<void(int)>();
     src += DelegateFree<void(int)>();
     ASSERT_TRUE(src.Size() == 3);
-    src -= DelegateFree<void(int)>();
+    src.Remove(DelegateFree<void(int)>());
     ASSERT_TRUE(src.Size() == 2);
 }
 
