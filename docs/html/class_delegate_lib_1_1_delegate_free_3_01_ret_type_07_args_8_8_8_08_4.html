@@ -158,7 +158,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ad50bc3385f014ff12cf61c16c030f9c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns the state of one object to another.  <br /></td></tr>
 <tr class="separator:ad50bc3385f014ff12cf61c16c030f9c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e31fdd4391c352138672960a50e973d" id="r_a3e31fdd4391c352138672960a50e973d"><td class="memItemLeft" align="right" valign="top">virtual RetType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3e31fdd4391c352138672960a50e973d">operator()</a> (Args... args) override</td></tr>
-<tr class="memdesc:a3e31fdd4391c352138672960a50e973d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the bound delegate function synchronously.  <br /></td></tr>
+<tr class="memdesc:a3e31fdd4391c352138672960a50e973d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the bound delegate function synchronously. Always safe to call.  <br /></td></tr>
 <tr class="separator:a3e31fdd4391c352138672960a50e973d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa4a27109dccd3bdeb31cdee5107b6137" id="r_aa4a27109dccd3bdeb31cdee5107b6137"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a683744d6fe8b0318323e70a1e2bd7f92">ClassType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa4a27109dccd3bdeb31cdee5107b6137">operator=</a> (const <a class="el" href="#a683744d6fe8b0318323e70a1e2bd7f92">ClassType</a> &amp;rhs)</td></tr>
 <tr class="memdesc:aa4a27109dccd3bdeb31cdee5107b6137"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator that assigns the state of one object to another.  <br /></td></tr>
@@ -707,7 +707,7 @@ template&lt;class RetType , class... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Invoke the bound delegate function synchronously. </p>
+<p>Invoke the bound delegate function synchronously. Always safe to call. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>- the function arguments, if any. </td></tr>

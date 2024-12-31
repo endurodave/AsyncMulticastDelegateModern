@@ -180,7 +180,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa837983f1f9c0a2f8b35fb0ea4704e5b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assigns the state of one object to another.  <br /></td></tr>
 <tr class="separator:aa837983f1f9c0a2f8b35fb0ea4704e5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac37f599bb6493c11c88a015c877b1530" id="r_ac37f599bb6493c11c88a015c877b1530"><td class="memItemLeft" align="right" valign="top">virtual RetType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac37f599bb6493c11c88a015c877b1530">operator()</a> (Args... args) override</td></tr>
-<tr class="memdesc:ac37f599bb6493c11c88a015c877b1530"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the bound delegate function synchronously.  <br /></td></tr>
+<tr class="memdesc:ac37f599bb6493c11c88a015c877b1530"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the bound delegate function synchronously. Always safe to call.  <br /></td></tr>
 <tr class="separator:ac37f599bb6493c11c88a015c877b1530"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad06b7ee91cc4f40440a2841a2fe2ec83" id="r_ad06b7ee91cc4f40440a2841a2fe2ec83"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#ac6d4fe0918756c689831ce0651da67e5">ClassType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad06b7ee91cc4f40440a2841a2fe2ec83">operator=</a> (const <a class="el" href="#ac6d4fe0918756c689831ce0651da67e5">ClassType</a> &amp;rhs)</td></tr>
 <tr class="memdesc:ad06b7ee91cc4f40440a2841a2fe2ec83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assignment operator that assigns the state of one object to another.  <br /></td></tr>
@@ -1028,7 +1028,7 @@ template&lt;class TClass , class RetType , class... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Invoke the bound delegate function synchronously. </p>
+<p>Invoke the bound delegate function synchronously. Always safe to call. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>- the function arguments, if any. </td></tr>

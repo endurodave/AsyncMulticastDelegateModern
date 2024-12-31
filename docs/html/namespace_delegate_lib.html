@@ -403,7 +403,7 @@ template&lt;typename Arg1 , typename... Args, typename... Ts&gt; </div>
 <dl class="section return"><dt>Returns</dt><dd>A new tuple with all arguments appended. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::bad_alloc</td><td>If dynamic allocation of arguments created on the heap for appending to the tuple fails. </td></tr>
+    <tr><td class="paramname">std::bad_alloc</td><td>If dynamic allocation of arguments created on the heap for appending to the tuple fails and USE_ASSERTS not defined. </td></tr>
   </table>
   </dd>
 </dl>

@@ -130,6 +130,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa7c99581fdb05907c15cf4dcc4279aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0cc0c31cbe31741efc20e6e77a81230" id="r_af0cc0c31cbe31741efc20e6e77a81230"><td class="memItemLeft" align="right" valign="top">RetType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af0cc0c31cbe31741efc20e6e77a81230">operator()</a> (Args... args)</td></tr>
 <tr class="separator:af0cc0c31cbe31741efc20e6e77a81230"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0c1806b4c13101c4d35f09df22d68a3" id="r_ac0c1806b4c13101c4d35f09df22d68a3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0c1806b4c13101c4d35f09df22d68a3">Broadcast</a> (Args... args)</td></tr>
+<tr class="separator:ac0c1806b4c13101c4d35f09df22d68a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f3acd13d866a9006acf92f66dc4c05d" id="r_a6f3acd13d866a9006acf92f66dc4c05d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f3acd13d866a9006acf92f66dc4c05d">operator=</a> (const <a class="el" href="#ab1154af6b77e08826e8493dd5029815e">DelegateType</a> &amp;rhs)</td></tr>
 <tr class="separator:a6f3acd13d866a9006acf92f66dc4c05d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a382532e6ad75807c8c365663f1e97c35" id="r_a382532e6ad75807c8c365663f1e97c35"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a382532e6ad75807c8c365663f1e97c35">operator=</a> (<a class="el" href="#ab1154af6b77e08826e8493dd5029815e">DelegateType</a> &amp;&amp;rhs)</td></tr>
@@ -302,6 +304,39 @@ template&lt;class RetType , class... Args&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac0c1806b4c13101c4d35f09df22d68a3" name="ac0c1806b4c13101c4d35f09df22d68a3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0c1806b4c13101c4d35f09df22d68a3">&#9670;&#160;</a></span>Broadcast()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class RetType , class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="struct_delegate_lib_1_1_unicast_delegate.html">DelegateLib::UnicastDelegate</a>&lt; RetType(Args...)&gt;::Broadcast </td>
+          <td>(</td>
+          <td class="paramtype">Args...</td>          <td class="paramname"><span class="paramname"><em>args</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Invoke the bound target functions. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>The arguments used when invoking the target function </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a7a1fdecc173333725b6b00a081c5f5ee" name="a7a1fdecc173333725b6b00a081c5f5ee"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7a1fdecc173333725b6b00a081c5f5ee">&#9670;&#160;</a></span>Clear()</h2>
 
@@ -413,7 +448,7 @@ template&lt;class RetType , class... Args&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Invoke the bound target function for all stored delegate instances. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Invoke the bound target. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>The arguments used when invoking the target function </td></tr>
   </table>

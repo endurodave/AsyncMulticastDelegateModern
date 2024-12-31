@@ -180,7 +180,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a1e6153da03f3d607b1e18deb391c04a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the bound delegate function asynchronously. Called by the source thread.  <br /></td></tr>
 <tr class="separator:a1e6153da03f3d607b1e18deb391c04a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5c0e0c2591b0b02feec73b501325fcb6" id="r_a5c0e0c2591b0b02feec73b501325fcb6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c0e0c2591b0b02feec73b501325fcb6">AsyncInvoke</a> (Args... args)</td></tr>
-<tr class="memdesc:a5c0e0c2591b0b02feec73b501325fcb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke delegate function asynchronously. Do not wait for return value. Called by the source thread.  <br /></td></tr>
+<tr class="memdesc:a5c0e0c2591b0b02feec73b501325fcb6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke delegate function asynchronously. Do not wait for return value. Called by the source thread. Always safe to call.  <br /></td></tr>
 <tr class="separator:a5c0e0c2591b0b02feec73b501325fcb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b54529a25ce5ee655ce18baa8527f3a" id="r_a2b54529a25ce5ee655ce18baa8527f3a"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b54529a25ce5ee655ce18baa8527f3a">Invoke</a> (std::shared_ptr&lt; <a class="el" href="class_delegate_lib_1_1_delegate_msg.html">DelegateMsg</a> &gt; msg) override</td></tr>
 <tr class="memdesc:a2b54529a25ce5ee655ce18baa8527f3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the delegate function on the destination thread. Called by the destintation thread.  <br /></td></tr>
@@ -510,7 +510,7 @@ template&lt;class RetType , class... Args&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Invoke delegate function asynchronously. Do not wait for return value. Called by the source thread. </p>
+<p>Invoke delegate function asynchronously. Do not wait for return value. Called by the source thread. Always safe to call. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>The function arguments, if any. </td></tr>
@@ -590,7 +590,7 @@ template&lt;class RetType , class... Args&gt; </div>
 <dl class="section post"><dt>Postcondition</dt><dd>The caller is responsible for deleting the clone object. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::bad_alloc</td><td>If dynamic memory allocation fails and USE_ASSERTS no defined. </td></tr>
+    <tr><td class="paramname">std::bad_alloc</td><td>If dynamic memory allocation fails and USE_ASSERTS not defined. </td></tr>
   </table>
   </dd>
 </dl>
@@ -761,7 +761,7 @@ template&lt;class RetType , class... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>Invoke the bound delegate function asynchronously. Called by the source thread. </p>
-<p>Invoke delegate function asynchronously and do not wait for return value. This function is called by the source thread. Dispatches the delegate data into the destination thread message queue. <code><a class="el" href="#a2b54529a25ce5ee655ce18baa8527f3a" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">Invoke()</a></code> must be called by the destination thread to invoke the target function.</p>
+<p>Invoke delegate function asynchronously and do not wait for return value. This function is called by the source thread. Dispatches the delegate data into the destination thread message queue. <code><a class="el" href="#a2b54529a25ce5ee655ce18baa8527f3a" title="Invoke the delegate function on the destination thread. Called by the destintation thread.">Invoke()</a></code> must be called by the destination thread to invoke the target function. Always safe to call.</p>
 <p>The <code><a class="el" href="class_delegate_lib_1_1_delegate_async_msg.html" title="Stores all function arguments suitable for non-blocking asynchronous calls. Argument data is stored i...">DelegateAsyncMsg</a></code> duplicates and copies the function arguments into heap memory. The source thread is not required to place function arguments into the heap. The delegate library performs all necessary heap and argument coping for the caller. Ensure complex argument data types can be safely copied by creating a copy constructor if necessary. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">args</td><td>The function arguments, if any. </td></tr>
@@ -772,7 +772,7 @@ template&lt;class RetType , class... Args&gt; </div>
 <dl class="section post"><dt>Postcondition</dt><dd>Do not use the return value as its not valid. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::bad_alloc</td><td>If dynamic memory allocation fails and USE_ASSERTS no defined. </td></tr>
+    <tr><td class="paramname">std::bad_alloc</td><td>If dynamic memory allocation fails and USE_ASSERTS not defined. </td></tr>
   </table>
   </dd>
 </dl>

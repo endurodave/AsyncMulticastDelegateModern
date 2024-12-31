@@ -5,6 +5,7 @@ var class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4 =
     [ "~UnicastDelegate", "class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#ab61da310e729c3264b771cf05edb1012", null ],
     [ "UnicastDelegate", "class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#a5ad610d6c02c159d9468c1357971f86d", null ],
     [ "UnicastDelegate", "class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#aa7c99581fdb05907c15cf4dcc4279aeb", null ],
+    [ "Broadcast", "class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#ac0c1806b4c13101c4d35f09df22d68a3", null ],
     [ "Clear", "class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#a7a1fdecc173333725b6b00a081c5f5ee", null ],
     [ "Empty", "class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#aa4892f2080d1e90f5170a56e63aa74f4", null ],
     [ "operator bool", "class_delegate_lib_1_1_unicast_delegate_3_01_ret_type_07_args_8_8_8_08_4.html#ae3fd389289f3f71b59d65bfd2e588b49", null ],
