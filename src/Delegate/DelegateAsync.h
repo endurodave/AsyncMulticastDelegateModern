@@ -220,7 +220,7 @@ public:
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `Invoke()` must be called by the destination 
-    /// thread to invoke the target function.
+    /// thread to invoke the target function. Always safe to call.
     /// 
     /// The `DelegateAsyncMsg` duplicates and copies the function arguments into heap memory. 
     /// The source thread is not required to place function arguments into the heap. The delegate
@@ -272,7 +272,7 @@ public:
     }
 
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
-    /// Called by the source thread.
+    /// Called by the source thread. Always safe to call.
     /// @param[in] args The function arguments, if any.
     void AsyncInvoke(Args... args) {
         operator()(std::forward<Args>(args)...);
@@ -520,7 +520,7 @@ public:
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `Invoke()` must be called by the destination 
-    /// thread to invoke the target function.
+    /// thread to invoke the target function. Always safe to call.
     /// 
     /// The `DelegateAsyncMsg` duplicates and copies the function arguments into heap memory. 
     /// The source thread is not required to place function arguments into the heap. The delegate
@@ -572,7 +572,7 @@ public:
     }
 
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
-    /// Called by the source thread.
+    /// Called by the source thread. Always safe to call.
     /// @param[in] args The function arguments, if any.
     void AsyncInvoke(Args... args) {
         operator()(std::forward<Args>(args)...);
@@ -761,7 +761,7 @@ public:
     /// @details Invoke delegate function asynchronously and do not wait for return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `Invoke()` must be called by the destination 
-    /// thread to invoke the target function.
+    /// thread to invoke the target function. Always safe to call.
     /// 
     /// The `DelegateAsyncMsg` duplicates and copies the function arguments into heap memory. 
     /// The source thread is not required to place function arguments into the heap. The delegate
@@ -813,7 +813,7 @@ public:
     }
 
     /// @brief Invoke delegate function asynchronously. Do not wait for return value.
-    /// Called by the source thread.
+    /// Called by the source thread. Always safe to call.
     /// @param[in] args The function arguments, if any.
     void AsyncInvoke(Args... args) {
         operator()(std::forward<Args>(args)...);

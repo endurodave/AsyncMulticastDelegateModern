@@ -272,7 +272,7 @@ public:
     /// @details Invoke delegate function asynchronously and wait for the return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `Invoke()` must be called by the destination 
-    /// thread to invoke the target function.
+    /// thread to invoke the target function. Always safe to call.
     /// 
     /// If the destination thread invokes the function within `m_timeout`, the return 
     /// value is obtained from the destination thread function call. If `m_timeout` expires 
@@ -340,7 +340,7 @@ public:
     }
 
     /// @brief Invoke delegate function asynchronously and block for function return value.
-    /// Called by the source thread.
+    /// Called by the source thread. Always safe to call.
     /// @param[in] args The function arguments, if any.
     /// @return The bound function return value stored withing `std::optional`. Use  
     /// `has_value()` to check if the the return value is valid. `value()` contains 
@@ -675,7 +675,7 @@ public:
     /// @details Invoke delegate function asynchronously and wait for the return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `Invoke()` must be called by the destination 
-    /// thread to invoke the target function.
+    /// thread to invoke the target function. Always safe to call.
     /// 
     /// If the destination thread invokes the function within `m_timeout`, the return 
     /// value is obtained from the destination thread function call. If `m_timeout` expires 
@@ -743,7 +743,7 @@ public:
     }
 
     /// @brief Invoke delegate function asynchronously and block for function return value.
-    /// Called by the source thread.
+    /// Called by the source thread. Always safe to call.
     /// @param[in] args The function arguments, if any.
     /// @return The bound function return value stored withing `std::optional`. Use  
     /// `has_value()` to check if the the return value is valid. `value()` contains 
@@ -997,7 +997,7 @@ public:
     /// @details Invoke delegate function asynchronously and wait for the return value.
     /// This function is called by the source thread. Dispatches the delegate data into the 
     /// destination thread message queue. `Invoke()` must be called by the destination 
-    /// thread to invoke the target function.
+    /// thread to invoke the target function. Always safe to call.
     /// 
     /// If the destination thread invokes the function within `m_timeout`, the return 
     /// value is obtained from the destination thread function call. If `m_timeout` expires 
@@ -1065,7 +1065,7 @@ public:
     }
 
     /// @brief Invoke delegate function asynchronously and block for function return value.
-    /// Called by the source thread.
+    /// Called by the source thread. Always safe to call.
     /// @param[in] args The function arguments, if any.
     /// @return The bound function return value stored withing `std::optional`. Use  
     /// `has_value()` to check if the the return value is valid. `value()` contains 

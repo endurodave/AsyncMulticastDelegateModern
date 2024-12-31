@@ -153,7 +153,7 @@ public:
         m_func = rhs.m_func; 
     }
 
-    /// @brief Invoke the bound delegate function synchronously. 
+    /// @brief Invoke the bound delegate function synchronously. Always safe to call.
     /// @param[in] args - the function arguments, if any.
     /// @return The bound function return value, if any. If empty delegate
     /// default return type returned. 
@@ -363,7 +363,7 @@ public:
         m_func = rhs.m_func;
     }
 
-    /// @brief Invoke the bound delegate function synchronously. 
+    /// @brief Invoke the bound delegate function synchronously. Always safe to call.
     /// @param[in] args - the function arguments, if any.
     /// @return The bound function return value, if any. If empty delegate
     /// default return type returned. 
@@ -555,7 +555,7 @@ public:
         m_func = rhs.m_func;
     }
 
-    /// @brief Invoke the bound delegate function synchronously. 
+    /// @brief Invoke the bound delegate function synchronously. Always safe to call.
     /// @param[in] args - the function arguments, if any.
     /// @return The bound function return value, if any. If empty delegate
     /// default return type returned. 

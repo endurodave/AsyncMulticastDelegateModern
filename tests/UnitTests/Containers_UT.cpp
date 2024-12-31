@@ -46,6 +46,10 @@ static void UnicastDelegateTests()
     dest = src;
     ASSERT_TRUE(src.Size() == 1);
     ASSERT_TRUE(dest.Size() == 1);
+
+    // Invoke target
+    src(TEST_INT);
+    src.Broadcast(TEST_INT);
 }
 
 static void MulticastDelegateTests()
@@ -90,6 +94,10 @@ static void MulticastDelegateTests()
     ASSERT_TRUE(src.Size() == 3);
     src.Remove(DelegateFree<void(int)>());
     ASSERT_TRUE(src.Size() == 2);
+
+    // Invoke all targets
+    src(TEST_INT);
+    src.Broadcast(TEST_INT);
 }
 
 static void MulticastDelegateSafeTests()
@@ -130,6 +138,10 @@ static void MulticastDelegateSafeTests()
     ASSERT_TRUE(src.Size() == 3);
     src.Remove(DelegateFree<void(int)>());
     ASSERT_TRUE(src.Size() == 2);
+
+    // Invoke all targets
+    src(TEST_INT);
+    src.Broadcast(TEST_INT);
 }
 
 void Containers_UT()

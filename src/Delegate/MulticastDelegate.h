@@ -3,7 +3,7 @@
 
 /// @file
 /// @brief Delegate container for storing and iterating over a collection of 
-/// delegate instances. Class is not thread safe.
+/// delegate instances. Class is not thread-safe.
 
 #include "Delegate.h"
 #include <list>
@@ -38,12 +38,19 @@ public:
     /// @param[in] rhs The object to move from.
     MulticastDelegate(MulticastDelegate&& rhs) noexcept : m_delegates(std::move(rhs.m_delegates)) { }
 
-    /// Invoke the bound target function for all stored delegate instances.
-    /// A void return value is used since multiple targets invoked.
-    /// @param[in] args The arguments used when invoking the target function
+    /// Invoke all bound target functions. A void return value is used 
+    /// since multiple targets invoked.
+    /// @param[in] args The arguments used when invoking the target functions
     void operator()(Args... args) {
         for (auto delegate : m_delegates)
             (*delegate)(args...);	// Invoke delegate callback
+    }
+
+    /// Invoke all bound target functions. A void return value is used 
+    /// since multiple targets invoked.
+    /// @param[in] args The arguments used when invoking the target functions
+    void Broadcast(Args... args) {
+        (*this)(args...);
     }
 
     /// Insert a delegate into the container.

@@ -28,10 +28,18 @@ public:
 
     /// Invoke the bound target function for all stored delegate instances.
     /// A void return value is used since multiple targets invoked.
-    /// @param[in] args The farguments used when invoking the target function
+    /// @param[in] args The arguments used when invoking the target functions
     void operator()(Args... args) {
         const std::lock_guard<std::mutex> lock(m_lock);
         BaseType::operator ()(args...);
+    }
+
+    /// Invoke all bound target functions. A void return value is used 
+    /// since multiple targets invoked.
+    /// @param[in] args The arguments used when invoking the target functions
+    void Broadcast(Args... args) {
+        const std::lock_guard<std::mutex> lock(m_lock);
+        BaseType::Broadcast(args...);
     }
 
     /// Insert a delegate into the container.

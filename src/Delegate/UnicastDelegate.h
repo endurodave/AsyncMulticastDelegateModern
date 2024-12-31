@@ -3,7 +3,7 @@
 
 /// @file
 /// @brief Delegate container for storing an invoking a single delegate instance. 
-/// Class is not thread safe.
+/// Class is not thread-safe.
 
 #include "Delegate.h"
 #include <memory>
@@ -39,11 +39,17 @@ public:
     /// @param[in] rhs The object to move from.
     UnicastDelegate(UnicastDelegate&& rhs) noexcept : m_delegate(std::move(rhs.m_delegate)) { }
 
-    /// Invoke the bound target function for all stored delegate instances.
+    /// Invoke the bound target.
     /// @param[in] args The arguments used when invoking the target function
     /// @return The target function return value. 
     RetType operator()(Args... args) {
         return (*m_delegate)(args...);	// Invoke delegate callback
+    }
+
+    /// Invoke the bound target functions. 
+    /// @param[in] args The arguments used when invoking the target function
+    void Broadcast(Args... args) {
+        (*this)(args...);
     }
 
     /// Assign a delegate to the container.
