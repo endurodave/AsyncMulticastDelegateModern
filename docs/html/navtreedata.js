@@ -25,7 +25,27 @@
 var NAVTREE =
 [
   [ "Delegates", "index.html", [
-    [ "C++ Delegate Library Documentation", "index.html", null ],
+    [ "Asynchronous Delegates in C++", "index.html#autotoc_md0", null ],
+    [ "Design Documentation", "index.html#autotoc_md1", null ],
+    [ "Quick Start", "index.html#autotoc_md2", [
+      [ "Basic Examples", "index.html#autotoc_md3", null ],
+      [ "Publish/Subscribe Example", "index.html#autotoc_md4", [
+        [ "Publisher", "index.html#autotoc_md5", null ],
+        [ "Subscriber", "index.html#autotoc_md6", null ]
+      ] ],
+      [ "All Delegate Types Example", "index.html#autotoc_md7", null ],
+      [ "Asynchronous API Example", "index.html#autotoc_md8", null ]
+    ] ],
+    [ "Delegate Classes", "index.html#autotoc_md9", null ],
+    [ "Project Build", "index.html#autotoc_md10", [
+      [ "Windows Visual Studio", "index.html#autotoc_md11", null ],
+      [ "Linux Make", "index.html#autotoc_md12", null ]
+    ] ],
+    [ "Related Repositories", "index.html#autotoc_md13", [
+      [ "Alternative Implementations", "index.html#autotoc_md14", null ],
+      [ "Projects Using Delegates", "index.html#autotoc_md15", null ]
+    ] ],
+    [ "Star History", "index.html#autotoc_md16", null ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [

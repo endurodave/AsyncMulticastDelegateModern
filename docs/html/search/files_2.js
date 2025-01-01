@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['semaphore_2eh_0',['Semaphore.h',['../_semaphore_8h.html',1,'']]],
-  ['src_5fdup_2epy_1',['src_dup.py',['../src__dup_8py.html',1,'']]]
+  ['readme_2emd_0',['README.md',['../_r_e_a_d_m_e_8md.html',1,'']]]
 ];
