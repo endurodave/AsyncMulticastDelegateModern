@@ -349,7 +349,7 @@ void TestAllTargetTypes() {
     // Invoke all callable function targets stored within the delegate container
     delegateA(123);
 
-    // Wait for async callbacks to complete
+    // Wait for async delegate invocations to complete
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
     // Remove all callable function targets from the delegate container

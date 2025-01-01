@@ -391,6 +391,8 @@ delegateMemberSp("Hello world using shared_ptr", 2020);
 
 The delegate library optionally uses a fixed-block memory allocator when `USE_ALLOCATOR` is defined. See `DelegateOpt.h`, `CMakeLists.txt`, and the `Allocator` directory for more details. The allocator design is available in the [stl_allocator](https://github.com/endurodave/stl_allocator) repository.
 
+`std::function` used within class `DelegateFunction` may use the heap under certain conditions. Implement a custom `xfunction` similar to the `xlist` concept within `xlist.h` using the `xallocator` fixed-block allocator if deemed necessary.
+
 ## Error Handling
 
 The delegate library uses dynamic memory to send asynchronous delegate messages to the target thread. By default, out-of-memory failures throw a `std::bad_alloc` exception. Optionally, if `USE_ASSERTS` is defined, exceptions are not thrown, and an assert is triggered instead. See `DelegateOpt.h` for more details.
@@ -399,7 +401,7 @@ The delegate library uses dynamic memory to send asynchronous delegate messages 
 
 The behavior of the delegate library when invoking asynchronous non-blocking delegates (e.g. `DelegateAsyncFree<>`) is to copy arguments into heap memory for safe transport to the destination thread. All arguments (if any) are duplicated. If your data is not plain old data (POD) and cannot be bitwise copied, ensure you implement an appropriate copy constructor to handle the copying.
 
-Since argument data is duplicated, an outgoing pointer argument passed to a function invoked using an asynchronous non-blocking delegate is not updated. A copy of the pointed to data is sent to the destination target thread.
+Since argument data is duplicated, an outgoing pointer argument passed to a function invoked using an asynchronous non-blocking delegate is not updated. A copy of the pointed to data is sent to the destination target thread, and the source thread continues without waiting for the target to be invoked.
 
 Synchronous and asynchronous blocking delegates, on the other hand, do not copy the target function's arguments when invoked. Outgoing pointer arguments passed through an asynchronous blocking delegate (e.g., `DelegateAsyncFreeWait<>`) behave exactly as if the native target function were called directly.
 
@@ -552,13 +554,12 @@ The Python script `src_dup.py` helps mitigate some of the maintenance overhead. 
 
 ## Heap Template Parameter Pack
 
-Non-blocking asynchronous invocations means that all argument data must be copied into the heap for transport to the destination thread. Arguments come in different styles: by value, by reference, pointer and pointer to pointer. For non-blocking delegates, anything other than pass by value needs to have the data created on the heap to ensure the data is valid on the destination thread. The key to being able to save each parameter into `DelegateMsgHeapArgs<>` is the `make_tuple_heap()` function. This template metaprogramming function creates a `tuple` of arguments where each tuple element is created on the heap.
+Non-blocking asynchronous invocations means that all argument data must be copied into the heap for transport to the destination thread. Arguments come in different styles: by value, by reference, pointer and pointer to pointer. For non-blocking delegates, the data is copied to the heap to ensure the data is valid on the destination thread. The key to being able to save each parameter into `DelegateMsgHeapArgs<>` is the `make_tuple_heap()` function. This template metaprogramming function creates a `tuple` of arguments where each tuple element is created on the heap.
 
 ```cpp
 /// @brief Terminate the template metaprogramming argument loop
 template<typename... Ts>
-auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, 
-                     std::tuple<Ts...> tup)
+auto make_tuple_heap(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, std::tuple<Ts...> tup)
 {
     return tup;
 }
@@ -569,9 +570,13 @@ auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs
 /// argument heap memory block that will be automatically deleted after the bound
 /// function is invoked on the target thread. 
 template<typename Arg1, typename... Args, typename... Ts>
-auto make_tuple_heap(std::list<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, 
-                     std::tuple<Ts...> tup, Arg1 arg1, Args... args)
+auto make_tuple_heap(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, std::tuple<Ts...> tup, Arg1 arg1, Args... args)
 {
+    static_assert(!(
+        (is_shared_ptr<Arg1>::value && (std::is_lvalue_reference_v<Arg1> || std::is_pointer_v<Arg1>))),
+        "std::shared_ptr reference argument not allowed");
+    static_assert(!std::is_same<Arg1, void*>::value, "void* argument not allowed");
+
     auto new_tup = tuple_append(heapArgs, tup, arg1);
     return make_tuple_heap(heapArgs, new_tup, args...);
 }
@@ -749,8 +754,8 @@ The `WorkerThread::Process()` thread loop is shown below. `Invoke()` is called f
 ```cpp
 void WorkerThread::Process()
 {
-    m_timerExit = false;
-    std::thread timerThread(&WorkerThread::TimerThread, this);
+	m_timerExit = false;
+	std::thread timerThread(&WorkerThread::TimerThread, this);
 
 	while (1)
 	{
@@ -773,7 +778,7 @@ void WorkerThread::Process()
 			case MSG_DISPATCH_DELEGATE:
 			{
 				// Get pointer to DelegateMsg data from queue msg data
-                auto delegateMsg = msg->GetData();
+				auto delegateMsg = msg->GetData();
 				ASSERT_TRUE(delegateMsg);
 
 				auto invoker = delegateMsg->GetDelegateInvoker();
@@ -783,17 +788,17 @@ void WorkerThread::Process()
 				bool success = invoker->Invoke(delegateMsg);
 				ASSERT_TRUE(success);
 				break;
-			}
+		    }
 
-            case MSG_TIMER:
-                Timer::ProcessTimers();
-                break;
+			case MSG_TIMER:
+				Timer::ProcessTimers();
+				break;
 
 			case MSG_EXIT_THREAD:
 			{
-                m_timerExit = true;
-                timerThread.join();
-                return;
+				m_timerExit = true;
+				timerThread.join();
+				return;
 			}
 
 			default:
@@ -1128,8 +1133,8 @@ The table below summarizes the various asynchronous function invocation implemen
 | Repository                                                                                            | Language | Key Delegate Features                                                                                                                                                                                                               | Notes                                                                                                                                                                                                      |
 |-------------------------------------------------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | <a href="https://github.com/endurodave/cpp-async-delegate">cpp-async-delegate</a> | C++17    | * Function-like template syntax<br> * Any delegate target function type (member, static, free, lambda)<br>  * N target function arguments<br> * N delegate subscribers<br>  * Optional fixed-block allocator     | * Modern C++ implementation<br> * Extensive unit tests<br> * Metaprogramming and variadic templates used for library implementation<br> * Any C++17 and higher compiler |
-<a href="https://github.com/endurodave/AsyncCallback">AsyncCallback</a>                               | C++      | * Traditional template syntax<br> * Delegate target function type (static, free)<br> * 1 target function argument<br> * N delegate subscribers                                                                                      | * Low lines of source code<br> * Compact C++ implementation<br> * Any C++ compiler                                                                                                                    |
-| <a href="https://github.com/endurodave/C_AsyncCallback">C_AsyncCallback</a>                           | C        | * Macros provide type-safety<br> * Delegate target function type (static, free)<br> * 1 target function argument<br> * Fixed callback subscribers (set at compile time)<br> * Optional fixed-block allocator                        | * Low lines of source code<br> * Compact C implementation<br> * Any C compiler                                            
+<a href="https://github.com/endurodave/AsyncCallback">AsyncCallback</a>                               | C++      | * Traditional template syntax<br> * Callback target function type (static, free)<br> * 1 target function argument<br> * N callback subscribers                                                                                      | * Low lines of source code<br> * Compact C++ implementation<br> * Any C++ compiler                                                                                                                    |
+| <a href="https://github.com/endurodave/C_AsyncCallback">C_AsyncCallback</a>                           | C        | * Macros provide type-safety<br> * Callback target function type (static, free)<br> * 1 target function argument<br> * Fixed callback subscribers (set at compile time)<br> * Optional fixed-block allocator                        | * Low lines of source code<br> * Compact C implementation<br> * Any C compiler                                            
 
 # References
 

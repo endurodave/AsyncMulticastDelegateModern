@@ -5,7 +5,7 @@
 /// @brief Delegate library options header file. 
 
 // Define this macro to switch between assert or exception handling
-//#define USE_ASSERTS  // Comment this out to use exceptions
+//#define USE_ASSERTS  // Comment this out to use asserts
 
 #ifdef USE_ASSERTS
     #include <cassert>

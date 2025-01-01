@@ -168,7 +168,7 @@ void WorkerThread::Process()
 			case MSG_DISPATCH_DELEGATE:
 			{
 				// Get pointer to DelegateMsg data from queue msg data
-                auto delegateMsg = msg->GetData();
+				auto delegateMsg = msg->GetData();
 				ASSERT_TRUE(delegateMsg);
 
 				auto invoker = delegateMsg->GetDelegateInvoker();
@@ -181,8 +181,8 @@ void WorkerThread::Process()
 			}
 
             case MSG_TIMER:
-                Timer::ProcessTimers();
-                break;
+				Timer::ProcessTimers();
+				break;
 
 			case MSG_EXIT_THREAD:
 			{

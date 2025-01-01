@@ -527,7 +527,12 @@ public:
     /// @param[in] func The `std::function` to bind to the delegate. This function must 
     /// match the signature of the delegate.
     void Bind(FunctionType func) {
-        m_func = func;
+        try {
+            m_func = func;
+        }
+        catch (const std::bad_alloc&) {
+            BAD_ALLOC();
+        }
     }
 
     /// Compares two ClassType objects using the '<' operator.

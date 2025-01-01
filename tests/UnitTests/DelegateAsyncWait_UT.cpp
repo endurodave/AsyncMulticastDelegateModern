@@ -605,6 +605,59 @@ static void DelegateFunctionAsyncWaitTests()
     for (int i = 0; i < 2; i++)
         arr[i](TEST_INT);
     delete[] arr;
+
+    {
+        using Del = DelegateFunctionAsyncWait<int(int)>;
+
+        Del del4([](int x) -> int { return x + 7; }, workerThread);
+        ASSERT_TRUE(del4(1) == 8);
+
+        Del del5 = Del{ [](int x) -> int { return x + 9; }, workerThread };
+        ASSERT_TRUE(del5(1) == 10);
+
+        int t = 5;
+        Del del6 = Del{ [t](int x) -> int { return x + 9 + t; }, workerThread };
+        ASSERT_TRUE(del6(1) == 15);
+    }
+
+    {
+        using Del = DelegateFunctionAsyncWait<int()>;
+
+        auto lam = []() { return 42; };
+        Del del1{ lam, workerThread };
+        Del del2; //= lam;
+        del2 = { lam, workerThread };
+        ASSERT_TRUE(!del1.Empty());
+        ASSERT_TRUE(del1() == 42);
+        ASSERT_TRUE(!del2.Empty());
+        ASSERT_TRUE(del2() == 42);
+
+        Del del3 = { lam, workerThread };
+        Del del13 = { []() { return 42; }, workerThread };
+        ASSERT_TRUE(!del3.Empty());
+        ASSERT_TRUE(del3() == 42);
+        ASSERT_TRUE(!del13.Empty());
+        ASSERT_TRUE(del13() == 42);
+
+        Del del10{ lam, workerThread };
+        Del del11 = { lam, workerThread };
+        Del del12 = { []() { return 42; }, workerThread };
+        ASSERT_TRUE(!del10.Empty());
+        ASSERT_TRUE(del10() == 42);
+        ASSERT_TRUE(!del11.Empty());
+        ASSERT_TRUE(del11() == 42);
+        ASSERT_TRUE(!del12.Empty());
+        ASSERT_TRUE(del12() == 42);
+
+        auto const lam2 = []() { return 42; };
+        Del del4{ lam2, workerThread };
+        Del del5; // = lam2;
+        del5 = { lam2, workerThread };
+        ASSERT_TRUE(!del4.Empty());
+        ASSERT_TRUE(del4() == 42);
+        ASSERT_TRUE(!del5.Empty());
+        ASSERT_TRUE(del5() == 42);
+    }
 }
 
 void DelegateAsyncWait_UT()

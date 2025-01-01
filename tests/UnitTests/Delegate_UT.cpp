@@ -594,6 +594,61 @@ static void DelegateFunctionTests()
     for (int i = 0; i < 2; i++)
         arr[i](TEST_INT);
     delete[] arr;
+
+    {
+        using Del = DelegateFunction<int(int)>;
+
+        Del del4([](int x) -> int { return x + 7; });
+        ASSERT_TRUE(del4(1) == 8);
+
+        Del del5 = Del{ [](int x) -> int { return x + 9; } };
+        ASSERT_TRUE(del5(1) == 10);
+
+        int t = 5;
+        Del del6 = Del{ [t](int x) -> int { return x + 9 + t; } };
+        ASSERT_TRUE(del6(1) == 15);
+    }
+
+    {
+        using Del = DelegateFunction<int()>;
+
+        auto lam = []() { return 42; };
+        Del del1{ lam };
+        Del del2; //= lam;
+        del2 = std::function(lam);
+        ASSERT_TRUE(!del1.Empty());
+        ASSERT_TRUE(del1() == 42);
+        ASSERT_TRUE(!del2.Empty());
+        ASSERT_TRUE(del2() == 42);
+
+#if 0
+        Del del3 = lam;
+        Del del13 = []() { return 42; };
+        ASSERT_TRUE(!del3.Empty());
+        ASSERT_TRUE(del3() == 42);
+        ASSERT_TRUE(!del13.Empty());
+        ASSERT_TRUE(del13() == 42);
+#endif
+
+        Del del10{ lam };
+        Del del11 = { lam };
+        Del del12 = { []() { return 42; } };
+        ASSERT_TRUE(!del10.Empty());
+        ASSERT_TRUE(del10() == 42);
+        ASSERT_TRUE(!del11.Empty());
+        ASSERT_TRUE(del11() == 42);
+        ASSERT_TRUE(!del12.Empty());
+        ASSERT_TRUE(del12() == 42);
+
+        auto const lam2 = []() { return 42; };
+        Del del4{ lam2 };
+        Del del5; // = lam2;
+        del5 = std::function(lam2);
+        ASSERT_TRUE(!del4.Empty());
+        ASSERT_TRUE(del4() == 42);
+        ASSERT_TRUE(!del5.Empty());
+        ASSERT_TRUE(del5() == 42);
+    }
 }
 
 void Delegate_UT()

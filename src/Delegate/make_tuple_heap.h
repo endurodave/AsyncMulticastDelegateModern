@@ -138,7 +138,7 @@ auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const
         heapArgs.push_back(deleter);
         return std::tuple_cat(tup, std::make_tuple(heap_arg));
     } 
-    catch (...) {
+    catch (const std::bad_alloc&) {
         BAD_ALLOC();
         throw;
     }
@@ -163,7 +163,7 @@ auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const
         heapArgs.push_back(deleter);
         return std::tuple_cat(tup, std::make_tuple(heap_arg));
     }
-    catch (...) {
+    catch (const std::bad_alloc&) {
         BAD_ALLOC();
         throw;
     }
@@ -188,7 +188,7 @@ auto tuple_append(xlist<std::shared_ptr<heap_arg_deleter_base>>& heapArgs, const
         auto new_type = std::get<0>(temp);
         return std::tuple_cat(tup, new_type);
     }
-    catch (...) {
+    catch (const std::bad_alloc&) {
         BAD_ALLOC();
         throw;
     }

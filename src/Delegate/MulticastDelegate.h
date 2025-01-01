@@ -105,7 +105,7 @@ public:
             std::shared_ptr<DelegateType> sharedDelegate(delegateClone);
             m_delegates.push_back(std::forward<std::shared_ptr<DelegateType>>(sharedDelegate));
         }
-        catch (...) {
+        catch (const std::bad_alloc&) {
             BAD_ALLOC();
         }
     }
@@ -153,7 +153,7 @@ private:
                 std::shared_ptr<DelegateType> sharedDelegate(delegateClone);
                 m_delegates.push_back(sharedDelegate);
             }
-            catch (...) {
+            catch (const std::bad_alloc&) {
                 BAD_ALLOC();
             }
         }

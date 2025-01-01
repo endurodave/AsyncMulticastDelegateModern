@@ -2591,6 +2591,12 @@ void DelegateUnitTests()
 	catch (const std::exception& e)
 	{
 		std::cout << "Unit Tests Failed: " << e.what() << std::endl;
+		ASSERT_TRUE(false);
+	}
+	catch (...)
+	{
+		std::cout << "Unit Tests Failed!" << std::endl;
+		ASSERT_TRUE(false);
 	}
 
 	testThread.CreateThread();
@@ -2622,6 +2628,12 @@ void DelegateUnitTests()
 	catch(const std::exception& e)
 	{
 		std::cout << "Unit Tests Failed: " << e.what() << std::endl;
+		ASSERT_TRUE(false);
+	}
+	catch (...)
+	{
+		std::cout << "Unit Tests Failed!" << std::endl;
+		ASSERT_TRUE(false);
 	}
 
 #ifdef WIN32
