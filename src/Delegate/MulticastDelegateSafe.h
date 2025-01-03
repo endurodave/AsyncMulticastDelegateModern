@@ -3,7 +3,7 @@
 
 /// @file
 /// @brief Delegate container for storing and iterating over a collection of 
-/// delegate instances. Class is thread safe.
+/// delegate instances. Class is thread-safe.
 
 #include "MulticastDelegate.h"
 #include <mutex>

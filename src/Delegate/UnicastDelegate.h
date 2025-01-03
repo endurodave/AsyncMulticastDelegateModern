@@ -13,7 +13,7 @@ namespace DelegateLib {
 template <class R>
 struct UnicastDelegate; // Not defined
 
-/// @brief A non-thread safe delegate container storing one delegate. Void and  
+/// @brief A non-thread-safe delegate container storing one delegate. Void and  
 /// non-void return values supported. 
 template<class RetType, class... Args>
 class UnicastDelegate<RetType(Args...)>

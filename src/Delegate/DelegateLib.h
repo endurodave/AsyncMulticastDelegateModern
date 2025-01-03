@@ -8,7 +8,6 @@
 /// @file
 /// @brief DelegateLib.h is a single include to obtain all delegate functionality. 
 ///
-/// TODO!!
 /// A C++ delegate library capable of invoking any callable function either synchronously   
 /// or asynchronously on a user specified thread of control.
 /// 

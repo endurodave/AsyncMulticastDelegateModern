@@ -12,10 +12,13 @@
 /// sending a clone of the object to the destination thread message queue. The destination 
 /// thread calls `Invoke()` to invoke the target function.
 /// 
+/// Argument data is created on the heap using `operator new` for transport thought a thread 
+/// message queue. An optional fixed-block allocator is available. See `USE_ALLOCATOR`. 
+/// 
 /// `RetType operator()(Args... args)` - called by the source thread to initiate the async
-/// function call. May throw `std::bad_alloc` if dynamic storage allocation fails and USE_ASSERTS 
-/// is not defined. Clone() may also throw `std::bad_alloc`. All other delegate class functions do 
-/// not throw exceptions.
+/// function call. May throw `std::bad_alloc` if dynamic storage allocation fails and `USE_ASSERTS` 
+/// is not defined. Clone() may also throw `std::bad_alloc` unless `USE_ASSERTS`. All other delegate 
+/// class functions do not throw exceptions.
 ///
 /// `void Invoke(std::shared_ptr<DelegateMsg> msg)` - called by the destination
 /// thread to invoke the target function. The destination thread must not call any other

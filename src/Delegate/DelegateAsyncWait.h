@@ -21,11 +21,12 @@
 /// the target function is not invoked. 
 /// 
 /// The `m_lock` mutex is used to protect shared state data between the source and destination 
-/// threads using the two thread safe functions below:
+/// threads using the two thread-safe functions below:
 ///
 /// `RetType operator()(Args... args)` - called by the source thread to initiate the async
-/// function call. May throw `std::bad_alloc` if dynamic storage allocation fails. Clone()
-/// also may throw `std::bad_alloc`. All other delegate class functions do not throw exceptions.
+/// function call. May throw `std::bad_alloc` if dynamic storage allocation fails and `USE_ASSERTS` 
+/// is not defined. Clone() also may throw `std::bad_alloc` unless 'USE_ASSERTS'. All other delegate 
+/// class functions do not throw exceptions.
 ///
 /// `void Invoke(std::shared_ptr<DelegateMsg> msg)` - called by the destination
 /// thread to invoke the target function. The destination thread must not call any other

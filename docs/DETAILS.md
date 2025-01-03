@@ -25,6 +25,7 @@ A C++ delegate library capable of anonymously invoking any callable function eit
   - [Fixed-Block Memory Allocator](#fixed-block-memory-allocator)
   - [Error Handling](#error-handling)
   - [Function Argument Copy](#function-argument-copy)
+  - [Caution Using `std::bind`](#caution-using-stdbind)
   - [Caution Using Raw Object Pointers](#caution-using-raw-object-pointers)
   - [Usage Summary](#usage-summary)
 - [Delegate Library](#delegate-library)
@@ -36,12 +37,13 @@ A C++ delegate library capable of anonymously invoking any callable function eit
   - [Send `DelegateMsg`](#send-delegatemsg)
   - [Receive `DelegateMsg`](#receive-delegatemsg)
 - [Examples](#examples)
-  - [SysData Example](#sysdata-example)
-  - [SysDataClient Example](#sysdataclient-example)
-  - [SysDataNoLock Example](#sysdatanolock-example)
-  - [SysDataNoLock Reinvoke Example](#sysdatanolock-reinvoke-example)
-  - [SysDataNoLock Blocking Reinvoke Example](#sysdatanolock-blocking-reinvoke-example)
+  - [Callback Example](#callback-example)
+  - [Register Callback Example](#register-callback-example)
+  - [Asynchronous API No Locks Example](#asynchronous-api-no-locks-example)
+  - [Asynchronous API Reinvoke Example](#asynchronous-api-reinvoke-example)
+  - [Asynchronous API Blocking Reinvoke Example](#asynchronous-api-blocking-reinvoke-example)
   - [Timer Example](#timer-example)
+  - [`std::async` Thread Targeting Example](#stdasync-thread-targeting-example)
   - [More Examples](#more-examples)
 - [Testing](#testing)
   - [Unit Tests](#unit-tests)
@@ -127,7 +129,7 @@ void main() {
 }
 ```
 
-The delegate library supports `std::function` target functions, as well as class instance methods and free functions, providing additional flexibility and robustness.
+The delegate library prevents this error. See [Caution Using `std::bind`](#caution-using-stdbind) for more information.
 
 ## `std::async` and `std::future`
 
@@ -153,15 +155,14 @@ In short, the delegate library offers features that are not natively available i
 | Callable Ambiguity | No | No | No | Yes<sup>3</sup> |
 | Thread-Safe Container <sup>4</sup> | Yes | Yes | Yes | No |
 
-<sup>1</sup> `DelegateAsync` function call operator copies all function data arguments using a copy constructor for safe transport to the target thread.   
+<sup>1</sup> `DelegateAsync<>` function call operator copies all function data arguments using a copy constructor for safe transport to the target thread.   
 <sup>2</sup> `std::async` could fail if dangling reference or pointer function argument is accessed. Delegates copy argument data when needed to prevent this failure mode.  
 <sup>3</sup> `std::function` cannot resolve difference between functions with matching signature `std::function` instances (e.g `void Class:One(int)` and `void Class::Two(int)` are equal).  
-<sup>4</sup> `MulticastDelegateSafe` a thread-safe container used to hold and invoke a collection of delegates.
+<sup>4</sup> `MulticastDelegateSafe<>` a thread-safe container used to hold and invoke a collection of delegates.
 
 # Using the Code
 
 The delegate library is comprised of delegates and delegate containers. 
-
 
 ## Delegates 
 
@@ -404,6 +405,34 @@ The behavior of the delegate library when invoking asynchronous non-blocking del
 Since argument data is duplicated, an outgoing pointer argument passed to a function invoked using an asynchronous non-blocking delegate is not updated. A copy of the pointed to data is sent to the destination target thread, and the source thread continues without waiting for the target to be invoked.
 
 Synchronous and asynchronous blocking delegates, on the other hand, do not copy the target function's arguments when invoked. Outgoing pointer arguments passed through an asynchronous blocking delegate (e.g., `DelegateAsyncFreeWait<>`) behave exactly as if the native target function were called directly.
+
+## Caution Using `std::bind`
+
+`std::function` compares the function signature, not the underlying callable instance. The example below demonstrates this limitation. 
+
+```cpp
+// Example shows std::function target limitations. Not a normal usage case.
+// Use MakeDelegate() to create delegates works correctly with delegate 
+// containers.
+Test t1, t2;
+std::function<void(int)> f1 = std::bind(&Test::Func, &t1, std::placeholders::_1);
+std::function<void(int)> f2 = std::bind(&Test::Func2, &t2, std::placeholders::_1);
+MulticastDelegateSafe<void(int)> safe;
+safe += MakeDelegate(f1);
+safe += MakeDelegate(f2);
+safe -= MakeDelegate(f2);   // Should remove f2, not f1!
+```
+
+To avoid this issue, use `MakeDelegate()`. In this case, `MakeDelegate()` binds to `Test::Func` using `DelegateMember<>`, not `DelegateFunction<>`, which prevents the error above.
+
+```cpp
+// Corrected example
+Test t1, t2;
+MulticastDelegateSafe<void(int)> safe;
+safe += MakeDelegate(&t1, &Test::Func);
+safe += MakeDelegate(&t2, &Test::Func2);
+safe -= MakeDelegate(&t2, &Test::Func2);   // Works correctly!
+```
 
 ## Caution Using Raw Object Pointers
 
@@ -810,9 +839,9 @@ void WorkerThread::Process()
 
 # Examples
 
-## SysData Example
+## Callback Example
 
-A few real-world examples will demonstrate common delegate usage patterns. First, `SysData` is a simple class showing how to expose an outgoing asynchronous interface. The class stores system data and provides asynchronous subscriber notifications when the mode changes. The class interface is shown below:
+Here are a few real-world examples that demonstrate common delegate usage patterns. First, `SysData` is a simple class that exposes an outgoing asynchronous interface. It stores system data and provides asynchronous notifications to subscribers when the mode changes. The class interface is shown below:
 
 ```cpp
 class SysData
@@ -840,7 +869,7 @@ private:
 };
 ```
 
-The subscriber interface for receiving callbacks is `SystemModeChangedDelegate`. Calling `SetSystemMode()` saves the new mode into `m_systemMode` and notifies all registered subscribers.
+The subscriber interface for receiving callbacks is `SystemModeChangedDelegate`. Calling `SetSystemMode()` updates `m_systemMode` with the new value and notifies all registered subscribers.
 
 ```cpp
 void SysData::SetSystemMode(SystemMode::Type systemMode)
@@ -856,36 +885,35 @@ void SysData::SetSystemMode(SystemMode::Type systemMode)
     m_systemMode = systemMode;
 
     // Callback all registered subscribers
-    if (SystemModeChangedDelegate)
-        SystemModeChangedDelegate(callbackData);
+    SystemModeChangedDelegate(callbackData);
 }
 ```
 
-## SysDataClient Example
+## Register Callback Example
 
 `SysDataClient` is a delegate subscriber and registers for `SysData::SystemModeChangedDelegate` notifications within the constructor.
 
 ```cpp
-    // Constructor
-    SysDataClient() :
-        m_numberOfCallbacks(0)
-    {
-        // Register for async delegate callbacks
-        SysData::GetInstance().SystemModeChangedDelegate += 
-                 MakeDelegate(this, &SysDataClient::CallbackFunction, workerThread1);
-        SysDataNoLock::GetInstance().SystemModeChangedDelegate += 
-                       MakeDelegate(this, &SysDataClient::CallbackFunction, workerThread1);
-    }
+// Constructor
+SysDataClient() :
+    m_numberOfCallbacks(0)
+{
+    // Register for async delegate callbacks
+    SysData::GetInstance().SystemModeChangedDelegate += 
+             MakeDelegate(this, &SysDataClient::CallbackFunction, workerThread1);
+    SysDataNoLock::GetInstance().SystemModeChangedDelegate += 
+                   MakeDelegate(this, &SysDataClient::CallbackFunction, workerThread1);
+}
 ```
 
 `SysDataClient::CallbackFunction()` is now called on `workerThread1` when the system mode changes.
 
 ```cpp
-    void CallbackFunction(const SystemModeChanged& data)
-    {
-        m_numberOfCallbacks++;
-        cout << "CallbackFunction " << data.CurrentSystemMode << endl;
-    }
+void CallbackFunction(const SystemModeChanged& data)
+{
+    m_numberOfCallbacks++;
+    cout << "CallbackFunction " << data.CurrentSystemMode << endl;
+}
 ```
 
 When `SetSystemMode()` is called, anyone interested in the mode changes are notified synchronously or asynchronously depending on the delegate type registered.
@@ -897,7 +925,7 @@ SysData::GetInstance().SetSystemMode(SystemMode::STARTING);
 SysData::GetInstance().SetSystemMode(SystemMode::NORMAL);
 ```
 
-## SysDataNoLock Example
+## Asynchronous API No Locks Example
 
 `SysDataNoLock` is an alternate implementation that uses a private `MulticastDelegateSafe<>` for setting the system mode asynchronously and without locks.
 
@@ -980,14 +1008,13 @@ void SysDataNoLock::SetSystemModePrivate(SystemMode::Type systemMode)
       m_systemMode = systemMode;
 
       // Callback all registered subscribers
-      if (SystemModeChangedDelegate)
-            SystemModeChangedDelegate(callbackData);
+      SystemModeChangedDelegate(callbackData);
 }
 ```
 
-## SysDataNoLock Reinvoke Example
+## Asynchronous API Reinvoke Example
 
-While creating a separate private function to create an asynchronous API does work, with delegates, it 's possible to just reinvoke the same exact function just on a different thread. Perform a simple check whether the caller is executing on the desired thread of control. If not, a temporary asynchronous delegate is created on the stack and then invoked. The delegate and all the caller's original function arguments are duplicated on the heap and the function is reinvoked on `workerThread2`.
+While creating a separate private function for an asynchronous API works, delegates allow you to simply reinvoke the same function on a different thread. A quick check determines if the caller is executing on the desired thread. If not, a temporary asynchronous delegate is created on the stack and invoked. The delegate and all original function arguments are duplicated on the heap, and the function is then reinvoked on `workerThread2`.
 
 ```cpp
 void SysDataNoLock::SetSystemModeAsyncAPI(SystemMode::Type systemMode)
@@ -1011,14 +1038,13 @@ void SysDataNoLock::SetSystemModeAsyncAPI(SystemMode::Type systemMode)
     m_systemMode = systemMode;
 
     // Callback all registered subscribers
-    if (SystemModeChangedDelegate)
-        SystemModeChangedDelegate(callbackData);
+    SystemModeChangedDelegate(callbackData);
 }
 ```
 
-## SysDataNoLock Blocking Reinvoke Example
+## Asynchronous API Blocking Reinvoke Example
 
-A blocking asynchronous API can be hidden inside a class member function. The function below sets the current mode on `workerThread2` and returns the previous mode. A blocking delegate is created on the stack and invoked if the caller isn't executing on `workerThread2`. To the caller, the function appears synchronous, but the delegate ensures that the call is executed on the proper thread before returning.
+A blocking asynchronous API can be encapsulated within a class member function. The following function sets the current mode on `workerThread2` and returns the previous mode. If the caller is not executing on `workerThread2`, a blocking delegate is created and invoked on that thread. To the caller, the function appears synchronous, but the delegate ensures the function is executed on the correct thread before returning.
 
 ```cpp
 SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type systemMode)
@@ -1042,8 +1068,7 @@ SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type syste
     m_systemMode = systemMode;
 
     // Callback all registered subscribers
-    if (SystemModeChangedDelegate)
-        SystemModeChangedDelegate(callbackData);
+    SystemModeChangedDelegate(callbackData);
 
     return callbackData.PreviousSystemMode;
 }
@@ -1079,7 +1104,45 @@ Users create an instance of the timer and register for the expiration. In this c
 m_timer.Expired = MakeDelegate(&myClass, &MyClass::MyCallback, myThread);
 m_timer.Start(1000);
 ```
+## `std::async` Thread Targeting Example
 
+An example combining `std::async`/`std::future` and an asynchronous delegate to target a specific worker thread during communication transmission.
+
+```cpp
+static WorkerThread comm_thread("CommunicationThread");
+
+// Assume send_data() is not thread-safe and may only be called on comm_thread context.
+// A random std::async thread from the pool is unacceptable and causes cross-threading.
+size_t send_data(const std::string& data) 
+{
+    std::this_thread::sleep_for(std::chrono::seconds(2));  // Simulate sending
+    return data.size();  // Return the 'bytes_sent' sent result
+}
+
+void AsyncFutureExample() 
+{
+    comm_thread.CreateThread();
+
+    // Create an async delegate targeted at send_data()
+    auto send_data_delegate = MakeDelegate(&send_data, comm_thread, WAIT_INFINITE);
+
+    // Start the asynchronous task using std::async. send_data() will be called on 
+    // comm_thread context.
+    std::future<size_t> result = std::async(std::launch::async, send_data_delegate, "send_data message");
+
+    // Do other work while send_data() is executing on comm_thread
+    std::cout << "Doing other work in main thread while data is sent...\n";
+
+    // Continue other work in the main thread while the task runs asynchronously
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+
+    // Get bytes sent. This will block until send_data() completes.
+    size_t bytes_sent = result.get(); 
+
+    std::cout << "Result from send_data: " << bytes_sent << std::endl;
+    comm_thread.ExitThread();
+}
+```
 ## More Examples
 
 See the `Examples` folder for additional examples.

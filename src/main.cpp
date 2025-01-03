@@ -4,6 +4,7 @@
 #include "ProducerConsumer.h"
 #include "CountdownLatch.h"
 #include "ActiveObject.h"
+#include "AsyncFuture.h"
 #include "Observer.h"
 #include <iostream>
 #include <chrono>
@@ -699,7 +700,9 @@ int main(void)
     cout << "AddFunc return value: " << sum << " ";
     // End lambda examples
 
-    // Example shows std::function target limitations
+    // Example shows std::function target limitations. Not a normal usage case.
+    // Use MakeDelegate() to create delegates works correctly with delegate 
+    // containers.
     Test t1, t2;
     std::function<void(int)> f1 = std::bind(&Test::Func, &t1, std::placeholders::_1);
     std::function<void(int)> f2 = std::bind(&Test::Func2, &t2, std::placeholders::_1);
@@ -707,6 +710,9 @@ int main(void)
     safe += MakeDelegate(f1);
     safe += MakeDelegate(f2);
     safe -= MakeDelegate(f2);   // Should remove f2, not f1!
+
+    // Run the std::async and std::future example with delegates
+    AsyncFutureExample();
 
     // Run the active object pattern example
     ActiveObjectExample();

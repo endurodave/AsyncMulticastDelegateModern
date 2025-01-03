@@ -40,6 +40,5 @@ void SysData::SetSystemMode(SystemMode::Type systemMode)
 	m_systemMode = systemMode;
 
 	// Callback all registered subscribers
-	if (SystemModeChangedDelegate)
-		SystemModeChangedDelegate(callbackData);
+	SystemModeChangedDelegate(callbackData);
 }

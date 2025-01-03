@@ -48,7 +48,7 @@ void SysDataNoLock::SetSystemModeAsyncAPI(SystemMode::Type systemMode)
 	// Is the caller executing on workerThread2?
 	if (workerThread2.GetThreadId() != WorkerThread::GetCurrentThreadId())
 	{
-		// Create an asynchronous delegate and re-invoke the function call on workerThread2
+		// Create an asynchronous delegate and reinvoke the function call on workerThread2
 		MakeDelegate(this, &SysDataNoLock::SetSystemModeAsyncAPI, workerThread2).AsyncInvoke(systemMode);
 		return;
 	}
@@ -62,8 +62,7 @@ void SysDataNoLock::SetSystemModeAsyncAPI(SystemMode::Type systemMode)
 	m_systemMode = systemMode;
 
 	// Callback all registered subscribers
-	if (SystemModeChangedDelegate)
-		SystemModeChangedDelegate(callbackData);
+	SystemModeChangedDelegate(callbackData);
 }
 
 //----------------------------------------------------------------------------
@@ -74,7 +73,7 @@ SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type syste
 	// Is the caller executing on workerThread2?
 	if (workerThread2.GetThreadId() != WorkerThread::GetCurrentThreadId())
 	{
-		// Create an asynchronous delegate and re-invoke the function call on workerThread2
+		// Create an asynchronous delegate and reinvoke the function call on workerThread2
 		auto delegate =
 			MakeDelegate(this, &SysDataNoLock::SetSystemModeAsyncWaitAPI, workerThread2, WAIT_INFINITE);
 		return delegate(systemMode);
@@ -89,8 +88,7 @@ SystemMode::Type SysDataNoLock::SetSystemModeAsyncWaitAPI(SystemMode::Type syste
 	m_systemMode = systemMode;
 
 	// Callback all registered subscribers
-	if (SystemModeChangedDelegate)
-		SystemModeChangedDelegate(callbackData);
+	SystemModeChangedDelegate(callbackData);
 
 	return callbackData.PreviousSystemMode;
 }
@@ -109,7 +107,6 @@ void SysDataNoLock::SetSystemModePrivate(SystemMode::Type systemMode)
 	m_systemMode = systemMode;
 
 	// Callback all registered subscribers
-	if (SystemModeChangedDelegate)
-		SystemModeChangedDelegate(callbackData);
+	SystemModeChangedDelegate(callbackData);
 }
 

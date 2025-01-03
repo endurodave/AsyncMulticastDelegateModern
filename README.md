@@ -5,11 +5,31 @@
 
 # Asynchronous Delegates in C++
 
-A C++ delegate library capable of anonymously invoking any callable function either synchronously or asynchronously on a user-specified thread of control. Extensive unit tests ensure compatibility with any C++17 and higher platform.
+The C++ delegate library allows anonymous asynchronous invocation of any callable function on a user-specified thread of control, in contrast to `std::async` which uses an unspecified thread from a thread pool.
 
-In C++, a delegate encapsulates a callable entity, such as a function, method, or lambda, so it can be invoked later. A delegate is a type-safe wrapper around a callable function that allows it to be passed around, stored, or invoked at a later time, typically within different contexts or on different threads. Delegates are particularly useful for event-driven programming, callbacks, or when you need to pass functions as arguments.
+```cpp
+// Create an async delegate targeting lambda on thread1
+auto lambda = [](int i) { std::cout << i; };
+auto lambdaDelegate = MakeDelegate(std::function(lambda), thread1);
 
-Asynchronous delegate function calls support both non-blocking and blocking modes with a timeout. The library supports all types of target functions, including free functions, class member functions, static class functions, lambdas, and `std::function`. It is capable of handling any function signature, regardless of the number of arguments or return value. All argument types are supported, including by value, pointers, pointers to pointers, and references. The delegate library takes care of the intricate details of function invocation across thread boundaries. 
+// Create an async delegate targeting Class::Func() on thread2
+Class myClass;
+auto memberDelegate = MakeDelegate(&myClass, &Class::Func, thread2);
+
+// Create a thread-safe delegate container
+MulticastDelegateSafe<void(int)> delegates;
+
+// Insert delegates into the container 
+delegates += lambdaDelegate;
+delegates += memberDelegate;
+
+// Invoke all callable targets asynchronously 
+delegates(123);
+```
+
+In C++, a delegate encapsulates a callable entity, such as a function, method, or lambda, so it can be invoked later. A delegate is a type-safe wrapper around a callable function that allows it to be passed around, stored, or invoked at a later time, typically within different contexts or on different threads. Delegates are particularly useful for event-driven programming, callbacks, asynchronous APIs, or when you need to pass functions as arguments.
+
+Synchronous and asynchronous delegates are available. Asynchronous variants handle both non-blocking and blocking modes with a timeout. The library supports all types of target functions, including free functions, class member functions, static class functions, lambdas, and `std::function`. It is capable of handling any function signature, regardless of the number of arguments or return value. All argument types are supported, including by value, pointers, pointers to pointers, and references. The delegate library takes care of the intricate details of function invocation across thread boundaries. 
 
 It is always safe to call the delegate. In its null state, a call will not perform any action and will return a default-constructed return value. A delegate behaves like a normal pointer type: it can be copied, compared for equality, called, and compared to `nullptr`. Const correctness is maintained; stored const objects can only be called by const member functions.
 
@@ -22,12 +42,13 @@ It is always safe to call the delegate. In its null state, a call will not perfo
  
 Typical use cases are:
 
+* Inter-Thread Publish/Subscribe (Observer) Pattern
+* Thread-Safe Asynchronous API
 * Asynchronous Method Invocation (AMI)
-* Publish/Subscribe (Observer) Pattern
 * Anonymous, Asynchronous Thread-Safe Callbacks
 * Event-Driven Programming
-* Thread-Safe Asynchronous API
 * Design Patterns (Active Object)
+* `std::async` Thread Targeting
 
 The delegate library's asynchronous features differ from `std::async` in that the caller-specified thread of control is used to invoke the target function bound to the delegate, rather than a random thread from the thread pool. The asynchronous variants copy the argument data into the event queue, ensuring safe transport to the destination thread, regardless of the argument type. This approach provides 'fire and forget' functionality, allowing the caller to avoid waiting or worrying about out-of-scope stack variables being accessed by the target thread.
 

@@ -26,7 +26,7 @@ public:
     void Process(int data) {
         // Is the producer executing on m_thread?
         if (m_thread.GetThreadId() != WorkerThread::GetCurrentThreadId()) {
-            // Re-invoke Process() on m_thread; non-blocking call (caller does not wait)
+            // Reinvoke Process() on m_thread; non-blocking call (caller does not wait)
             MakeDelegate(this, &Consumer::Process, m_thread).AsyncInvoke(data);
             return;
         }

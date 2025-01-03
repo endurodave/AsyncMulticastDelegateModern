@@ -1,5 +1,5 @@
 /// @file
-/// @brief Implement a active object pattern using delegates. 
+/// @brief Implement an active object pattern using delegates. 
 /// An example of asynchronous method invocation.
 
 #include "ActiveObject.h"
@@ -21,7 +21,7 @@ public:
         // Is caller executing on m_thread?
         if (m_thread.GetThreadId() != WorkerThread::GetCurrentThreadId())
         {
-            // Create an asynchronous delegate and re-invoke the function call on m_thread
+            // Create an asynchronous delegate and reinvoke the function call on m_thread
             MakeDelegate(this, &ActiveObject::SetValue, m_thread).AsyncInvoke(v);
             return;
         }
@@ -29,6 +29,19 @@ public:
         // m_value is always updated on m_thread
         m_value = v;
     }
+
+    double GetValue() {
+        // Is caller executing on m_thread?
+        if (m_thread.GetThreadId() != WorkerThread::GetCurrentThreadId())
+        {
+            // Create an asynchronous delegate and reinvoke the function call on m_thread
+            return MakeDelegate(this, &ActiveObject::GetValue, m_thread, WAIT_INFINITE)();
+        }
+
+        // m_value is always returned on m_thread
+        return m_value;
+    }
+
 
     ~ActiveObject() {
         m_thread.ExitThread();
@@ -47,4 +60,5 @@ void ActiveObjectExample()
     ActiveObject activeObject;
     activeObject.SetValue(1.0);
     activeObject.SetValue(2.0);
+    double value = activeObject.GetValue();
 }
